@@ -29,7 +29,7 @@ public class SYSDictDAOImpl extends AMybatisTemplate implements ISYSDictDAO {
      */
     @Override
     public int insert(SYSDict data) {
-        return super.insert("insert_sysDict", data);
+        return super.insert(NAMESPACE.concat("insert_sysDict"), data);
     }
 
     /** 
@@ -37,7 +37,7 @@ public class SYSDictDAOImpl extends AMybatisTemplate implements ISYSDictDAO {
      */
     @Override
     public int delete(SYSDict data) {
-        return super.delete("delete_sysDict", data);
+        return super.delete(NAMESPACE.concat("delete_sysDict"), data);
     }
 
     /** 
@@ -45,7 +45,8 @@ public class SYSDictDAOImpl extends AMybatisTemplate implements ISYSDictDAO {
      */
     @Override
     public SYSDict select(SYSDict condition) {
-        return super.select("select_sysDict", condition, SYSDict.class);
+        return super.select(NAMESPACE.concat("select_sysDict"), condition,
+            SYSDict.class);
     }
 
     /** 
@@ -53,7 +54,8 @@ public class SYSDictDAOImpl extends AMybatisTemplate implements ISYSDictDAO {
      */
     @Override
     public Long selectTotalCount(SYSDict condition) {
-        return super.selectTotalCount("select_sysDict_count", condition);
+        return super.selectTotalCount(NAMESPACE.concat("select_sysDict_count"),
+            condition);
     }
 
     /** 
@@ -61,7 +63,8 @@ public class SYSDictDAOImpl extends AMybatisTemplate implements ISYSDictDAO {
      */
     @Override
     public List<SYSDict> selectList(SYSDict condition) {
-        return super.selectList("select_sysDict", condition, SYSDict.class);
+        return super.selectList(NAMESPACE.concat("select_sysDict"), condition,
+            SYSDict.class);
     }
 
     /** 
@@ -69,8 +72,8 @@ public class SYSDictDAOImpl extends AMybatisTemplate implements ISYSDictDAO {
      */
     @Override
     public List<SYSDict> selectList(SYSDict condition, int start, int count) {
-        return super.selectList("select_sysDict", start, count, condition,
-            SYSDict.class);
+        return super.selectList(NAMESPACE.concat("select_sysDict"), start,
+            count, condition, SYSDict.class);
     }
 
     /**
@@ -78,7 +81,7 @@ public class SYSDictDAOImpl extends AMybatisTemplate implements ISYSDictDAO {
      */
     @Override
     public int update(SYSDict data) {
-        return super.update("update_sysDict", data);
+        return super.update(NAMESPACE.concat("update_sysDict"), data);
     }
 
 }

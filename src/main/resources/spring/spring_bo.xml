@@ -13,6 +13,10 @@
 	
 	<!-- 分页BO层注入paginableDao -->
 	
+	<bean id="productBO" class="com.cdkj.ylq.bo.impl.ProductBOImpl">
+		<property name="paginableDAO" ref="productDAOImpl"/>
+	</bean>	
+	
 	<bean id="sysDictBO" class="com.cdkj.ylq.bo.impl.SYSDictBOImpl">
 		<property name="paginableDAO" ref="sysDictDAOImpl"/>
 	</bean>	

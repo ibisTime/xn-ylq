@@ -18,7 +18,7 @@ import com.cdkj.ylq.ao.ISYSDictAO;
 import com.cdkj.ylq.bo.ISYSDictBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.SYSDict;
-import com.cdkj.ylq.dto.req.XN808900Req;
+import com.cdkj.ylq.dto.req.XN623900Req;
 import com.cdkj.ylq.enums.EDictType;
 
 /** 
@@ -32,7 +32,7 @@ public class SYSDictAOImpl implements ISYSDictAO {
     ISYSDictBO sysDictBO;
 
     @Override
-    public Long addSecondDict(XN808900Req req) {
+    public Long addSecondDict(XN623900Req req) {
         String parentKey = req.getParentKey();
         String key = req.getDkey();
         String companyCode = req.getCompanyCode();

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.IProductDAO">
+	<resultMap id="product_DB_Result" type="product">
+		<result column="code" property="code" />
+		<result column="name" property="name" />
+		<result column="slogan" property="slogan" />
+		<result column="level" property="level" />
+		<result column="amount" property="amount" />
+		<result column="duration" property="duration" />
+		<result column="rate1" property="rate1" />
+		<result column="rate2" property="rate2" />
+		<result column="lx_amount" property="lxAmount" />
+		<result column="xs_amount" property="xsAmount" />
+		<result column="gl_amount" property="glAmount" />
+		<result column="fw_amount" property="fwAmount" />
+		<result column="status" property="status" />
+		<result column="ui_location" property="uiLocation" />
+		<result column="ui_order" property="uiOrder" />
+		<result column="ui_color" property="uiColor" />
+		<result column="updater" property="updater" />
+		<result column="update_datetime" property="updateDatetime" />
+		<result column="remark" property="remark" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_product" parameterType="product" resultMap="product_DB_Result">
+		SELECT
+		t.code
+		,t.name
+		,t.slogan
+		,t.level
+		,t.amount
+		,t.duration
+		,t.rate1
+		,t.rate2
+		,t.lx_amount
+		,t.xs_amount
+		,t.gl_amount
+		,t.fw_amount
+		,t.status
+		,t.ui_location
+		,t.ui_order
+		,t.ui_color
+		,t.updater
+		,t.update_datetime
+		,t.remark
+		FROM
+		t_product t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_product_count" parameterType="product"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM t_product t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_product" parameterType="product">
+		INSERT INTO
+		t_product(
+		code
+		,name
+		,slogan
+		,level
+		,amount
+		,duration
+		,rate1
+		,rate2
+		,lx_amount
+		,xs_amount
+		,gl_amount
+		,fw_amount
+		,status
+		,ui_location
+		,ui_order
+		,ui_color
+		,updater
+		,update_datetime
+		,remark
+		)
+		VALUES(
+		#{code}
+		,#{name}
+		,#{slogan}
+		,#{level}
+		,#{amount}
+		,#{duration}
+		,#{rate1}
+		,#{rate2}
+		,#{lxAmount}
+		,#{xsAmount}
+		,#{glAmount}
+		,#{fwAmount}
+		,#{status}
+		,#{uiLocation}
+		,#{uiOrder}
+		,#{uiColor}
+		,#{updater}
+		,#{updateDatetime}
+		,#{remark}
+		)
+	</insert>
+
+	<update id="update_product" parameterType="product">
+		UPDATE t_product
+		SET
+		name = #{name}
+		,slogan = #{slogan}
+		,level = #{level}
+		,amount = #{amount}
+		,duration = #{duration}
+		,rate1 = #{rate1}
+		,rate2 = #{rate2}
+		,lx_amount = #{lxAmount}
+		,xs_amount = #{xsAmount}
+		,gl_amount = #{glAmount}
+		,fw_amount = #{fwAmount}
+		,status = #{status}
+		,ui_location = #{uiLocation}
+		,ui_order = #{uiOrder}
+		,ui_color = #{uiColor}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+
+
+</mapper>

@@ -13,7 +13,7 @@ package com.cdkj.ylq.dto.req;
  * @since: 2016年6月12日 下午1:36:37 
  * @history:
  */
-public class XN808917Req {
+public class XN623917Req {
 
     // key(必填)
     private String key;
