@@ -1,0 +1,10 @@
+TRUNCATE `tmall_category`;
+TRUNCATE `tmall_order`;
+TRUNCATE `tmall_product`;
+TRUNCATE `tmall_product_specs`;
+TRUNCATE `tmall_vorder`;
+TRUNCATE `tmall_vproduct`;
+TRUNCATE `to2o_purchase`;
+TRUNCATE `to2o_store`;
+TRUNCATE `tsys_config`;
+TRUNCATE `tsys_dict`;
