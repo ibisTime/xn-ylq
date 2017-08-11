@@ -50,4 +50,14 @@ public class ProductDAOImpl extends AMybatisTemplate implements IProductDAO {
         return super.update(NAMESPACE.concat("update_product"), data);
     }
 
+    @Override
+    public int updatePutOn(Product data) {
+        return super.update(NAMESPACE.concat("update_putOn"), data);
+    }
+
+    @Override
+    public int updatePutOff(Product data) {
+        return super.update(NAMESPACE.concat("update_putOff"), data);
+    }
+
 }

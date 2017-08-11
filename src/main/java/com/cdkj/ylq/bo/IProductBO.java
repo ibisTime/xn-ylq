@@ -5,9 +5,14 @@ import com.cdkj.ylq.domain.Product;
 
 public interface IProductBO extends IPaginableBO<Product> {
 
-    public String saveProduct(Product data);
+    public int saveProduct(Product data);
 
     public int refreshProduct(Product data);
+
+    public int putOn(Product data, String uiLocation, int uiOrder,
+            String uiColor, String updater, String remark);
+
+    public int putOff(Product data, String updater, String remark);
 
     public Product getProduct(String code);
 

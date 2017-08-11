@@ -1,15 +1,16 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
-import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IProductDAO;
 import com.cdkj.ylq.domain.Product;
-import com.cdkj.ylq.enums.EGeneratePrefix;
+import com.cdkj.ylq.enums.EProductStatus;
 import com.cdkj.ylq.exception.BizException;
 
 @Component
@@ -20,15 +21,12 @@ public class ProductBOImpl extends PaginableBOImpl<Product> implements
     private IProductDAO productDAO;
 
     @Override
-    public String saveProduct(Product data) {
-        String code = null;
+    public int saveProduct(Product data) {
+        int count = 0;
         if (data != null) {
-            code = OrderNoGenerater
-                .generateM(EGeneratePrefix.PRODUCT.getCode());
-            data.setCode(code);
-            productDAO.insert(data);
+            count = productDAO.insert(data);
         }
-        return code;
+        return count;
     }
 
     @Override
@@ -53,4 +51,27 @@ public class ProductBOImpl extends PaginableBOImpl<Product> implements
         }
         return data;
     }
+
+    @Override
+    public int putOn(Product data, String uiLocation, int uiOrder,
+            String uiColor, String updater, String remark) {
+        data.setUiLocation(uiLocation);
+        data.setUiOrder(uiOrder);
+        data.setUiColor(uiColor);
+        data.setStatus(EProductStatus.PUT_ON.getCode());
+        data.setUpdater(updater);
+        data.setUpdateDatetime(new Date());
+        data.setRemark(remark);
+        return productDAO.updatePutOn(data);
+    }
+
+    @Override
+    public int putOff(Product data, String updater, String remark) {
+        data.setStatus(EProductStatus.PUT_OFF.getCode());
+        data.setUpdater(updater);
+        data.setUpdateDatetime(new Date());
+        data.setRemark(remark);
+        return productDAO.updatePutOff(data);
+    }
+
 }

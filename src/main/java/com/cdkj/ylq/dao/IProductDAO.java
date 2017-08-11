@@ -7,4 +7,8 @@ public interface IProductDAO extends IBaseDAO<Product> {
     String NAMESPACE = IProductDAO.class.getName().concat(".");
 
     public int updateProduct(Product data);
+
+    public int updatePutOn(Product data);
+
+    public int updatePutOff(Product data);
 }

@@ -28,6 +28,19 @@
 			<if test="code != null and code != '' ">
 				AND t.code = #{code}
 			</if>
+			<if test="name != null and name != '' ">
+				AND t.name like "%"#{name}"%"
+			</if>
+			<if test="level != null and level != '' ">
+				AND t.level = #{level}
+			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
+			<if test="uiLocation != null and uiLocation != '' ">
+				AND t.ui_location = #{uiLocation}
+			</if>
+			
 		</trim>
 	</sql>
 	<select id="select_product" parameterType="product" resultMap="product_DB_Result">
@@ -127,10 +140,29 @@
 		,xs_amount = #{xsAmount}
 		,gl_amount = #{glAmount}
 		,fw_amount = #{fwAmount}
-		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_putOn" parameterType="product">
+		UPDATE t_product
+		SET
+		status = #{status}
 		,ui_location = #{uiLocation}
 		,ui_order = #{uiOrder}
 		,ui_color = #{uiColor}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_putOff" parameterType="product">
+		UPDATE t_product
+		SET
+		status = #{status}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
