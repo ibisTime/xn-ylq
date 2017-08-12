@@ -7,6 +7,10 @@ public interface IApplyBO extends IPaginableBO<Apply> {
 
     public String saveApply(Apply data);
 
+    public void cancel(Apply data);
+
     public Apply getApply(String code);
+
+    public Apply getCurrentApply(String userId, String productCode);
 
 }

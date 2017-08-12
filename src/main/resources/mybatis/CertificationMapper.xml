@@ -5,7 +5,7 @@
 	<resultMap id="certification_DB_Result" type="certification">
 		<result column="id" property="id" />
 		<result column="user_id" property="userId" />
-		<result column="key" property="key" />
+		<result column="certi_key" property="certiKey" />
 		<result column="flag" property="flag" />
 		<result column="result" property="result" />
 		<result column="cer_datetime" property="cerDatetime" />
@@ -23,7 +23,7 @@
 		SELECT
 		t.id
 		,t.user_id
-		,t.key
+		,t.certi_key
 		,t.flag
 		,t.result
 		,t.cer_datetime
@@ -49,7 +49,7 @@
 		INSERT INTO
 		t_certification(
 		user_id
-		,key
+		,certi_key
 		,flag
 		,result
 		,cer_datetime
@@ -58,7 +58,7 @@
 		)
 		VALUES(
 		#{userId}
-		,#{key}
+		,#{certiKey}
 		,#{flag}
 		,#{result}
 		,#{cerDatetime}
@@ -71,7 +71,7 @@
 		UPDATE t_certification
 		SET
 		user_id = #{userId}
-		,key = #{key}
+		,certi_key = #{certiKey}
 		,flag = #{flag}
 		,result = #{result}
 		,cer_datetime = #{cerDatetime}

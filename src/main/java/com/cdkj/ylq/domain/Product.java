@@ -71,6 +71,14 @@ public class Product extends ABaseDO {
     // 备注
     private String remark;
 
+    // ******** 辅助字段 *************
+
+    // 当前申请状态
+    private String userProductStatus;
+
+    // 是否锁定
+    private String isLocked;
+
     public String getCode() {
         return code;
     }
@@ -221,6 +229,22 @@ public class Product extends ABaseDO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getUserProductStatus() {
+        return userProductStatus;
+    }
+
+    public void setUserProductStatus(String userProductStatus) {
+        this.userProductStatus = userProductStatus;
+    }
+
+    public String getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(String isLocked) {
+        this.isLocked = isLocked;
     }
 
 }

@@ -41,7 +41,7 @@ CREATE TABLE `t_apply` (
 CREATE TABLE `t_certification` (
   `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
-  `key` varchar(32) DEFAULT NULL COMMENT '键',
+  `certi_key` varchar(32) DEFAULT NULL COMMENT '键',
   `flag` varchar(32) DEFAULT NULL COMMENT '标识',
   `result` text COMMENT '认证结果',
   `cer_datetime` datetime DEFAULT NULL COMMENT '认证时间',

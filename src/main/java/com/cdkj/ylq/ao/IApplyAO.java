@@ -6,7 +6,11 @@ import com.cdkj.ylq.domain.Apply;
 public interface IApplyAO {
     static final String DEFAULT_ORDER_COLUMN = "code";
 
-    public String submitApply(Apply data);
+    // 提交申请
+    public String submitApply(String applyUser, String productCode);
+
+    // 取消申请
+    public void cancalApply(String applyUser, String productCode);
 
     public Paginable<Apply> queryApplyPage(int start, int limit, Apply condition);
 

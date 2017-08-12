@@ -3,21 +3,28 @@ package com.cdkj.ylq.ao.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cdkj.ylq.ao.IProductAO;
+import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IProductBO;
+import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.core.StringValidater;
+import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Product;
+import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN623000Req;
 import com.cdkj.ylq.dto.req.XN623001Req;
+import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EProductLevel;
 import com.cdkj.ylq.enums.EProductLocation;
 import com.cdkj.ylq.enums.EProductStatus;
+import com.cdkj.ylq.enums.EUserProductStatus;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
@@ -25,6 +32,12 @@ public class ProductAOImpl implements IProductAO {
 
     @Autowired
     private IProductBO productBO;
+
+    @Autowired
+    private IUserBO userBO;
+
+    @Autowired
+    private IApplyBO applyBO;
 
     @Override
     public String addProduct(XN623000Req req) {
@@ -97,7 +110,23 @@ public class ProductAOImpl implements IProductAO {
             condition);
         List<Product> products = results.getList();
         for (Product product : products) {
-
+            if (StringUtils.isNotBlank(userId)) {
+                User user = userBO.getRemoteUser(userId);
+                Apply apply = applyBO
+                    .getCurrentApply(userId, product.getCode());
+                if (apply != null) {
+                    product.setUserProductStatus(apply.getStatus());
+                } else {
+                    product.setUserProductStatus(EUserProductStatus.TO_APPLY
+                        .getCode());
+                }
+                // to 根据用户等级 判断是否锁定产品
+                product.setIsLocked(EBoolean.NO.getCode());
+            } else {
+                product.setUserProductStatus(EUserProductStatus.TO_APPLY
+                    .getCode());
+                product.setIsLocked(EBoolean.NO.getCode());
+            }
         }
         return results;
     }

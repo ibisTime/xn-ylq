@@ -21,7 +21,7 @@ public class Certification extends ABaseDO {
     private String userId;
 
     // 键
-    private String key;
+    private String certiKey;
 
     // 标识
     private String flag;
@@ -54,12 +54,12 @@ public class Certification extends ABaseDO {
         this.userId = userId;
     }
 
-    public String getKey() {
-        return key;
+    public String getCertiKey() {
+        return certiKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setCertiKey(String certiKey) {
+        this.certiKey = certiKey;
     }
 
     public String getFlag() {

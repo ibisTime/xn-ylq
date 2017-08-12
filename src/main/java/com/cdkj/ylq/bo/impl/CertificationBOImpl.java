@@ -1,5 +1,7 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,11 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
     }
 
     @Override
+    public int refreshCertification(Certification data) {
+        return 0;
+    }
+
+    @Override
     public Certification getCertification(Long id) {
         Certification data = null;
         if (id != null) {
@@ -38,4 +45,20 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
         }
         return data;
     }
+
+    @Override
+    public Certification getCertification(String userId, String certiKey) {
+        Certification condition = new Certification();
+        condition.setUserId(userId);
+        condition.setCertiKey(certiKey);
+        return certificationDAO.select(condition);
+    }
+
+    @Override
+    public List<Certification> queryCertificationList(String userId) {
+        Certification condition = new Certification();
+        condition.setUserId(userId);
+        return certificationDAO.selectList(condition);
+    }
+
 }

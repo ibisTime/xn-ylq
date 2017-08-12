@@ -16,8 +16,8 @@ package com.cdkj.ylq.enums;
 public enum EProductLevel {
     ONE("1", "LV.1"), TWO("2", "LV.2"), THREE("3", "LV.3"), FOUR("4", "LV.4")
 
-    , ONE_COLOR("LV.1颜色", "red"), TWO_COLOR("LV.2颜色", "blue"), THREE_COLOR(
-            "LV.3颜色", "yellow"), FOUR_COLOR("LV.4颜色", "white");
+    , ONE_COLOR("#0cb8ae", "LV.1颜色"), TWO_COLOR("#fba72e", "LV.2颜色"), THREE_COLOR(
+            "#f16254", "LV.3颜色"), FOUR_COLOR("#28a6e6", "LV.4颜色");
 
     EProductLevel(String code, String value) {
         this.code = code;
@@ -27,13 +27,13 @@ public enum EProductLevel {
     public static String getLevelCode(String level) {
         String color = "";
         if (level.equals(EProductLevel.ONE.getCode())) {
-            color = EProductLevel.ONE_COLOR.getValue();
+            color = EProductLevel.ONE_COLOR.getCode();
         } else if (level.equals(EProductLevel.TWO.getCode())) {
-            color = EProductLevel.TWO_COLOR.getValue();
+            color = EProductLevel.TWO_COLOR.getCode();
         } else if (level.equals(EProductLevel.THREE.getCode())) {
-            color = EProductLevel.THREE_COLOR.getValue();
+            color = EProductLevel.THREE_COLOR.getCode();
         } else if (level.equals(EProductLevel.FOUR.getCode())) {
-            color = EProductLevel.FOUR_COLOR.getValue();
+            color = EProductLevel.FOUR_COLOR.getCode();
         }
         return color;
     }

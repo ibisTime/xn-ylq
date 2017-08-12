@@ -1,6 +1,7 @@
 package com.cdkj.ylq.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import com.cdkj.ylq.dao.base.ABaseDO;
 
@@ -49,6 +50,10 @@ public class Apply extends ABaseDO {
 
     // 备注
     private String remark;
+
+    // *** 查询字段 ****
+    // 状态列表
+    private List<String> statusList;
 
     public String getCode() {
         return code;
@@ -144,6 +149,14 @@ public class Apply extends ABaseDO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public List<String> getStatusList() {
+        return statusList;
+    }
+
+    public void setStatusList(List<String> statusList) {
+        this.statusList = statusList;
     }
 
 }
