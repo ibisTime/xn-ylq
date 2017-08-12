@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.ICertificationDAO">
+	<resultMap id="certification_DB_Result" type="certification">
+		<result column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="key" property="key" />
+		<result column="flag" property="flag" />
+		<result column="result" property="result" />
+		<result column="cer_datetime" property="cerDatetime" />
+		<result column="valid_datetime" property="validDatetime" />
+		<result column="ref" property="ref" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="id != null and id != '' ">
+				AND t.id = #{id}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_certification" parameterType="certification" resultMap="certification_DB_Result">
+		SELECT
+		t.id
+		,t.user_id
+		,t.key
+		,t.flag
+		,t.result
+		,t.cer_datetime
+		,t.valid_datetime
+		,t.ref
+		FROM
+		t_certification t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_certification_count" parameterType="certification"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM t_certification t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_certification" parameterType="certification">
+		INSERT INTO
+		t_certification(
+		user_id
+		,key
+		,flag
+		,result
+		,cer_datetime
+		,valid_datetime
+		,ref
+		)
+		VALUES(
+		#{userId}
+		,#{key}
+		,#{flag}
+		,#{result}
+		,#{cerDatetime}
+		,#{validDatetime}
+		,#{ref}
+		)
+	</insert>
+
+	<update id="update_certification" parameterType="certification">
+		UPDATE t_certification
+		SET
+		user_id = #{userId}
+		,key = #{key}
+		,flag = #{flag}
+		,result = #{result}
+		,cer_datetime = #{cerDatetime}
+		,valid_datetime = #{validDatetime}
+		,ref = #{ref}
+		WHERE code = #{code}
+	</update>
+
+
+</mapper>

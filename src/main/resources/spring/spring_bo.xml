@@ -17,6 +17,10 @@
 		<property name="paginableDAO" ref="productDAOImpl"/>
 	</bean>	
 	
+	<bean id="applyBO" class="com.cdkj.ylq.bo.impl.ApplyBOImpl">
+		<property name="paginableDAO" ref="applyDAOImpl"/>
+	</bean>	
+	
 	<bean id="sysDictBO" class="com.cdkj.ylq.bo.impl.SYSDictBOImpl">
 		<property name="paginableDAO" ref="sysDictDAOImpl"/>
 	</bean>	

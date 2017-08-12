@@ -22,6 +22,34 @@ CREATE TABLE `t_product` (
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `t_apply` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
+  `apply_datetime` datetime DEFAULT NULL COMMENT '申请时间',
+  `product_code` varchar(32) DEFAULT NULL COMMENT '产品编号',
+  `status` varchar(32) DEFAULT NULL COMMENT '状态',
+  `sx_amount` bigint(32) DEFAULT NULL COMMENT '授信额度',
+  `approver` varchar(32) DEFAULT NULL COMMENT '审核人',
+  `approve_note` varchar(255) DEFAULT NULL COMMENT '审核说明',
+  `approve_datetime` datetime DEFAULT NULL COMMENT '审核时间',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `t_certification` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `key` varchar(32) DEFAULT NULL COMMENT '键',
+  `flag` varchar(32) DEFAULT NULL COMMENT '标识',
+  `result` text COMMENT '认证结果',
+  `cer_datetime` datetime DEFAULT NULL COMMENT '认证时间',
+  `valid_datetime` datetime DEFAULT NULL COMMENT '有效时间',
+  `ref` varchar(45) DEFAULT NULL COMMENT '关联申请单',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `tsys_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `type` varchar(32) DEFAULT NULL COMMENT '类型',
