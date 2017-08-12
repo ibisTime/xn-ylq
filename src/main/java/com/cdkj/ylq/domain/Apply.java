@@ -51,6 +51,12 @@ public class Apply extends ABaseDO {
     // 备注
     private String remark;
 
+    // *** 辅助字段 ****
+
+    private User user;
+
+    private Product product;
+
     // *** 查询字段 ****
     // 状态列表
     private List<String> statusList;
@@ -157,6 +163,22 @@ public class Apply extends ABaseDO {
 
     public void setStatusList(List<String> statusList) {
         this.statusList = statusList;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
 }

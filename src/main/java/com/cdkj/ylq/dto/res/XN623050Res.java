@@ -8,7 +8,10 @@
  */
 package com.cdkj.ylq.dto.res;
 
+import com.cdkj.ylq.domain.InfoBankcard;
 import com.cdkj.ylq.domain.InfoBasic;
+import com.cdkj.ylq.domain.InfoContact;
+import com.cdkj.ylq.domain.InfoOccupation;
 
 /** 
  * @author: haiqingzheng 
@@ -29,11 +32,20 @@ public class XN623050Res {
     // 职业信息标识
     private String infoOccupationFlag;
 
+    // 职业信息
+    private InfoOccupation infoOccupation;
+
     // 紧急联系人标识
     private String infoContactFlag;
 
+    // 紧急联系人信息
+    private InfoContact infoContact;
+
     // 银行卡标识
     private String infoBankcardFlag;
+
+    // 银行卡信息
+    private InfoBankcard infoBankcard;
 
     // 欺诈信息标识
     private String antifraudFlag;
@@ -147,6 +159,30 @@ public class XN623050Res {
 
     public void setWechatFlag(String wechatFlag) {
         this.wechatFlag = wechatFlag;
+    }
+
+    public InfoOccupation getInfoOccupation() {
+        return infoOccupation;
+    }
+
+    public void setInfoOccupation(InfoOccupation infoOccupation) {
+        this.infoOccupation = infoOccupation;
+    }
+
+    public InfoContact getInfoContact() {
+        return infoContact;
+    }
+
+    public void setInfoContact(InfoContact infoContact) {
+        this.infoContact = infoContact;
+    }
+
+    public InfoBankcard getInfoBankcard() {
+        return infoBankcard;
+    }
+
+    public void setInfoBankcard(InfoBankcard infoBankcard) {
+        this.infoBankcard = infoBankcard;
     }
 
 }

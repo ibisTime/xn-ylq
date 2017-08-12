@@ -17,6 +17,15 @@
 			<if test="id != null and id != '' ">
 				AND t.id = #{id}
 			</if>
+			<if test="userId != null and userId != '' ">
+				AND t.user_id = #{userId}
+			</if>
+			<if test="certiKey != null and certiKey != '' ">
+				AND t.certi_key = #{certiKey}
+			</if>
+			<if test="ref != null and ref != '' ">
+				AND t.ref = #{ref}
+			</if>
 		</trim>
 	</sql>
 	<select id="select_certification" parameterType="certification" resultMap="certification_DB_Result">
@@ -70,14 +79,12 @@
 	<update id="update_certification" parameterType="certification">
 		UPDATE t_certification
 		SET
-		user_id = #{userId}
-		,certi_key = #{certiKey}
-		,flag = #{flag}
+		flag = #{flag}
 		,result = #{result}
 		,cer_datetime = #{cerDatetime}
 		,valid_datetime = #{validDatetime}
 		,ref = #{ref}
-		WHERE code = #{code}
+		WHERE id = #{id}
 	</update>
 
 

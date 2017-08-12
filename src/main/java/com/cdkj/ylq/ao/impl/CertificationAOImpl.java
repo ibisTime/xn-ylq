@@ -16,8 +16,14 @@ import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.InfoBankcard;
 import com.cdkj.ylq.domain.InfoBasic;
+import com.cdkj.ylq.domain.InfoContact;
+import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.dto.req.XN623040Req;
+import com.cdkj.ylq.dto.req.XN623041Req;
+import com.cdkj.ylq.dto.req.XN623042Req;
+import com.cdkj.ylq.dto.req.XN623043Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
@@ -32,35 +38,59 @@ public class CertificationAOImpl implements ICertificationAO {
     private IUserBO userBO;
 
     @Override
-    public String submitBasicInfo(XN623040Req req) {
+    public void submitInfoBasic(XN623040Req req) {
         InfoBasic data = getInfoBasic(req);
         Certification certification = certificationBO.getCertification(
             req.getUserId(), ECertiKey.INFO_BASIC.getCode());
-        if (certification == null) {
-            certification = new Certification();
-            certification.setUserId(req.getUserId());
-            certification.setCertiKey(ECertiKey.INFO_BASIC.getCode());
+        if (certification != null) {
             certification.setFlag(EBoolean.YES.getCode());
             certification.setResult(JsonUtil.Object2Json(data));
             certification.setCerDatetime(new Date());
             certification.setRef("");
-            certificationBO.saveCertification(certification);
-        } else {
+            certificationBO.refreshCertification(certification);
         }
-        return null;
     }
 
-    private InfoBasic getInfoBasic(XN623040Req req) {
-        InfoBasic data = new InfoBasic();
-        data.setEducation(req.getEducation());
-        data.setMarriage(req.getMarriage());
-        data.setChildrenNum(StringValidater.toInteger(req.getChildrenNum()));
-        data.setProvinceCity(req.getProvinceCity());
-        data.setAddress(req.getAddress());
-        data.setLiveTime(req.getLiveTime());
-        data.setQq(req.getQq());
-        data.setEmail(req.getEmail());
-        return data;
+    @Override
+    public void submitInfoOccupation(XN623041Req req) {
+        InfoOccupation data = getInfoOccupation(req);
+        Certification certification = certificationBO.getCertification(
+            req.getUserId(), ECertiKey.INFO_OCCUPATION.getCode());
+        if (certification != null) {
+            certification.setFlag(EBoolean.YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(data));
+            certification.setCerDatetime(new Date());
+            certification.setRef("");
+            certificationBO.refreshCertification(certification);
+        }
+    }
+
+    @Override
+    public void submitInfoContact(XN623042Req req) {
+        InfoContact data = getInfoContact(req);
+        Certification certification = certificationBO.getCertification(
+            req.getUserId(), ECertiKey.INFO_CONTACT.getCode());
+        if (certification != null) {
+            certification.setFlag(EBoolean.YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(data));
+            certification.setCerDatetime(new Date());
+            certification.setRef("");
+            certificationBO.refreshCertification(certification);
+        }
+    }
+
+    @Override
+    public void submitInfoBankcard(XN623043Req req) {
+        InfoBankcard data = getInfoBankcard(req);
+        Certification certification = certificationBO.getCertification(
+            req.getUserId(), ECertiKey.INFO_BANKCARD.getCode());
+        if (certification != null) {
+            certification.setFlag(EBoolean.YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(data));
+            certification.setCerDatetime(new Date());
+            certification.setRef("");
+            certificationBO.refreshCertification(certification);
+        }
     }
 
     @Override
@@ -97,25 +127,37 @@ public class CertificationAOImpl implements ICertificationAO {
             if (ECertiKey.INFO_BASIC.getCode().equals(
                 certification.getCertiKey())) {
                 res.setInfoBasicFlag(certification.getFlag());
+                if (EBoolean.YES.getCode().equals(certification.getFlag())) {
+                    res.setInfoBasic(JsonUtil.json2Bean(
+                        certification.getResult(), InfoBasic.class));
+                }
             }
             if (ECertiKey.INFO_OCCUPATION.getCode().equals(
                 certification.getCertiKey())) {
                 res.setInfoOccupationFlag(certification.getFlag());
+                if (EBoolean.YES.getCode().equals(certification.getFlag())) {
+                    res.setInfoOccupation(JsonUtil.json2Bean(
+                        certification.getResult(), InfoOccupation.class));
+                }
             }
             if (ECertiKey.INFO_CONTACT.getCode().equals(
                 certification.getCertiKey())) {
                 res.setInfoContactFlag(certification.getFlag());
+                if (EBoolean.YES.getCode().equals(certification.getFlag())) {
+                    res.setInfoContact(JsonUtil.json2Bean(
+                        certification.getResult(), InfoContact.class));
+                }
             }
             if (ECertiKey.INFO_BANKCARD.getCode().equals(
                 certification.getCertiKey())) {
                 res.setInfoBankcardFlag(certification.getFlag());
+                if (EBoolean.YES.getCode().equals(certification.getFlag())) {
+                    res.setInfoBankcard(JsonUtil.json2Bean(
+                        certification.getResult(), InfoBankcard.class));
+                }
             }
         }
         return res;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(Boolean.valueOf("true"));
     }
 
     private List<Certification> initialCertification(String userId) {
@@ -155,4 +197,47 @@ public class CertificationAOImpl implements ICertificationAO {
 
         return certifications;
     }
+
+    private InfoBasic getInfoBasic(XN623040Req req) {
+        InfoBasic data = new InfoBasic();
+        data.setEducation(req.getEducation());
+        data.setMarriage(req.getMarriage());
+        data.setChildrenNum(StringValidater.toInteger(req.getChildrenNum()));
+        data.setProvinceCity(req.getProvinceCity());
+        data.setAddress(req.getAddress());
+        data.setLiveTime(req.getLiveTime());
+        data.setQq(req.getQq());
+        data.setEmail(req.getEmail());
+        return data;
+    }
+
+    private InfoOccupation getInfoOccupation(XN623041Req req) {
+        InfoOccupation data = new InfoOccupation();
+        data.setOccupation(req.getOccupation());
+        data.setIncome(StringValidater.toLong(req.getIncome()));
+        data.setCompany(req.getCompany());
+        data.setProvinceCity(req.getProvinceCity());
+        data.setAddress(req.getAddress());
+        data.setPhone(req.getPhone());
+        return data;
+    }
+
+    private InfoContact getInfoContact(XN623042Req req) {
+        InfoContact data = new InfoContact();
+        data.setFamilyRelation(req.getFamilyRelation());
+        data.setFamilyMobile(req.getFamilyMobile());
+        data.setSocietyRelation(req.getSocietyRelation());
+        data.setSocietyMobile(req.getSocietyMobile());
+        return data;
+    }
+
+    private InfoBankcard getInfoBankcard(XN623043Req req) {
+        InfoBankcard data = new InfoBankcard();
+        data.setBank(req.getBank());
+        data.setPrivinceCity(req.getPrivinceCity());
+        data.setMobile(req.getMobile());
+        data.setCardNo(req.getCardNo());
+        return data;
+    }
+
 }

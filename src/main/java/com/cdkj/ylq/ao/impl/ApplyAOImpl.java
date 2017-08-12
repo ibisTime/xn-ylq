@@ -1,12 +1,14 @@
 package com.cdkj.ylq.ao.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cdkj.ylq.ao.IApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
+import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.core.OrderNoGenerater;
@@ -23,6 +25,9 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Autowired
     private IUserBO userBO;
+
+    @Autowired
+    private IProductBO productBO;
 
     @Override
     public String submitApply(String applyUser, String productCode) {
@@ -62,7 +67,14 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Override
     public Paginable<Apply> queryApplyPage(int start, int limit, Apply condition) {
-        return applyBO.getPaginable(start, limit, condition);
+        Paginable<Apply> results = applyBO
+            .getPaginable(start, limit, condition);
+        List<Apply> applyList = results.getList();
+        for (Apply apply : applyList) {
+            apply.setUser(userBO.getRemoteUser(apply.getApplyUser()));
+            apply.setProduct(productBO.getProduct(apply.getProductCode()));
+        }
+        return results;
     }
 
     @Override

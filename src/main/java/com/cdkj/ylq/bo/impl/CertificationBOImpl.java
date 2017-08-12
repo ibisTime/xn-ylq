@@ -29,7 +29,7 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
 
     @Override
     public int refreshCertification(Certification data) {
-        return 0;
+        return certificationDAO.updateCertification(data);
     }
 
     @Override
