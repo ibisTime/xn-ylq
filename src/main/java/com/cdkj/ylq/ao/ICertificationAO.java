@@ -26,6 +26,9 @@ public interface ICertificationAO {
     // 芝麻认证查询
     public XN798014Res doZhimaQuery(String userId, String bizNo);
 
+    // 提交身份认证
+    public void submitIdentifyInfo(String userId);
+
     // 提交个人基本信息
     public void submitInfoBasic(XN623040Req req);
 

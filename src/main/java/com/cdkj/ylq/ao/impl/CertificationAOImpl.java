@@ -116,6 +116,39 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
+    public void submitIdentifyInfo(String userId) {
+        userBO.getRemoteUser(userId);
+        XN623050Res certiInfo = getCertiInfo(userId);
+        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyPicFlag())) {
+            throw new BizException("xn623000", "请先在上传身份证");
+        }
+        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFaceFlag())) {
+            throw new BizException("xn623000", "请先进行人脸识别");
+        }
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_IDENTIFY.getCode());
+        if (certification != null) {
+            certification.setFlag(EBoolean.YES.getCode());
+            certification.setCerDatetime(new Date());
+            certification.setResult(JsonUtil.Object2Json(certiInfo
+                .getInfoIdentifyFace()));
+            certification.setRef("");
+            certificationBO.refreshCertification(certification);
+        } else {
+            certification = new Certification();
+            certification.setUserId(userId);
+            certification.setCertiKey(ECertiKey.INFO_IDENTIFY.getCode());
+            certification.setFlag(EBoolean.YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(JsonUtil
+                .Object2Json(certiInfo.getInfoIdentifyFace())));
+            certification.setCerDatetime(new Date());
+            certification.setRef("");
+            certificationBO.saveCertification(certification);
+        }
+
+    }
+
+    @Override
     public void submitInfoBasic(XN623040Req req) {
         InfoBasic data = getInfoBasic(req);
         Certification certification = certificationBO.getCertification(
@@ -126,6 +159,16 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
+        } else {
+            certification = new Certification();
+            certification.setUserId(req.getUserId());
+            certification.setCertiKey(ECertiKey.INFO_BASIC.getCode());
+            certification.setFlag(EBoolean.YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(JsonUtil
+                .Object2Json(data)));
+            certification.setCerDatetime(new Date());
+            certification.setRef("");
+            certificationBO.saveCertification(certification);
         }
     }
 
@@ -140,6 +183,16 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
+        } else {
+            certification = new Certification();
+            certification.setUserId(req.getUserId());
+            certification.setCertiKey(ECertiKey.INFO_OCCUPATION.getCode());
+            certification.setFlag(EBoolean.YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(JsonUtil
+                .Object2Json(data)));
+            certification.setCerDatetime(new Date());
+            certification.setRef("");
+            certificationBO.saveCertification(certification);
         }
     }
 
@@ -154,6 +207,16 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
+        } else {
+            certification = new Certification();
+            certification.setUserId(req.getUserId());
+            certification.setCertiKey(ECertiKey.INFO_CONTACT.getCode());
+            certification.setFlag(EBoolean.YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(JsonUtil
+                .Object2Json(data)));
+            certification.setCerDatetime(new Date());
+            certification.setRef("");
+            certificationBO.saveCertification(certification);
         }
     }
 
@@ -168,6 +231,16 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
+        } else {
+            certification = new Certification();
+            certification.setUserId(req.getUserId());
+            certification.setCertiKey(ECertiKey.INFO_BANKCARD.getCode());
+            certification.setFlag(EBoolean.YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(JsonUtil
+                .Object2Json(data)));
+            certification.setCerDatetime(new Date());
+            certification.setRef("");
+            certificationBO.saveCertification(certification);
         }
     }
 
@@ -176,11 +249,8 @@ public class CertificationAOImpl implements ICertificationAO {
             String wifiMac, String imei) {
         User user = userBO.getRemoteUser(userId);
         XN623050Res certiInfo = getCertiInfo(userId);
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyPicFlag())) {
-            throw new BizException("xn623000", "请先在身份认证中上传身份证");
-        }
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
-            throw new BizException("xn623000", "请先在身份认证中进行人脸识别认证");
+            throw new BizException("xn623000", "请先进行身份认证");
         }
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoBasicFlag())) {
             throw new BizException("xn623000", "请先完善基本信息");
@@ -192,7 +262,7 @@ public class CertificationAOImpl implements ICertificationAO {
             throw new BizException("xn623000", "请先完善紧急联系人信息");
         }
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoContactFlag())) {
-            throw new BizException("xn623000", "请先完成银行卡认证");
+            throw new BizException("xn623000", "请先完善银行卡信息");
         }
         InfoBasic infoBasic = certiInfo.getInfoBasic();
         InfoBankcard infoBankcard = certiInfo.getInfoBankcard();
@@ -229,11 +299,8 @@ public class CertificationAOImpl implements ICertificationAO {
     public InfoZMCredit doZhimaCreditScoreGet(String userId) {
         User user = userBO.getRemoteUser(userId);
         XN623050Res certiInfo = getCertiInfo(userId);
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyPicFlag())) {
-            throw new BizException("xn623000", "请先在身份认证中上传身份证");
-        }
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
-            throw new BizException("xn623000", "请先在身份认证中进行人脸识别认证");
+            throw new BizException("xn623000", "请先进行身份认证");
         }
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoAntifraudFlag())) {
             throw new BizException("xn623000", "请先提交基本信息");
@@ -305,8 +372,6 @@ public class CertificationAOImpl implements ICertificationAO {
     @Override
     @Transactional
     public XN623050Res getCertiInfo(String userId) {
-        // 查询用户ID是否真实存在
-        userBO.getRemoteUser(userId);
         // 获取认证结果
         List<Certification> certifications = certificationBO
             .queryCertificationList(userId);
@@ -345,6 +410,7 @@ public class CertificationAOImpl implements ICertificationAO {
     private XN623050Res transferCertiInfo(List<Certification> certifications) {
         XN623050Res res = new XN623050Res();
         res.setInfoIdentifyPicFlag(EBoolean.NO.getCode());
+        res.setInfoIdentifyFaceFlag(EBoolean.NO.getCode());
         res.setInfoIdentifyFlag(EBoolean.NO.getCode());
         res.setInfoBasicFlag(EBoolean.NO.getCode());
         res.setInfoOccupationFlag(EBoolean.NO.getCode());
@@ -354,14 +420,6 @@ public class CertificationAOImpl implements ICertificationAO {
         res.setInfoZMCreditFlag(EBoolean.NO.getCode());
         res.setInfoCarrierFlag(EBoolean.NO.getCode());
         for (Certification certification : certifications) {
-            if (ECertiKey.INFO_IDENTIFY.getCode().equals(
-                certification.getCertiKey())) {
-                res.setInfoIdentifyFlag(certification.getFlag());
-                if (EBoolean.YES.getCode().equals(certification.getFlag())) {
-                    res.setInfoIdentify(JsonUtil.json2Bean(
-                        certification.getResult(), InfoIdentify.class));
-                }
-            }
             if (ECertiKey.INFO_IDENTIFY_PIC.getCode().equals(
                 certification.getCertiKey())) {
                 res.setInfoIdentifyPicFlag(certification.getFlag());
@@ -370,6 +428,23 @@ public class CertificationAOImpl implements ICertificationAO {
                         certification.getResult(), InfoIdentifyPic.class));
                 }
             }
+            if (ECertiKey.INFO_IDENTIFY_FACE.getCode().equals(
+                certification.getCertiKey())) {
+                res.setInfoIdentifyFaceFlag(certification.getFlag());
+                if (EBoolean.YES.getCode().equals(certification.getFlag())) {
+                    res.setInfoIdentifyFace(JsonUtil.json2Bean(
+                        certification.getResult(), InfoIdentify.class));
+                }
+            }
+            if (ECertiKey.INFO_IDENTIFY.getCode().equals(
+                certification.getCertiKey())) {
+                res.setInfoIdentifyFlag(certification.getFlag());
+                if (EBoolean.YES.getCode().equals(certification.getFlag())) {
+                    res.setInfoIdentify(JsonUtil.json2Bean(
+                        certification.getResult(), InfoIdentify.class));
+                }
+            }
+
             if (ECertiKey.INFO_BASIC.getCode().equals(
                 certification.getCertiKey())) {
                 res.setInfoBasicFlag(certification.getFlag());
@@ -447,6 +522,14 @@ public class CertificationAOImpl implements ICertificationAO {
         identifyPic.setFlag(EBoolean.NO.getCode());
         certificationBO.saveCertification(identifyPic);
         certifications.add(identifyPic);
+
+        // 人脸识别
+        Certification identifyFace = new Certification();
+        identifyFace.setUserId(userId);
+        identifyFace.setCertiKey(ECertiKey.INFO_IDENTIFY_FACE.getCode());
+        identifyFace.setFlag(EBoolean.NO.getCode());
+        certificationBO.saveCertification(identifyFace);
+        certifications.add(identifyFace);
 
         // 基本信息
         Certification certification1 = new Certification();

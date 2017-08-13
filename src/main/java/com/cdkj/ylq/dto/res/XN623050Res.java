@@ -27,6 +27,24 @@ public class XN623050Res {
     // 用户编号
     private String userId;
 
+    // 身份证上传标识
+    private String infoIdentifyPicFlag;
+
+    // 身份证照片信息
+    private InfoIdentifyPic infoIdentifyPic;
+
+    // 人脸标识标识
+    private String infoIdentifyFaceFlag;
+
+    // 实名认证信息
+    private InfoIdentify infoIdentifyFace;
+
+    // 身份认证标识
+    private String infoIdentifyFlag;
+
+    // 实名认证信息
+    private InfoIdentify infoIdentify;
+
     // 基本信息标识
     private String infoBasicFlag;
 
@@ -63,18 +81,6 @@ public class XN623050Res {
     // 芝麻信用结果
     private InfoZMCredit infoZMCredit;
 
-    // 身份认证标识
-    private String infoIdentifyFlag;
-
-    // 实名认证信息
-    private InfoIdentify infoIdentify;
-
-    // 身份证上传标识
-    private String infoIdentifyPicFlag;
-
-    // 身份证照片信息
-    private InfoIdentifyPic infoIdentifyPic;
-
     // 运营商标识
     private String infoCarrierFlag;
 
@@ -90,6 +96,46 @@ public class XN623050Res {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getInfoIdentifyPicFlag() {
+        return infoIdentifyPicFlag;
+    }
+
+    public void setInfoIdentifyPicFlag(String infoIdentifyPicFlag) {
+        this.infoIdentifyPicFlag = infoIdentifyPicFlag;
+    }
+
+    public InfoIdentifyPic getInfoIdentifyPic() {
+        return infoIdentifyPic;
+    }
+
+    public void setInfoIdentifyPic(InfoIdentifyPic infoIdentifyPic) {
+        this.infoIdentifyPic = infoIdentifyPic;
+    }
+
+    public String getInfoIdentifyFaceFlag() {
+        return infoIdentifyFaceFlag;
+    }
+
+    public void setInfoIdentifyFaceFlag(String infoIdentifyFaceFlag) {
+        this.infoIdentifyFaceFlag = infoIdentifyFaceFlag;
+    }
+
+    public InfoIdentify getInfoIdentifyFace() {
+        return infoIdentifyFace;
+    }
+
+    public void setInfoIdentifyFace(InfoIdentify infoIdentifyFace) {
+        this.infoIdentifyFace = infoIdentifyFace;
+    }
+
+    public String getInfoIdentifyFlag() {
+        return infoIdentifyFlag;
+    }
+
+    public void setInfoIdentifyFlag(String infoIdentifyFlag) {
+        this.infoIdentifyFlag = infoIdentifyFlag;
     }
 
     public String getInfoBasicFlag() {
@@ -188,36 +234,12 @@ public class XN623050Res {
         this.infoZMCredit = infoZMCredit;
     }
 
-    public String getInfoIdentifyFlag() {
-        return infoIdentifyFlag;
-    }
-
-    public void setInfoIdentifyFlag(String infoIdentifyFlag) {
-        this.infoIdentifyFlag = infoIdentifyFlag;
-    }
-
     public InfoIdentify getInfoIdentify() {
         return infoIdentify;
     }
 
     public void setInfoIdentify(InfoIdentify infoIdentify) {
         this.infoIdentify = infoIdentify;
-    }
-
-    public String getInfoIdentifyPicFlag() {
-        return infoIdentifyPicFlag;
-    }
-
-    public void setInfoIdentifyPicFlag(String infoIdentifyPicFlag) {
-        this.infoIdentifyPicFlag = infoIdentifyPicFlag;
-    }
-
-    public InfoIdentifyPic getInfoIdentifyPic() {
-        return infoIdentifyPic;
-    }
-
-    public void setInfoIdentifyPic(InfoIdentifyPic infoIdentifyPic) {
-        this.infoIdentifyPic = infoIdentifyPic;
     }
 
     public String getInfoCarrierFlag() {

@@ -14,9 +14,11 @@ package com.cdkj.ylq.enums;
  * @history:
  */
 public enum ECertiKey {
-    INFO_IDENTIFY("INFO_IDENTIFY", "实名认证信息")
+    INFO_IDENTIFY("INFO_IDENTIFY", "实名认证提交")
 
     , INFO_IDENTIFY_PIC("INFO_IDENTIFY_PIC", "身份证照片")
+
+    , INFO_IDENTIFY_FACE("INFO_IDENTIFY_FACE", "人脸识别")
 
     , INFO_BASIC("INFO_BASIC", "基本信息")
 
