@@ -48,7 +48,7 @@ public class XN623907 extends AProcessor {
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = ISYSDictAO.DEFAULT_ORDER_COLUMN;
         }
-        condition.setOrder(orderColumn, req.getOrderDir());
+        condition.setOrder(orderColumn, "asc");
         return sysDictAO.querySysDictList(condition);
     }
 

@@ -19,8 +19,19 @@ public class XN623030Req extends APageReq {
 
     private static final long serialVersionUID = 1845471254089653851L;
 
-    // 状态（选填）
+    // 状态
+    private String status;
+
+    // 状态List（选填）
     private List<String> statusList;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public List<String> getStatusList() {
         return statusList;

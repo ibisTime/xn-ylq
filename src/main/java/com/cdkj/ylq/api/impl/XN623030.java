@@ -38,6 +38,7 @@ public class XN623030 extends AProcessor {
     @Override
     public Object doBusiness() throws BizException {
         Apply condition = new Apply();
+        condition.setStatus(req.getStatus());
         condition.setStatusList(req.getStatusList());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {

@@ -26,6 +26,8 @@ public class BizConnecter {
 
     public static final String ACCOUNT_URL = PropertiesUtil.Config.ACCOUNT_URL;
 
+    public static final String CERTI_URL = PropertiesUtil.Config.CERTI_URL;
+
     public static final String POST_URL = "...";
 
     public static <T> T getBizData(String code, String json, Class<T> clazz) {
@@ -63,6 +65,8 @@ public class BizConnecter {
             postUrl = USER_URL;
         } else if (code.startsWith("802") || code.startsWith("002")) {
             postUrl = ACCOUNT_URL;
+        } else if (code.startsWith("798")) {
+            postUrl = CERTI_URL;
         }
         return postUrl;
     }

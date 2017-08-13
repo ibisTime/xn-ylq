@@ -2,14 +2,27 @@ package com.cdkj.ylq.ao;
 
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
 import com.cdkj.ylq.dto.req.XN623042Req;
 import com.cdkj.ylq.dto.req.XN623043Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
+import com.cdkj.ylq.dto.res.XN798013Res;
+import com.cdkj.ylq.dto.res.XN798014Res;
 
 public interface ICertificationAO {
     static final String DEFAULT_ORDER_COLUMN = "apply_datetime";
+
+    // 提交身份证照片
+    public void submitIdentifyPic(String userId, String pic);
+
+    // 芝麻认证第一步，返回bizNo
+    public XN798013Res doZhimaVerify(String userId, String idKind, String idNo,
+            String realName, String returnUrl, String localCheck, String remark);
+
+    // 芝麻认证查询
+    public XN798014Res doZhimaQuery(String userId, String bizNo);
 
     // 提交个人基本信息
     public void submitInfoBasic(XN623040Req req);
@@ -23,7 +36,14 @@ public interface ICertificationAO {
     // 提交银行卡信息
     public void submitInfoBankcard(XN623043Req req);
 
-    // 查询个人认证信息
+    // 提交个人信息，开始欺诈认证
+    public void submitPersonalInfo(String userId, String ip, String mac,
+            String wifiMac, String imei);
+
+    // 芝麻信用分查询（同时查询行业关注名单）
+    public InfoZMCredit doZhimaCreditScoreGet(String userId);
+
+    // 查询个人超详细的认证信息（可形成用户报告）
     public XN623050Res getCertiInfo(String userId);
 
     public Paginable<Certification> queryCertificationPage(int start,

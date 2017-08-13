@@ -31,6 +31,8 @@ public class PropertiesUtil {
 
         public static String ACCOUNT_URL = props.getProperty("ACCOUNT_URL");
 
+        public static String CERTI_URL = props.getProperty("CERTI_URL");
+
         public static String PAY_BACK_URL = props.getProperty("PAY_BACK_URL");
 
     }

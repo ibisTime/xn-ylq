@@ -49,14 +49,14 @@ public class XN001400Res {
     // 分成比例
     private String divRate;
 
-    // 公司编号
-    private String companyCode;
-
     // 关注数
     private String totalFollowNum;
 
     // 粉丝数
     private String totalFansNum;
+
+    // 公司编号
+    private String companyCode;
 
     // 系统编号
     private String systemCode;
