@@ -43,12 +43,13 @@ CREATE TABLE `t_certification` (
   `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
   `certi_key` varchar(32) DEFAULT NULL COMMENT '键',
   `flag` varchar(32) DEFAULT NULL COMMENT '标识',
-  `result` text COMMENT '认证结果',
+  `result` longtext COMMENT '认证结果',
   `cer_datetime` datetime DEFAULT NULL COMMENT '认证时间',
   `valid_datetime` datetime DEFAULT NULL COMMENT '有效时间',
   `ref` varchar(45) DEFAULT NULL COMMENT '关联申请单',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `tsys_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',

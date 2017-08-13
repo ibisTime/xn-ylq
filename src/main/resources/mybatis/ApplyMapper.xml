@@ -100,19 +100,14 @@
 		)
 	</insert>
 
-	<update id="update_apply" parameterType="apply">
+	<update id="update_approve" parameterType="apply">
 		UPDATE t_apply
 		SET
-		apply_user = #{applyUser}
-		,product_code = #{productCode}
-		,status = #{status}
+		status = #{status}
 		,sx_amount = #{sxAmount}
 		,approver = #{approver}
 		,approve_note = #{approveNote}
 		,approve_datetime = #{approveDatetime}
-		,updater = #{updater}
-		,update_datetime = #{updateDatetime}
-		,remark = #{remark}
 		WHERE code = #{code}
 	</update>
 	

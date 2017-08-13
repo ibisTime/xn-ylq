@@ -5,15 +5,23 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
+import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
+import com.cdkj.ylq.common.DateUtil;
+import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.domain.Apply;
+import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.enums.EApplyStatus;
+import com.cdkj.ylq.enums.EBoolean;
+import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.exception.BizException;
 
@@ -28,6 +36,9 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Autowired
     private IProductBO productBO;
+
+    @Autowired
+    private ICertificationBO certificationBO;
 
     @Override
     public String submitApply(String applyUser, String productCode) {
@@ -63,6 +74,48 @@ public class ApplyAOImpl implements IApplyAO {
         }
         applyBO.cancel(apply);
 
+    }
+
+    @Override
+    @Transactional
+    public void doApprove(String code, String approveResult, Long sxAmount,
+            String approver, String approveNote) {
+        Apply apply = applyBO.getApply(code);
+        if (!EApplyStatus.TO_APPROVE.getCode().equals(apply.getStatus())) {
+            throw new BizException("xn623021", "该申请记录不处于待审核状态");
+        }
+        String status = EApplyStatus.APPROVE_NO.getCode();
+        if (EBoolean.YES.getCode().equals(approveResult)) {
+            status = EApplyStatus.APPROVE_YES.getCode();
+            // 落地授信信息
+            InfoAmount infoAmount = new InfoAmount();
+            infoAmount.setSxAmount(sxAmount);
+            Certification certification = certificationBO.getCertification(
+                apply.getApplyUser(), ECertiKey.INFO_AMOUNT.getCode());
+            if (certification != null) {
+                certification.setFlag(EBoolean.YES.getCode());
+                certification.setResult(JsonUtil.Object2Json(infoAmount));
+                certification.setCerDatetime(new Date());
+                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                    DateUtil.getTodayStart(), 7));
+                certification.setRef(apply.getCode());
+                certificationBO.refreshCertification(certification);
+            } else {
+                certification = new Certification();
+                certification.setUserId(apply.getApplyUser());
+                certification.setCertiKey(ECertiKey.INFO_AMOUNT.getCode());
+                certification.setFlag(EBoolean.YES.getCode());
+                certification.setResult(JsonUtil.Object2Json(sxAmount));
+                certification.setCerDatetime(new Date());
+                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                    DateUtil.getTodayStart(), 7));
+                certification.setRef(apply.getCode());
+                certificationBO.saveCertification(certification);
+            }
+        } else {
+            sxAmount = 0L;
+        }
+        applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
     }
 
     @Override

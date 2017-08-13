@@ -2,7 +2,9 @@ package com.cdkj.ylq.ao;
 
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
 import com.cdkj.ylq.dto.req.XN623042Req;
@@ -43,8 +45,14 @@ public interface ICertificationAO {
     // 芝麻信用分查询（同时查询行业关注名单）
     public InfoZMCredit doZhimaCreditScoreGet(String userId);
 
+    // 魔蝎运营商认证
+    public MxReportData doCarrierVerify(String userId, String taskId);
+
     // 查询个人超详细的认证信息（可形成用户报告）
     public XN623050Res getCertiInfo(String userId);
+
+    // 查询我的授信额度
+    public InfoAmount getMyCreditAmount(String userId);
 
     public Paginable<Certification> queryCertificationPage(int start,
             int limit, Certification condition);

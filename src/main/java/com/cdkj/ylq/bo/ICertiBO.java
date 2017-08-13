@@ -10,6 +10,7 @@ package com.cdkj.ylq.bo;
 
 import com.cdkj.ylq.domain.InfoAntifraud;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.dto.res.XN798013Res;
 import com.cdkj.ylq.dto.res.XN798014Res;
 import com.cdkj.ylq.dto.res.XN798015Res;
@@ -65,4 +66,7 @@ public interface ICertiBO {
     // 行业关注名单
     public XN798016Res doZhimaCreditWatchlistiiGet(String systemCode,
             String companyCode, String idNo, String realName);
+
+    // 魔蝎报告查询
+    public MxReportData doMxReportDataGet(String taskId);
 }

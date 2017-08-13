@@ -28,7 +28,11 @@ public enum ECertiKey {
 
     , INFO_ANTIFRAUD("INFO_ANTIFRAUD", "欺诈信息")
 
-    , INFO_ZMCREDIT("INFO_ZMCREDIT", "芝麻信用认证");
+    , INFO_ZMCREDIT("INFO_ZMCREDIT", "芝麻信用认证")
+
+    , INFO_CARRIER("INFO_CARRIER", "运营商认证")
+
+    , INFO_AMOUNT("INFO_AMOUNT", "授信额度");
 
     ECertiKey(String code, String value) {
         this.code = code;

@@ -50,4 +50,9 @@ public class ApplyDAOImpl extends AMybatisTemplate implements IApplyDAO {
         return super.update(NAMESPACE.concat("update_cancel"), data);
     }
 
+    @Override
+    public int updateApprove(Apply data) {
+        return super.update(NAMESPACE.concat("update_approve"), data);
+    }
+
 }

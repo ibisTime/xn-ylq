@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.cdkj.ylq.bo.ICertiBO;
 import com.cdkj.ylq.domain.InfoAntifraud;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.dto.req.XN798013Req;
 import com.cdkj.ylq.dto.req.XN798014Req;
 import com.cdkj.ylq.dto.req.XN798015Req;
@@ -20,6 +21,7 @@ import com.cdkj.ylq.dto.req.XN798016Req;
 import com.cdkj.ylq.dto.req.XN798019Req;
 import com.cdkj.ylq.dto.req.XN798020Req;
 import com.cdkj.ylq.dto.req.XN798021Req;
+import com.cdkj.ylq.dto.req.XN798552Req;
 import com.cdkj.ylq.dto.res.XN798013Res;
 import com.cdkj.ylq.dto.res.XN798014Res;
 import com.cdkj.ylq.dto.res.XN798015Res;
@@ -200,6 +202,14 @@ public class CertiBOImpl implements ICertiBO {
         req.setIdNo(idNo);
         return BizConnecter.getBizData("798016", JsonUtils.object2Json(req),
             XN798016Res.class);
+    }
+
+    @Override
+    public MxReportData doMxReportDataGet(String taskId) {
+        XN798552Req req = new XN798552Req();
+        req.setTaskId(taskId);
+        return BizConnecter.getBizData("798552", JsonUtils.object2Json(req),
+            MxReportData.class);
     }
 
 }

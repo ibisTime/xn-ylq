@@ -7,4 +7,6 @@ public interface IApplyDAO extends IBaseDAO<Apply> {
     String NAMESPACE = IApplyDAO.class.getName().concat(".");
 
     public int updateCancel(Apply data);
+
+    public int updateApprove(Apply data);
 }

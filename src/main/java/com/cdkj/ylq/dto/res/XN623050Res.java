@@ -15,6 +15,7 @@ import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.InfoIdentify;
 import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
+import com.cdkj.ylq.domain.InfoZMCredit;
 
 /** 
  * @author: haiqingzheng 
@@ -51,42 +52,37 @@ public class XN623050Res {
     private InfoBankcard infoBankcard;
 
     // 欺诈信息标识
-    private String antifraudFlag;
+    private String infoAntifraudFlag;
 
     // 欺诈信息
     private InfoAntifraud infoAntifraud;
 
-    // 芝麻分标识
-    private String zhimaScoreFlag;
+    // 芝麻信用标识
+    private String infoZMCreditFlag;
+
+    // 芝麻信用结果
+    private InfoZMCredit infoZMCredit;
 
     // 身份认证标识
-    private String identifyFlag;
+    private String infoIdentifyFlag;
 
     // 实名认证信息
     private InfoIdentify infoIdentify;
 
     // 身份证上传标识
-    private String identifyPicFlag;
+    private String infoIdentifyPicFlag;
 
     // 身份证照片信息
     private InfoIdentifyPic infoIdentifyPic;
 
     // 运营商标识
-    private String carrierFlag;
+    private String infoCarrierFlag;
 
     // 通讯录标识
     private String addressBookFlag;
 
     // 通讯录标识
     private String wechatFlag;
-
-    public InfoAntifraud getInfoAntifraud() {
-        return infoAntifraud;
-    }
-
-    public void setInfoAntifraud(InfoAntifraud infoAntifraud) {
-        this.infoAntifraud = infoAntifraud;
-    }
 
     public String getUserId() {
         return userId;
@@ -120,12 +116,28 @@ public class XN623050Res {
         this.infoOccupationFlag = infoOccupationFlag;
     }
 
+    public InfoOccupation getInfoOccupation() {
+        return infoOccupation;
+    }
+
+    public void setInfoOccupation(InfoOccupation infoOccupation) {
+        this.infoOccupation = infoOccupation;
+    }
+
     public String getInfoContactFlag() {
         return infoContactFlag;
     }
 
     public void setInfoContactFlag(String infoContactFlag) {
         this.infoContactFlag = infoContactFlag;
+    }
+
+    public InfoContact getInfoContact() {
+        return infoContact;
+    }
+
+    public void setInfoContact(InfoContact infoContact) {
+        this.infoContact = infoContact;
     }
 
     public String getInfoBankcardFlag() {
@@ -136,44 +148,84 @@ public class XN623050Res {
         this.infoBankcardFlag = infoBankcardFlag;
     }
 
-    public String getAntifraudFlag() {
-        return antifraudFlag;
+    public InfoBankcard getInfoBankcard() {
+        return infoBankcard;
     }
 
-    public void setAntifraudFlag(String antifraudFlag) {
-        this.antifraudFlag = antifraudFlag;
+    public void setInfoBankcard(InfoBankcard infoBankcard) {
+        this.infoBankcard = infoBankcard;
     }
 
-    public String getZhimaScoreFlag() {
-        return zhimaScoreFlag;
+    public String getInfoAntifraudFlag() {
+        return infoAntifraudFlag;
     }
 
-    public void setZhimaScoreFlag(String zhimaScoreFlag) {
-        this.zhimaScoreFlag = zhimaScoreFlag;
+    public void setInfoAntifraudFlag(String infoAntifraudFlag) {
+        this.infoAntifraudFlag = infoAntifraudFlag;
     }
 
-    public String getIdentifyFlag() {
-        return identifyFlag;
+    public InfoAntifraud getInfoAntifraud() {
+        return infoAntifraud;
     }
 
-    public void setIdentifyFlag(String identifyFlag) {
-        this.identifyFlag = identifyFlag;
+    public void setInfoAntifraud(InfoAntifraud infoAntifraud) {
+        this.infoAntifraud = infoAntifraud;
     }
 
-    public String getIdentifyPicFlag() {
-        return identifyPicFlag;
+    public String getInfoZMCreditFlag() {
+        return infoZMCreditFlag;
     }
 
-    public void setIdentifyPicFlag(String identifyPicFlag) {
-        this.identifyPicFlag = identifyPicFlag;
+    public void setInfoZMCreditFlag(String infoZMCreditFlag) {
+        this.infoZMCreditFlag = infoZMCreditFlag;
     }
 
-    public String getCarrierFlag() {
-        return carrierFlag;
+    public InfoZMCredit getInfoZMCredit() {
+        return infoZMCredit;
     }
 
-    public void setCarrierFlag(String carrierFlag) {
-        this.carrierFlag = carrierFlag;
+    public void setInfoZMCredit(InfoZMCredit infoZMCredit) {
+        this.infoZMCredit = infoZMCredit;
+    }
+
+    public String getInfoIdentifyFlag() {
+        return infoIdentifyFlag;
+    }
+
+    public void setInfoIdentifyFlag(String infoIdentifyFlag) {
+        this.infoIdentifyFlag = infoIdentifyFlag;
+    }
+
+    public InfoIdentify getInfoIdentify() {
+        return infoIdentify;
+    }
+
+    public void setInfoIdentify(InfoIdentify infoIdentify) {
+        this.infoIdentify = infoIdentify;
+    }
+
+    public String getInfoIdentifyPicFlag() {
+        return infoIdentifyPicFlag;
+    }
+
+    public void setInfoIdentifyPicFlag(String infoIdentifyPicFlag) {
+        this.infoIdentifyPicFlag = infoIdentifyPicFlag;
+    }
+
+    public InfoIdentifyPic getInfoIdentifyPic() {
+        return infoIdentifyPic;
+    }
+
+    public void setInfoIdentifyPic(InfoIdentifyPic infoIdentifyPic) {
+        this.infoIdentifyPic = infoIdentifyPic;
+    }
+
+    public String getInfoCarrierFlag() {
+        return infoCarrierFlag;
+    }
+
+    public void setInfoCarrierFlag(String infoCarrierFlag) {
+        this.infoCarrierFlag = infoCarrierFlag;
     }
 
     public String getAddressBookFlag() {
@@ -190,46 +242,6 @@ public class XN623050Res {
 
     public void setWechatFlag(String wechatFlag) {
         this.wechatFlag = wechatFlag;
-    }
-
-    public InfoOccupation getInfoOccupation() {
-        return infoOccupation;
-    }
-
-    public void setInfoOccupation(InfoOccupation infoOccupation) {
-        this.infoOccupation = infoOccupation;
-    }
-
-    public InfoContact getInfoContact() {
-        return infoContact;
-    }
-
-    public void setInfoContact(InfoContact infoContact) {
-        this.infoContact = infoContact;
-    }
-
-    public InfoBankcard getInfoBankcard() {
-        return infoBankcard;
-    }
-
-    public void setInfoBankcard(InfoBankcard infoBankcard) {
-        this.infoBankcard = infoBankcard;
-    }
-
-    public InfoIdentify getInfoIdentify() {
-        return infoIdentify;
-    }
-
-    public void setInfoIdentify(InfoIdentify infoIdentify) {
-        this.infoIdentify = infoIdentify;
-    }
-
-    public InfoIdentifyPic getInfoIdentifyPic() {
-        return infoIdentifyPic;
-    }
-
-    public void setInfoIdentifyPic(InfoIdentifyPic infoIdentifyPic) {
-        this.infoIdentifyPic = infoIdentifyPic;
     }
 
 }

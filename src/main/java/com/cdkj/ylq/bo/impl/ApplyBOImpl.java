@@ -43,6 +43,17 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
     }
 
     @Override
+    public void doApprove(Apply data, String status, Long sxAmount,
+            String approver, String remark) {
+        data.setStatus(status);
+        data.setSxAmount(sxAmount);
+        data.setApprover(approver);
+        data.setApproveDatetime(new Date());
+        data.setApproveNote(remark);
+        applyDAO.updateApprove(data);
+    }
+
+    @Override
     public Apply getApply(String code) {
         Apply data = null;
         if (StringUtils.isNotBlank(code)) {

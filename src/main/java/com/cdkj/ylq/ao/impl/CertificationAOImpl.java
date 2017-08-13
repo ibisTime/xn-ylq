@@ -17,6 +17,7 @@ import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoAntifraud;
 import com.cdkj.ylq.domain.InfoBankcard;
 import com.cdkj.ylq.domain.InfoBasic;
@@ -25,6 +26,7 @@ import com.cdkj.ylq.domain.InfoIdentify;
 import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
@@ -174,10 +176,10 @@ public class CertificationAOImpl implements ICertificationAO {
             String wifiMac, String imei) {
         User user = userBO.getRemoteUser(userId);
         XN623050Res certiInfo = getCertiInfo(userId);
-        if (EBoolean.NO.getCode().equals(certiInfo.getIdentifyPicFlag())) {
+        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyPicFlag())) {
             throw new BizException("xn623000", "请先在身份认证中上传身份证");
         }
-        if (EBoolean.NO.getCode().equals(certiInfo.getIdentifyFlag())) {
+        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
             throw new BizException("xn623000", "请先在身份认证中进行人脸识别认证");
         }
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoBasicFlag())) {
@@ -227,13 +229,13 @@ public class CertificationAOImpl implements ICertificationAO {
     public InfoZMCredit doZhimaCreditScoreGet(String userId) {
         User user = userBO.getRemoteUser(userId);
         XN623050Res certiInfo = getCertiInfo(userId);
-        if (EBoolean.NO.getCode().equals(certiInfo.getIdentifyPicFlag())) {
+        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyPicFlag())) {
             throw new BizException("xn623000", "请先在身份认证中上传身份证");
         }
-        if (EBoolean.NO.getCode().equals(certiInfo.getIdentifyFlag())) {
+        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
             throw new BizException("xn623000", "请先在身份认证中进行人脸识别认证");
         }
-        if (EBoolean.NO.getCode().equals(certiInfo.getAntifraudFlag())) {
+        if (EBoolean.NO.getCode().equals(certiInfo.getInfoAntifraudFlag())) {
             throw new BizException("xn623000", "请先提交基本信息");
         }
         InfoIdentify infoIdentify = certiInfo.getInfoIdentify();
@@ -264,6 +266,32 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
+    public MxReportData doCarrierVerify(String userId, String taskId) {
+        MxReportData mxReportData = certiBO.doMxReportDataGet(taskId);
+        if (mxReportData != null) {
+            Certification certification = certificationBO.getCertification(
+                userId, ECertiKey.INFO_CARRIER.getCode());
+            if (certification != null) {
+                certification.setFlag(EBoolean.YES.getCode());
+                certification.setResult(mxReportData.getReportData());
+                certification.setCerDatetime(new Date());
+                certification.setRef("");
+                certificationBO.refreshCertification(certification);
+            } else {
+                certification = new Certification();
+                certification.setUserId(userId);
+                certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
+                certification.setFlag(EBoolean.YES.getCode());
+                certification.setResult(mxReportData.getReportData());
+                certification.setCerDatetime(new Date());
+                certification.setRef("");
+                certificationBO.saveCertification(certification);
+            }
+        }
+        return mxReportData;
+    }
+
+    @Override
     public Paginable<Certification> queryCertificationPage(int start,
             int limit, Certification condition) {
         return certificationBO.getPaginable(start, limit, condition);
@@ -291,21 +319,44 @@ public class CertificationAOImpl implements ICertificationAO {
         return res;
     }
 
+    @Override
+    public InfoAmount getMyCreditAmount(String userId) {
+        InfoAmount infoAmount = null;
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_AMOUNT.getCode());
+        if (certification != null) {
+            infoAmount = JsonUtil.json2Bean(certification.getResult(),
+                InfoAmount.class);
+            infoAmount.setValidDatetime(certification.getValidDatetime());
+        } else {
+            infoAmount = new InfoAmount();
+            infoAmount.setSxAmount(0L);
+            Certification creditAmount = new Certification();
+            creditAmount.setUserId(userId);
+            creditAmount.setCertiKey(ECertiKey.INFO_AMOUNT.getCode());
+            creditAmount.setFlag(EBoolean.NO.getCode());
+            infoAmount.setSxAmount(0L);
+            creditAmount.setResult(JsonUtil.Object2Json(infoAmount));
+            certificationBO.saveCertification(creditAmount);
+        }
+        return infoAmount;
+    }
+
     private XN623050Res transferCertiInfo(List<Certification> certifications) {
         XN623050Res res = new XN623050Res();
-        res.setIdentifyPicFlag(EBoolean.NO.getCode());
-        res.setIdentifyFlag(EBoolean.NO.getCode());
+        res.setInfoIdentifyPicFlag(EBoolean.NO.getCode());
+        res.setInfoIdentifyFlag(EBoolean.NO.getCode());
         res.setInfoBasicFlag(EBoolean.NO.getCode());
         res.setInfoOccupationFlag(EBoolean.NO.getCode());
         res.setInfoContactFlag(EBoolean.NO.getCode());
         res.setInfoBankcardFlag(EBoolean.NO.getCode());
-        res.setAntifraudFlag(EBoolean.NO.getCode());
-        res.setZhimaScoreFlag(EBoolean.NO.getCode());
-        res.setCarrierFlag(EBoolean.NO.getCode());
+        res.setInfoAntifraudFlag(EBoolean.NO.getCode());
+        res.setInfoZMCreditFlag(EBoolean.NO.getCode());
+        res.setInfoCarrierFlag(EBoolean.NO.getCode());
         for (Certification certification : certifications) {
             if (ECertiKey.INFO_IDENTIFY.getCode().equals(
                 certification.getCertiKey())) {
-                res.setIdentifyFlag(certification.getFlag());
+                res.setInfoIdentifyFlag(certification.getFlag());
                 if (EBoolean.YES.getCode().equals(certification.getFlag())) {
                     res.setInfoIdentify(JsonUtil.json2Bean(
                         certification.getResult(), InfoIdentify.class));
@@ -313,7 +364,7 @@ public class CertificationAOImpl implements ICertificationAO {
             }
             if (ECertiKey.INFO_IDENTIFY_PIC.getCode().equals(
                 certification.getCertiKey())) {
-                res.setIdentifyPicFlag(certification.getFlag());
+                res.setInfoIdentifyPicFlag(certification.getFlag());
                 if (EBoolean.YES.getCode().equals(certification.getFlag())) {
                     res.setInfoIdentifyPic(JsonUtil.json2Bean(
                         certification.getResult(), InfoIdentifyPic.class));
@@ -354,11 +405,25 @@ public class CertificationAOImpl implements ICertificationAO {
 
             if (ECertiKey.INFO_ANTIFRAUD.getCode().equals(
                 certification.getCertiKey())) {
-                res.setAntifraudFlag(certification.getFlag());
+                res.setInfoAntifraudFlag(certification.getFlag());
                 if (EBoolean.YES.getCode().equals(certification.getFlag())) {
                     res.setInfoAntifraud(JsonUtil.json2Bean(
                         certification.getResult(), InfoAntifraud.class));
                 }
+            }
+
+            if (ECertiKey.INFO_ZMCREDIT.getCode().equals(
+                certification.getCertiKey())) {
+                res.setInfoZMCreditFlag(certification.getFlag());
+                if (EBoolean.YES.getCode().equals(certification.getFlag())) {
+                    res.setInfoZMCredit(JsonUtil.json2Bean(
+                        certification.getResult(), InfoZMCredit.class));
+                }
+            }
+
+            if (ECertiKey.INFO_CARRIER.getCode().equals(
+                certification.getCertiKey())) {
+                res.setInfoCarrierFlag(certification.getFlag());
             }
         }
         return res;
@@ -422,6 +487,33 @@ public class CertificationAOImpl implements ICertificationAO {
         antifraud.setFlag(EBoolean.NO.getCode());
         certificationBO.saveCertification(antifraud);
         certifications.add(antifraud);
+
+        // 芝麻认证
+        Certification zmCredit = new Certification();
+        zmCredit.setUserId(userId);
+        zmCredit.setCertiKey(ECertiKey.INFO_ZMCREDIT.getCode());
+        zmCredit.setFlag(EBoolean.NO.getCode());
+        certificationBO.saveCertification(zmCredit);
+        certifications.add(zmCredit);
+
+        // 运营商认证
+        Certification carrier = new Certification();
+        carrier.setUserId(userId);
+        carrier.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
+        carrier.setFlag(EBoolean.NO.getCode());
+        certificationBO.saveCertification(carrier);
+        certifications.add(carrier);
+
+        // 授信额度
+        Certification creditAmount = new Certification();
+        creditAmount.setUserId(userId);
+        creditAmount.setCertiKey(ECertiKey.INFO_AMOUNT.getCode());
+        creditAmount.setFlag(EBoolean.NO.getCode());
+        InfoAmount infoAmount = new InfoAmount();
+        infoAmount.setSxAmount(0L);
+        creditAmount.setResult(JsonUtil.Object2Json(infoAmount));
+        certificationBO.saveCertification(creditAmount);
+        certifications.add(creditAmount);
 
         return certifications;
     }
