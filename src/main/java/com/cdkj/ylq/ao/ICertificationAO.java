@@ -12,6 +12,7 @@ import com.cdkj.ylq.dto.req.XN623043Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
 import com.cdkj.ylq.dto.res.XN798013Res;
 import com.cdkj.ylq.dto.res.XN798014Res;
+import com.cdkj.ylq.enums.ECertiKey;
 
 public interface ICertificationAO {
     static final String DEFAULT_ORDER_COLUMN = "apply_datetime";
@@ -53,6 +54,9 @@ public interface ICertificationAO {
 
     // 查询个人超详细的认证信息（可形成用户报告）
     public XN623050Res getCertiInfo(String userId);
+
+    // 根据认证类型获取认证信息
+    public Object getCertiInfo(ECertiKey certiKey);
 
     // 查询我的授信额度
     public InfoAmount getMyCreditAmount(String userId);

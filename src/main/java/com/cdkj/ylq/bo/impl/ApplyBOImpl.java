@@ -84,4 +84,10 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
         return applyDAO.select(condition);
     }
 
+    @Override
+    public void toDoApprove(Apply data) {
+        data.setStatus(EApplyStatus.TO_APPROVE.getCode());
+        applyDAO.updateToDoApprove(data);
+    }
+
 }

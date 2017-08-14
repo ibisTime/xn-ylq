@@ -8,5 +8,7 @@ public interface IApplyDAO extends IBaseDAO<Apply> {
 
     public int updateCancel(Apply data);
 
+    public int updateToDoApprove(Apply data);
+
     public int updateApprove(Apply data);
 }

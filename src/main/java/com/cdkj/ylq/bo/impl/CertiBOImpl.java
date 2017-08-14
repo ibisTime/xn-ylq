@@ -70,19 +70,23 @@ public class CertiBOImpl implements ICertiBO {
     }
 
     @Override
-    public InfoAntifraud doZhimaCreditAntifraud(String mobile, String idNo,
-            String realName, String cardNo, String email, String address,
-            String ip, String mac, String wifiMac, String imei) {
+    public InfoAntifraud doZhimaCreditAntifraud(String systemCode,
+            String companyCode, String mobile, String idNo, String realName,
+            String cardNo, String email, String address, String ip, String mac,
+            String wifiMac, String imei) {
         InfoAntifraud infoAntifraud = new InfoAntifraud();
         // 欺诈评分
-        XN798019Res xn798019Res = this.doZhimaCreditAntifraudScoreGet(mobile,
-            idNo, realName, cardNo, email, address, ip, mac, wifiMac, imei);
+        XN798019Res xn798019Res = this.doZhimaCreditAntifraudScoreGet(
+            systemCode, companyCode, mobile, idNo, realName, cardNo, email,
+            address, ip, mac, wifiMac, imei);
         // 欺诈信息验证
-        XN798020Res xn798020Res = this.doZhimaCreditAntifraudVerify(mobile,
-            idNo, realName, cardNo, email, address, ip, mac, wifiMac, imei);
+        XN798020Res xn798020Res = this.doZhimaCreditAntifraudVerify(systemCode,
+            companyCode, mobile, idNo, realName, cardNo, email, address, ip,
+            mac, wifiMac, imei);
         // 欺诈关注清单
-        XN798021Res xn798021Res = this.doZhimaCreditAntifraudRiskList(mobile,
-            idNo, realName, cardNo, email, address, ip, mac, wifiMac, imei);
+        XN798021Res xn798021Res = this.doZhimaCreditAntifraudRiskList(
+            systemCode, companyCode, mobile, idNo, realName, cardNo, email,
+            address, ip, mac, wifiMac, imei);
         // 调用结果组装
         infoAntifraud.setScore(xn798019Res.getScore());
         infoAntifraud.setVerifyInfoList(xn798020Res.getVerifyInfoList());
@@ -118,10 +122,13 @@ public class CertiBOImpl implements ICertiBO {
      * @see com.cdkj.ylq.bo.ICertiBO#doZhimaCreditAntifraudScoreGet(com.cdkj.ylq.dto.req.XN798019Req)
      */
     @Override
-    public XN798019Res doZhimaCreditAntifraudScoreGet(String mobile,
-            String idNo, String realName, String cardNo, String email,
-            String address, String ip, String mac, String wifiMac, String imei) {
+    public XN798019Res doZhimaCreditAntifraudScoreGet(String systemCode,
+            String companyCode, String mobile, String idNo, String realName,
+            String cardNo, String email, String address, String ip, String mac,
+            String wifiMac, String imei) {
         XN798019Req req = new XN798019Req();
+        req.setSystemCode(systemCode);
+        req.setCompanyCode(companyCode);
         req.setMobile(mobile);
         req.setIdNo(idNo);
         req.setRealName(realName);
@@ -140,10 +147,13 @@ public class CertiBOImpl implements ICertiBO {
      * @see com.cdkj.ylq.bo.ICertiBO#doZhimaCreditAntifraudVerify(com.cdkj.ylq.dto.req.XN798020Req)
      */
     @Override
-    public XN798020Res doZhimaCreditAntifraudVerify(String mobile, String idNo,
-            String realName, String cardNo, String email, String address,
-            String ip, String mac, String wifiMac, String imei) {
+    public XN798020Res doZhimaCreditAntifraudVerify(String systemCode,
+            String companyCode, String mobile, String idNo, String realName,
+            String cardNo, String email, String address, String ip, String mac,
+            String wifiMac, String imei) {
         XN798020Req req = new XN798020Req();
+        req.setSystemCode(systemCode);
+        req.setCompanyCode(companyCode);
         req.setMobile(mobile);
         req.setIdNo(idNo);
         req.setRealName(realName);
@@ -162,10 +172,13 @@ public class CertiBOImpl implements ICertiBO {
      * @see com.cdkj.ylq.bo.ICertiBO#doZhimaCreditAntifraudRiskList(com.cdkj.ylq.dto.req.XN798021Req)
      */
     @Override
-    public XN798021Res doZhimaCreditAntifraudRiskList(String mobile,
-            String idNo, String realName, String cardNo, String email,
-            String address, String ip, String mac, String wifiMac, String imei) {
+    public XN798021Res doZhimaCreditAntifraudRiskList(String systemCode,
+            String companyCode, String mobile, String idNo, String realName,
+            String cardNo, String email, String address, String ip, String mac,
+            String wifiMac, String imei) {
         XN798021Req req = new XN798021Req();
+        req.setSystemCode(systemCode);
+        req.setCompanyCode(companyCode);
         req.setMobile(mobile);
         req.setIdNo(idNo);
         req.setRealName(realName);

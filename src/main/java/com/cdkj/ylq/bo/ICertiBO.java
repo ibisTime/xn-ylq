@@ -36,28 +36,32 @@ public interface ICertiBO {
             String bizNo);
 
     // 开始芝麻欺诈三认证
-    public InfoAntifraud doZhimaCreditAntifraud(String mobile, String idNo,
-            String realName, String cardNo, String email, String address,
-            String ip, String mac, String wifiMac, String imei);
+    public InfoAntifraud doZhimaCreditAntifraud(String systemCode,
+            String companyCode, String mobile, String idNo, String realName,
+            String cardNo, String email, String address, String ip, String mac,
+            String wifiMac, String imei);
 
     // 开始芝麻信用认证，信用分查询+行业关注名单查询
     public InfoZMCredit doZhimaCreditGet(String systemCode, String companyCode,
             String realName, String idNo);
 
     // 申请欺诈评分
-    public XN798019Res doZhimaCreditAntifraudScoreGet(String mobile,
-            String idNo, String realName, String cardNo, String email,
-            String address, String ip, String mac, String wifiMac, String imei);
+    public XN798019Res doZhimaCreditAntifraudScoreGet(String systemCode,
+            String companyCode, String mobile, String idNo, String realName,
+            String cardNo, String email, String address, String ip, String mac,
+            String wifiMac, String imei);
 
     // 欺诈信息验证
-    public XN798020Res doZhimaCreditAntifraudVerify(String mobile, String idNo,
-            String realName, String cardNo, String email, String address,
-            String ip, String mac, String wifiMac, String imei);
+    public XN798020Res doZhimaCreditAntifraudVerify(String systemCode,
+            String companyCode, String mobile, String idNo, String realName,
+            String cardNo, String email, String address, String ip, String mac,
+            String wifiMac, String imei);
 
     // 欺诈关注清单
-    public XN798021Res doZhimaCreditAntifraudRiskList(String mobile,
-            String idNo, String realName, String cardNo, String email,
-            String address, String ip, String mac, String wifiMac, String imei);
+    public XN798021Res doZhimaCreditAntifraudRiskList(String systemCode,
+            String companyCode, String mobile, String idNo, String realName,
+            String cardNo, String email, String address, String ip, String mac,
+            String wifiMac, String imei);
 
     // 芝麻信用分查询
     public XN798015Res doZhimaCreditScoreGet(String systemCode,

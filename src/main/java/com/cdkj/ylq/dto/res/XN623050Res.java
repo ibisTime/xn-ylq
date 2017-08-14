@@ -84,11 +84,22 @@ public class XN623050Res {
     // 运营商标识
     private String infoCarrierFlag;
 
+    // 运营商报告
+    private String infoCarrier;
+
     // 通讯录标识
     private String addressBookFlag;
 
     // 通讯录标识
     private String wechatFlag;
+
+    public String getInfoCarrier() {
+        return infoCarrier;
+    }
+
+    public void setInfoCarrier(String infoCarrier) {
+        this.infoCarrier = infoCarrier;
+    }
 
     public String getUserId() {
         return userId;

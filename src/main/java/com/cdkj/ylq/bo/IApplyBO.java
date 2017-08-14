@@ -9,6 +9,8 @@ public interface IApplyBO extends IPaginableBO<Apply> {
 
     public void cancel(Apply data);
 
+    public void toDoApprove(Apply data);
+
     public void doApprove(Apply data, String status, Long sxAmount,
             String approver, String remark);
 

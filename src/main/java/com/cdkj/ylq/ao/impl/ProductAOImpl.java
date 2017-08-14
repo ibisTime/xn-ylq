@@ -121,7 +121,12 @@ public class ProductAOImpl implements IProductAO {
                         .getCode());
                 }
                 // to 根据用户等级 判断是否锁定产品
-                product.setIsLocked(EBoolean.NO.getCode());
+                if (EProductLevel.ONE.getCode().equals(product.getLevel())) {
+                    product.setIsLocked(EBoolean.NO.getCode());
+                } else {
+                    product.setIsLocked(EBoolean.YES.getCode());
+                }
+
             } else {
                 product.setUserProductStatus(EUserProductStatus.TO_APPLY
                     .getCode());

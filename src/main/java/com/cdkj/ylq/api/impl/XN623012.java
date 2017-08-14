@@ -47,7 +47,7 @@ public class XN623012 extends AProcessor {
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = IProductAO.DEFAULT_ORDER_COLUMN;
         }
-        condition.setOrder(orderColumn, req.getOrderDir());
+        condition.setOrder(orderColumn, "asc");
         int start = StringValidater.toInteger(req.getStart());
         int limit = StringValidater.toInteger(req.getLimit());
         return productAO.queryProductPage(start, limit, condition,

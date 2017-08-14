@@ -132,7 +132,10 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Override
     public Apply getApply(String code) {
-        return applyBO.getApply(code);
+        Apply apply = applyBO.getApply(code);
+        apply.setUser(userBO.getRemoteUser(apply.getApplyUser()));
+        apply.setProduct(productBO.getProduct(apply.getProductCode()));
+        return apply;
     }
 
 }

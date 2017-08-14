@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.ICertificationAO;
+import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.ICertiBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.StringValidater;
+import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoAntifraud;
@@ -50,6 +52,9 @@ public class CertificationAOImpl implements ICertificationAO {
 
     @Autowired
     private ICertiBO certiBO;
+
+    @Autowired
+    private IApplyBO applyBO;
 
     @Override
     public void submitIdentifyPic(String userId, String pic) {
@@ -94,7 +99,7 @@ public class CertificationAOImpl implements ICertificationAO {
             infoIdentify.setRealName(res.getRealName());
             infoIdentify.setIdNo(res.getIdNo());
             Certification certification = certificationBO.getCertification(
-                userId, ECertiKey.INFO_IDENTIFY.getCode());
+                userId, ECertiKey.INFO_IDENTIFY_FACE.getCode());
             if (certification != null) {
                 certification.setFlag(EBoolean.YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoIdentify));
@@ -104,7 +109,8 @@ public class CertificationAOImpl implements ICertificationAO {
             } else {
                 certification = new Certification();
                 certification.setUserId(userId);
-                certification.setCertiKey(ECertiKey.INFO_IDENTIFY.getCode());
+                certification.setCertiKey(ECertiKey.INFO_IDENTIFY_FACE
+                    .getCode());
                 certification.setFlag(EBoolean.YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoIdentify));
                 certification.setCerDatetime(new Date());
@@ -127,11 +133,11 @@ public class CertificationAOImpl implements ICertificationAO {
         }
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_IDENTIFY.getCode());
+        InfoIdentify infoIdentify = certiInfo.getInfoIdentifyFace();
         if (certification != null) {
             certification.setFlag(EBoolean.YES.getCode());
             certification.setCerDatetime(new Date());
-            certification.setResult(JsonUtil.Object2Json(certiInfo
-                .getInfoIdentifyFace()));
+            certification.setResult(JsonUtil.Object2Json(infoIdentify));
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         } else {
@@ -139,8 +145,7 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setUserId(userId);
             certification.setCertiKey(ECertiKey.INFO_IDENTIFY.getCode());
             certification.setFlag(EBoolean.YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(JsonUtil
-                .Object2Json(certiInfo.getInfoIdentifyFace())));
+            certification.setResult(JsonUtil.Object2Json(infoIdentify));
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.saveCertification(certification);
@@ -269,9 +274,9 @@ public class CertificationAOImpl implements ICertificationAO {
         InfoIdentify infoIdentify = certiInfo.getInfoIdentify();
 
         InfoAntifraud infoAntifraud = certiBO.doZhimaCreditAntifraud(
-            user.getMobile(), infoIdentify.getIdNo(),
-            infoIdentify.getRealName(), infoBankcard.getCardNo(),
-            infoBasic.getEmail(),
+            user.getSystemCode(), user.getCompanyCode(), user.getMobile(),
+            infoIdentify.getIdNo(), infoIdentify.getRealName(),
+            infoBankcard.getCardNo(), infoBasic.getEmail(),
             infoBasic.getProvinceCity() + infoBasic.getAddress(), ip, mac,
             wifiMac, imei);
 
@@ -333,6 +338,7 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
+    @Transactional
     public MxReportData doCarrierVerify(String userId, String taskId) {
         MxReportData mxReportData = certiBO.doMxReportDataGet(taskId);
         if (mxReportData != null) {
@@ -353,6 +359,10 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setCerDatetime(new Date());
                 certification.setRef("");
                 certificationBO.saveCertification(certification);
+            }
+            Apply apply = applyBO.getCurrentApply(userId, null);
+            if (apply != null) {
+                applyBO.toDoApprove(apply);
             }
         }
         return mxReportData;
@@ -382,6 +392,11 @@ public class CertificationAOImpl implements ICertificationAO {
         // 组装认证结果信息
         XN623050Res res = transferCertiInfo(certifications);
         return res;
+    }
+
+    @Override
+    public Object getCertiInfo(ECertiKey certiKey) {
+        return null;
     }
 
     @Override
@@ -419,6 +434,7 @@ public class CertificationAOImpl implements ICertificationAO {
         res.setInfoAntifraudFlag(EBoolean.NO.getCode());
         res.setInfoZMCreditFlag(EBoolean.NO.getCode());
         res.setInfoCarrierFlag(EBoolean.NO.getCode());
+
         for (Certification certification : certifications) {
             if (ECertiKey.INFO_IDENTIFY_PIC.getCode().equals(
                 certification.getCertiKey())) {
@@ -499,6 +515,9 @@ public class CertificationAOImpl implements ICertificationAO {
             if (ECertiKey.INFO_CARRIER.getCode().equals(
                 certification.getCertiKey())) {
                 res.setInfoCarrierFlag(certification.getFlag());
+                if (EBoolean.YES.getCode().equals(certification.getFlag())) {
+                    res.setInfoCarrier(certification.getResult());
+                }
             }
         }
         return res;
