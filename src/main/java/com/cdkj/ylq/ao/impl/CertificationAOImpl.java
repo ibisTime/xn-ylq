@@ -169,8 +169,7 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setUserId(req.getUserId());
             certification.setCertiKey(ECertiKey.INFO_BASIC.getCode());
             certification.setFlag(EBoolean.YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(JsonUtil
-                .Object2Json(data)));
+            certification.setResult(JsonUtil.Object2Json(data));
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.saveCertification(certification);
@@ -193,8 +192,7 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setUserId(req.getUserId());
             certification.setCertiKey(ECertiKey.INFO_OCCUPATION.getCode());
             certification.setFlag(EBoolean.YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(JsonUtil
-                .Object2Json(data)));
+            certification.setResult(JsonUtil.Object2Json(data));
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.saveCertification(certification);
@@ -217,8 +215,7 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setUserId(req.getUserId());
             certification.setCertiKey(ECertiKey.INFO_CONTACT.getCode());
             certification.setFlag(EBoolean.YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(JsonUtil
-                .Object2Json(data)));
+            certification.setResult(JsonUtil.Object2Json(data));
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.saveCertification(certification);
@@ -241,8 +238,7 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setUserId(req.getUserId());
             certification.setCertiKey(ECertiKey.INFO_BANKCARD.getCode());
             certification.setFlag(EBoolean.YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(JsonUtil
-                .Object2Json(data)));
+            certification.setResult(JsonUtil.Object2Json(data));
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.saveCertification(certification);

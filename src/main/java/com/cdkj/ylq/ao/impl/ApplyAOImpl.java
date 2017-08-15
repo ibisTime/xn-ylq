@@ -11,6 +11,7 @@ import com.cdkj.ylq.ao.IApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
+import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
@@ -40,12 +41,34 @@ public class ApplyAOImpl implements IApplyAO {
     @Autowired
     private ICertificationBO certificationBO;
 
+    @Autowired
+    private ISmsOutBO smsOutBO;
+
     @Override
     public String submitApply(String applyUser, String productCode) {
         userBO.getRemoteUser(applyUser);
-        Apply apply = applyBO.getCurrentApply(applyUser, productCode);
+        String status = EApplyStatus.TO_CERTI.getCode();
+        Certification identify = certificationBO.getCertification(applyUser,
+            ECertiKey.INFO_IDENTIFY.getCode());
+        Certification antifraud = certificationBO.getCertification(applyUser,
+            ECertiKey.INFO_ANTIFRAUD.getCode());
+        Certification zmcredit = certificationBO.getCertification(applyUser,
+            ECertiKey.INFO_ZMCREDIT.getCode());
+        Certification carrier = certificationBO.getCertification(applyUser,
+            ECertiKey.INFO_CARRIER.getCode());
+        if (identify != null && antifraud != null && zmcredit != null
+                && carrier != null) {
+            if (EBoolean.YES.getCode().equals(identify.getFlag())
+                    && EBoolean.YES.getCode().equals(antifraud.getFlag())
+                    && EBoolean.YES.getCode().equals(zmcredit.getFlag())
+                    && EBoolean.YES.getCode().equals(carrier.getFlag())) {
+                status = EApplyStatus.TO_APPROVE.getCode();
+            }
+        }
+
+        Apply apply = applyBO.getCurrentApply(applyUser, null);
         if (apply != null) {
-            throw new BizException("xn623020", "您已经有贷款申请");
+            throw new BizException("xn623020", "您已经有一个申请");
         }
         Apply data = new Apply();
         String code = OrderNoGenerater.generateM(EGeneratePrefix.APPLY
@@ -54,7 +77,7 @@ public class ApplyAOImpl implements IApplyAO {
         data.setApplyUser(applyUser);
         data.setApplyDatetime(new Date());
         data.setProductCode(productCode);
-        data.setStatus(EApplyStatus.TO_CERTI.getCode());
+        data.setStatus(status);
         data.setUpdater(applyUser);
         data.setUpdateDatetime(new Date());
         data.setRemark("新申请");
@@ -116,6 +139,12 @@ public class ApplyAOImpl implements IApplyAO {
             sxAmount = 0L;
         }
         applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
+
+        String content = "恭喜您，您的借款申请已经通过审核，请登录APP进行自助借款操作";
+        if (EBoolean.NO.getCode().equals(approveResult)) {
+            content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote + "，请登录APP查看详情。";
+        }
+        smsOutBO.sentContent(apply.getApplyUser(), content);
     }
 
     @Override

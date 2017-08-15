@@ -130,7 +130,11 @@ public class ProductAOImpl implements IProductAO {
             } else {
                 product.setUserProductStatus(EUserProductStatus.TO_APPLY
                     .getCode());
-                product.setIsLocked(EBoolean.NO.getCode());
+                if (EProductLevel.ONE.getCode().equals(product.getLevel())) {
+                    product.setIsLocked(EBoolean.NO.getCode());
+                } else {
+                    product.setIsLocked(EBoolean.YES.getCode());
+                }
             }
         }
         return results;
