@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.ICouponDAO">
+	<resultMap id="coupon_DB_Result" type="coupon">
+		<result column="code" property="code" />
+		<result column="type" property="type" />
+		<result column="get_condition" property="condition" />
+		<result column="amount" property="amount" />
+		<result column="valid_days" property="validDays" />
+		<result column="start_amount" property="startAmount" />
+		<result column="status" property="status" />
+		<result column="updater" property="updater" />
+		<result column="update_datetime" property="updateDatetime" />
+		<result column="remark" property="remark" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_coupon" parameterType="coupon" resultMap="coupon_DB_Result">
+		SELECT
+		t.code
+		,t.type
+		,t.get_condition
+		,t.amount
+		,t.valid_days
+		,t.start_amount
+		,t.status
+		,t.updater
+		,t.update_datetime
+		,t.remark
+		FROM
+		t_coupon t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_coupon_count" parameterType="coupon"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM t_coupon t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_coupon" parameterType="coupon">
+		INSERT INTO
+		t_coupon(
+		code
+		,type
+		,get_condition
+		,amount
+		,valid_days
+		,start_amount
+		,status
+		,updater
+		,update_datetime
+		,remark
+		)
+		VALUES(
+		#{code}
+		,#{type}
+		,#{condition}
+		,#{amount}
+		,#{validDays}
+		,#{startAmount}
+		,#{status}
+		,#{updater}
+		,#{updateDatetime}
+		,#{remark}
+		)
+	</insert>
+
+	<update id="update_coupon" parameterType="coupon">
+		UPDATE t_coupon
+		SET
+		type = #{type}
+		,get_condition = #{condition}
+		,amount = #{amount}
+		,valid_days = #{validDays}
+		,start_amount = #{startAmount}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+
+    <update id="update_status" parameterType="coupon">
+		UPDATE t_coupon
+		SET
+		status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+
+</mapper>

@@ -50,6 +50,47 @@ CREATE TABLE `t_certification` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
+CREATE TABLE `t_borrow` (
+  `code` varchar(32) NOT NULL COMMENT '编号（合同编号）',
+  `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
+  `sign_datetime` datetime DEFAULT NULL COMMENT '签约时间',
+  `amount` bigint(32) DEFAULT NULL COMMENT '借款金额',
+  `duration` int(11) DEFAULT NULL COMMENT '借款时长',
+  `fk_datetime` datetime DEFAULT NULL COMMENT '放款时间',
+  `jx_datetime` datetime DEFAULT NULL COMMENT '计息时间',
+  `hk_datetime` datetime DEFAULT NULL COMMENT '约定还款时间',
+  `real_hk_datetime` datetime DEFAULT NULL COMMENT '实际还款时间',
+  `lx_amount` bigint(32) DEFAULT NULL COMMENT '正常应付利息',
+  `xs_amount` bigint(32) DEFAULT NULL COMMENT '快速信审费',
+  `gl_amount` bigint(32) DEFAULT NULL COMMENT '账户管理费',
+  `fw_amount` bigint(32) DEFAULT NULL COMMENT '服务费',
+  `yh_amount` bigint(32) DEFAULT NULL COMMENT '优惠金额',
+  `rate1` decimal(18,8) DEFAULT NULL COMMENT '7天内逾期利率',
+  `rate2` decimal(18,8) DEFAULT NULL COMMENT '7天外逾期利率',
+  `yqlx_amount` bigint(32) DEFAULT NULL COMMENT '逾期利息',
+  `yq_days` int(11) DEFAULT NULL COMMENT '逾期天数',
+  `status` varchar(32) DEFAULT NULL COMMENT '状态',
+  `updater` varchar(32) DEFAULT NULL COMMENT '最后更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '最后更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `t_coupon` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `type` varchar(32) DEFAULT NULL COMMENT '类型',
+  `condition` int(11) DEFAULT NULL COMMENT '获得条件',
+  `amount` bigint(32) DEFAULT NULL COMMENT '金额',
+  `valid_days` int(11) DEFAULT NULL COMMENT '有效天数',
+  `start_amount` bigint(32) DEFAULT NULL COMMENT '起用金额',
+  `status` varchar(32) DEFAULT NULL COMMENT '状态',
+  `updater` varchar(32) DEFAULT NULL COMMENT '最后更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '最后更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 CREATE TABLE `tsys_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',

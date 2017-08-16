@@ -5,6 +5,7 @@
 	    <typeAlias alias="product" type="com.cdkj.ylq.domain.Product" />
 	    <typeAlias alias="apply" type="com.cdkj.ylq.domain.Apply" />
 	    <typeAlias alias="certification" type="com.cdkj.ylq.domain.Certification" />
+	    <typeAlias alias="coupon" type="com.cdkj.ylq.domain.Coupon" />
 		
 	    <typeAlias alias="sysDict" type="com.cdkj.ylq.domain.SYSDict" />
 	    <typeAlias alias="sysConfig" type="com.cdkj.ylq.domain.SYSConfig" />
