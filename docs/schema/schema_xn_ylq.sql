@@ -79,7 +79,7 @@ CREATE TABLE `t_borrow` (
 CREATE TABLE `t_coupon` (
   `code` varchar(32) NOT NULL COMMENT '编号',
   `type` varchar(32) DEFAULT NULL COMMENT '类型',
-  `condition` int(11) DEFAULT NULL COMMENT '获得条件',
+  `get_condition` int(11) DEFAULT NULL COMMENT '获得条件',
   `amount` bigint(32) DEFAULT NULL COMMENT '金额',
   `valid_days` int(11) DEFAULT NULL COMMENT '有效天数',
   `start_amount` bigint(32) DEFAULT NULL COMMENT '起用金额',
@@ -89,6 +89,24 @@ CREATE TABLE `t_coupon` (
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `t_user_coupon` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `get_datetime` datetime DEFAULT NULL COMMENT '获得时间',
+  `type` varchar(32) DEFAULT NULL COMMENT '优惠券类型',
+  `amount` bigint(32) DEFAULT NULL COMMENT '优惠券金额',
+  `start_amount` bigint(32) DEFAULT NULL COMMENT '起用金额',
+  `valid_days` int(11) DEFAULT NULL COMMENT '有效天数',
+  `invalid_datetime` datetime DEFAULT NULL COMMENT '失效时间',
+  `status` varchar(32) DEFAULT NULL COMMENT '状态',
+  `borrow_code` varchar(32) DEFAULT NULL COMMENT '关联借款编号',
+  `updater` varchar(32) DEFAULT NULL COMMENT '最后更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '最后更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 

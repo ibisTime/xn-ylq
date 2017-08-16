@@ -29,6 +29,10 @@
 		<property name="paginableDAO" ref="couponDAOImpl"/>
 	</bean>	
 	
+	<bean id="userCouponBO" class="com.cdkj.ylq.bo.impl.UserCouponBOImpl">
+		<property name="paginableDAO" ref="userCouponDAOImpl"/>
+	</bean>	
+	
 	<bean id="sysDictBO" class="com.cdkj.ylq.bo.impl.SYSDictBOImpl">
 		<property name="paginableDAO" ref="sysDictDAOImpl"/>
 	</bean>	

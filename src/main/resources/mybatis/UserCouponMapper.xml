@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdkj.ylq.dao.ICouponDAO">
-	<resultMap id="coupon_DB_Result" type="coupon">
-		<result column="code" property="code" />
+<mapper namespace="com.cdkj.ylq.dao.IUserCouponDAO">
+	<resultMap id="userCoupon_DB_Result" type="userCoupon">
+		<result column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="get_datetime" property="getDatetime" />
 		<result column="type" property="type" />
-		<result column="get_condition" property="condition" />
 		<result column="amount" property="amount" />
-		<result column="valid_days" property="validDays" />
 		<result column="start_amount" property="startAmount" />
+		<result column="valid_days" property="validDays" />
+		<result column="invalid_datetime" property="invalidDatetime" />
 		<result column="status" property="status" />
+		<result column="borrow_code" property="borrowCode" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
-			<if test="code != null and code != '' ">
-				AND t.code = #{code}
+			<if test="id != null and id != '' ">
+				AND t.id = #{id}
+			</if>
+			<if test="userId != null and userId != '' ">
+				AND t.user_id = #{userId}
 			</if>
 			<if test="type != null and type != '' ">
 				AND t.type = #{type}
@@ -25,22 +31,28 @@
 			<if test="status != null and status != '' ">
 				AND t.status = #{status}
 			</if>
+			<if test="borrowCode != null and borrowCode != '' ">
+				AND t.borrow_code = #{borrowCode}
+			</if>
 		</trim>
 	</sql>
-	<select id="select_coupon" parameterType="coupon" resultMap="coupon_DB_Result">
+	<select id="select_userCoupon" parameterType="userCoupon" resultMap="userCoupon_DB_Result">
 		SELECT
-		t.code
+		t.id
+		,t.user_id
+		,t.get_datetime
 		,t.type
-		,t.get_condition
 		,t.amount
-		,t.valid_days
 		,t.start_amount
+		,t.valid_days
+		,t.invalid_datetime
 		,t.status
+		,t.borrow_code
 		,t.updater
 		,t.update_datetime
 		,t.remark
 		FROM
-		t_coupon t
+		t_user_coupon t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -49,33 +61,35 @@
 		</trim>
 	</select>
 
-	<select id="select_coupon_count" parameterType="coupon"
+	<select id="select_userCoupon_count" parameterType="userCoupon"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM t_coupon t
+		SELECT count(1) FROM t_user_coupon t
 		<include refid="where_condition" />
 	</select>
 
-	<insert id="insert_coupon" parameterType="coupon">
+	<insert id="insert_userCoupon" parameterType="userCoupon">
 		INSERT INTO
-		t_coupon(
-		code
+		t_user_coupon(
+		user_id
+		,get_datetime
 		,type
-		,get_condition
 		,amount
-		,valid_days
 		,start_amount
+		,valid_days
+		,invalid_datetime
 		,status
 		,updater
 		,update_datetime
 		,remark
 		)
 		VALUES(
-		#{code}
+		#{userId}
+		,#{getDatetime}
 		,#{type}
-		,#{condition}
 		,#{amount}
-		,#{validDays}
 		,#{startAmount}
+		,#{validDays}
+		,#{invalidDatetime}
 		,#{status}
 		,#{updater}
 		,#{updateDatetime}
@@ -83,28 +97,23 @@
 		)
 	</insert>
 
-	<update id="update_coupon" parameterType="coupon">
-		UPDATE t_coupon
+	<update id="update_use" parameterType="userCoupon">
+		UPDATE t_user_coupon
 		SET
-		type = #{type}
-		,get_condition = #{condition}
-		,amount = #{amount}
-		,valid_days = #{validDays}
-		,start_amount = #{startAmount}
-		,updater = #{updater}
-		,update_datetime = #{updateDatetime}
-		,remark = #{remark}
-		WHERE code = #{code}
+		status = #{status}
+		,borrow_code = #{borrowCode}
+		WHERE id = #{id}
 	</update>
-
-    <update id="update_status" parameterType="coupon">
-		UPDATE t_coupon
+	
+	<update id="update_recycle" parameterType="userCoupon">
+		UPDATE t_user_coupon
 		SET
 		status = #{status}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
-		WHERE code = #{code}
+		WHERE id = #{id}
 	</update>
+
 
 </mapper>

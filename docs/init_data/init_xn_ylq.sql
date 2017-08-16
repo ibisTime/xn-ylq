@@ -120,3 +120,13 @@ INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_d
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('0','','coupon_type','优惠券类型','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','coupon_type','0','获客优惠券','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','coupon_type','1','借还优惠券','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('0','','coupon_status','优惠券状态','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','coupon_status','0','关闭','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','coupon_status','1','开启','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('0','','user_coupon_status','优惠券类型','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','user_coupon_status','0','可使用','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','user_coupon_status','1','已使用','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','user_coupon_status','2','已过期','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','user_coupon_status','3','已回收','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');

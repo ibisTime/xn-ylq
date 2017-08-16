@@ -1,9 +1,10 @@
 package com.cdkj.ylq.enums;
 
-public enum ECouponStatus {
-    CLOSE("0", "关闭"), OPEN("1", "启用");
+public enum EUserCouponStatus {
+    TO_USE("0", "可使用"), USED("1", "已使用"), INVALID("2", "已过期"), RECYCLE("3",
+            "已回收");
 
-    ECouponStatus(String code, String value) {
+    EUserCouponStatus(String code, String value) {
         this.code = code;
         this.value = value;
     }
