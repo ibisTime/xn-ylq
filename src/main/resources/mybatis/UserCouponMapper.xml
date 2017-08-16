@@ -28,11 +28,22 @@
 			<if test="type != null and type != '' ">
 				AND t.type = #{type}
 			</if>
-			<if test="status != null and status != '' ">
-				AND t.status = #{status}
-			</if>
+			<choose>
+				 <when test="status == '12'">
+				  	AND (t.status = 1 or t.status = 2)
+				 </when>
+				 <when test="status != null and status != '' ">
+				  	AND t.status = #{status}
+				 </when>
+				 <otherwise>
+				  	AND 1 = 1
+				 </otherwise>
+			</choose>
 			<if test="borrowCode != null and borrowCode != '' ">
 				AND t.borrow_code = #{borrowCode}
+			</if>
+			<if test="productAmount != null and productAmount != '' ">
+				<![CDATA[AND t.start_amount >= #{productAmount}]]>
 			</if>
 		</trim>
 	</sql>

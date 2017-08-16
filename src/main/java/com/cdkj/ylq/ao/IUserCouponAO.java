@@ -15,11 +15,19 @@ public interface IUserCouponAO {
     // 回收优惠券
     public void recycle(Long id, String updater, String remark);
 
+    // 客户端：我的优惠券查询
+    public Paginable<UserCoupon> queryMyCouponPage(int start, int limit,
+            UserCoupon condition);
+
+    // 客户端：可使用的优惠券查询
+    public List<UserCoupon> queryCouponList(UserCoupon condition,
+            String productCode);
+
+    // oss：用户优惠券分页查询
     public Paginable<UserCoupon> queryUserCouponPage(int start, int limit,
             UserCoupon condition);
 
-    public List<UserCoupon> queryUserCouponList(UserCoupon condition);
-
+    // oss：用户优惠券详情查询
     public UserCoupon getUserCoupon(Long id);
 
 }

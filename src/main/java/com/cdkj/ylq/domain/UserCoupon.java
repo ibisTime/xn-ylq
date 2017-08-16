@@ -53,8 +53,12 @@ public class UserCoupon extends ABaseDO {
     // 备注
     private String remark;
 
-    // ****** 辅助字段 ******
+    // ****** 查询字段 ******
 
+    // 当前产品可借金额
+    private Long productAmount;
+
+    // ****** 辅助字段 ******
     // 用户信息
     private User user;
 
@@ -168,6 +172,14 @@ public class UserCoupon extends ABaseDO {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Long getProductAmount() {
+        return productAmount;
+    }
+
+    public void setProductAmount(Long productAmount) {
+        this.productAmount = productAmount;
     }
 
 }
