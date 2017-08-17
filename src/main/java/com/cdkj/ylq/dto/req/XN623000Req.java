@@ -31,22 +31,22 @@ public class XN623000Req {
     private String duration;
 
     // 7天内逾期利率（必填）
-    private String rate1;
+    private String yqRate1;
 
     // 7天外逾期利率（必填）
-    private String rate2;
+    private String yqRate2;
 
     // 利息（必填）
-    private String lxAmount;
+    private String lxRate;
 
     // 快速信审费（必填）
-    private String xsAmount;
+    private String xsRate;
 
     // 账户管理费（必填）
-    private String glAmount;
+    private String glRate;
 
     // 服务费（必填）
-    private String fwAmount;
+    private String fwRate;
 
     // 最后更新人（必填）
     private String updater;
@@ -94,52 +94,52 @@ public class XN623000Req {
         this.duration = duration;
     }
 
-    public String getRate1() {
-        return rate1;
+    public String getYqRate1() {
+        return yqRate1;
     }
 
-    public void setRate1(String rate1) {
-        this.rate1 = rate1;
+    public void setYqRate1(String yqRate1) {
+        this.yqRate1 = yqRate1;
     }
 
-    public String getRate2() {
-        return rate2;
+    public String getYqRate2() {
+        return yqRate2;
     }
 
-    public void setRate2(String rate2) {
-        this.rate2 = rate2;
+    public void setYqRate2(String yqRate2) {
+        this.yqRate2 = yqRate2;
     }
 
-    public String getLxAmount() {
-        return lxAmount;
+    public String getLxRate() {
+        return lxRate;
     }
 
-    public void setLxAmount(String lxAmount) {
-        this.lxAmount = lxAmount;
+    public void setLxRate(String lxRate) {
+        this.lxRate = lxRate;
     }
 
-    public String getXsAmount() {
-        return xsAmount;
+    public String getXsRate() {
+        return xsRate;
     }
 
-    public void setXsAmount(String xsAmount) {
-        this.xsAmount = xsAmount;
+    public void setXsRate(String xsRate) {
+        this.xsRate = xsRate;
     }
 
-    public String getGlAmount() {
-        return glAmount;
+    public String getGlRate() {
+        return glRate;
     }
 
-    public void setGlAmount(String glAmount) {
-        this.glAmount = glAmount;
+    public void setGlRate(String glRate) {
+        this.glRate = glRate;
     }
 
-    public String getFwAmount() {
-        return fwAmount;
+    public String getFwRate() {
+        return fwRate;
     }
 
-    public void setFwAmount(String fwAmount) {
-        this.fwAmount = fwAmount;
+    public void setFwRate(String fwRate) {
+        this.fwRate = fwRate;
     }
 
     public String getUpdater() {
@@ -157,4 +157,5 @@ public class XN623000Req {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
 }

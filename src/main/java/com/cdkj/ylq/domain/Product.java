@@ -33,22 +33,22 @@ public class Product extends ABaseDO {
     private Integer duration;
 
     // 7天内逾期利率
-    private Double rate1;
+    private Double yqRate1;
 
     // 7天外逾期利率
-    private Double rate2;
+    private Double yqRate2;
 
-    // 利息
-    private Long lxAmount;
+    // 利息利率
+    private Double lxRate;
 
-    // 快速信审费
-    private Long xsAmount;
+    // 快速信审费利率
+    private Double xsRate;
 
-    // 账户管理费
-    private Long glAmount;
+    // 账户管理费利率
+    private Double glRate;
 
-    // 服务费
-    private Long fwAmount;
+    // 服务费利率
+    private Double fwRate;
 
     // 状态
     private String status;
@@ -127,52 +127,52 @@ public class Product extends ABaseDO {
         this.duration = duration;
     }
 
-    public Double getRate1() {
-        return rate1;
+    public Double getYqRate1() {
+        return yqRate1;
     }
 
-    public void setRate1(Double rate1) {
-        this.rate1 = rate1;
+    public void setYqRate1(Double yqRate1) {
+        this.yqRate1 = yqRate1;
     }
 
-    public Double getRate2() {
-        return rate2;
+    public Double getYqRate2() {
+        return yqRate2;
     }
 
-    public void setRate2(Double rate2) {
-        this.rate2 = rate2;
+    public void setYqRate2(Double yqRate2) {
+        this.yqRate2 = yqRate2;
     }
 
-    public Long getLxAmount() {
-        return lxAmount;
+    public Double getLxRate() {
+        return lxRate;
     }
 
-    public void setLxAmount(Long lxAmount) {
-        this.lxAmount = lxAmount;
+    public void setLxRate(Double lxRate) {
+        this.lxRate = lxRate;
     }
 
-    public Long getXsAmount() {
-        return xsAmount;
+    public Double getXsRate() {
+        return xsRate;
     }
 
-    public void setXsAmount(Long xsAmount) {
-        this.xsAmount = xsAmount;
+    public void setXsRate(Double xsRate) {
+        this.xsRate = xsRate;
     }
 
-    public Long getGlAmount() {
-        return glAmount;
+    public Double getGlRate() {
+        return glRate;
     }
 
-    public void setGlAmount(Long glAmount) {
-        this.glAmount = glAmount;
+    public void setGlRate(Double glRate) {
+        this.glRate = glRate;
     }
 
-    public Long getFwAmount() {
-        return fwAmount;
+    public Double getFwRate() {
+        return fwRate;
     }
 
-    public void setFwAmount(Long fwAmount) {
-        this.fwAmount = fwAmount;
+    public void setFwRate(Double fwRate) {
+        this.fwRate = fwRate;
     }
 
     public String getStatus() {

@@ -33,6 +33,10 @@
 		<property name="paginableDAO" ref="userCouponDAOImpl"/>
 	</bean>	
 	
+	<bean id="borrowBO" class="com.cdkj.ylq.bo.impl.BorrowBOImpl">
+		<property name="paginableDAO" ref="borrowDAOImpl"/>
+	</bean>	
+	
 	<bean id="sysDictBO" class="com.cdkj.ylq.bo.impl.SYSDictBOImpl">
 		<property name="paginableDAO" ref="sysDictDAOImpl"/>
 	</bean>	

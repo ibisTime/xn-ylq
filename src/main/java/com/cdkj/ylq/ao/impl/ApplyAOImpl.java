@@ -121,7 +121,7 @@ public class ApplyAOImpl implements IApplyAO {
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                     DateUtil.getTodayStart(), 7));
-                certification.setRef(apply.getCode());
+                certification.setRef(apply.getProductCode());
                 certificationBO.refreshCertification(certification);
             } else {
                 certification = new Certification();
@@ -132,7 +132,7 @@ public class ApplyAOImpl implements IApplyAO {
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                     DateUtil.getTodayStart(), 7));
-                certification.setRef(apply.getCode());
+                certification.setRef(apply.getProductCode());
                 certificationBO.saveCertification(certification);
             }
         } else {

@@ -86,8 +86,7 @@
 	<update id="update_coupon" parameterType="coupon">
 		UPDATE t_coupon
 		SET
-		type = #{type}
-		,get_condition = #{condition}
+		get_condition = #{condition}
 		,amount = #{amount}
 		,valid_days = #{validDays}
 		,start_amount = #{startAmount}

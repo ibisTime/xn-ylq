@@ -9,17 +9,21 @@ import org.springframework.stereotype.Service;
 
 import com.cdkj.ylq.ao.IProductAO;
 import com.cdkj.ylq.bo.IApplyBO;
+import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
+import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Apply;
+import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.Product;
-import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN623000Req;
 import com.cdkj.ylq.dto.req.XN623001Req;
 import com.cdkj.ylq.enums.EBoolean;
+import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EProductLevel;
 import com.cdkj.ylq.enums.EProductLocation;
@@ -39,6 +43,9 @@ public class ProductAOImpl implements IProductAO {
     @Autowired
     private IApplyBO applyBO;
 
+    @Autowired
+    private ICertificationBO certificationBO;
+
     @Override
     public String addProduct(XN623000Req req) {
         Product data = new Product();
@@ -52,13 +59,13 @@ public class ProductAOImpl implements IProductAO {
         data.setAmount(StringValidater.toLong(req.getAmount()));
 
         data.setDuration(StringValidater.toInteger(req.getDuration()));
-        data.setRate1(StringValidater.toDouble(req.getRate1()));
-        data.setRate2(StringValidater.toDouble(req.getRate2()));
-        data.setLxAmount(StringValidater.toLong(req.getLxAmount()));
-        data.setXsAmount(StringValidater.toLong(req.getXsAmount()));
+        data.setYqRate1(StringValidater.toDouble(req.getYqRate1()));
+        data.setYqRate1(StringValidater.toDouble(req.getYqRate2()));
+        data.setLxRate(StringValidater.toDouble(req.getLxRate()));
+        data.setXsRate(StringValidater.toDouble(req.getXsRate()));
 
-        data.setGlAmount(StringValidater.toLong(req.getGlAmount()));
-        data.setFwAmount(StringValidater.toLong(req.getFwAmount()));
+        data.setGlRate(StringValidater.toDouble(req.getGlRate()));
+        data.setFwRate(StringValidater.toDouble(req.getFwRate()));
         data.setStatus(EProductStatus.NEW.getCode());
         data.setUiLocation(EProductLocation.NORMAL.getCode());
         data.setUiOrder(0);
@@ -83,13 +90,13 @@ public class ProductAOImpl implements IProductAO {
         data.setAmount(StringValidater.toLong(req.getAmount()));
 
         data.setDuration(StringValidater.toInteger(req.getDuration()));
-        data.setRate1(StringValidater.toDouble(req.getRate1()));
-        data.setRate2(StringValidater.toDouble(req.getRate2()));
-        data.setLxAmount(StringValidater.toLong(req.getLxAmount()));
-        data.setXsAmount(StringValidater.toLong(req.getXsAmount()));
+        data.setYqRate1(StringValidater.toDouble(req.getYqRate1()));
+        data.setYqRate1(StringValidater.toDouble(req.getYqRate2()));
+        data.setLxRate(StringValidater.toDouble(req.getLxRate()));
+        data.setXsRate(StringValidater.toDouble(req.getXsRate()));
 
-        data.setGlAmount(StringValidater.toLong(req.getGlAmount()));
-        data.setFwAmount(StringValidater.toLong(req.getFwAmount()));
+        data.setGlRate(StringValidater.toDouble(req.getGlRate()));
+        data.setFwRate(StringValidater.toDouble(req.getFwRate()));
         data.setUpdater(req.getUpdater());
         data.setUpdateDatetime(new Date());
         data.setRemark(req.getRemark());
@@ -111,7 +118,7 @@ public class ProductAOImpl implements IProductAO {
         List<Product> products = results.getList();
         for (Product product : products) {
             if (StringUtils.isNotBlank(userId)) {
-                User user = userBO.getRemoteUser(userId);
+                userBO.getRemoteUser(userId);
                 Apply apply = applyBO
                     .getCurrentApply(userId, product.getCode());
                 if (apply != null) {
@@ -155,6 +162,25 @@ public class ProductAOImpl implements IProductAO {
         }
         return productBO.putOn(data, uiLocation, uiOrder, uiColor, updater,
             remark);
+    }
+
+    @Override
+    public Product getAvaliableProduct(String userId) {
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_AMOUNT.getCode());
+        if (certification == null) {
+            throw new BizException("623013", "您还没有额度，请先选择产品进行申请");
+        }
+        // 授信额度
+        InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
+            InfoAmount.class);
+        if (infoAmount.getSxAmount() == 0) {
+            throw new BizException("623013", "您还没有额度，请先选择产品进行申请");
+        }
+        if (StringUtils.isBlank(certification.getRef())) {
+            throw new BizException("623013", "您还没有额度，请先选择产品进行申请");
+        }
+        return productBO.getProduct(certification.getRef());
     }
 
     @Override

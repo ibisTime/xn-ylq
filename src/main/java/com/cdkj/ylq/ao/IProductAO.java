@@ -28,6 +28,9 @@ public interface IProductAO {
     public Paginable<Product> queryProductPage(int start, int limit,
             Product condition, String userId);
 
+    // C端用户详情查询当前可借款的产品
+    public Product getAvaliableProduct(String userId);
+
     public Product getProduct(String code);
 
 }

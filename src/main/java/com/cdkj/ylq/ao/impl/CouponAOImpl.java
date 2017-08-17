@@ -20,7 +20,6 @@ public class CouponAOImpl implements ICouponAO {
     @Override
     public int editCoupon(XN623100Req req) {
         Coupon coupon = couponBO.getCoupon(req.getCode());
-        coupon.setType(req.getType());
         coupon.setCondition(StringValidater.toInteger(req.getCondition()));
         coupon.setAmount(StringValidater.toLong(req.getAmount()));
         coupon.setValidDays(StringValidater.toInteger(req.getValidDays()));

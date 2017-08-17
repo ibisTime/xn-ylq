@@ -18,9 +18,6 @@ public class XN623100Req {
     // 编号（必填）
     private String code;
 
-    // 类型（必填）
-    private String type;
-
     // 获得条件（必填）
     private String condition;
 
@@ -45,14 +42,6 @@ public class XN623100Req {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getCondition() {
