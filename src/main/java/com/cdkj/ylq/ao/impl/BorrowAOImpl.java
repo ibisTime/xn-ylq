@@ -260,12 +260,31 @@ public class BorrowAOImpl implements IBorrowAO {
         Borrow borrow = borrowList.get(0);
         if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())) {
             // 更新订单支付金额
-            borrowBO.paySuccess(borrow, amount, payCode, payType);
+            borrowBO.repaySuccess(borrow, amount, payCode, payType);
+            // 更新申请单状态
             Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
-            apply.setStatus(EApplyStatus.TO_LOAN.getCode());
+            apply.setStatus(EApplyStatus.REPAY.getCode());
             applyBO.refreshStatus(apply);
         } else {
             logger.info("订单号：" + borrow.getCode() + "已支付，重复回调");
         }
+    }
+
+    @Override
+    public void confirmBad(String code, String updater, String remark) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.TO_LOAN.getCode().equals(borrow.getStatus())) {
+            throw new BizException("623073", "借款不处于逾期状态");
+        }
+        borrow.setStatus(EBorrowStatus.BAD.getCode());
+        borrow.setUpdater(updater);
+        borrow.setUpdateDatetime(new Date());
+        borrow.setRemark(remark);
+        borrowBO.confirmBad(borrow);
+
+        Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
+        apply.setStatus(EApplyStatus.BAD.getCode());
+        applyBO.refreshStatus(apply);
+
     }
 }

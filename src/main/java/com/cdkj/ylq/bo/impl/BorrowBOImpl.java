@@ -76,12 +76,6 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     }
 
     @Override
-    public int repay(Borrow data) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
     public List<Borrow> queryBorrowListByPayGroup(String payGroup) {
         Borrow condition = new Borrow();
         condition.setPayGroup(payGroup);
@@ -89,7 +83,7 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     }
 
     @Override
-    public int paySuccess(Borrow borrow, Long payAmount, String payCode,
+    public int repaySuccess(Borrow borrow, Long payAmount, String payCode,
             String payType) {
         int count = 0;
         if (borrow != null && StringUtils.isNotBlank(borrow.getCode())) {
@@ -100,6 +94,15 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
             borrow.setPayType(payType);
             borrow.setStatus(EBorrowStatus.REPAY.getCode());
             count = borrowDAO.updateRepaySuccess(borrow);
+        }
+        return count;
+    }
+
+    @Override
+    public int confirmBad(Borrow data) {
+        int count = 0;
+        if (data != null) {
+            count = borrowDAO.updateConfirmBad(data);
         }
         return count;
     }

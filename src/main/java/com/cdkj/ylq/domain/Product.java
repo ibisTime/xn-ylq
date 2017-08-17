@@ -73,6 +73,18 @@ public class Product extends ABaseDO {
 
     // ******** 辅助字段 *************
 
+    // 利息
+    private Long lxAmount;
+
+    // 快速信审费
+    private Long xsAmount;
+
+    // 账户管理费
+    private Long glAmount;
+
+    // 服务费
+    private Long fwAmount;
+
     // 当前申请状态
     private String userProductStatus;
 
@@ -245,6 +257,38 @@ public class Product extends ABaseDO {
 
     public void setIsLocked(String isLocked) {
         this.isLocked = isLocked;
+    }
+
+    public Long getLxAmount() {
+        return lxAmount;
+    }
+
+    public void setLxAmount(Long lxAmount) {
+        this.lxAmount = lxAmount;
+    }
+
+    public Long getXsAmount() {
+        return xsAmount;
+    }
+
+    public void setXsAmount(Long xsAmount) {
+        this.xsAmount = xsAmount;
+    }
+
+    public Long getGlAmount() {
+        return glAmount;
+    }
+
+    public void setGlAmount(Long glAmount) {
+        this.glAmount = glAmount;
+    }
+
+    public Long getFwAmount() {
+        return fwAmount;
+    }
+
+    public void setFwAmount(Long fwAmount) {
+        this.fwAmount = fwAmount;
     }
 
 }

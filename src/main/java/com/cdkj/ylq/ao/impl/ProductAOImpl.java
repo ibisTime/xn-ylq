@@ -9,14 +9,17 @@ import org.springframework.stereotype.Service;
 
 import com.cdkj.ylq.ao.IProductAO;
 import com.cdkj.ylq.bo.IApplyBO;
+import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
+import com.cdkj.ylq.common.AmountUtil;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Apply;
+import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.Product;
@@ -45,6 +48,9 @@ public class ProductAOImpl implements IProductAO {
 
     @Autowired
     private ICertificationBO certificationBO;
+
+    @Autowired
+    private IBorrowBO borrowBO;
 
     @Override
     public String addProduct(XN623000Req req) {
@@ -148,7 +154,28 @@ public class ProductAOImpl implements IProductAO {
 
     @Override
     public Product getProduct(String code) {
-        return productBO.getProduct(code);
+
+        Product product = productBO.getProduct(code);
+        // 借款总额
+        Long borrowAmount = product.getAmount();
+        // 利息
+        Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getLxRate()));
+        // 快速信审费
+        Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getXsRate()));
+        // 账户管理费
+        Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getGlRate()));
+        // 服务费
+        Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getFwRate()));
+        product.setLxAmount(lxAmount);
+        product.setXsAmount(xsAmount);
+        product.setGlAmount(glAmount);
+        product.setFwAmount(fwAmount);
+
+        return product;
     }
 
     @Override
@@ -179,7 +206,33 @@ public class ProductAOImpl implements IProductAO {
         if (StringUtils.isBlank(certification.getRef())) {
             throw new BizException("623013", "您还没有额度，请先选择产品进行申请");
         }
-        return productBO.getProduct(certification.getRef());
+        // 是否已经有借款
+        Borrow condition = new Borrow();
+        condition.setApplyUser(userId);
+        if (borrowBO.getTotalCount(condition) > 0) {
+            throw new BizException("623013", "当前已有借款");
+        }
+        Product product = productBO.getProduct(certification.getRef());
+        // 借款总额
+        Long borrowAmount = infoAmount.getSxAmount();
+        // 利息
+        Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getLxRate()));
+        // 快速信审费
+        Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getXsRate()));
+        // 账户管理费
+        Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getGlRate()));
+        // 服务费
+        Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getFwRate()));
+        product.setLxAmount(lxAmount);
+        product.setXsAmount(xsAmount);
+        product.setGlAmount(glAmount);
+        product.setFwAmount(fwAmount);
+        product.setAmount(borrowAmount);
+        return product;
     }
 
     @Override

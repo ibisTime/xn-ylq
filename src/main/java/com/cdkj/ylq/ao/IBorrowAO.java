@@ -29,4 +29,7 @@ public interface IBorrowAO {
     public void repaySuccess(String payGroup, String payType, String payCode,
             Long amount);
 
+    // 管理端：确认坏账
+    public void confirmBad(String code, String updater, String remark);
+
 }

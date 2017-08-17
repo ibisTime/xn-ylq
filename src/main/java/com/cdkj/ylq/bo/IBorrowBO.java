@@ -17,9 +17,9 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     public String addPayGroup(String code);
 
-    public int repay(Borrow data);
+    public int confirmBad(Borrow data);
 
-    public int paySuccess(Borrow borrow, Long payAmount, String payCode,
+    public int repaySuccess(Borrow borrow, Long payAmount, String payCode,
             String payType);
 
     public List<Borrow> queryBorrowListByPayGroup(String payGroup);
