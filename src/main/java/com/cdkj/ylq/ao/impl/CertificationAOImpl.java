@@ -39,6 +39,7 @@ import com.cdkj.ylq.dto.res.XN798013Res;
 import com.cdkj.ylq.dto.res.XN798014Res;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
+import com.cdkj.ylq.enums.EIDKind;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
@@ -117,6 +118,8 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setRef("");
                 certificationBO.saveCertification(certification);
             }
+            userBO.doIdentify(userId, EIDKind.IDCard.getCode(),
+                infoIdentify.getIdNo(), infoIdentify.getRealName());
         }
         return res;
     }

@@ -8,11 +8,10 @@ import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN001100Req;
 import com.cdkj.ylq.dto.req.XN001102Req;
-import com.cdkj.ylq.dto.req.XN001350Req;
 import com.cdkj.ylq.dto.req.XN001400Req;
+import com.cdkj.ylq.dto.req.XN805190Req;
 import com.cdkj.ylq.dto.res.XN001102Res;
 import com.cdkj.ylq.dto.res.XN001400Res;
-import com.cdkj.ylq.dto.res.XNUserRes;
 import com.cdkj.ylq.enums.ESysUser;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.enums.EUserKind;
@@ -71,6 +70,18 @@ public class UserBOImpl implements IUserBO {
     }
 
     @Override
+    public void doIdentify(String userId, String idKind, String idNo,
+            String realName) {
+        XN805190Req req = new XN805190Req();
+        req.setUserId(userId);
+        req.setIdKind(idKind);
+        req.setIdNo(idNo);
+        req.setRealName(realName);
+        BizConnecter.getBizData("805190", JsonUtils.object2Json(req),
+            Object.class);
+    }
+
+    @Override
     public String isUserExist(String mobile, EUserKind kind, String systemCode) {
         String userId = null;
         XN001102Req req = new XN001102Req();
@@ -83,40 +94,6 @@ public class UserBOImpl implements IUserBO {
             userId = res.getUserId();
         }
         return userId;
-    }
-
-    @Override
-    public String doSaveBUser(String mobile, String userReferee,
-            String updater, String systemCode, String companyCode) {
-        XN001350Req req = new XN001350Req();
-        req.setLoginName(mobile);
-        req.setMobile(mobile);
-        req.setUserReferee(userReferee);
-        req.setUpdater(updater);
-        req.setRemark("代注册商家");
-
-        req.setSystemCode(systemCode);
-        req.setCompanyCode(companyCode);
-        XNUserRes res = BizConnecter.getBizData("001350",
-            JsonUtils.object2Json(req), XNUserRes.class);
-        return res.getUserId();
-    }
-
-    @Override
-    public String doSavePartnerUser(String mobile, String userReferee,
-            String updater, String systemCode, String companyCode) {
-        XN001350Req req = new XN001350Req();
-        req.setLoginName(mobile);
-        req.setMobile(mobile);
-        req.setUserReferee(userReferee);
-        req.setUpdater(updater);
-        req.setRemark("代注册名宿主");
-
-        req.setSystemCode(systemCode);
-        req.setCompanyCode(companyCode);
-        XNUserRes res = BizConnecter.getBizData("001351",
-            JsonUtils.object2Json(req), XNUserRes.class);
-        return res.getUserId();
     }
 
     @Override
