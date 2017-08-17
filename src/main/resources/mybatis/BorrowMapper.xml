@@ -20,7 +20,7 @@
 		<result column="rate2" property="rate2" />
 		<result column="yqlx_amount" property="yqlxAmount" />
 		<result column="yq_days" property="yqDays" />
-		<result column="totalAmount" property="totalAmount" />
+		<result column="total_amount" property="totalAmount" />
 		<result column="real_hk_datetime" property="realHkDatetime" />
 		<result column="real_hk_amount" property="realHkAmount" />
 		<result column="pay_code" property="payCode" />

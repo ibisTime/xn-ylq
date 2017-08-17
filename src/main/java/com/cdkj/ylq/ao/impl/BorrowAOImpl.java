@@ -273,7 +273,7 @@ public class BorrowAOImpl implements IBorrowAO {
     @Override
     public void confirmBad(String code, String updater, String remark) {
         Borrow borrow = borrowBO.getBorrow(code);
-        if (!EBorrowStatus.TO_LOAN.getCode().equals(borrow.getStatus())) {
+        if (!EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
             throw new BizException("623073", "借款不处于逾期状态");
         }
         borrow.setStatus(EBorrowStatus.BAD.getCode());

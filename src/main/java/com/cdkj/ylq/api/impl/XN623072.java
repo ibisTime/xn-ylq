@@ -13,7 +13,6 @@ import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.dto.req.XN623072Req;
-import com.cdkj.ylq.dto.res.BooleanRes;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.ParaException;
 import com.cdkj.ylq.spring.SpringContextHolder;
@@ -35,8 +34,7 @@ public class XN623072 extends AProcessor {
      */
     @Override
     public Object doBusiness() throws BizException {
-        borrowAO.repay(req.getCode(), req.getPayType());
-        return new BooleanRes(true);
+        return borrowAO.repay(req.getCode(), req.getPayType());
     }
 
     /** 
