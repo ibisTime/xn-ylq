@@ -3,11 +3,17 @@ package com.cdkj.ylq.ao.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IBorrowAO;
+import com.cdkj.ylq.bo.IAccountBO;
+import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
@@ -15,24 +21,37 @@ import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.AmountUtil;
+import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
+import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.Product;
+import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.UserCoupon;
+import com.cdkj.ylq.enums.EApplyStatus;
+import com.cdkj.ylq.enums.EBizType;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.EGeneratePrefix;
+import com.cdkj.ylq.enums.EPayType;
+import com.cdkj.ylq.enums.ESysUser;
 import com.cdkj.ylq.enums.EUserCouponStatus;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
 public class BorrowAOImpl implements IBorrowAO {
 
+    protected static final Logger logger = LoggerFactory
+        .getLogger(IBorrowAO.class);
+
     @Autowired
     private IBorrowBO borrowBO;
+
+    @Autowired
+    private IApplyBO applyBO;
 
     @Autowired
     private ICertificationBO certificationBO;
@@ -46,7 +65,11 @@ public class BorrowAOImpl implements IBorrowAO {
     @Autowired
     private IUserBO userBO;
 
+    @Autowired
+    private IAccountBO accountBO;
+
     @Override
+    @Transactional
     public String borrow(String userId, Long couponId) {
         // 授信额度信息校验
         Certification certification = certificationBO.getCertification(userId,
@@ -70,7 +93,7 @@ public class BorrowAOImpl implements IBorrowAO {
         }
         // 产品
         Product product = productBO.getProduct(certification.getRef());
-        // 查询优惠券
+        // 优惠金额
         Long yhAmount = 0L;
         if (couponId != null) {
             UserCoupon userCoupon = userCouponBO.getUserCoupon(couponId);
@@ -87,7 +110,24 @@ public class BorrowAOImpl implements IBorrowAO {
         String code = OrderNoGenerater.generateM(EGeneratePrefix.BORROW
             .getCode());
         Date now = new Date();
+        // 借款总额
         Long borrowAmount = infoAmount.getSxAmount();
+        // 利息
+        Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getLxRate()));
+        // 快速信审费
+        Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getXsRate()));
+        // 账户管理费
+        Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getGlRate()));
+        // 服务费
+        Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+            product.getFwRate()));
+        // 应还金额
+        Long totalAmount = borrowAmount + lxAmount + xsAmount + glAmount
+                + fwAmount - yhAmount;
+
         Borrow borrow = new Borrow();
 
         borrow.setCode(code);
@@ -96,27 +136,29 @@ public class BorrowAOImpl implements IBorrowAO {
         borrow.setAmount(borrowAmount);
         borrow.setDuration(product.getDuration());
 
-        borrow.setLxAmount(AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getLxRate())));
-        borrow.setXsAmount(AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getXsRate())));
-        borrow.setGlAmount(AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getGlRate())));
-        borrow.setFwAmount(AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getFwRate())));
+        borrow.setLxAmount(lxAmount);
+        borrow.setXsAmount(xsAmount);
+        borrow.setGlAmount(glAmount);
+        borrow.setFwAmount(fwAmount);
         borrow.setYhAmount(yhAmount);
 
         borrow.setRate1(product.getYqRate1());
         borrow.setRate2(product.getYqRate2());
         borrow.setYqlxAmount(0L);
         borrow.setYqDays(0);
-        borrow.setStatus(EBorrowStatus.TO_LOAN.getCode());
+        borrow.setTotalAmount(totalAmount);
 
+        borrow.setRealHkAmount(0L);
+        borrow.setStatus(EBorrowStatus.TO_LOAN.getCode());
         borrow.setUpdater(userId);
         borrow.setUpdateDatetime(now);
         borrow.setRemark("新申请借款");
 
         borrowBO.saveBorrow(borrow);
+
+        Apply apply = applyBO.getCurrentApply(userId);
+        apply.setStatus(EApplyStatus.TO_LOAN.getCode());
+        applyBO.refreshStatus(apply);
         return code;
     }
 
@@ -143,5 +185,87 @@ public class BorrowAOImpl implements IBorrowAO {
         Borrow borrow = borrowBO.getBorrow(code);
         borrow.setUser(userBO.getRemoteUser(borrow.getApplyUser()));
         return borrow;
+    }
+
+    @Override
+    @Transactional
+    public void loan(String code, String updater, String remark) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.TO_LOAN.getCode().equals(borrow.getStatus())) {
+            throw new BizException("623071", "借款不处于待放款状态");
+        }
+        Date now = new Date();
+        Date fkDatetime = now;
+        Date jxDatetime = DateUtil.getTomorrowStart(fkDatetime);
+        Date hkDatetime = DateUtil.getRelativeDateOfDays(jxDatetime,
+            borrow.getDuration());
+        borrow.setFkDatetime(fkDatetime);
+        borrow.setJxDatetime(jxDatetime);
+        borrow.setHkDatetime(hkDatetime);
+        borrow.setStatus(EBorrowStatus.LOANING.getCode());
+        borrow.setUpdater(updater);
+        borrow.setUpdateDatetime(now);
+        borrow.setRemark(remark);
+        borrowBO.loan(borrow);
+
+        Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
+        apply.setStatus(EApplyStatus.TO_LOAN.getCode());
+        applyBO.refreshStatus(apply);
+    }
+
+    @Override
+    public Object repay(String code, String payType) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                && !EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
+            throw new BizException("623071", "借款不处于待还款状态");
+        }
+        if (EPayType.ALIPAY.getCode().equals(payType)) {
+            return doRepayAlipay(borrow);
+        } else if (EPayType.WEIXIN_APP.getCode().equals(payType)) {
+            return doRepayWechat(borrow);
+        } else {
+            throw new BizException("623071", "暂不支持此支付方式");
+        }
+    }
+
+    private Object doRepayWechat(Borrow borrow) {
+        Long rmbAmount = borrow.getTotalAmount();
+        User user = userBO.getRemoteUser(borrow.getApplyUser());
+        String payGroup = borrowBO.addPayGroup(borrow.getCode());
+        return accountBO.doWeiXinPayRemote(user.getUserId(),
+            ESysUser.SYS_USER_YLQ.getCode(), payGroup, borrow.getCode(),
+            EBizType.YLQ_REPAY, EBizType.YLQ_REPAY.getValue() + "-微信",
+            rmbAmount);
+    }
+
+    private Object doRepayAlipay(Borrow borrow) {
+        Long rmbAmount = borrow.getTotalAmount();
+        User user = userBO.getRemoteUser(borrow.getApplyUser());
+        String payGroup = borrowBO.addPayGroup(borrow.getCode());
+        return accountBO.doAlipayRemote(user.getUserId(),
+            ESysUser.SYS_USER_YLQ.getCode(), payGroup, borrow.getCode(),
+            EBizType.YLQ_REPAY, EBizType.YLQ_REPAY.getValue() + "-支付宝",
+            rmbAmount);
+    }
+
+    @Override
+    @Transactional
+    public void repaySuccess(String payGroup, String payType, String payCode,
+            Long amount) {
+        List<Borrow> borrowList = borrowBO.queryBorrowListByPayGroup(payGroup);
+        if (CollectionUtils.isEmpty(borrowList)) {
+            throw new BizException("XN000000", "找不到对应的借款记录");
+        }
+        Borrow borrow = borrowList.get(0);
+        if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())) {
+            // 更新订单支付金额
+            borrowBO.paySuccess(borrow, amount, payCode, payType);
+            Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
+            apply.setStatus(EApplyStatus.TO_LOAN.getCode());
+            applyBO.refreshStatus(apply);
+        } else {
+            logger.info("订单号：" + borrow.getCode() + "已支付，重复回调");
+        }
     }
 }

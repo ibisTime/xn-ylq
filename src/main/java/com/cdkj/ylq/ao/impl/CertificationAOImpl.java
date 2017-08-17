@@ -356,7 +356,7 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setRef("");
                 certificationBO.saveCertification(certification);
             }
-            Apply apply = applyBO.getCurrentApply(userId, null);
+            Apply apply = applyBO.getCurrentApply(userId);
             if (apply != null) {
                 applyBO.toDoApprove(apply);
             }

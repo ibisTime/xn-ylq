@@ -66,7 +66,7 @@ public class ApplyAOImpl implements IApplyAO {
             }
         }
 
-        Apply apply = applyBO.getCurrentApply(applyUser, null);
+        Apply apply = applyBO.getCurrentApply(applyUser);
         if (apply != null) {
             throw new BizException("xn623020", "您已经有一个申请");
         }
@@ -87,7 +87,7 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Override
     public void cancalApply(String applyUser, String productCode) {
-        Apply apply = applyBO.getCurrentApply(applyUser, productCode);
+        Apply apply = applyBO.getCurrentApply(applyUser);
         if (!EApplyStatus.TO_CERTI.getCode().equals(apply.getStatus())
                 && !EApplyStatus.TO_APPROVE.getCode().equals(apply.getStatus())
                 && !EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())

@@ -11,4 +11,6 @@ public interface IApplyDAO extends IBaseDAO<Apply> {
     public int updateToDoApprove(Apply data);
 
     public int updateApprove(Apply data);
+
+    public int updateStatus(Apply data);
 }

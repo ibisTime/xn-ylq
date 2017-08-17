@@ -16,6 +16,8 @@ public interface IApplyBO extends IPaginableBO<Apply> {
 
     public Apply getApply(String code);
 
-    public Apply getCurrentApply(String userId, String productCode);
+    public Apply getCurrentApply(String userId);
+
+    public void refreshStatus(Apply data);
 
 }

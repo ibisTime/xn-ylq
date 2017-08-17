@@ -14,7 +14,7 @@ public class Borrow extends ABaseDO {
 
     private static final long serialVersionUID = 1L;
 
-    // 编号（合同编号
+    // 编号（合同编号）
     private String code;
 
     // 申请人
@@ -37,9 +37,6 @@ public class Borrow extends ABaseDO {
 
     // 约定还款时间
     private Date hkDatetime;
-
-    // 实际还款时间
-    private Date realHkDatetime;
 
     // 正常应付利息
     private Long lxAmount;
@@ -67,6 +64,24 @@ public class Borrow extends ABaseDO {
 
     // 逾期天数
     private Integer yqDays;
+
+    // 共计应还金额
+    private Long totalAmount;
+
+    // 实际还款时间
+    private Date realHkDatetime;
+
+    // 实际还款金额
+    private Long realHkAmount;
+
+    // 支付编号
+    private String payCode;
+
+    // 支付组号
+    private String payGroup;
+
+    // 支付方式
+    private String payType;
 
     // 状态
     private String status;
@@ -266,6 +281,46 @@ public class Borrow extends ABaseDO {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Long getRealHkAmount() {
+        return realHkAmount;
+    }
+
+    public void setRealHkAmount(Long realHkAmount) {
+        this.realHkAmount = realHkAmount;
+    }
+
+    public String getPayCode() {
+        return payCode;
+    }
+
+    public void setPayCode(String payCode) {
+        this.payCode = payCode;
+    }
+
+    public String getPayGroup() {
+        return payGroup;
+    }
+
+    public void setPayGroup(String payGroup) {
+        this.payGroup = payGroup;
+    }
+
+    public String getPayType() {
+        return payType;
+    }
+
+    public void setPayType(String payType) {
+        this.payType = payType;
+    }
+
+    public Long getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Long totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
 }

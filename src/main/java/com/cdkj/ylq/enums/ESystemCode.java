@@ -9,7 +9,7 @@ import java.util.Map;
  * @history:
  */
 public enum ESystemCode {
-    YAOCHENG("CD-CYC000009", "姚橙");
+    YLQ("CD-YLQ000014", "一两千");
     public static Map<String, ESystemCode> getMap() {
         Map<String, ESystemCode> map = new HashMap<String, ESystemCode>();
         for (ESystemCode direction : ESystemCode.values()) {

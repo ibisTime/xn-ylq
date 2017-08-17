@@ -68,7 +68,7 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
     }
 
     @Override
-    public Apply getCurrentApply(String userId, String productCode) {
+    public Apply getCurrentApply(String userId) {
         Apply condition = new Apply();
         List<String> statusList = new ArrayList<String>();
         statusList.add(EApplyStatus.TO_CERTI.getCode());
@@ -79,7 +79,6 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
         statusList.add(EApplyStatus.LOANING.getCode());
         statusList.add(EApplyStatus.OVERDUE.getCode());
         condition.setApplyUser(userId);
-        condition.setProductCode(productCode);
         condition.setStatusList(statusList);
         return applyDAO.select(condition);
     }
@@ -88,6 +87,11 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
     public void toDoApprove(Apply data) {
         data.setStatus(EApplyStatus.TO_APPROVE.getCode());
         applyDAO.updateToDoApprove(data);
+    }
+
+    @Override
+    public void refreshStatus(Apply data) {
+        applyDAO.updateStatus(data);
     }
 
 }

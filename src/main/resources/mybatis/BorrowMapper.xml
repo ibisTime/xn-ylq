@@ -11,7 +11,6 @@
 		<result column="fk_datetime" property="fkDatetime" />
 		<result column="jx_datetime" property="jxDatetime" />
 		<result column="hk_datetime" property="hkDatetime" />
-		<result column="real_hk_datetime" property="realHkDatetime" />
 		<result column="lx_amount" property="lxAmount" />
 		<result column="xs_amount" property="xsAmount" />
 		<result column="gl_amount" property="glAmount" />
@@ -21,6 +20,12 @@
 		<result column="rate2" property="rate2" />
 		<result column="yqlx_amount" property="yqlxAmount" />
 		<result column="yq_days" property="yqDays" />
+		<result column="totalAmount" property="totalAmount" />
+		<result column="real_hk_datetime" property="realHkDatetime" />
+		<result column="real_hk_amount" property="realHkAmount" />
+		<result column="pay_code" property="payCode" />
+		<result column="pay_group" property="payGroup" />
+		<result column="pay_type" property="payType" />
 		<result column="status" property="status" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
@@ -49,7 +54,6 @@
 		,t.fk_datetime
 		,t.jx_datetime
 		,t.hk_datetime
-		,t.real_hk_datetime
 		,t.lx_amount
 		,t.xs_amount
 		,t.gl_amount
@@ -59,6 +63,12 @@
 		,t.rate2
 		,t.yqlx_amount
 		,t.yq_days
+		,t.total_amount
+		,t.real_hk_datetime
+		,t.real_hk_amount
+		,t.pay_code
+		,t.pay_group
+		,t.pay_type
 		,t.status
 		,t.updater
 		,t.update_datetime
@@ -90,7 +100,6 @@
 		,fk_datetime
 		,jx_datetime
 		,hk_datetime
-		,real_hk_datetime
 		,lx_amount
 		,xs_amount
 		,gl_amount
@@ -100,6 +109,8 @@
 		,rate2
 		,yqlx_amount
 		,yq_days
+		,total_amount
+		,real_hk_amount
 		,status
 		,updater
 		,update_datetime
@@ -114,7 +125,6 @@
 		,#{fkDatetime}
 		,#{jxDatetime}
 		,#{hkDatetime}
-		,#{realHkDatetime}
 		,#{lxAmount}
 		,#{xsAmount}
 		,#{glAmount}
@@ -124,6 +134,8 @@
 		,#{rate2}
 		,#{yqlxAmount}
 		,#{yqDays}
+		,#{totalAmount}
+		,#{realHkAmount}
 		,#{status}
 		,#{updater}
 		,#{updateDatetime}
@@ -155,6 +167,37 @@
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_loan" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		fk_datetime = #{fkDatetime}
+		,jx_datetime = #{jxDatetime}
+		,hk_datetime = #{hkDatetime}
+		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_payGroup" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		pay_group = #{payGroup}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_repaySuccess" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		real_hk_datetime = #{realHkDatetime}
+		,real_hk_amount = #{realHkAmount}
+		,pay_code = #{payCode}
+		,pay_type = #{payType}
+		,status = #{status}
 		WHERE code = #{code}
 	</update>
 

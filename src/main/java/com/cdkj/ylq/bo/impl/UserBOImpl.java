@@ -121,8 +121,8 @@ public class UserBOImpl implements IUserBO {
 
     @Override
     public String getSystemUser(String systemCode) {
-        if (ESystemCode.YAOCHENG.getCode().equals(systemCode)) {
-            return ESysUser.SYS_USER_YAOCHENG.getCode();
+        if (ESystemCode.YLQ.getCode().equals(systemCode)) {
+            return ESysUser.SYS_USER_YLQ.getCode();
         }
         return null;
     }

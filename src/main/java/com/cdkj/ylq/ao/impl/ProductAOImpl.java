@@ -60,7 +60,7 @@ public class ProductAOImpl implements IProductAO {
 
         data.setDuration(StringValidater.toInteger(req.getDuration()));
         data.setYqRate1(StringValidater.toDouble(req.getYqRate1()));
-        data.setYqRate1(StringValidater.toDouble(req.getYqRate2()));
+        data.setYqRate2(StringValidater.toDouble(req.getYqRate2()));
         data.setLxRate(StringValidater.toDouble(req.getLxRate()));
         data.setXsRate(StringValidater.toDouble(req.getXsRate()));
 
@@ -91,7 +91,7 @@ public class ProductAOImpl implements IProductAO {
 
         data.setDuration(StringValidater.toInteger(req.getDuration()));
         data.setYqRate1(StringValidater.toDouble(req.getYqRate1()));
-        data.setYqRate1(StringValidater.toDouble(req.getYqRate2()));
+        data.setYqRate2(StringValidater.toDouble(req.getYqRate2()));
         data.setLxRate(StringValidater.toDouble(req.getLxRate()));
         data.setXsRate(StringValidater.toDouble(req.getXsRate()));
 
@@ -119,8 +119,7 @@ public class ProductAOImpl implements IProductAO {
         for (Product product : products) {
             if (StringUtils.isNotBlank(userId)) {
                 userBO.getRemoteUser(userId);
-                Apply apply = applyBO
-                    .getCurrentApply(userId, product.getCode());
+                Apply apply = applyBO.getCurrentApply(userId);
                 if (apply != null) {
                     product.setUserProductStatus(apply.getStatus());
                 } else {
