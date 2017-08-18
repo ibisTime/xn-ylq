@@ -32,4 +32,7 @@ public interface IBorrowAO {
     // 管理端：确认坏账
     public void confirmBad(String code, String updater, String remark);
 
+    // 定时器调用：每日00:00:00点检查逾期情况
+    public void doCheckOverdueDaily();
+
 }

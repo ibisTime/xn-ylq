@@ -2,37 +2,14 @@ package com.cdkj.ylq.common;
 
 public class SysConstants {
 
-    public static final String SP_BYJE = "SP_BYJE"; // 包邮金额
+    public static final String IDENTIFY_VALID_DAYS = "identifyValidDays"; // 身份认证有效天数
 
-    public static final String SP_YUNFEI = "SP_YUNFEI"; // 订单运费，全系统统一
+    public static final String ANTIFRAUD_VALID_DAYS = "antifraudValidDays"; // 欺诈识别认证有效天数
 
-    // *************************************正汇*************************************
+    public static final String ZMSCORE_VALID_DAYS = "zmScoreValidDays"; // 芝麻分认证有效天数
 
-    public static final String MAX_PERSON_STOCK = "MAX_PERSON_STOCK"; // 最大分红权个数
+    public static final String CARRIER_VALID_DAYS = "carrierValidDays"; // 运营商认证有效天数
 
-    public static final String MAX_DAY_STOCK = "MAX_DAY_STOCK"; // 每天最多有效分红权个数
-
-    public static final String USER_STOCK_DAYBACK = "USER_STOCK_DAYBACK"; // 用户每个分红权可以领钱金额
-
-    public static final String STORE_STOCK_DAYBACK = "STORE_STOCK_DAYBACK"; // 商家每个分红权可以领钱金额
-
-    // *************************************正汇*************************************
-
-    // *************************************管道*************************************
-    public static final String STORE_RMB2JF = "STORE_RMB2JF"; // 积分消费比例
-
-    // *************************************管道*************************************
-
-    // *************************************菜狗*************************************
-
-    public static final String STORE_XFFX = "STORE_XFFX"; // C端消费返现人民币比例
-
-    // *************************************菜狗*************************************
-
-    public static final String WX_PAY_OPEN = "wxPayOpen"; // 是否开启微信支付
-
-    public static final String ZFB_PAY_OPEN = "zfbPayOpen"; // 是否开启支付宝支付
-
-    public static final String STOCK_STEP = "stockStep"; // 分红权每次读取数量
+    public static final String AMOUNT_VALID_DAYS = "amountValidDays"; // 额度有效天数
 
 }

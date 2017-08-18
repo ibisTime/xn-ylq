@@ -26,6 +26,9 @@
 			<if test="ref != null and ref != '' ">
 				AND t.ref = #{ref}
 			</if>
+			<if test="curDatetime != null and curDatetime != '' ">
+				<![CDATA[AND t.valid_datetime <= #{curDatetime}]]>
+			</if>
 		</trim>
 	</sql>
 	<select id="select_certification" parameterType="certification" resultMap="certification_DB_Result">
@@ -84,6 +87,13 @@
 		,cer_datetime = #{cerDatetime}
 		,valid_datetime = #{validDatetime}
 		,ref = #{ref}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="update_flag" parameterType="certification">
+		UPDATE t_certification
+		SET
+		flag = #{flag}
 		WHERE id = #{id}
 	</update>
 

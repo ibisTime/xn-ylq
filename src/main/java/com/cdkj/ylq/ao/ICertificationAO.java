@@ -66,4 +66,7 @@ public interface ICertificationAO {
 
     public Certification getCertification(Long id);
 
+    // 定时器：每日检查认证是否已过期
+    public void doCheckValidDaily();
+
 }

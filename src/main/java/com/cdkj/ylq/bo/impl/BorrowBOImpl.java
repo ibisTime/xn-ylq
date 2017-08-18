@@ -106,4 +106,13 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
         }
         return count;
     }
+
+    @Override
+    public int overdue(Borrow data) {
+        int count = 0;
+        if (data != null) {
+            count = borrowDAO.updateOverdue(data);
+        }
+        return count;
+    }
 }

@@ -38,6 +38,19 @@ public class Certification extends ABaseDO {
     // 关联申请单
     private String ref;
 
+    // *** 查询字段 ****
+
+    // 当前时间
+    private Date curDatetime;
+
+    public Date getCurDatetime() {
+        return curDatetime;
+    }
+
+    public void setCurDatetime(Date curDatetime) {
+        this.curDatetime = curDatetime;
+    }
+
     public Long getId() {
         return id;
     }

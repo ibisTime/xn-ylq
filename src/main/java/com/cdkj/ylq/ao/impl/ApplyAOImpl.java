@@ -11,19 +11,23 @@ import com.cdkj.ylq.ao.IApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
+import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
+import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
+import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.EGeneratePrefix;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
@@ -43,6 +47,9 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Autowired
     private ISmsOutBO smsOutBO;
+
+    @Autowired
+    private ISYSConfigBO sysConfigBO;
 
     @Override
     public String submitApply(String applyUser, String productCode) {
@@ -115,12 +122,16 @@ public class ApplyAOImpl implements IApplyAO {
             infoAmount.setSxAmount(sxAmount);
             Certification certification = certificationBO.getCertification(
                 apply.getApplyUser(), ECertiKey.INFO_AMOUNT.getCode());
+            SYSConfig config = sysConfigBO.getSYSConfig(
+                SysConstants.AMOUNT_VALID_DAYS, ESystemCode.YLQ.getCode(),
+                ESystemCode.YLQ.getCode());
             if (certification != null) {
                 certification.setFlag(EBoolean.YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoAmount));
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(), 7));
+                    DateUtil.getTodayStart(),
+                    Integer.valueOf(config.getCvalue())));
                 certification.setRef(apply.getProductCode());
                 certificationBO.refreshCertification(certification);
             } else {
@@ -131,7 +142,8 @@ public class ApplyAOImpl implements IApplyAO {
                 certification.setResult(JsonUtil.Object2Json(sxAmount));
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(), 7));
+                    DateUtil.getTodayStart(),
+                    Integer.valueOf(config.getCvalue())));
                 certification.setRef(apply.getProductCode());
                 certificationBO.saveCertification(certification);
             }

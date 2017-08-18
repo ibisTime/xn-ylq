@@ -1,5 +1,6 @@
 package com.cdkj.ylq.ao.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -125,8 +126,7 @@ public class BorrowAOImpl implements IBorrowAO {
         Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
             product.getFwRate()));
         // 应还金额
-        Long totalAmount = borrowAmount + lxAmount + xsAmount + glAmount
-                + fwAmount - yhAmount;
+        Long totalAmount = borrowAmount;
 
         Borrow borrow = new Borrow();
 
@@ -209,7 +209,7 @@ public class BorrowAOImpl implements IBorrowAO {
         borrowBO.loan(borrow);
 
         Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
-        apply.setStatus(EApplyStatus.TO_LOAN.getCode());
+        apply.setStatus(EApplyStatus.LOANING.getCode());
         applyBO.refreshStatus(apply);
     }
 
@@ -286,5 +286,45 @@ public class BorrowAOImpl implements IBorrowAO {
         apply.setStatus(EApplyStatus.BAD.getCode());
         applyBO.refreshStatus(apply);
 
+    }
+
+    @Override
+    public void doCheckOverdueDaily() {
+        logger.info("***************开始扫描逾期借款***************");
+        Borrow condition = new Borrow();
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(EBorrowStatus.LOANING.getCode());
+        statusList.add(EBorrowStatus.OVERDUE.getCode());
+        condition.setStatusList(statusList);
+        condition.setCurDatetime(new Date());
+        List<Borrow> borrowList = borrowBO.queryBorrowList(condition);
+        if (CollectionUtils.isNotEmpty(borrowList)) {
+            for (Borrow borrow : borrowList) {
+                overdue(borrow);
+            }
+        }
+        logger.info("***************结束扫描逾期借款***************");
+    }
+
+    public void overdue(Borrow borrow) {
+        // 逾期天数
+        Integer yqDays = borrow.getYqDays() + 1;
+        // 逾期利息
+        Long yqlxAmount = borrow.getYqlxAmount();
+        if (yqDays <= 7) {
+            yqlxAmount += AmountUtil.eraseLiUp(AmountUtil.mul(
+                borrow.getAmount(), borrow.getRate1()));
+        } else {
+            yqlxAmount += AmountUtil.eraseLiUp(AmountUtil.mul(
+                borrow.getAmount(), borrow.getRate2()));
+        }
+        borrow.setYqDays(yqDays);
+        borrow.setYqlxAmount(yqlxAmount);
+        borrow.setTotalAmount(borrow.getAmount() + yqlxAmount);
+        borrow.setStatus(EBorrowStatus.OVERDUE.getCode());
+        borrow.setUpdater("程序自动");
+        borrow.setUpdateDatetime(new Date());
+        borrow.setRemark("已逾期");
+        borrowBO.overdue(borrow);
     }
 }

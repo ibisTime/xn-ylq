@@ -1,6 +1,7 @@
 package com.cdkj.ylq.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import com.cdkj.ylq.dao.base.ABaseDO;
 
@@ -97,7 +98,31 @@ public class Borrow extends ABaseDO {
 
     // *** 辅助字段 ****
 
+    // 用户信息
     private User user;
+
+    // *** 查询字段 ****
+    // 状态列表
+    private List<String> statusList;
+
+    // 当前时间
+    private Date curDatetime;
+
+    public List<String> getStatusList() {
+        return statusList;
+    }
+
+    public void setStatusList(List<String> statusList) {
+        this.statusList = statusList;
+    }
+
+    public Date getCurDatetime() {
+        return curDatetime;
+    }
+
+    public void setCurDatetime(Date curDatetime) {
+        this.curDatetime = curDatetime;
+    }
 
     public String getCode() {
         return code;

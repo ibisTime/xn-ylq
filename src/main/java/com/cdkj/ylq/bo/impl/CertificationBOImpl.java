@@ -9,6 +9,7 @@ import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.dao.ICertificationDAO;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.exception.BizException;
 
 @Component
@@ -59,6 +60,17 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
         Certification condition = new Certification();
         condition.setUserId(userId);
         return certificationDAO.selectList(condition);
+    }
+
+    @Override
+    public List<Certification> queryCertificationList(Certification condition) {
+        return certificationDAO.selectList(condition);
+    }
+
+    @Override
+    public void makeInvalid(Certification certification) {
+        certification.setFlag(ECertificationStatus.INVALID.getCode());
+        certificationDAO.updateFlag(certification);
     }
 
 }

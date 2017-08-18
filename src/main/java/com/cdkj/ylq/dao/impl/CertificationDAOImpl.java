@@ -52,4 +52,9 @@ public class CertificationDAOImpl extends AMybatisTemplate implements
         return super.update(NAMESPACE.concat("update_certification"), data);
     }
 
+    @Override
+    public int updateFlag(Certification data) {
+        return super.update(NAMESPACE.concat("update_flag"), data);
+    }
+
 }

@@ -7,4 +7,6 @@ public interface ICertificationDAO extends IBaseDAO<Certification> {
     String NAMESPACE = ICertificationDAO.class.getName().concat(".");
 
     public int updateCertification(Certification data);
+
+    public int updateFlag(Certification data);
 }

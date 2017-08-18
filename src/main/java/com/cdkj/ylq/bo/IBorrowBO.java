@@ -19,6 +19,8 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     public int confirmBad(Borrow data);
 
+    public int overdue(Borrow data);
+
     public int repaySuccess(Borrow borrow, Long payAmount, String payCode,
             String payType);
 

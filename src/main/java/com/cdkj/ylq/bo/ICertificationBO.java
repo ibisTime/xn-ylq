@@ -19,4 +19,9 @@ public interface ICertificationBO extends IPaginableBO<Certification> {
     // 根据userId查询用户认证信息列表
     public List<Certification> queryCertificationList(String userId);
 
+    public List<Certification> queryCertificationList(Certification condition);
+
+    // 认证失效
+    public void makeInvalid(Certification certification);
+
 }

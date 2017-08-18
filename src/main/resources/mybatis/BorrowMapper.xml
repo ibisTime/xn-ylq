@@ -42,6 +42,15 @@
 			<if test="status != null and status != '' ">
 				AND t.status = #{status}
 			</if>
+			<if test="curDatetime != null and curDatetime != '' ">
+				<![CDATA[AND t.hk_datetime <= #{curDatetime}]]>
+			</if>
+			<if test="statusList != null and statusList != '' ">
+				AND t.status in 
+                <foreach item="item" index="index" collection="statusList" open="(" separator="," close=")">
+	            	#{item}
+                </foreach> 
+			</if>
 		</trim>
 	</sql>
 	<select id="select_borrow" parameterType="borrow" resultMap="borrow_DB_Result">
@@ -211,5 +220,17 @@
 		WHERE code = #{code}
 	</update>
 
+    <update id="update_overdue" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		status = #{status}
+		,yq_days = #{yqDays}
+		,yqlx_amount = #{yqlxAmount}
+		,total_amount = #{totalAmount}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
 
 </mapper>

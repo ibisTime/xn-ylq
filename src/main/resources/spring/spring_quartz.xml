@@ -18,21 +18,32 @@
   <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
        <property name="triggers">  
            <list>
-     <!--       	  <ref bean="orderTrigger"/>  -->
+           	  <ref bean="borrowTrigger"/>
+           	  <ref bean="certificationTrigger"/>
           </list>  
        </property>  
        <property name="autoStartup" value="true"/>  
     </bean> 
 	
-<!-- 	<bean id="orderTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
-       <property name="jobDetail" ref="doChangeOrderStatusDaily"/>  
-       <property name="cronExpression" value="0 0 22 * * ?"/>每天22点执行
+ 	<bean id="borrowTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail" ref="doCheckOverdueDaily"/>  
+       <property name="cronExpression" value="0 0 0 * * ?"/><!-- 每天0点执行 -->
 	</bean>
-	<bean id="doChangeOrderStatusDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
-	        <property name="targetObject" ref="orderAOImpl"/>  
-	        <property name="targetMethod" value="doChangeOrderStatusDaily"/>  
-	        <property name="concurrent" value="true"/>   是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  
-	</bean> -->
+	<bean id="doCheckOverdueDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
+	        <property name="targetObject" ref="borrowAOImpl"/>  
+	        <property name="targetMethod" value="doCheckOverdueDaily"/>  
+	        <property name="concurrent" value="true"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
+	</bean>
+	
+	<bean id="certificationTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail" ref="doCheckValidDaily"/>  
+       <property name="cronExpression" value="0 0 0 * * ?"/><!-- 每天0点执行 -->
+	</bean>
+	<bean id="doCheckValidDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
+	        <property name="targetObject" ref="borrowAOImpl"/>  
+	        <property name="targetMethod" value="doCheckValidDaily"/>  
+	        <property name="concurrent" value="true"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
+	</bean>
 	
 	
 </beans>

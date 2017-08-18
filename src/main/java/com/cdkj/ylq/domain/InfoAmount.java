@@ -20,8 +20,30 @@ public class InfoAmount {
     // 授信额度
     private Long sxAmount;
 
+    // 授信时间
+    private Date cerDatetime;
+
     // 有效时间
     private Date validDatetime;
+
+    // 剩余有效天数
+    private Integer validDays;
+
+    public Date getCerDatetime() {
+        return cerDatetime;
+    }
+
+    public void setCerDatetime(Date cerDatetime) {
+        this.cerDatetime = cerDatetime;
+    }
+
+    public Integer getValidDays() {
+        return validDays;
+    }
+
+    public void setValidDays(Integer validDays) {
+        this.validDays = validDays;
+    }
 
     public Date getValidDatetime() {
         return validDatetime;
