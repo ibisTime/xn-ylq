@@ -14,6 +14,7 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','couponExplain','优惠券说明','jkeg',now(),'优惠券说明','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrowProtocol','借款协议','admin',now(),'借款协议','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','helpCenter','帮助中心','admin',now(),'帮助中心','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','activityRule','活动规则','admin',now(),'活动规则','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','time','09:00:00 - 17:30:00','admin',now(),'服务时间','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','telephone','0579-89166370','admin',now(),'服务电话','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','domainUrl','http://m.yiliangqian.com','admin',now(),'推荐注册链接','CD-YLQ000014','CD-YLQ000014');

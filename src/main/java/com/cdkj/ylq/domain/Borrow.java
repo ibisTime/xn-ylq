@@ -27,6 +27,9 @@ public class Borrow extends ABaseDO {
     // 借款金额
     private Long amount;
 
+    // 等级
+    private String level;
+
     // 借款时长
     private Integer duration;
 
@@ -107,6 +110,14 @@ public class Borrow extends ABaseDO {
 
     // 当前时间
     private Date curDatetime;
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
     public List<String> getStatusList() {
         return statusList;

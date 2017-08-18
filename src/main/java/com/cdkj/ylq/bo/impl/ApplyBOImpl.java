@@ -73,7 +73,6 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
         List<String> statusList = new ArrayList<String>();
         statusList.add(EApplyStatus.TO_CERTI.getCode());
         statusList.add(EApplyStatus.TO_APPROVE.getCode());
-        statusList.add(EApplyStatus.APPROVE_NO.getCode());
         statusList.add(EApplyStatus.APPROVE_YES.getCode());
         statusList.add(EApplyStatus.TO_LOAN.getCode());
         statusList.add(EApplyStatus.LOANING.getCode());

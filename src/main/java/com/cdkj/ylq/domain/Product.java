@@ -88,8 +88,30 @@ public class Product extends ABaseDO {
     // 当前申请状态
     private String userProductStatus;
 
+    // 审核说明 - 审核不通过时返回
+    private String approveNote;
+
+    // 借款编号 - 放款后返回
+    private String borrowCode;
+
     // 是否锁定
     private String isLocked;
+
+    public String getBorrowCode() {
+        return borrowCode;
+    }
+
+    public void setBorrowCode(String borrowCode) {
+        this.borrowCode = borrowCode;
+    }
+
+    public String getApproveNote() {
+        return approveNote;
+    }
+
+    public void setApproveNote(String approveNote) {
+        this.approveNote = approveNote;
+    }
 
     public String getCode() {
         return code;

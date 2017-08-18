@@ -134,6 +134,7 @@ public class BorrowAOImpl implements IBorrowAO {
         borrow.setApplyUser(userId);
         borrow.setSignDatetime(now);
         borrow.setAmount(borrowAmount);
+        borrow.setLevel(product.getLevel());
         borrow.setDuration(product.getDuration());
 
         borrow.setLxAmount(lxAmount);

@@ -122,33 +122,49 @@ public class ProductAOImpl implements IProductAO {
         Paginable<Product> results = productBO.getPaginable(start, limit,
             condition);
         List<Product> products = results.getList();
-        for (Product product : products) {
-            if (StringUtils.isNotBlank(userId)) {
-                userBO.getRemoteUser(userId);
-                Apply apply = applyBO.getCurrentApply(userId);
-                if (apply != null) {
-                    product.setUserProductStatus(apply.getStatus());
-                } else {
+        // 未登录，只显示最低等级
+        if (StringUtils.isBlank(userId)) {
+            for (Product product : products) {
+                if (EProductLevel.ONE.getCode().equals(product.getLevel())) {
+                    product.setIsLocked(EBoolean.NO.getCode());
                     product.setUserProductStatus(EUserProductStatus.TO_APPLY
                         .getCode());
-                }
-                // to 根据用户等级 判断是否锁定产品
-                if (EProductLevel.ONE.getCode().equals(product.getLevel())) {
-                    product.setIsLocked(EBoolean.NO.getCode());
-                } else {
-                    product.setIsLocked(EBoolean.YES.getCode());
-                }
-
-            } else {
-                product.setUserProductStatus(EUserProductStatus.TO_APPLY
-                    .getCode());
-                if (EProductLevel.ONE.getCode().equals(product.getLevel())) {
-                    product.setIsLocked(EBoolean.NO.getCode());
                 } else {
                     product.setIsLocked(EBoolean.YES.getCode());
                 }
             }
+        } else {
+            EProductLevel curProductLevel = borrowBO.getUserBorrowLevel(userId);
+            Apply apply = applyBO.getCurrentApply(userId);
+            if (apply != null) {
+                Borrow borrow = borrowBO.getCurrentBorrow(userId);
+                for (Product product : products) {
+                    if (apply.getProductCode().equals(product.getCode())) {
+                        product.setUserProductStatus(apply.getStatus());
+                        product.setApproveNote(apply.getApproveNote());
+                        if (borrow != null) {
+                            product.setBorrowCode(borrow.getCode());
+                        }
+                        product.setIsLocked(EBoolean.NO.getCode());
+                    } else {
+                        product.setIsLocked(EBoolean.YES.getCode());
+                    }
+                }
+            } else {
+                for (Product product : products) {
+                    if (curProductLevel.getCode().equals(product.getCode())) {
+                        product
+                            .setUserProductStatus(EUserProductStatus.TO_APPLY
+                                .getCode());
+                        product.setIsLocked(EBoolean.YES.getCode());
+                    } else {
+                        product.setIsLocked(EBoolean.NO.getCode());
+                    }
+                }
+            }
+
         }
+
         return results;
     }
 
@@ -207,9 +223,8 @@ public class ProductAOImpl implements IProductAO {
             throw new BizException("623013", "您还没有额度，请先选择产品进行申请");
         }
         // 是否已经有借款
-        Borrow condition = new Borrow();
-        condition.setApplyUser(userId);
-        if (borrowBO.getTotalCount(condition) > 0) {
+        Borrow borrow = borrowBO.getCurrentBorrow(userId);
+        if (borrow != null) {
             throw new BizException("623013", "当前已有借款");
         }
         Product product = productBO.getProduct(certification.getRef());

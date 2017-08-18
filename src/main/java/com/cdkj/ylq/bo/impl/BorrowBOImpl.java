@@ -1,5 +1,6 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import com.cdkj.ylq.dao.IBorrowDAO;
 import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
+import com.cdkj.ylq.enums.EProductLevel;
 import com.cdkj.ylq.exception.BizException;
 
 @Component
@@ -115,4 +117,40 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
         }
         return count;
     }
+
+    @Override
+    public Borrow getCurrentBorrow(String userId) {
+        Borrow condition = new Borrow();
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(EBorrowStatus.TO_LOAN.getCode());
+        statusList.add(EBorrowStatus.LOANING.getCode());
+        statusList.add(EBorrowStatus.OVERDUE.getCode());
+        condition.setApplyUser(userId);
+        condition.setStatusList(statusList);
+        return borrowDAO.select(condition);
+    }
+
+    @Override
+    public EProductLevel getUserBorrowLevel(String userId) {
+        EProductLevel level = EProductLevel.ONE;
+        Borrow condition = new Borrow();
+        condition.setApplyUser(userId);
+        condition.setStatus(EBorrowStatus.REPAY.getCode());
+        condition.setLevel(EProductLevel.FOUR.getCode());
+        if (borrowDAO.selectTotalCount(condition) > 2) {
+            level = EProductLevel.FOUR;
+        } else {
+            condition.setLevel(EProductLevel.THREE.getCode());
+            if (borrowDAO.selectTotalCount(condition) > 2) {
+                level = EProductLevel.THREE;
+            } else {
+                condition.setLevel(EProductLevel.TWO.getCode());
+                if (borrowDAO.selectTotalCount(condition) > 2) {
+                    level = EProductLevel.TWO;
+                }
+            }
+        }
+        return level;
+    }
+
 }
