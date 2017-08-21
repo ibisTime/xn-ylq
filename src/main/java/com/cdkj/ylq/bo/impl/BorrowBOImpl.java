@@ -154,4 +154,11 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
         return level;
     }
 
+    @Override
+    public int archive(Borrow data) {
+        int count = 0;
+        count = borrowDAO.updateArchive(data);
+        return count;
+    }
+
 }

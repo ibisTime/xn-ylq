@@ -27,6 +27,8 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
     public int repaySuccess(Borrow borrow, Long payAmount, String payCode,
             String payType);
 
+    public int archive(Borrow data);
+
     public List<Borrow> queryBorrowListByPayGroup(String payGroup);
 
     // 用户当前可借产品等级

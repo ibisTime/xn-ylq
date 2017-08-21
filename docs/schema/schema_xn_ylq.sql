@@ -40,11 +40,13 @@ CREATE TABLE `t_borrow` (
   `pay_group` varchar(32) DEFAULT NULL COMMENT '支付组号',
   `pay_type` varchar(32) DEFAULT NULL COMMENT '支付方式',
   `status` varchar(32) DEFAULT NULL COMMENT '状态',
+  `is_archive` varchar(32) DEFAULT '0' COMMENT '是否归档',
   `updater` varchar(32) DEFAULT NULL COMMENT '最后更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '最后更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `t_certification` (
   `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '编号',

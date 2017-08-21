@@ -70,4 +70,9 @@ public class BorrowDAOImpl extends AMybatisTemplate implements IBorrowDAO {
         return super.update(NAMESPACE.concat("update_overdue"), data);
     }
 
+    @Override
+    public int updateArchive(Borrow data) {
+        return super.update(NAMESPACE.concat("update_archive"), data);
+    }
+
 }

@@ -34,6 +34,7 @@ import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.UserCoupon;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBizType;
+import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
@@ -330,5 +331,15 @@ public class BorrowAOImpl implements IBorrowAO {
         borrow.setUpdateDatetime(new Date());
         borrow.setRemark("已逾期");
         borrowBO.overdue(borrow);
+    }
+
+    @Override
+    public void archive(String code, String updater, String remark) {
+        Borrow data = borrowBO.getBorrow(code);
+        data.setIsArchive(EBoolean.YES.getCode());
+        data.setUpdater(updater);
+        data.setUpdateDatetime(new Date());
+        data.setRemark(remark);
+        borrowBO.archive(data);
     }
 }

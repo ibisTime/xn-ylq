@@ -90,6 +90,9 @@ public class Borrow extends ABaseDO {
     // 状态
     private String status;
 
+    // 是否归档
+    private String isArchive;
+
     // 最后更新人
     private String updater;
 
@@ -357,6 +360,14 @@ public class Borrow extends ABaseDO {
 
     public void setTotalAmount(Long totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public String getIsArchive() {
+        return isArchive;
+    }
+
+    public void setIsArchive(String isArchive) {
+        this.isArchive = isArchive;
     }
 
 }

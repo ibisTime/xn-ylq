@@ -28,6 +28,7 @@
 		<result column="pay_group" property="payGroup" />
 		<result column="pay_type" property="payType" />
 		<result column="status" property="status" />
+		<result column="is_archive" property="isArchive" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
@@ -48,6 +49,9 @@
 			</if>
 			<if test="level != null and level != '' ">
 				AND t.level = #{level}
+			</if>
+			<if test="isArchive != null and isArchive != '' ">
+				AND t.is_archive = #{isArchive}
 			</if>
 			<if test="curDatetime != null and curDatetime != '' ">
 				<![CDATA[AND t.hk_datetime <= #{curDatetime}]]>
@@ -87,6 +91,7 @@
 		,t.pay_group
 		,t.pay_type
 		,t.status
+		,t.is_archive
 		,t.updater
 		,t.update_datetime
 		,t.remark
@@ -212,6 +217,16 @@
 		,yq_days = #{yqDays}
 		,yqlx_amount = #{yqlxAmount}
 		,total_amount = #{totalAmount}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_archive" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		is_archive = #{isArchive}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}

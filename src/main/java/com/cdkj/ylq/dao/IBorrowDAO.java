@@ -15,4 +15,6 @@ public interface IBorrowDAO extends IBaseDAO<Borrow> {
     public int updateConfirmBad(Borrow data);
 
     public int updateOverdue(Borrow data);
+
+    public int updateArchive(Borrow data);
 }
