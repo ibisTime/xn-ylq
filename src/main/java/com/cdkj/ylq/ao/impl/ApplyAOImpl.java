@@ -75,7 +75,14 @@ public class ApplyAOImpl implements IApplyAO {
 
         Apply apply = applyBO.getCurrentApply(applyUser);
         if (apply != null) {
-            throw new BizException("xn623020", "您已经有一个申请");
+            if (EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())) {
+                apply.setStatus(status);
+                applyBO.refreshStatus(apply);
+                return apply.getCode();
+            } else {
+                throw new BizException("xn623020", "您已经有一个申请");
+            }
+
         }
         Apply data = new Apply();
         String code = OrderNoGenerater.generateM(EGeneratePrefix.APPLY
@@ -93,7 +100,7 @@ public class ApplyAOImpl implements IApplyAO {
     }
 
     @Override
-    public void cancalApply(String applyUser, String productCode) {
+    public void cancalApply(String applyUser) {
         Apply apply = applyBO.getCurrentApply(applyUser);
         if (!EApplyStatus.TO_CERTI.getCode().equals(apply.getStatus())
                 && !EApplyStatus.TO_APPROVE.getCode().equals(apply.getStatus())

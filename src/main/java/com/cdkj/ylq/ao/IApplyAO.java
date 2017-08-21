@@ -10,7 +10,7 @@ public interface IApplyAO {
     public String submitApply(String applyUser, String productCode);
 
     // 取消申请
-    public void cancalApply(String applyUser, String productCode);
+    public void cancalApply(String applyUser);
 
     // 审核
     public void doApprove(String code, String approveResult, Long sxAmount,

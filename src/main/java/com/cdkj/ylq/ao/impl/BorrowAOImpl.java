@@ -36,6 +36,7 @@ import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBizType;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.ECertiKey;
+import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EPayType;
 import com.cdkj.ylq.enums.ESysUser;
@@ -86,10 +87,12 @@ public class BorrowAOImpl implements IBorrowAO {
         if (StringUtils.isBlank(certification.getRef())) {
             throw new BizException("623070", "您还没有额度，请先选择产品进行申请");
         }
+        if (ECertificationStatus.INVALID.getCode().equals(
+            certification.getFlag())) {
+            throw new BizException("623070", "您的额度已失效，请选择产品重新申请");
+        }
         // 是否已经有借款
-        Borrow condition = new Borrow();
-        condition.setApplyUser(userId);
-        if (borrowBO.getTotalCount(condition) > 0) {
+        if (borrowBO.getCurrentBorrow(userId) != null) {
             throw new BizException("623070", "当前已有借款");
         }
         // 产品

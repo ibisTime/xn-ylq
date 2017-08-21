@@ -7,10 +7,11 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 
 /*
 -- Query: SELECT * FROM xn_ylq.t_coupon
--- Date: 2017-08-16 12:26
+-- Date: 2017-08-19 00:45
 */
-INSERT INTO `t_coupon` (`code`,`type`,`condition`,`amount`,`valid_days`,`start_amount`,`status`,`updater`,`update_datetime`,`remark`) VALUES ('CD-YLQ000014001','1',1,50000,30,1000000,'1','admin',now(),'推荐成功送');
-INSERT INTO `t_coupon` (`code`,`type`,`condition`,`amount`,`valid_days`,`start_amount`,`status`,`updater`,`update_datetime`,`remark`) VALUES ('CD-YLQ000014002','2',3,100000,30,1000000,'1','admin',now(),'借还成功送');
+INSERT INTO `t_coupon` (`code`,`type`,`get_condition`,`amount`,`valid_days`,`start_amount`,`status`,`updater`,`update_datetime`,`remark`) VALUES ('CD-YLQ000014001','0',1,50000,30,1000000,'1','admin',now(),'推荐成功送');
+INSERT INTO `t_coupon` (`code`,`type`,`get_condition`,`amount`,`valid_days`,`start_amount`,`status`,`updater`,`update_datetime`,`remark`) VALUES ('CD-YLQ000014002','1',2,80000,30,1000000,'1','ylq',now(),'借还成功送');
+
 
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('0','','product_level','产品等级','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','product_level','1','LV.1','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');

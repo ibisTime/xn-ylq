@@ -95,6 +95,7 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
             borrow.setPayCode(payCode);
             borrow.setPayType(payType);
             borrow.setStatus(EBorrowStatus.REPAY.getCode());
+            borrow.setRemark("已还款");
             count = borrowDAO.updateRepaySuccess(borrow);
         }
         return count;
@@ -136,16 +137,16 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
         Borrow condition = new Borrow();
         condition.setApplyUser(userId);
         condition.setStatus(EBorrowStatus.REPAY.getCode());
-        condition.setLevel(EProductLevel.FOUR.getCode());
-        if (borrowDAO.selectTotalCount(condition) > 2) {
+        condition.setLevel(EProductLevel.THREE.getCode());
+        if (borrowDAO.selectTotalCount(condition) >= 2) {
             level = EProductLevel.FOUR;
         } else {
-            condition.setLevel(EProductLevel.THREE.getCode());
-            if (borrowDAO.selectTotalCount(condition) > 2) {
+            condition.setLevel(EProductLevel.TWO.getCode());
+            if (borrowDAO.selectTotalCount(condition) >= 2) {
                 level = EProductLevel.THREE;
             } else {
-                condition.setLevel(EProductLevel.TWO.getCode());
-                if (borrowDAO.selectTotalCount(condition) > 2) {
+                condition.setLevel(EProductLevel.ONE.getCode());
+                if (borrowDAO.selectTotalCount(condition) >= 2) {
                     level = EProductLevel.TWO;
                 }
             }

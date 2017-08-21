@@ -34,7 +34,7 @@ public class XN623021 extends AProcessor {
      */
     @Override
     public Object doBusiness() throws BizException {
-        applyAO.cancalApply(req.getApplyUser(), req.getProductCode());
+        applyAO.cancalApply(req.getApplyUser());
         return new BooleanRes(true);
     }
 
@@ -44,7 +44,7 @@ public class XN623021 extends AProcessor {
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN623021Req.class);
-        StringValidater.validateBlank(req.getApplyUser(), req.getProductCode());
+        StringValidater.validateBlank(req.getApplyUser());
     }
 
 }

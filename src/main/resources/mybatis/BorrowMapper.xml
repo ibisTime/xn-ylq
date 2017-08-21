@@ -37,6 +37,9 @@
 			<if test="code != null and code != '' ">
 				AND t.code = #{code}
 			</if>
+			<if test="payGroup != null and payGroup != '' ">
+				AND t.pay_group = #{payGroup}
+			</if>
 			<if test="applyUser != null and applyUser != '' ">
 				AND t.apply_user = #{applyUser}
 			</if>
@@ -188,6 +191,7 @@
 		,pay_code = #{payCode}
 		,pay_type = #{payType}
 		,status = #{status}
+		,remark = #{remark}
 		WHERE code = #{code}
 	</update>
 	

@@ -1,4 +1,12 @@
 /*
+-- Query: SELECT * FROM ylq_std_account.tstd_company_channel
+-- Date: 2017-08-19 01:05
+*/
+INSERT INTO `tstd_company_channel` (`company_code`,`company_name`,`channel_type`,`status`,`channel_company`,`private_key1`,`private_key2`,`private_key3`,`private_key4`,`private_key5`,`page_url`,`error_url`,`back_url`,`fee`,`remark`,`system_code`) VALUES ('CD-YLQ000014','九州宝','30','1','2088502726506825','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','2017061307478740',NULL,NULL,NULL,NULL,'',NULL,NULL,'CD-YLQ000014');
+INSERT INTO `tstd_company_channel` (`company_code`,`company_name`,`channel_type`,`status`,`channel_company`,`private_key1`,`private_key2`,`private_key3`,`private_key4`,`private_key5`,`page_url`,`error_url`,`back_url`,`fee`,`remark`,`system_code`) VALUES ('CD-YLQ000014','九州宝','36','1','1483267162','J8uIhtLtxwsNufPjfsXGBV2dLIcHMiYl','wxbea7a28408973ab3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'CD-YLQ000014');
+
+
+/*
  * 操作步骤
  * 1、替换CD-YLQ000014 为新的system_code
  * 2、替换DATAA2017100000000000000为XXXA2017100000000000000
@@ -53,7 +61,7 @@ INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_d
 -- Date: 2016-12-29 15:08
 */
 INSERT INTO `tstd_account` (`account_number`,`user_id`,`real_name`,`type`,`status`,`currency`,`amount`,`frozen_amount`,`md5`,`create_datetime`,`last_order`,`system_code`) VALUES ('YLQA2017100000000000000','SYS_USER_YLQ','平台','P','0','CNY',0,0,'b99e0407fedc3d160f73fec8d1fa9a0c',now(),NULL,'CD-YLQ000014');
-
+INSERT INTO `tstd_account` (`account_number`,`user_id`,`real_name`,`type`,`status`,`currency`,`amount`,`frozen_amount`,`md5`,`create_datetime`,`last_order`,`company_code`,`system_code`) VALUES ('CD-YLQ000014','SYS_USER_YLQ_TG','平台托管账户','P','0','CNY',0,0,'b99e0407fedc3d160f73fec8d1fa9a0c',now(),NULL,'CD-JKEG000011','CD-JKEG000011');
 /*
 -- Query: SELECT bank_code,bank_name,channel_type,status,channel_bank,max_order,order_amount,day_amount,month_amount,remark FROM std_account.tstd_channel_bank
 LIMIT 0, 50000

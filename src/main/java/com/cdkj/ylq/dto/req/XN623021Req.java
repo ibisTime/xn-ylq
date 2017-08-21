@@ -18,23 +18,12 @@ public class XN623021Req {
     // 申请人（必填）
     private String applyUser;
 
-    // 产品编号（必填）
-    private String productCode;
-
     public String getApplyUser() {
         return applyUser;
     }
 
     public void setApplyUser(String applyUser) {
         this.applyUser = applyUser;
-    }
-
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
     }
 
 }
