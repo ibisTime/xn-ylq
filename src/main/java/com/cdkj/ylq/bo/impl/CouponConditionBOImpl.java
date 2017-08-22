@@ -8,7 +8,6 @@ import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.dao.ICouponConditionDAO;
 import com.cdkj.ylq.domain.CouponCondition;
 import com.cdkj.ylq.enums.ECouponType;
-import com.cdkj.ylq.exception.BizException;
 
 @Component
 public class CouponConditionBOImpl extends PaginableBOImpl<CouponCondition>
@@ -45,9 +44,6 @@ public class CouponConditionBOImpl extends PaginableBOImpl<CouponCondition>
         condition.setUserId(userId);
         condition.setCouponType(couponType.getCode());
         data = couponConditionDAO.select(condition);
-        if (data == null) {
-            throw new BizException("xn0000", "优惠券赠送条件不存在");
-        }
         return data;
     }
 }

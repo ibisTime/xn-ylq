@@ -36,20 +36,20 @@ public class CouponConditionAOImpl implements ICouponConditionAO {
             couponCondition = couponConditionBO.saveCouponCondition(userId,
                 ECouponType.RECOMMENT, 0);
         }
+        couponCondition.setCount(couponCondition.getCount() + 1);
         // 获取优惠券信息
         Coupon coupon = couponBO.getCoupon(ECouponType.RECOMMENT);
-        // 优惠券状态是OPEN说明这个活动是在进行中的
-        if (ECouponStatus.OPEN.getCode().equals(coupon.getStatus())) {
-            // 当前该用户已经推荐成功多少人
-            Integer condition = coupon.getCondition();
-            if (couponCondition.getCount() + 1 >= condition) {
-                userCouponBO.saveUserCoupon(userId, coupon, "程序自动发放", "推荐成功赠送");
-                couponCondition.setCount(0); // 重置已推荐人数
-            } else {
-                couponCondition.setCount(couponCondition.getCount() + 1); // 推荐人数+1
+        if (coupon != null) {
+            // 优惠券状态是OPEN说明这个活动是在进行中的
+            if (ECouponStatus.OPEN.getCode().equals(coupon.getStatus())) {
+                // 当前该用户已经推荐成功多少人
+                Integer condition = coupon.getCondition();
+                if (couponCondition.getCount() >= condition) {
+                    userCouponBO.saveUserCoupon(userId, coupon, "程序自动发放",
+                        "推荐成功赠送");
+                    couponCondition.setCount(0); // 重置已推荐人数
+                }
             }
-        } else {
-            couponCondition.setCount(couponCondition.getCount() + 1); // 推荐人数+1
         }
         couponConditionBO.refreshCount(couponCondition);
     }
@@ -64,20 +64,20 @@ public class CouponConditionAOImpl implements ICouponConditionAO {
             couponCondition = couponConditionBO.saveCouponCondition(userId,
                 ECouponType.BORROW, 0);
         }
+        couponCondition.setCount(couponCondition.getCount() + 1);
         // 获取优惠券信息
         Coupon coupon = couponBO.getCoupon(ECouponType.BORROW);
-        // 优惠券状态是OPEN说明这个活动是在进行中的
-        if (ECouponStatus.OPEN.getCode().equals(coupon.getStatus())) {
-            // 当前该用户已经推荐成功多少人
-            Integer condition = coupon.getCondition();
-            if (couponCondition.getCount() + 1 >= condition) {
-                userCouponBO.saveUserCoupon(userId, coupon, "程序自动发放", "借还成功赠送");
-                couponCondition.setCount(0); // 重置已推荐人数
-            } else {
-                couponCondition.setCount(couponCondition.getCount() + 1); // 推荐人数+1
+        if (coupon != null) {
+            // 优惠券状态是OPEN说明这个活动是在进行中的
+            if (ECouponStatus.OPEN.getCode().equals(coupon.getStatus())) {
+                // 当前该用户已经推荐成功多少人
+                Integer condition = coupon.getCondition();
+                if (couponCondition.getCount() >= condition) {
+                    userCouponBO.saveUserCoupon(userId, coupon, "程序自动发放",
+                        "借还成功赠送");
+                    couponCondition.setCount(0); // 重置已推荐人数
+                }
             }
-        } else {
-            couponCondition.setCount(couponCondition.getCount() + 1); // 推荐人数+1
         }
         couponConditionBO.refreshCount(couponCondition);
     }

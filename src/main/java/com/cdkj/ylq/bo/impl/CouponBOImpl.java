@@ -58,11 +58,8 @@ public class CouponBOImpl extends PaginableBOImpl<Coupon> implements ICouponBO {
         Coupon data = null;
         if (type != null) {
             Coupon condition = new Coupon();
-            condition.setCode(type.getCode());
+            condition.setType(type.getCode());
             data = couponDAO.select(condition);
-            if (data == null) {
-                throw new BizException("xn0000", "优惠券类型不存在");
-            }
         }
         return data;
     }

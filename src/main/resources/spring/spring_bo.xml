@@ -29,6 +29,10 @@
 		<property name="paginableDAO" ref="couponDAOImpl"/>
 	</bean>	
 	
+	<bean id="couponConditionBO" class="com.cdkj.ylq.bo.impl.CouponConditionBOImpl">
+		<property name="paginableDAO" ref="couponConditionDAOImpl"/>
+	</bean>	
+	
 	<bean id="userCouponBO" class="com.cdkj.ylq.bo.impl.UserCouponBOImpl">
 		<property name="paginableDAO" ref="userCouponDAOImpl"/>
 	</bean>	

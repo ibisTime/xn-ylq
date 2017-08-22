@@ -61,7 +61,7 @@
 		UPDATE t_coupon_condition
 		SET
 		count = #{count}
-		WHERE id = #{id}
+		WHERE user_id = #{userId} AND coupon_type = #{couponType}
 	</update>
 
 

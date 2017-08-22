@@ -34,7 +34,7 @@ public class CallbackConroller {
     ICouponConditionAO couponConditionAO;
 
     @RequestMapping("/thirdPay/callback")
-    public synchronized void doCallbackZhpay(HttpServletRequest request,
+    public synchronized void doCallbackYLQ(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         boolean isSuccess = Boolean.valueOf(request.getParameter("isSuccess"));
         String channelType = request.getParameter("channelType");
@@ -53,7 +53,7 @@ public class CallbackConroller {
                     String userId = borrowAO.repaySuccess(payGroup, payType,
                         payCode, amount);
                     if (StringUtils.isNotBlank(userId)) {
-                        couponConditionAO.recommendSuccess(userId);
+                        couponConditionAO.repaySuccess(userId);
                     }
                 }
             } catch (Exception e) {
