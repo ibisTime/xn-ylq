@@ -256,8 +256,9 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Override
     @Transactional
-    public void repaySuccess(String payGroup, String payType, String payCode,
+    public String repaySuccess(String payGroup, String payType, String payCode,
             Long amount) {
+        String userId = null;
         List<Borrow> borrowList = borrowBO.queryBorrowListByPayGroup(payGroup);
         if (CollectionUtils.isEmpty(borrowList)) {
             throw new BizException("XN000000", "找不到对应的借款记录");
@@ -270,9 +271,11 @@ public class BorrowAOImpl implements IBorrowAO {
             Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
             apply.setStatus(EApplyStatus.REPAY.getCode());
             applyBO.refreshStatus(apply);
+            userId = borrow.getApplyUser();
         } else {
             logger.info("订单号：" + borrow.getCode() + "已支付，重复回调");
         }
+        return userId;
     }
 
     @Override

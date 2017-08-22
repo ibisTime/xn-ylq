@@ -6,6 +6,7 @@
 	    <typeAlias alias="apply" type="com.cdkj.ylq.domain.Apply" />
 	    <typeAlias alias="certification" type="com.cdkj.ylq.domain.Certification" />
 	    <typeAlias alias="coupon" type="com.cdkj.ylq.domain.Coupon" />
+	    <typeAlias alias="couponCondition" type="com.cdkj.ylq.domain.CouponCondition" />
 	    <typeAlias alias="userCoupon" type="com.cdkj.ylq.domain.UserCoupon" />
 	    <typeAlias alias="borrow" type="com.cdkj.ylq.domain.Borrow" />
 	    

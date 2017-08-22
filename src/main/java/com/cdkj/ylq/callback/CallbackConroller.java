@@ -5,12 +5,14 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cdkj.ylq.ao.IBorrowAO;
+import com.cdkj.ylq.ao.ICouponConditionAO;
 import com.cdkj.ylq.enums.EBizType;
 import com.cdkj.ylq.enums.EChannelType;
 import com.cdkj.ylq.enums.EPayType;
@@ -27,6 +29,9 @@ public class CallbackConroller {
 
     @Autowired
     IBorrowAO borrowAO;
+
+    @Autowired
+    ICouponConditionAO couponConditionAO;
 
     @RequestMapping("/thirdPay/callback")
     public synchronized void doCallbackZhpay(HttpServletRequest request,
@@ -45,7 +50,11 @@ public class CallbackConroller {
         } else {
             try {
                 if (EBizType.YLQ_REPAY.getCode().equals(bizType)) {
-                    borrowAO.repaySuccess(payGroup, payType, payCode, amount);
+                    String userId = borrowAO.repaySuccess(payGroup, payType,
+                        payCode, amount);
+                    if (StringUtils.isNotBlank(userId)) {
+                        couponConditionAO.recommendSuccess(userId);
+                    }
                 }
             } catch (Exception e) {
                 logger.error("支付回调异常payGroup <" + payGroup + "> payCode <"

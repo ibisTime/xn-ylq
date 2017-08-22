@@ -8,6 +8,7 @@ import com.cdkj.ylq.bo.ICouponBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.dao.ICouponDAO;
 import com.cdkj.ylq.domain.Coupon;
+import com.cdkj.ylq.enums.ECouponType;
 import com.cdkj.ylq.exception.BizException;
 
 @Component
@@ -47,6 +48,20 @@ public class CouponBOImpl extends PaginableBOImpl<Coupon> implements ICouponBO {
             data = couponDAO.select(condition);
             if (data == null) {
                 throw new BizException("xn0000", "优惠券编号不存在");
+            }
+        }
+        return data;
+    }
+
+    @Override
+    public Coupon getCoupon(ECouponType type) {
+        Coupon data = null;
+        if (type != null) {
+            Coupon condition = new Coupon();
+            condition.setCode(type.getCode());
+            data = couponDAO.select(condition);
+            if (data == null) {
+                throw new BizException("xn0000", "优惠券类型不存在");
             }
         }
         return data;

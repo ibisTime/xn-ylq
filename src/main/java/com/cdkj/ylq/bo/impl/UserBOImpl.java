@@ -9,9 +9,11 @@ import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN001100Req;
 import com.cdkj.ylq.dto.req.XN001102Req;
 import com.cdkj.ylq.dto.req.XN001400Req;
+import com.cdkj.ylq.dto.req.XN805041Req;
 import com.cdkj.ylq.dto.req.XN805190Req;
 import com.cdkj.ylq.dto.res.XN001102Res;
 import com.cdkj.ylq.dto.res.XN001400Res;
+import com.cdkj.ylq.dto.res.XN805041Res;
 import com.cdkj.ylq.enums.ESysUser;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.enums.EUserKind;
@@ -102,5 +104,27 @@ public class UserBOImpl implements IUserBO {
             return ESysUser.SYS_USER_YLQ.getCode();
         }
         return null;
+    }
+
+    @Override
+    public XN805041Res doRegister(String mobile, String loginPwd,
+            String userReferee, String userRefereeKind, String smsCaptcha,
+            String kind, String isRegHx, String province, String city,
+            String area, String companyCode, String systemCode) {
+        XN805041Req req = new XN805041Req();
+        req.setMobile(mobile);
+        req.setLoginPwd(loginPwd);
+        req.setUserReferee(userReferee);
+        req.setUserRefereeKind(userRefereeKind);
+        req.setSmsCaptcha(smsCaptcha);
+        req.setKind(kind);
+        req.setIsRegHx(isRegHx);
+        req.setProvince(province);
+        req.setCity(city);
+        req.setArea(area);
+        req.setCompanyCode(companyCode);
+        req.setSystemCode(systemCode);
+        return BizConnecter.getBizData("805041", JsonUtils.object2Json(req),
+            XN805041Res.class);
     }
 }

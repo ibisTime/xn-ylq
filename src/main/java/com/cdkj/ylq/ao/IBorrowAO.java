@@ -26,7 +26,7 @@ public interface IBorrowAO {
     public Object repay(String code, String payType);
 
     // 客户端：还款成功回调
-    public void repaySuccess(String payGroup, String payType, String payCode,
+    public String repaySuccess(String payGroup, String payType, String payCode,
             Long amount);
 
     // 管理端：确认坏账

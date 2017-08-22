@@ -3,12 +3,15 @@ package com.cdkj.ylq.bo.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
+import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.dao.IUserCouponDAO;
+import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.UserCoupon;
 import com.cdkj.ylq.enums.EUserCouponStatus;
 import com.cdkj.ylq.exception.BizException;
@@ -21,10 +24,25 @@ public class UserCouponBOImpl extends PaginableBOImpl<UserCoupon> implements
     private IUserCouponDAO userCouponDAO;
 
     @Override
-    public int saveUserCoupon(UserCoupon data) {
+    public int saveUserCoupon(String userId, Coupon coupon, String updater,
+            String remark) {
         int count = 0;
-        if (data != null) {
-            count = userCouponDAO.insert(data);
+        if (coupon != null && StringUtils.isNotBlank(userId)) {
+            UserCoupon userCoupon = new UserCoupon();
+            Date now = new Date();
+            userCoupon.setUserId(userId);
+            userCoupon.setGetDatetime(now);
+            userCoupon.setType(coupon.getType());
+            userCoupon.setAmount(coupon.getAmount());
+            userCoupon.setStartAmount(coupon.getStartAmount());
+            userCoupon.setValidDays(coupon.getValidDays());
+            userCoupon.setInvalidDatetime(DateUtil.getRelativeDateOfDays(
+                DateUtil.getTodayStart(), coupon.getValidDays()));
+            userCoupon.setStatus(EUserCouponStatus.TO_USE.getCode());
+            userCoupon.setUpdater(updater);
+            userCoupon.setUpdateDatetime(now);
+            userCoupon.setRemark(remark);
+            count = userCouponDAO.insert(userCoupon);
         }
         return count;
     }

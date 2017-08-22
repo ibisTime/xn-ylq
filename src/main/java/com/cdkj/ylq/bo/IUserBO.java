@@ -1,6 +1,7 @@
 package com.cdkj.ylq.bo;
 
 import com.cdkj.ylq.domain.User;
+import com.cdkj.ylq.dto.res.XN805041Res;
 import com.cdkj.ylq.enums.EUserKind;
 
 /**
@@ -20,4 +21,10 @@ public interface IUserBO {
 
     public void doIdentify(String userId, String idKind, String idNo,
             String realName);
+
+    // 前端用户注册
+    public XN805041Res doRegister(String mobile, String loginPwd,
+            String userReferee, String userRefereeKind, String smsCaptcha,
+            String kind, String isRegHx, String province, String city,
+            String area, String companyCode, String systemCode);
 }

@@ -1,10 +1,8 @@
 package com.cdkj.ylq.ao.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +12,6 @@ import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.Paginable;
-import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.UserCoupon;
@@ -44,24 +41,7 @@ public class UserCouponAOImpl implements IUserCouponAO {
         if (ECouponStatus.CLOSE.getCode().equals(coupon.getStatus())) {
             throw new BizException("623130", "该优惠活动处于关闭状态，不能发放");
         }
-        UserCoupon userCoupon = new UserCoupon();
-        Date now = new Date();
-        userCoupon.setUserId(userId);
-        userCoupon.setGetDatetime(now);
-        userCoupon.setType(coupon.getType());
-        userCoupon.setAmount(coupon.getAmount());
-        userCoupon.setStartAmount(coupon.getStartAmount());
-        userCoupon.setValidDays(coupon.getValidDays());
-        userCoupon.setInvalidDatetime(DateUtil.getRelativeDateOfDays(
-            DateUtil.getTodayStart(), coupon.getValidDays()));
-        userCoupon.setStatus(EUserCouponStatus.TO_USE.getCode());
-        userCoupon.setUpdater(updater);
-        userCoupon.setUpdateDatetime(now);
-        if (StringUtils.isBlank(remark)) {
-            remark = "管理端手动发放";
-        }
-        userCoupon.setRemark(remark);
-        userCouponBO.saveUserCoupon(userCoupon);
+        userCouponBO.saveUserCoupon(userId, coupon, updater, "管理端手动发放");
     }
 
     @Override
