@@ -45,11 +45,15 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
     @Override
     public void doApprove(Apply data, String status, Long sxAmount,
             String approver, String remark) {
+        Date now = new Date();
         data.setStatus(status);
         data.setSxAmount(sxAmount);
         data.setApprover(approver);
-        data.setApproveDatetime(new Date());
+        data.setApproveDatetime(now);
         data.setApproveNote(remark);
+        data.setUpdater(approver);
+        data.setUpdateDatetime(now);
+        data.setRemark("已完成人工审核");
         applyDAO.updateApprove(data);
     }
 

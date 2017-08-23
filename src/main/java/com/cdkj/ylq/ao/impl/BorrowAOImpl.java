@@ -225,6 +225,9 @@ public class BorrowAOImpl implements IBorrowAO {
         apply.setStatus(EApplyStatus.LOANING.getCode());
         applyBO.refreshStatus(apply);
 
+        // 额度重置为0
+        certificationBO.resetSxAmount(borrow.getApplyUser());
+
         smsOutBO.sentContent(apply.getApplyUser(),
             "恭喜您，您的" + CalculationUtil.diviUp(borrow.getAmount())
                     + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
@@ -243,6 +246,9 @@ public class BorrowAOImpl implements IBorrowAO {
         Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
         apply.setStatus(EApplyStatus.APPROVE_YES.getCode());
         applyBO.refreshStatus(apply);
+
+        // 额度重置为0
+        certificationBO.resetSxAmount(borrow.getApplyUser());
     }
 
     @Override
@@ -299,17 +305,7 @@ public class BorrowAOImpl implements IBorrowAO {
             Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
             apply.setStatus(EApplyStatus.REPAY.getCode());
             applyBO.refreshStatus(apply);
-            // 额度重置为0
-            Certification certification = certificationBO.getCertification(
-                apply.getApplyUser(), ECertiKey.INFO_AMOUNT);
-            InfoAmount infoAmount = JsonUtil.json2Bean(
-                certification.getResult(), InfoAmount.class);
-            Date now = new Date();
-            infoAmount.setSxAmount(0L);
-            certification.setResult(JsonUtil.Object2Json(infoAmount));
-            certification.setCerDatetime(now);
-            certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
-            certificationBO.refreshCertification(certification);
+
             userId = borrow.getApplyUser();
             smsOutBO.sentContent(apply.getApplyUser(),
                 "您的" + CalculationUtil.diviUp(borrow.getAmount())
@@ -321,6 +317,7 @@ public class BorrowAOImpl implements IBorrowAO {
     }
 
     @Override
+    @Transactional
     public void confirmBad(String code, String updater, String remark) {
         Borrow borrow = borrowBO.getBorrow(code);
         if (!EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
@@ -335,6 +332,13 @@ public class BorrowAOImpl implements IBorrowAO {
         Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
         apply.setStatus(EApplyStatus.BAD.getCode());
         applyBO.refreshStatus(apply);
+
+        // 额度重置为0
+        certificationBO.resetSxAmount(borrow.getApplyUser());
+
+        // 将用户拉入黑名单
+        userBO.addBlacklist(apply.getApplyUser(), "bad_debt", updater,
+            "借钱不还，已确认坏账");
 
     }
 

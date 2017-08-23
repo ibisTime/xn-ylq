@@ -25,4 +25,7 @@ public interface ICertificationBO extends IPaginableBO<Certification> {
     // 认证失效
     public void makeInvalid(Certification certification);
 
+    // 额度重置为0
+    public void resetSxAmount(String userId);
+
 }

@@ -1,5 +1,6 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,10 @@ import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
+import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.dao.ICertificationDAO;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.exception.BizException;
@@ -72,6 +75,20 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
     public void makeInvalid(Certification certification) {
         certification.setFlag(ECertificationStatus.INVALID.getCode());
         certificationDAO.updateFlag(certification);
+    }
+
+    @Override
+    public void resetSxAmount(String userId) {
+        Certification certification = this.getCertification(userId,
+            ECertiKey.INFO_AMOUNT);
+        InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
+            InfoAmount.class);
+        Date now = new Date();
+        infoAmount.setSxAmount(0L);
+        certification.setResult(JsonUtil.Object2Json(infoAmount));
+        certification.setValidDatetime(now);
+        certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        this.refreshCertification(certification);
     }
 
 }

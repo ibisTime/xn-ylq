@@ -27,4 +27,8 @@ public interface IUserBO {
             String userReferee, String userRefereeKind, String smsCaptcha,
             String kind, String isRegHx, String province, String city,
             String area, String companyCode, String systemCode);
+
+    // 将用户拉入黑名单
+    public void addBlacklist(String userId, String type, String updater,
+            String remark);
 }

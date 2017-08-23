@@ -108,6 +108,9 @@
 		,approver = #{approver}
 		,approve_note = #{approveNote}
 		,approve_datetime = #{approveDatetime}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
 		WHERE code = #{code}
 	</update>
 	

@@ -195,7 +195,7 @@ DROP TABLE IF EXISTS `tstd_blacklist`;
 CREATE TABLE `tstd_blacklist` (
   `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT 'ID主键',
   `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
-  `type` varchar(4) DEFAULT NULL COMMENT '拉黑类型',
+  `type` varchar(32) DEFAULT NULL COMMENT '拉黑类型',
   `status` varchar(4) DEFAULT NULL COMMENT '状态 0-已删除 1-已生效',
   `create_datetime` datetime DEFAULT NULL COMMENT '拉黑时间',
   `updater` varchar(32) DEFAULT NULL COMMENT '更新人',

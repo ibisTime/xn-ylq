@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.User;
+import com.cdkj.ylq.dto.req.XN001001Req;
 import com.cdkj.ylq.dto.req.XN001100Req;
 import com.cdkj.ylq.dto.req.XN001102Req;
 import com.cdkj.ylq.dto.req.XN001400Req;
@@ -126,5 +127,16 @@ public class UserBOImpl implements IUserBO {
         req.setSystemCode(systemCode);
         return BizConnecter.getBizData("805041", JsonUtils.object2Json(req),
             XN805041Res.class);
+    }
+
+    @Override
+    public void addBlacklist(String userId, String type, String updater,
+            String remark) {
+        XN001001Req req = new XN001001Req();
+        req.setRemark(remark);
+        req.setUserId(userId);
+        req.setUpdater(updater);
+        req.setType(type);
+        BizConnecter.getBizData("001001", JsonUtils.object2Json(req));
     }
 }
