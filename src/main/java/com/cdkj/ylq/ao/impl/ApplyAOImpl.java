@@ -23,6 +23,7 @@ import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.SYSConfig;
+import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.res.XN623020Res;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
@@ -54,6 +55,10 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Override
     public XN623020Res submitApply(String applyUser, String productCode) {
+        User user = userBO.getRemoteUser(applyUser);
+        if (EBoolean.YES.getCode().equals(user.getBlacklistFlag())) {
+            throw new BizException("xn000000", "由于您逾期未还款，已被平台拉入黑名单，请联系平台进行处理！");
+        }
         XN623020Res res = new XN623020Res();
         String status = EApplyStatus.TO_CERTI.getCode();
         Certification identify = certificationBO.getCertification(applyUser,

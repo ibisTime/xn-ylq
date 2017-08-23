@@ -64,6 +64,17 @@ public class XN001400Res {
     // 实名认证
     private String identityFlag;
 
+    // 是否被拉入黑名单
+    private String blacklistFlag;
+
+    public String getBlacklistFlag() {
+        return blacklistFlag;
+    }
+
+    public void setBlacklistFlag(String blacklistFlag) {
+        this.blacklistFlag = blacklistFlag;
+    }
+
     public String getIdentityFlag() {
         return identityFlag;
     }

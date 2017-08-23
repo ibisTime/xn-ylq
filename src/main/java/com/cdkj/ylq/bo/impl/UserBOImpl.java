@@ -68,6 +68,7 @@ public class UserBOImpl implements IUserBO {
             user.setDivRate(StringValidater.toDouble(res.getDivRate()));
             user.setCompanyCode(res.getCompanyCode());
             user.setSystemCode(res.getSystemCode());
+            user.setBlacklistFlag(res.getBlacklistFlag());
         }
         return user;
     }

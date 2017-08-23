@@ -79,6 +79,10 @@ public class BorrowAOImpl implements IBorrowAO {
     @Override
     @Transactional
     public String borrow(String userId, Long couponId) {
+        User user = userBO.getRemoteUser(userId);
+        if (EBoolean.YES.getCode().equals(user.getBlacklistFlag())) {
+            throw new BizException("xn000000", "由于您逾期未还款，已被平台拉入黑名单，请联系平台进行处理！");
+        }
         // 授信额度信息校验
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_AMOUNT);

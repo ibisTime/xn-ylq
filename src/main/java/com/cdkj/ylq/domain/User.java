@@ -66,6 +66,17 @@ public class User extends ABaseDO {
     // 系统编号
     private String systemCode;
 
+    // 是否被拉入黑名单
+    private String blacklistFlag;
+
+    public String getBlacklistFlag() {
+        return blacklistFlag;
+    }
+
+    public void setBlacklistFlag(String blacklistFlag) {
+        this.blacklistFlag = blacklistFlag;
+    }
+
     public String getCompanyCode() {
         return companyCode;
     }
