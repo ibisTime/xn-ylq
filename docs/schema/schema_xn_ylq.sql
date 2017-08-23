@@ -140,3 +140,12 @@ CREATE TABLE `t_user_coupon` (
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `t_coupon_condition` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `coupon_type` varchar(32) DEFAULT NULL COMMENT '获取优惠券类型',
+  `count` int(11) DEFAULT NULL COMMENT '已有次数',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+

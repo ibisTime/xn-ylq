@@ -24,6 +24,7 @@ import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoAntifraud;
 import com.cdkj.ylq.domain.InfoBankcard;
@@ -414,6 +415,36 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
+    public void doAddressBookVerify(String userId,
+            List<InfoAddressBook> addressBookList) {
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_ADDRESS_BOOK);
+        SYSConfig config = sysConfigBO.getSYSConfig(
+            SysConstants.ADDRESS_BOOK_VALID_DAYS, ESystemCode.YLQ.getCode(),
+            ESystemCode.YLQ.getCode());
+        if (certification != null) {
+            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(addressBookList));
+            certification.setCerDatetime(new Date());
+            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+            certification.setRef("");
+            certificationBO.refreshCertification(certification);
+        } else {
+            certification = new Certification();
+            certification.setUserId(userId);
+            certification.setCertiKey(ECertiKey.INFO_ADDRESS_BOOK.getCode());
+            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(addressBookList));
+            certification.setCerDatetime(new Date());
+            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+            certification.setRef("");
+            certificationBO.saveCertification(certification);
+        }
+    }
+
+    @Override
     public Paginable<Certification> queryCertificationPage(int start,
             int limit, Certification condition) {
         return certificationBO.getPaginable(start, limit, condition);
@@ -440,7 +471,7 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
-    public Object getCertiInfo(ECertiKey certiKey) {
+    public Object getCertiInfo(String userId, ECertiKey certiKey) {
         return null;
     }
 
@@ -487,6 +518,7 @@ public class CertificationAOImpl implements ICertificationAO {
         res.setInfoAntifraudFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoZMCreditFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoCarrierFlag(ECertificationStatus.TO_CERTI.getCode());
+        res.setInfoAddressBookFlag(ECertificationStatus.TO_CERTI.getCode());
 
         for (Certification certification : certifications) {
             if (ECertiKey.INFO_IDENTIFY_PIC.getCode().equals(
@@ -582,6 +614,15 @@ public class CertificationAOImpl implements ICertificationAO {
                     res.setInfoCarrier(certification.getResult());
                 }
             }
+
+            if (ECertiKey.INFO_ADDRESS_BOOK.getCode().equals(
+                certification.getCertiKey())) {
+                res.setInfoAddressBookFlag(certification.getFlag());
+                if (ECertificationStatus.CERTI_YES.getCode().equals(
+                    certification.getFlag())) {
+                    res.setInfoAddressBook(certification.getResult());
+                }
+            }
         }
         return res;
     }
@@ -668,6 +709,14 @@ public class CertificationAOImpl implements ICertificationAO {
         carrier.setFlag(ECertificationStatus.TO_CERTI.getCode());
         certificationBO.saveCertification(carrier);
         certifications.add(carrier);
+
+        // 通讯录认证
+        Certification addressBook = new Certification();
+        addressBook.setUserId(userId);
+        addressBook.setCertiKey(ECertiKey.INFO_ADDRESS_BOOK.getCode());
+        addressBook.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        certificationBO.saveCertification(addressBook);
+        certifications.add(addressBook);
 
         // 授信额度
         Certification creditAmount = new Certification();

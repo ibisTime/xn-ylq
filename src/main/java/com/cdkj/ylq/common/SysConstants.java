@@ -10,6 +10,8 @@ public class SysConstants {
 
     public static final String CARRIER_VALID_DAYS = "carrierValidDays"; // 运营商认证有效天数
 
+    public static final String ADDRESS_BOOK_VALID_DAYS = "addressBookValidDays"; // 通讯录认证有效天数
+
     public static final String AMOUNT_VALID_DAYS = "amountValidDays"; // 额度有效天数
 
 }

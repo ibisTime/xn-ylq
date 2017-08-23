@@ -1,7 +1,10 @@
 package com.cdkj.ylq.ao;
 
+import java.util.List;
+
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.MxReportData;
@@ -52,11 +55,15 @@ public interface ICertificationAO {
     // 魔蝎运营商认证
     public MxReportData doCarrierVerify(String userId, String taskId);
 
+    // 通讯录认证
+    public void doAddressBookVerify(String userId,
+            List<InfoAddressBook> addressBookList);
+
     // 查询个人超详细的认证信息（可形成用户报告）
     public XN623050Res getCertiInfo(String userId);
 
     // 根据认证类型获取认证信息
-    public Object getCertiInfo(ECertiKey certiKey);
+    public Object getCertiInfo(String userId, ECertiKey certiKey);
 
     // 查询我的授信额度
     public InfoAmount getMyCreditAmount(String userId);

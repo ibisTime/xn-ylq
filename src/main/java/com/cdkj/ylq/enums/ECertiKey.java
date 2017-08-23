@@ -34,7 +34,10 @@ public enum ECertiKey {
 
     , INFO_CARRIER("INFO_CARRIER", "运营商认证")
 
-    , INFO_AMOUNT("INFO_AMOUNT", "授信额度");
+    , INFO_AMOUNT("INFO_AMOUNT", "授信额度")
+
+    // 可选认证
+    , INFO_ADDRESS_BOOK("INFO_ADDRESS_BOOK", "通讯录认证");
 
     ECertiKey(String code, String value) {
         this.code = code;

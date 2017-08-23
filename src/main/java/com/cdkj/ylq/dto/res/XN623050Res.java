@@ -88,7 +88,10 @@ public class XN623050Res {
     private String infoCarrier;
 
     // 通讯录标识
-    private String addressBookFlag;
+    private String infoAddressBookFlag;
+
+    // 通讯录列表
+    private String infoAddressBook;
 
     // 通讯录标识
     private String wechatFlag;
@@ -261,12 +264,20 @@ public class XN623050Res {
         this.infoCarrierFlag = infoCarrierFlag;
     }
 
-    public String getAddressBookFlag() {
-        return addressBookFlag;
+    public String getInfoAddressBookFlag() {
+        return infoAddressBookFlag;
     }
 
-    public void setAddressBookFlag(String addressBookFlag) {
-        this.addressBookFlag = addressBookFlag;
+    public void setInfoAddressBookFlag(String infoAddressBookFlag) {
+        this.infoAddressBookFlag = infoAddressBookFlag;
+    }
+
+    public String getInfoAddressBook() {
+        return infoAddressBook;
+    }
+
+    public void setInfoAddressBook(String infoAddressBook) {
+        this.infoAddressBook = infoAddressBook;
     }
 
     public String getWechatFlag() {
