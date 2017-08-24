@@ -229,9 +229,9 @@ public class BorrowAOImpl implements IBorrowAO {
         }
         String status = null;
         if (EBoolean.YES.getCode().equals(approveResult)) {
-            status = EApplyStatus.APPROVE_YES.getCode();
+            status = EBorrowStatus.APPROVE_YES.getCode();
         } else {
-            status = EApplyStatus.APPROVE_NO.getCode();
+            status = EBorrowStatus.APPROVE_NO.getCode();
             // 返回优惠券
             userCouponBO.useCancel(borrow.getCode());
             // 更新申请单状态
