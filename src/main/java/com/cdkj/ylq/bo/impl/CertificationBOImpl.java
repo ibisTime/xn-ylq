@@ -1,6 +1,5 @@
 package com.cdkj.ylq.bo.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,11 +83,20 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
             ECertiKey.INFO_AMOUNT);
         InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
             InfoAmount.class);
-        Date now = new Date();
         infoAmount.setSxAmount(0L);
         certification.setResult(JsonUtil.Object2Json(infoAmount));
-        certification.setValidDatetime(now);
-        certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        certification.setFlag(ECertificationStatus.INVALID.getCode());
+        this.refreshCertification(certification);
+    }
+
+    @Override
+    public void refreshSxAmount(String userId, Long amount) {
+        Certification certification = this.getCertification(userId,
+            ECertiKey.INFO_AMOUNT);
+        InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
+            InfoAmount.class);
+        infoAmount.setSxAmount(infoAmount.getSxAmount() + amount);
+        certification.setResult(JsonUtil.Object2Json(infoAmount));
         this.refreshCertification(certification);
     }
 

@@ -19,7 +19,7 @@ import com.cdkj.ylq.exception.ParaException;
 import com.cdkj.ylq.spring.SpringContextHolder;
 
 /** 
- * 取消借款
+ * 审核
  * @author: haiqingzheng 
  * @since: 2017年8月16日 下午4:31:31 
  * @history:
@@ -35,7 +35,8 @@ public class XN623075 extends AProcessor {
      */
     @Override
     public Object doBusiness() throws BizException {
-        borrowAO.cancel(req.getCode(), req.getUpdater(), req.getRemark());
+        borrowAO.doApprove(req.getCode(), req.getApproveResult(),
+            req.getApprover(), req.getApproveNote());
         return new BooleanRes(true);
     }
 
@@ -45,7 +46,8 @@ public class XN623075 extends AProcessor {
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN623075Req.class);
-        StringValidater.validateBlank(req.getCode(), req.getUpdater());
+        StringValidater.validateBlank(req.getCode(), req.getApproveResult(),
+            req.getApprover());
     }
 
 }

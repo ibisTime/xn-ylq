@@ -1,8 +1,9 @@
 package com.cdkj.ylq.enums;
 
 public enum EBorrowStatus {
-    TO_LOAN("0", "等待放款中"), LOANING("1", "生效中"), OVERDUE("2", "已逾期"), REPAY("3",
-            "已还款"), CANCEL("4", "已取消"), BAD("5", "确认坏账");
+    TO_APPROVE("0", "待审核"), APPROVE_YES("1", "审核通过待放款"), APPROVE_NO("2",
+            "审核不通过"), LOANING("3", "已放款"), REPAY("4", "已还款"), OVERDUE("5",
+            "已逾期"), BAD("6", "确认坏账");
 
     EBorrowStatus(String code, String value) {
         this.code = code;

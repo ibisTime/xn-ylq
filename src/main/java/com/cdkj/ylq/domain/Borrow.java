@@ -93,6 +93,15 @@ public class Borrow extends ABaseDO {
     // 是否归档
     private String isArchive;
 
+    // 审核人
+    private String approver;
+
+    // 审核说明
+    private String approveNote;
+
+    // 审核时间
+    private Date approveDatetime;
+
     // 最后更新人
     private String updater;
 
@@ -390,6 +399,30 @@ public class Borrow extends ABaseDO {
 
     public void setIsArchive(String isArchive) {
         this.isArchive = isArchive;
+    }
+
+    public String getApprover() {
+        return approver;
+    }
+
+    public void setApprover(String approver) {
+        this.approver = approver;
+    }
+
+    public String getApproveNote() {
+        return approveNote;
+    }
+
+    public void setApproveNote(String approveNote) {
+        this.approveNote = approveNote;
+    }
+
+    public Date getApproveDatetime() {
+        return approveDatetime;
+    }
+
+    public void setApproveDatetime(Date approveDatetime) {
+        this.approveDatetime = approveDatetime;
     }
 
 }

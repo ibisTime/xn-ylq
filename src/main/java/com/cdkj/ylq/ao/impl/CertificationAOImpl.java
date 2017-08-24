@@ -44,6 +44,7 @@ import com.cdkj.ylq.dto.req.XN623043Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
 import com.cdkj.ylq.dto.res.XN798013Res;
 import com.cdkj.ylq.dto.res.XN798014Res;
+import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
@@ -483,10 +484,11 @@ public class CertificationAOImpl implements ICertificationAO {
         if (certification != null) {
             infoAmount = JsonUtil.json2Bean(certification.getResult(),
                 InfoAmount.class);
-            infoAmount.setCerDatetime(certification.getCerDatetime());
-            infoAmount.setValidDatetime(certification.getValidDatetime());
-            if (!ECertificationStatus.TO_CERTI.getCode().equals(
+            infoAmount.setFlag(certification.getFlag());
+            if (ECertificationStatus.CERTI_YES.getCode().equals(
                 certification.getFlag())) {
+                infoAmount.setCerDatetime(certification.getCerDatetime());
+                infoAmount.setValidDatetime(certification.getValidDatetime());
                 infoAmount
                     .setValidDays(DateUtil.daysBetween(
                         DateUtil.getTodayStart(),
@@ -500,6 +502,7 @@ public class CertificationAOImpl implements ICertificationAO {
             creditAmount.setCertiKey(ECertiKey.INFO_AMOUNT.getCode());
             creditAmount.setFlag(ECertificationStatus.TO_CERTI.getCode());
             infoAmount.setSxAmount(0L);
+            infoAmount.setFlag(ECertificationStatus.TO_CERTI.getCode());
             creditAmount.setResult(JsonUtil.Object2Json(infoAmount));
             certificationBO.saveCertification(creditAmount);
         }
@@ -795,6 +798,12 @@ public class CertificationAOImpl implements ICertificationAO {
         if (CollectionUtils.isNotEmpty(certificationList)) {
             for (Certification certification : certificationList) {
                 certificationBO.makeInvalid(certification);
+                // 如果额度失效，产品可申请
+                if (ECertiKey.INFO_AMOUNT.getCode().equals(
+                    certification.getCertiKey())) {
+                    applyBO.refreshCurrentApplyStatus(
+                        certification.getUserId(), EApplyStatus.CANCEL);
+                }
             }
         }
         logger.info("***************结束扫描认证结果***************");

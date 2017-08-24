@@ -28,6 +28,7 @@ import com.cdkj.ylq.dto.res.XN623020Res;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
+import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
@@ -128,7 +129,7 @@ public class ApplyAOImpl implements IApplyAO {
                 SysConstants.AMOUNT_VALID_DAYS, ESystemCode.YLQ.getCode(),
                 ESystemCode.YLQ.getCode());
             if (certification != null) {
-                certification.setFlag(EBoolean.YES.getCode());
+                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoAmount));
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
@@ -140,7 +141,7 @@ public class ApplyAOImpl implements IApplyAO {
                 certification = new Certification();
                 certification.setUserId(apply.getApplyUser());
                 certification.setCertiKey(ECertiKey.INFO_AMOUNT.getCode());
-                certification.setFlag(EBoolean.YES.getCode());
+                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(sxAmount));
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(

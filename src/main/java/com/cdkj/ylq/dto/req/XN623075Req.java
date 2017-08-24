@@ -18,11 +18,14 @@ public class XN623075Req {
     // 借款编号（必填）
     private String code;
 
-    // 最后更新人（必填）
-    private String updater;
+    // 审核结果（必填）
+    private String approveResult;
 
-    // 备注（选填）
-    private String remark;
+    // 审核人（必填）
+    private String approver;
+
+    // 审核说明（必填）
+    private String approveNote;
 
     public String getCode() {
         return code;
@@ -32,20 +35,28 @@ public class XN623075Req {
         this.code = code;
     }
 
-    public String getUpdater() {
-        return updater;
+    public String getApproveResult() {
+        return approveResult;
     }
 
-    public void setUpdater(String updater) {
-        this.updater = updater;
+    public void setApproveResult(String approveResult) {
+        this.approveResult = approveResult;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getApprover() {
+        return approver;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setApprover(String approver) {
+        this.approver = approver;
+    }
+
+    public String getApproveNote() {
+        return approveNote;
+    }
+
+    public void setApproveNote(String approveNote) {
+        this.approveNote = approveNote;
     }
 
 }

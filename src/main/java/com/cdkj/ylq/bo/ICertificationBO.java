@@ -28,6 +28,9 @@ public interface ICertificationBO extends IPaginableBO<Certification> {
     // 额度重置为0
     public void resetSxAmount(String userId);
 
+    // 额度加减
+    public void refreshSxAmount(String userId, Long amount);
+
     // 是否完成必要认证
     public boolean isCompleteCerti(String userId);
 

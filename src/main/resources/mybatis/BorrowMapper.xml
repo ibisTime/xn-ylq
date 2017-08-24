@@ -29,6 +29,9 @@
 		<result column="pay_type" property="payType" />
 		<result column="status" property="status" />
 		<result column="is_archive" property="isArchive" />
+		<result column="approver" property="approver" />
+		<result column="approve_note" property="approveNote" />
+		<result column="approve_datetime" property="approveDatetime" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
@@ -95,6 +98,9 @@
 		,t.pay_type
 		,t.status
 		,t.is_archive
+		,t.approver
+		,t.approve_note
+		,t.approve_datetime
 		,t.updater
 		,t.update_datetime
 		,t.remark
@@ -170,6 +176,18 @@
 		)
 	</insert>
 
+	<update id="update_approve" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		status = #{status}
+		,approver = #{approver}
+		,approve_note = #{approveNote}
+		,approve_datetime = #{approveDatetime}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
 	
 	<update id="update_loan" parameterType="borrow">
 		UPDATE t_borrow
@@ -178,16 +196,6 @@
 		,jx_datetime = #{jxDatetime}
 		,hk_datetime = #{hkDatetime}
 		,status = #{status}
-		,updater = #{updater}
-		,update_datetime = #{updateDatetime}
-		,remark = #{remark}
-		WHERE code = #{code}
-	</update>
-	
-	<update id="update_cancel" parameterType="borrow">
-		UPDATE t_borrow
-		SET
-		status = #{status}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
@@ -245,5 +253,7 @@
 		,remark = #{remark}
 		WHERE code = #{code}
 	</update>
+	
+
 
 </mapper>

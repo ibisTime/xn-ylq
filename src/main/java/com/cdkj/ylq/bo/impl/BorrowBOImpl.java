@@ -70,6 +70,20 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     }
 
     @Override
+    public void doApprove(Borrow data, String status, String approver,
+            String approveNote) {
+        Date now = new Date();
+        data.setStatus(status);
+        data.setApprover(approver);
+        data.setApproveDatetime(now);
+        data.setApproveNote(approveNote);
+        data.setUpdater(approver);
+        data.setUpdateDatetime(now);
+        data.setRemark("已完成审核");
+        borrowDAO.updateApprove(data);
+    }
+
+    @Override
     public int loan(Borrow data, String updater, String remark) {
         int count = 0;
         if (data != null) {
@@ -86,19 +100,6 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
             data.setUpdateDatetime(now);
             data.setRemark(remark);
             count = borrowDAO.updateLoan(data);
-        }
-        return count;
-    }
-
-    @Override
-    public int cancel(Borrow data, String updater, String remark) {
-        int count = 0;
-        if (data != null) {
-            data.setStatus(EBorrowStatus.CANCEL.getCode());
-            data.setUpdater(updater);
-            data.setUpdateDatetime(new Date());
-            data.setRemark(remark);
-            count = borrowDAO.updateCancel(data);
         }
         return count;
     }
@@ -149,7 +150,8 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     public Borrow getCurrentBorrow(String userId) {
         Borrow condition = new Borrow();
         List<String> statusList = new ArrayList<String>();
-        statusList.add(EBorrowStatus.TO_LOAN.getCode());
+        statusList.add(EBorrowStatus.TO_APPROVE.getCode());
+        statusList.add(EBorrowStatus.APPROVE_YES.getCode());
         statusList.add(EBorrowStatus.LOANING.getCode());
         statusList.add(EBorrowStatus.OVERDUE.getCode());
         condition.setApplyUser(userId);

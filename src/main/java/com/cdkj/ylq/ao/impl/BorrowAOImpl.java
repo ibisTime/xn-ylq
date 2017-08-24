@@ -163,7 +163,7 @@ public class BorrowAOImpl implements IBorrowAO {
         borrow.setTotalAmount(totalAmount);
 
         borrow.setRealHkAmount(0L);
-        borrow.setStatus(EBorrowStatus.TO_LOAN.getCode());
+        borrow.setStatus(EBorrowStatus.TO_APPROVE.getCode());
         borrow.setUpdater(userId);
         borrow.setUpdateDatetime(now);
         borrow.setRemark("新申请借款");
@@ -172,6 +172,10 @@ public class BorrowAOImpl implements IBorrowAO {
 
         // 更新申请单状态
         applyBO.refreshCurrentApplyStatus(userId, EApplyStatus.TO_LOAN);
+
+        // 额度减去
+        certificationBO.refreshSxAmount(borrow.getApplyUser(),
+            -borrow.getAmount());
 
         return code;
     }
@@ -217,9 +221,47 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Override
     @Transactional
+    public void doApprove(String code, String approveResult, String approver,
+            String approveNote) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.TO_APPROVE.getCode().equals(borrow.getStatus())) {
+            throw new BizException("xn623000", "该申请记录不处于待审核状态");
+        }
+        String status = null;
+        if (EBoolean.YES.getCode().equals(approveResult)) {
+            status = EApplyStatus.APPROVE_YES.getCode();
+        } else {
+            status = EApplyStatus.APPROVE_NO.getCode();
+            // 返回优惠券
+            userCouponBO.useCancel(borrow.getCode());
+            // 更新申请单状态
+            Certification certification = certificationBO.getCertification(
+                borrow.getApplyUser(), ECertiKey.INFO_AMOUNT);
+            if (ECertificationStatus.CERTI_YES.getCode().equals(
+                certification.getFlag())) {
+                applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                    EApplyStatus.APPROVE_YES);
+            } else {
+                applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                    EApplyStatus.CANCEL);
+            }
+            // 返还额度
+            certificationBO.refreshSxAmount(borrow.getApplyUser(),
+                borrow.getAmount());
+
+            smsOutBO.sentContent(borrow.getApplyUser(), "很抱歉，您的"
+                    + CalculationUtil.diviUp(borrow.getAmount())
+                    + "借款未能审核通过，合同编号为" + borrow.getCode() + "，原因："
+                    + approveNote + "。");
+        }
+        borrowBO.doApprove(borrow, status, approver, approveNote);
+    }
+
+    @Override
+    @Transactional
     public void loan(String code, String updater, String remark) {
         Borrow borrow = borrowBO.getBorrow(code);
-        if (!EBorrowStatus.TO_LOAN.getCode().equals(borrow.getStatus())) {
+        if (!EBorrowStatus.APPROVE_YES.getCode().equals(borrow.getStatus())) {
             throw new BizException("623071", "借款不处于待放款状态");
         }
         borrowBO.loan(borrow, updater, remark);
@@ -228,35 +270,9 @@ public class BorrowAOImpl implements IBorrowAO {
         applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
             EApplyStatus.LOANING);
 
-        // 额度重置为0
-        certificationBO.resetSxAmount(borrow.getApplyUser());
-
         smsOutBO.sentContent(borrow.getApplyUser(),
             "恭喜您，您的" + CalculationUtil.diviUp(borrow.getAmount())
                     + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
-    }
-
-    @Override
-    @Transactional
-    public void cancel(String code, String updater, String remark) {
-        Borrow borrow = borrowBO.getBorrow(code);
-        if (!EBorrowStatus.TO_LOAN.getCode().equals(borrow.getStatus())) {
-            throw new BizException("623071", "借款不处于待放款状态");
-        }
-        // 返回优惠券
-        userCouponBO.useCancel(borrow.getCode());
-        // 更新借款订单状态
-        borrowBO.cancel(borrow, updater, remark);
-        // 更新申请单状态
-        applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-            EApplyStatus.CANCEL);
-        // 额度重置为0
-        certificationBO.resetSxAmount(borrow.getApplyUser());
-
-        smsOutBO.sentContent(borrow.getApplyUser(),
-            "很抱歉，您的" + CalculationUtil.diviUp(borrow.getAmount())
-                    + "借款未能成功放款，合同编号为" + borrow.getCode() + "，原因：" + remark
-                    + "。");
     }
 
     @Override

@@ -6,9 +6,9 @@ import com.cdkj.ylq.domain.Borrow;
 public interface IBorrowDAO extends IBaseDAO<Borrow> {
     String NAMESPACE = IBorrowDAO.class.getName().concat(".");
 
-    public int updateLoan(Borrow data);
+    public int updateApprove(Borrow data);
 
-    public int updateCancel(Borrow data);
+    public int updateLoan(Borrow data);
 
     public int updatePayGroup(Borrow data);
 

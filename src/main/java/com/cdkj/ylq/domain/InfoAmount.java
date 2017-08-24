@@ -20,6 +20,9 @@ public class InfoAmount {
     // 授信额度
     private Long sxAmount;
 
+    // 标识
+    private String flag;
+
     // 授信时间
     private Date cerDatetime;
 
@@ -28,6 +31,14 @@ public class InfoAmount {
 
     // 剩余有效天数
     private Integer validDays;
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
 
     public Date getCerDatetime() {
         return cerDatetime;
