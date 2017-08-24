@@ -1,8 +1,11 @@
 package com.cdkj.ylq.ao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,9 @@ import com.cdkj.ylq.exception.BizException;
 
 @Service
 public class UserCouponAOImpl implements IUserCouponAO {
+
+    protected static final Logger logger = LoggerFactory
+        .getLogger(IUserCouponAO.class);
 
     @Autowired
     private IUserCouponBO userCouponBO;
@@ -83,6 +89,21 @@ public class UserCouponAOImpl implements IUserCouponAO {
         UserCoupon userCoupon = userCouponBO.getUserCoupon(id);
         userCoupon.setUser(userBO.getRemoteUser(userCoupon.getUserId()));
         return userCoupon;
+    }
+
+    @Override
+    public void doCheckUserCouponInvalidDaily() {
+        logger.info("***************开始扫描优惠券过期***************");
+        UserCoupon condition = new UserCoupon();
+        condition.setCurDatetime(new Date());
+        List<UserCoupon> userCouponList = userCouponBO
+            .queryUserCouponList(condition);
+        if (CollectionUtils.isNotEmpty(userCouponList)) {
+            for (UserCoupon userCoupon : userCouponList) {
+                userCouponBO.makeInvalid(userCoupon);
+            }
+        }
+        logger.info("***************结束扫描优惠券过期***************");
     }
 
 }

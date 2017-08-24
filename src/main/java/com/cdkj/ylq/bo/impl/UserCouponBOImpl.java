@@ -37,7 +37,7 @@ public class UserCouponBOImpl extends PaginableBOImpl<UserCoupon> implements
             userCoupon.setStartAmount(coupon.getStartAmount());
             userCoupon.setValidDays(coupon.getValidDays());
             userCoupon.setInvalidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), coupon.getValidDays()));
+                DateUtil.getTodayEnd(), coupon.getValidDays()));
             userCoupon.setStatus(EUserCouponStatus.TO_USE.getCode());
             userCoupon.setUpdater(updater);
             userCoupon.setUpdateDatetime(now);
@@ -111,6 +111,12 @@ public class UserCouponBOImpl extends PaginableBOImpl<UserCoupon> implements
             count = userCouponDAO.updateUse(data);
         }
         return count;
+    }
+
+    @Override
+    public int makeInvalid(UserCoupon userCoupon) {
+        userCoupon.setStatus(EUserCouponStatus.INVALID.getCode());
+        return userCouponDAO.updateInvalid(userCoupon);
     }
 
 }

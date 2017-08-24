@@ -57,4 +57,9 @@ public class UserCouponDAOImpl extends AMybatisTemplate implements
         return super.update(NAMESPACE.concat("update_use"), data);
     }
 
+    @Override
+    public int updateInvalid(UserCoupon data) {
+        return super.update(NAMESPACE.concat("update_invalid"), data);
+    }
+
 }

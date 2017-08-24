@@ -19,6 +19,9 @@ public interface IUserCouponBO extends IPaginableBO<UserCoupon> {
     // 取消借款，返还优惠券
     public int useCancel(String borrowCode);
 
+    // 优惠券失效
+    public int makeInvalid(UserCoupon userCoupon);
+
     public List<UserCoupon> queryUserCouponList(UserCoupon condition);
 
     public UserCoupon getUserCoupon(Long id);

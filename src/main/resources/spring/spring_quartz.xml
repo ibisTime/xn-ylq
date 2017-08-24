@@ -20,6 +20,7 @@
            <list>
            	  <ref bean="borrowTrigger"/>
            	  <ref bean="certificationTrigger"/>
+           	  <ref bean="userCouponTrigger"/>
           </list>  
        </property>  
        <property name="autoStartup" value="true"/>  
@@ -42,6 +43,16 @@
 	<bean id="doCheckValidDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="certificationAOImpl"/>  
 	        <property name="targetMethod" value="doCheckValidDaily"/>  
+	        <property name="concurrent" value="true"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
+	</bean>
+	
+	<bean id="userCouponTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail" ref="doCheckUserCouponInvalidDaily"/>  
+       <property name="cronExpression" value="0 0 0 * * ?"/><!-- 每天0点执行 -->
+	</bean>
+	<bean id="doCheckUserCouponInvalidDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
+	        <property name="targetObject" ref="userCouponAOImpl"/>  
+	        <property name="targetMethod" value="doCheckUserCouponInvalidDaily"/>  
 	        <property name="concurrent" value="true"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
 	</bean>
 	

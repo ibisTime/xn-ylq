@@ -45,6 +45,9 @@
 			<if test="productAmount != null and productAmount != '' ">
 				<![CDATA[AND t.start_amount <= #{productAmount}]]>
 			</if>
+			<if test="curDatetime != null and curDatetime != '' ">
+				<![CDATA[AND t.invalid_datetime < #{curDatetime}]]>
+			</if>
 		</trim>
 	</sql>
 	<select id="select_userCoupon" parameterType="userCoupon" resultMap="userCoupon_DB_Result">
@@ -134,5 +137,11 @@
 		WHERE id = #{id}
 	</update>
 
+    <update id="update_invalid" parameterType="userCoupon">
+		UPDATE t_user_coupon
+		SET
+		status = #{status}
+		WHERE id = #{id}
+	</update>
 
 </mapper>

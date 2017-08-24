@@ -58,6 +58,9 @@ public class UserCoupon extends ABaseDO {
     // 当前产品可借金额
     private Long productAmount;
 
+    // 当前时间
+    private Date curDatetime;
+
     // ****** 辅助字段 ******
     // 用户信息
     private User user;
@@ -180,6 +183,14 @@ public class UserCoupon extends ABaseDO {
 
     public void setProductAmount(Long productAmount) {
         this.productAmount = productAmount;
+    }
+
+    public Date getCurDatetime() {
+        return curDatetime;
+    }
+
+    public void setCurDatetime(Date curDatetime) {
+        this.curDatetime = curDatetime;
     }
 
 }

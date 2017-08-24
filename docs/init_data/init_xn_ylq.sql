@@ -1,4 +1,14 @@
 
+/*
+-- Query: SELECT * FROM xn_ylq.t_product
+-- Date: 2017-08-24 19:24
+*/
+INSERT INTO `t_product` (`code`,`name`,`slogan`,`level`,`amount`,`duration`,`yq_rate1`,`yq_rate2`,`lx_rate`,`xs_rate`,`gl_rate`,`fw_rate`,`status`,`ui_location`,`ui_order`,`ui_color`,`updater`,`update_datetime`,`remark`) VALUES ('CP2017082321163077150710','借贷产品A','无条件申请','1',1000000,7,0.01000000,0.02000000,0.01000000,0.01500000,0.01500000,0.01500000,'1','0',1,'#0cb8ae','admin',now(),NULL);
+INSERT INTO `t_product` (`code`,`name`,`slogan`,`level`,`amount`,`duration`,`yq_rate1`,`yq_rate2`,`lx_rate`,`xs_rate`,`gl_rate`,`fw_rate`,`status`,`ui_location`,`ui_order`,`ui_color`,`updater`,`update_datetime`,`remark`) VALUES ('CP201708232117435016838','借贷产品B','LV1成功借还2次以上方可申请','2',2000000,7,0.01000000,0.02000000,0.01000000,0.01500000,0.01500000,0.01500000,'1','0',2,'#fba72e','admin',now(),NULL);
+INSERT INTO `t_product` (`code`,`name`,`slogan`,`level`,`amount`,`duration`,`yq_rate1`,`yq_rate2`,`lx_rate`,`xs_rate`,`gl_rate`,`fw_rate`,`status`,`ui_location`,`ui_order`,`ui_color`,`updater`,`update_datetime`,`remark`) VALUES ('CP2017082321185528683722','借贷产品C','LV2成功借还2次以上方可申请','3',4000000,7,0.01000000,0.02000000,0.01000000,0.01500000,0.01500000,0.01500000,'1','0',3,'#f16254','admin',now(),NULL);
+INSERT INTO `t_product` (`code`,`name`,`slogan`,`level`,`amount`,`duration`,`yq_rate1`,`yq_rate2`,`lx_rate`,`xs_rate`,`gl_rate`,`fw_rate`,`status`,`ui_location`,`ui_order`,`ui_color`,`updater`,`update_datetime`,`remark`) VALUES ('CP2017082321213612259502','借贷产品D','LV2成功借还2次以上方可申请','4',5000000,7,0.01000000,0.02000000,0.01000000,0.01500000,0.01500000,0.01500000,'1','0',4,'#28a6e6','admin',now(),NULL);
+
+
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','identifyValidDays','7','admin',now(),'身份认证有效天数','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','antifraudValidDays','7','admin',now(),'欺诈识别认证有效天数','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','zmScoreValidDays','7','admin',now(),'芝麻分认证有效天数','CD-YLQ000014','CD-YLQ000014');
@@ -141,12 +151,13 @@ INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_d
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','user_coupon_status','3','已回收','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('0','','borrow_status','借款状态','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','0','待放款','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','1','生效中','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','2','已逾期','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','3','已还款','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','4','已取消','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','5','坏账','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','0','待审核','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','1','待放款','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','2','审核不通过','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','3','已放款','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','4','已还款','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','5','已逾期','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','borrow_status','6','坏账','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('0','','pay_type','支付方式','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','pay_type','2','微信','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');

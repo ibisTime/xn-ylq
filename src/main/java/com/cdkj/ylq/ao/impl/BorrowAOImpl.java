@@ -328,7 +328,9 @@ public class BorrowAOImpl implements IBorrowAO {
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                 EApplyStatus.REPAY);
-
+            // 返还额度
+            certificationBO.refreshSxAmount(borrow.getApplyUser(),
+                borrow.getAmount());
             userId = borrow.getApplyUser();
             smsOutBO.sentContent(borrow.getApplyUser(),
                 "您的" + CalculationUtil.diviUp(borrow.getAmount())

@@ -9,4 +9,6 @@ public interface IUserCouponDAO extends IBaseDAO<UserCoupon> {
     public int updateRecycle(UserCoupon data);
 
     public int updateUse(UserCoupon data);
+
+    public int updateInvalid(UserCoupon data);
 }

@@ -29,4 +29,7 @@ public interface IUserCouponAO {
     // oss：用户优惠券详情查询
     public UserCoupon getUserCoupon(Long id);
 
+    // 定时器调用：每日00:00:00点检查优惠券过期情况
+    public void doCheckUserCouponInvalidDaily();
+
 }
