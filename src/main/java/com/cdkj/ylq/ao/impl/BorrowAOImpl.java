@@ -26,7 +26,6 @@ import com.cdkj.ylq.common.AmountUtil;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
-import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
@@ -171,9 +170,9 @@ public class BorrowAOImpl implements IBorrowAO {
 
         borrowBO.saveBorrow(borrow);
 
-        Apply apply = applyBO.getCurrentApply(userId);
-        apply.setStatus(EApplyStatus.TO_LOAN.getCode());
-        applyBO.refreshStatus(apply);
+        // 更新申请单状态
+        applyBO.refreshCurrentApplyStatus(userId, EApplyStatus.TO_LOAN);
+
         return code;
     }
 
@@ -225,14 +224,14 @@ public class BorrowAOImpl implements IBorrowAO {
         }
         borrowBO.loan(borrow, updater, remark);
 
-        Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
-        apply.setStatus(EApplyStatus.LOANING.getCode());
-        applyBO.refreshStatus(apply);
+        // 更新申请单状态
+        applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+            EApplyStatus.LOANING);
 
         // 额度重置为0
         certificationBO.resetSxAmount(borrow.getApplyUser());
 
-        smsOutBO.sentContent(apply.getApplyUser(),
+        smsOutBO.sentContent(borrow.getApplyUser(),
             "恭喜您，您的" + CalculationUtil.diviUp(borrow.getAmount())
                     + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
     }
@@ -244,15 +243,20 @@ public class BorrowAOImpl implements IBorrowAO {
         if (!EBorrowStatus.TO_LOAN.getCode().equals(borrow.getStatus())) {
             throw new BizException("623071", "借款不处于待放款状态");
         }
+        // 返回优惠券
         userCouponBO.useCancel(borrow.getCode());
+        // 更新借款订单状态
         borrowBO.cancel(borrow, updater, remark);
         // 更新申请单状态
-        Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
-        apply.setStatus(EApplyStatus.APPROVE_YES.getCode());
-        applyBO.refreshStatus(apply);
-
+        applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+            EApplyStatus.CANCEL);
         // 额度重置为0
         certificationBO.resetSxAmount(borrow.getApplyUser());
+
+        smsOutBO.sentContent(borrow.getApplyUser(),
+            "很抱歉，您的" + CalculationUtil.diviUp(borrow.getAmount())
+                    + "借款未能成功放款，合同编号为" + borrow.getCode() + "，原因：" + remark
+                    + "。");
     }
 
     @Override
@@ -306,12 +310,11 @@ public class BorrowAOImpl implements IBorrowAO {
             // 更新订单支付金额
             borrowBO.repaySuccess(borrow, amount, payCode, payType);
             // 更新申请单状态
-            Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
-            apply.setStatus(EApplyStatus.REPAY.getCode());
-            applyBO.refreshStatus(apply);
+            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                EApplyStatus.REPAY);
 
             userId = borrow.getApplyUser();
-            smsOutBO.sentContent(apply.getApplyUser(),
+            smsOutBO.sentContent(borrow.getApplyUser(),
                 "您的" + CalculationUtil.diviUp(borrow.getAmount())
                         + "借款已经成功还款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
         } else {
@@ -333,15 +336,15 @@ public class BorrowAOImpl implements IBorrowAO {
         borrow.setRemark(remark);
         borrowBO.confirmBad(borrow);
 
-        Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
-        apply.setStatus(EApplyStatus.BAD.getCode());
-        applyBO.refreshStatus(apply);
+        // 更新申请单状态
+        applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+            EApplyStatus.BAD);
 
         // 额度重置为0
         certificationBO.resetSxAmount(borrow.getApplyUser());
 
         // 将用户拉入黑名单
-        userBO.addBlacklist(apply.getApplyUser(), "bad_debt", updater,
+        userBO.addBlacklist(borrow.getApplyUser(), "bad_debt", updater,
             "借钱不还，已确认坏账");
 
     }
@@ -386,9 +389,8 @@ public class BorrowAOImpl implements IBorrowAO {
         borrowBO.overdue(borrow);
 
         // 更新申请单状态
-        Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
-        apply.setStatus(EApplyStatus.OVERDUE.getCode());
-        applyBO.refreshStatus(apply);
+        applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+            EApplyStatus.OVERDUE);
 
     }
 

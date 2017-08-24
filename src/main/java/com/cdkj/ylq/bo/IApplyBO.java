@@ -2,6 +2,7 @@ package com.cdkj.ylq.bo;
 
 import com.cdkj.ylq.bo.base.IPaginableBO;
 import com.cdkj.ylq.domain.Apply;
+import com.cdkj.ylq.enums.EApplyStatus;
 
 public interface IApplyBO extends IPaginableBO<Apply> {
 
@@ -19,5 +20,7 @@ public interface IApplyBO extends IPaginableBO<Apply> {
     public Apply getCurrentApply(String userId);
 
     public void refreshStatus(Apply data);
+
+    public void refreshCurrentApplyStatus(String userId, EApplyStatus stauts);
 
 }

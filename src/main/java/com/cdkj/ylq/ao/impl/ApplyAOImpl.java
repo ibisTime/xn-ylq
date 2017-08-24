@@ -61,22 +61,8 @@ public class ApplyAOImpl implements IApplyAO {
         }
         XN623020Res res = new XN623020Res();
         String status = EApplyStatus.TO_CERTI.getCode();
-        Certification identify = certificationBO.getCertification(applyUser,
-            ECertiKey.INFO_IDENTIFY);
-        Certification antifraud = certificationBO.getCertification(applyUser,
-            ECertiKey.INFO_ANTIFRAUD);
-        Certification zmcredit = certificationBO.getCertification(applyUser,
-            ECertiKey.INFO_ZMCREDIT);
-        Certification carrier = certificationBO.getCertification(applyUser,
-            ECertiKey.INFO_CARRIER);
-        if (identify != null && antifraud != null && zmcredit != null
-                && carrier != null) {
-            if (EBoolean.YES.getCode().equals(identify.getFlag())
-                    && EBoolean.YES.getCode().equals(antifraud.getFlag())
-                    && EBoolean.YES.getCode().equals(zmcredit.getFlag())
-                    && EBoolean.YES.getCode().equals(carrier.getFlag())) {
-                status = EApplyStatus.TO_APPROVE.getCode();
-            }
+        if (certificationBO.isCompleteCerti(applyUser)) {
+            status = EApplyStatus.TO_APPROVE.getCode();
         }
 
         Apply apply = applyBO.getCurrentApply(applyUser);

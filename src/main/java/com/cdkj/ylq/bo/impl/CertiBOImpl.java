@@ -91,7 +91,7 @@ public class CertiBOImpl implements ICertiBO {
         infoAntifraud.setScore(xn798019Res.getScore());
         infoAntifraud.setVerifyInfoList(xn798020Res.getVerifyInfoList());
         infoAntifraud.setHit(xn798021Res.getHit());
-        infoAntifraud.setRiskInofList(xn798021Res.getRiskInofList());
+        infoAntifraud.setRiskInfoList(xn798021Res.getRiskInofList());
         return infoAntifraud;
     }
 

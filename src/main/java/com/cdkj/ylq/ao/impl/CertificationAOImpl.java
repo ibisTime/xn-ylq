@@ -287,7 +287,7 @@ public class CertificationAOImpl implements ICertificationAO {
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoContactFlag())) {
             throw new BizException("xn623000", "请先完善紧急联系人信息");
         }
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoContactFlag())) {
+        if (EBoolean.NO.getCode().equals(certiInfo.getInfoBankcardFlag())) {
             throw new BizException("xn623000", "请先完善银行卡信息");
         }
         InfoBasic infoBasic = certiInfo.getInfoBasic();
@@ -543,7 +543,9 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.getCertiKey())) {
                 res.setInfoIdentifyFlag(certification.getFlag());
                 if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())) {
+                    certification.getFlag())
+                        || ECertificationStatus.INVALID.getCode().equals(
+                            certification.getFlag())) {
                     res.setInfoIdentify(JsonUtil.json2Bean(
                         certification.getResult(), InfoIdentify.class));
                 }
@@ -590,7 +592,9 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.getCertiKey())) {
                 res.setInfoAntifraudFlag(certification.getFlag());
                 if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())) {
+                    certification.getFlag())
+                        || ECertificationStatus.INVALID.getCode().equals(
+                            certification.getFlag())) {
                     res.setInfoAntifraud(JsonUtil.json2Bean(
                         certification.getResult(), InfoAntifraud.class));
                 }
@@ -600,7 +604,9 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.getCertiKey())) {
                 res.setInfoZMCreditFlag(certification.getFlag());
                 if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())) {
+                    certification.getFlag())
+                        || ECertificationStatus.INVALID.getCode().equals(
+                            certification.getFlag())) {
                     res.setInfoZMCredit(JsonUtil.json2Bean(
                         certification.getResult(), InfoZMCredit.class));
                 }
@@ -610,7 +616,9 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.getCertiKey())) {
                 res.setInfoCarrierFlag(certification.getFlag());
                 if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())) {
+                    certification.getFlag())
+                        || ECertificationStatus.INVALID.getCode().equals(
+                            certification.getFlag())) {
                     res.setInfoCarrier(certification.getResult());
                 }
             }
@@ -619,7 +627,9 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.getCertiKey())) {
                 res.setInfoAddressBookFlag(certification.getFlag());
                 if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())) {
+                    certification.getFlag())
+                        || ECertificationStatus.INVALID.getCode().equals(
+                            certification.getFlag())) {
                     res.setInfoAddressBook(certification.getResult());
                 }
             }
@@ -778,6 +788,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public void doCheckValidDaily() {
         logger.info("***************开始扫描认证结果***************");
         Certification condition = new Certification();
+        condition.setFlag(ECertificationStatus.CERTI_YES.getCode());
         condition.setCurDatetime(new Date());
         List<Certification> certificationList = certificationBO
             .queryCertificationList(condition);

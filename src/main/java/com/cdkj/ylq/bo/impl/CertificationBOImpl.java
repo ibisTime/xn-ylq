@@ -12,6 +12,7 @@ import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.dao.ICertificationDAO;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
+import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.exception.BizException;
@@ -89,6 +90,28 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
         certification.setValidDatetime(now);
         certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
         this.refreshCertification(certification);
+    }
+
+    @Override
+    public boolean isCompleteCerti(String userId) {
+        boolean flag = false;
+        Certification identify = getCertification(userId,
+            ECertiKey.INFO_IDENTIFY);
+        Certification antifraud = getCertification(userId,
+            ECertiKey.INFO_ANTIFRAUD);
+        Certification zmcredit = getCertification(userId,
+            ECertiKey.INFO_ZMCREDIT);
+        Certification carrier = getCertification(userId, ECertiKey.INFO_CARRIER);
+        if (identify != null && antifraud != null && zmcredit != null
+                && carrier != null) {
+            if (EBoolean.YES.getCode().equals(identify.getFlag())
+                    && EBoolean.YES.getCode().equals(antifraud.getFlag())
+                    && EBoolean.YES.getCode().equals(zmcredit.getFlag())
+                    && EBoolean.YES.getCode().equals(carrier.getFlag())) {
+                flag = true;
+            }
+        }
+        return flag;
     }
 
 }

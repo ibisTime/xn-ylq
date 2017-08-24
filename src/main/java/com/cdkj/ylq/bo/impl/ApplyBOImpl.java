@@ -98,4 +98,11 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
         applyDAO.updateStatus(data);
     }
 
+    @Override
+    public void refreshCurrentApplyStatus(String userId, EApplyStatus status) {
+        Apply apply = getCurrentApply(userId);
+        apply.setStatus(status.getCode());
+        refreshStatus(apply);
+    }
+
 }

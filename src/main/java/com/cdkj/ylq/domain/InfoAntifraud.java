@@ -26,7 +26,7 @@ public class InfoAntifraud {
     private String hit;
 
     // 欺诈关注清单的RiskCode列表转义
-    private List<String> riskInofList;
+    private List<String> riskInfoList;
 
     public Long getScore() {
         return score;
@@ -52,11 +52,12 @@ public class InfoAntifraud {
         this.hit = hit;
     }
 
-    public List<String> getRiskInofList() {
-        return riskInofList;
+    public List<String> getRiskInfoList() {
+        return riskInfoList;
     }
 
-    public void setRiskInofList(List<String> riskInofList) {
-        this.riskInofList = riskInofList;
+    public void setRiskInfoList(List<String> riskInfoList) {
+        this.riskInfoList = riskInfoList;
     }
+
 }
