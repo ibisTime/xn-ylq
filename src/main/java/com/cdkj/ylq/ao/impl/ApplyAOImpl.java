@@ -68,6 +68,9 @@ public class ApplyAOImpl implements IApplyAO {
 
         Apply apply = applyBO.getCurrentApply(applyUser);
         if (apply != null) {
+            if (!apply.getProductCode().equals(productCode)) {
+                throw new BizException("xn623020", "您已经有一个申请");
+            }
             if (EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())) {
                 apply.setStatus(status);
                 applyBO.refreshStatus(apply);

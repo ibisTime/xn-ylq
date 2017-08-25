@@ -3,24 +3,25 @@ INSERT INTO `tstd_user` (`user_id`,`login_name`,`login_pwd`,`login_pwd_strength`
 
 INSERT INTO `tsys_role` (`code`,`name`,`level`,`updater`,`update_datetime`,`remark`,`system_code`) VALUES ('sysAdmin','系统管理员','1','admin',now(),NULL,'CD-YLQ000014');
 
+/*
+-- Query: SELECT `type`,`ckey`,`cvalue`,`updater`,now() as `update_datetime`,`remark`,`company_code`,`system_code` FROM tsys_config
+-- Date: 2017-08-25 13:58
+*/
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('QINIU','QINIU_ACCESS_KEY','ulfN2j4k6vHEsmKw-4EKZEGKL9qVkI7UJgrAHr4s','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('QINIU','QINIU_SECRET_KEY','aCdHlg4ct83YENkupTWLovs2-ISxKfS1U2FoHyZb','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('QINIU','QINIU_BUCKET','ylq-pic','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
-
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','aboutUs','关于我们','jkeg',now(),'关于我们','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','regProtocol','注册协议','admin',now(),'注册协议','CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','couponExplain','优惠券说明','jkeg',now(),'优惠券说明','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','couponExplain','<p></p><font color=\"#008000\" size=\"2\">如何使用优惠券</font><p><font size=\"2\">1、选择金额时。</font></p><p><font color=\"#008000\" size=\"2\">如何获取优惠券</font></p><p><font size=\"2\">1、邀请好友</font></p><p><font size=\"2\">2、成功还款2次</font></p><p><br></p>','admin',now(),'优惠券说明','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','borrowProtocol','借款协议','admin',now(),'借款协议','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','addressBookProtocol','通讯录授权协议','admin',now(),'通讯录授权协议','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','infoCollectRule','信息收集及使用规则','admin',now(),'信息收集及使用规则','CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','helpCenter','帮助中心','admin',now(),'帮助中心','CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('text','couponRule','您目前没有可用的优惠券','jkeg',now(),'优惠券规则','CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('text','activityRule','活动规则','admin',now(),'活动规则','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','helpCenter','<p><font color=\"#ff0000\">一.&nbsp; 常见问题</font></p><p>Q1：如何申请借款？</p><p>A1：请您下载九州宝APP，注册、登录，选择产品申请额度，使用额度进行借款。</p><p>Q2：一共有几种还款方式？</p><p>A2：一共有2种还款方式，支付宝还款、微信还款。\r\n</p><p><font color=\"#ff0000\">二.&nbsp; 联系客服</font></p><p>微信ID：jiuzhoubao</p><p>客户电话：10101058</p><p><font color=\"#ff0000\">三.&nbsp; 留言CEO</font></p><p></p><p>温馨提示：您好！如对本产品有任何疑问，可以直接微信留言或拨打客服电话。</p><p><br></p>','admin',now(),'帮助中心','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('text','couponRule','您目前没有可用的优惠券，您可以通过以下途径获取：\r\n1、邀请好友 2、借还成功2次','admin',now(),'优惠券规则','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('text','activityRule','1、邀请好友成功注册，送50元优惠券\r\n2、借款成功两次，送80元优惠券','admin',now(),'活动规则','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('text','time','09:00:00 - 17:30:00','admin',now(),'服务时间','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('text','telephone','0579-89166370','admin',now(),'服务电话','CD-YLQ000014','CD-YLQ000014');
-
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('config','domainUrl','http://m.ylq.hijuniu.com','admin',now(),'推荐注册链接','CD-YLQ000014','CD-YLQ000014');
-
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('android-c','version','1.0.0','admin',now(),'最新版本号','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('android-c','forceUpdate','1','admin',now(),'是否强制更新','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('android-c','note','版本更新说明','admin',now(),'更新说明','CD-YLQ000014','CD-YLQ000014');
@@ -29,6 +30,7 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','forceUpdate','1','admin',now(),'是否强制更新','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','note','版本更新说明','admin',now(),'更新说明','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','downloadUrl','https://itunes.apple.com/cn/app/健康e购/id1256905137?mt=8','admin',now(),'iOS下载地址','CD-YLQ000014','CD-YLQ000014');
+
 
 /*
 -- Query: SELECT code,name,type,url,order_no,updater, now() as update_datetime,remark,parent_code,system_code FROM tsys_menu where system_code = 'CD-YLQ000014'
