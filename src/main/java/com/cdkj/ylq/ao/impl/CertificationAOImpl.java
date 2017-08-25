@@ -798,11 +798,17 @@ public class CertificationAOImpl implements ICertificationAO {
         if (CollectionUtils.isNotEmpty(certificationList)) {
             for (Certification certification : certificationList) {
                 certificationBO.makeInvalid(certification);
-                // 如果额度失效，产品可申请
+                // 如果额度失效，用户还未使用该额度，则将产品重置可申请
                 if (ECertiKey.INFO_AMOUNT.getCode().equals(
                     certification.getCertiKey())) {
-                    applyBO.refreshCurrentApplyStatus(
-                        certification.getUserId(), EApplyStatus.CANCEL);
+                    Apply apply = applyBO.getCurrentApply(certification
+                        .getUserId());
+                    if (apply != null
+                            && EApplyStatus.APPROVE_YES.getCode().equals(
+                                apply.getStatus())) {
+                        apply.setStatus(EApplyStatus.CANCEL.getCode());
+                        applyBO.refreshStatus(apply);
+                    }
                 }
             }
         }

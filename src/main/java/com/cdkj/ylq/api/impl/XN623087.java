@@ -40,6 +40,7 @@ public class XN623087 extends AProcessor {
         Borrow condition = new Borrow();
         condition.setApplyUser(req.getApplyUser());
         condition.setStatus(req.getStatus());
+        condition.setStatusList(req.getStatusList());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = IBorrowAO.DEFAULT_ORDER_COLUMN;

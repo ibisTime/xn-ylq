@@ -8,6 +8,8 @@
  */
 package com.cdkj.ylq.dto.req;
 
+import java.util.List;
+
 /** 
  * @author: haiqingzheng 
  * @since: 2017年8月16日 下午5:03:02 
@@ -22,6 +24,17 @@ public class XN623087Req extends APageReq {
 
     // 状态（选填）
     private String status;
+
+    // 状态List（选填）
+    private List<String> statusList;
+
+    public List<String> getStatusList() {
+        return statusList;
+    }
+
+    public void setStatusList(List<String> statusList) {
+        this.statusList = statusList;
+    }
 
     public String getApplyUser() {
         return applyUser;

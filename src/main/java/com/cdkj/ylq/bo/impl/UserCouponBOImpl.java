@@ -95,7 +95,7 @@ public class UserCouponBOImpl extends PaginableBOImpl<UserCoupon> implements
         int count = 0;
         if (data != null) {
             data.setBorrowCode(borrowCode);
-            data.setStatus(EUserCouponStatus.RECYCLE.getCode());
+            data.setStatus(EUserCouponStatus.USED.getCode());
             userCouponDAO.updateUse(data);
         }
         return count;

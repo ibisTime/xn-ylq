@@ -45,6 +45,15 @@ public class User extends ABaseDO {
     // 是否实名认证
     private String identityFlag;
 
+    // 证件类型
+    private String idKind;
+
+    // 证件号码
+    private String idNo;
+
+    // 真实姓名
+    private String realName;
+
     // 推荐人
     private String userReferee;
 
@@ -68,6 +77,30 @@ public class User extends ABaseDO {
 
     // 是否被拉入黑名单
     private String blacklistFlag;
+
+    public String getIdKind() {
+        return idKind;
+    }
+
+    public void setIdKind(String idKind) {
+        this.idKind = idKind;
+    }
+
+    public String getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(String idNo) {
+        this.idNo = idNo;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
 
     public String getBlacklistFlag() {
         return blacklistFlag;
