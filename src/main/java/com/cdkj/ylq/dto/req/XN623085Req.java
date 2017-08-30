@@ -26,6 +26,9 @@ public class XN623085Req extends APageReq {
     // 状态（选填）
     private String status;
 
+    // 是否归档（选填）
+    private String isArchive;
+
     public String getCode() {
         return code;
     }
@@ -48,6 +51,14 @@ public class XN623085Req extends APageReq {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getIsArchive() {
+        return isArchive;
+    }
+
+    public void setIsArchive(String isArchive) {
+        this.isArchive = isArchive;
     }
 
 }
