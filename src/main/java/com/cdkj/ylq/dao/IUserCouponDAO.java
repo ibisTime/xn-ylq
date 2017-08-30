@@ -7,4 +7,6 @@ public interface IUserCouponDAO extends IBaseDAO<UserCoupon> {
     String NAMESPACE = IUserCouponDAO.class.getName().concat(".");
 
     public int updateRecycle(UserCoupon data);
+
+    public int updateUse(UserCoupon data);
 }

@@ -209,7 +209,7 @@ public class ProductAOImpl implements IProductAO {
     @Override
     public Product getAvaliableProduct(String userId) {
         Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_AMOUNT.getCode());
+            ECertiKey.INFO_AMOUNT);
         if (certification == null) {
             throw new BizException("623013", "您还没有额度，请先选择产品进行申请");
         }

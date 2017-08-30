@@ -13,8 +13,16 @@ public interface IUserCouponBO extends IPaginableBO<UserCoupon> {
 
     public int recycle(UserCoupon data, String updater, String remark);
 
+    // 使用优惠券
+    public int use(UserCoupon data, String borrowCode);
+
+    // 取消借款，返还优惠券
+    public int useCancel(String borrowCode);
+
     public List<UserCoupon> queryUserCouponList(UserCoupon condition);
 
     public UserCoupon getUserCoupon(Long id);
+
+    public UserCoupon getUserCoupon(String borrowCode);
 
 }

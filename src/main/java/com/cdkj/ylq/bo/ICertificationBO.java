@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cdkj.ylq.bo.base.IPaginableBO;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.enums.ECertiKey;
 
 public interface ICertificationBO extends IPaginableBO<Certification> {
 
@@ -14,7 +15,7 @@ public interface ICertificationBO extends IPaginableBO<Certification> {
     public Certification getCertification(Long id);
 
     // 根据认证标识和用户ID获取认证记录
-    public Certification getCertification(String userId, String certiKey);
+    public Certification getCertification(String userId, ECertiKey certiKey);
 
     // 根据userId查询用户认证信息列表
     public List<Certification> queryCertificationList(String userId);

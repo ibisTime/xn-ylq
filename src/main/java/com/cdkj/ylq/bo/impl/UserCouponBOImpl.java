@@ -79,4 +79,38 @@ public class UserCouponBOImpl extends PaginableBOImpl<UserCoupon> implements
         return data;
     }
 
+    @Override
+    public UserCoupon getUserCoupon(String borrowCode) {
+        UserCoupon data = null;
+        if (StringUtils.isNotBlank(borrowCode)) {
+            UserCoupon condition = new UserCoupon();
+            condition.setBorrowCode(borrowCode);
+            data = userCouponDAO.select(condition);
+        }
+        return data;
+    }
+
+    @Override
+    public int use(UserCoupon data, String borrowCode) {
+        int count = 0;
+        if (data != null) {
+            data.setBorrowCode(borrowCode);
+            data.setStatus(EUserCouponStatus.RECYCLE.getCode());
+            userCouponDAO.updateUse(data);
+        }
+        return count;
+    }
+
+    @Override
+    public int useCancel(String borrowCode) {
+        int count = 0;
+        if (StringUtils.isNotBlank(borrowCode)) {
+            UserCoupon data = new UserCoupon();
+            data.setBorrowCode(borrowCode);
+            data.setStatus(EUserCouponStatus.TO_USE.getCode());
+            count = userCouponDAO.updateUse(data);
+        }
+        return count;
+    }
+
 }

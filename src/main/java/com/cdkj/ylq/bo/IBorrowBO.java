@@ -16,7 +16,9 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     public Borrow getCurrentBorrow(String userId);
 
-    public int loan(Borrow data);
+    public int loan(Borrow data, String updater, String remark);
+
+    public int cancel(Borrow data, String updater, String remark);
 
     public String addPayGroup(String code);
 

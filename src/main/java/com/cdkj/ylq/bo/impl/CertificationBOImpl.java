@@ -9,6 +9,7 @@ import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.dao.ICertificationDAO;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.exception.BizException;
 
@@ -48,10 +49,10 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
     }
 
     @Override
-    public Certification getCertification(String userId, String certiKey) {
+    public Certification getCertification(String userId, ECertiKey certiKey) {
         Certification condition = new Certification();
         condition.setUserId(userId);
-        condition.setCertiKey(certiKey);
+        condition.setCertiKey(certiKey.getCode());
         return certificationDAO.select(condition);
     }
 

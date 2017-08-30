@@ -22,6 +22,9 @@ public interface IBorrowAO {
     // 管理端：放款
     public void loan(String code, String updater, String remark);
 
+    // 管理端：取消借款申请
+    public void cancel(String code, String updater, String remark);
+
     // 客户端：我要还款，返回三方支付所需参数
     public Object repay(String code, String payType);
 

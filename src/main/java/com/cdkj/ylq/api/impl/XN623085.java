@@ -38,7 +38,7 @@ public class XN623085 extends AProcessor {
     @Override
     public Object doBusiness() throws BizException {
         Borrow condition = new Borrow();
-        condition.setCode(req.getCode());
+        condition.setCodeForQuery(req.getCode());
         condition.setApplyUser(req.getApplyUser());
         condition.setStatus(req.getStatus());
         String orderColumn = req.getOrderColumn();

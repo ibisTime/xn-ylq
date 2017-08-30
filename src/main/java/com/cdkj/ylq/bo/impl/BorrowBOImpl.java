@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
+import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IBorrowDAO;
 import com.cdkj.ylq.domain.Borrow;
@@ -69,10 +70,35 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     }
 
     @Override
-    public int loan(Borrow data) {
+    public int loan(Borrow data, String updater, String remark) {
         int count = 0;
         if (data != null) {
+            Date now = new Date();
+            Date fkDatetime = now;
+            Date jxDatetime = DateUtil.getTomorrowStart(fkDatetime);
+            Date hkDatetime = DateUtil.getRelativeDate(jxDatetime,
+                data.getDuration() * 24 * 3600 - 1);
+            data.setFkDatetime(fkDatetime);
+            data.setJxDatetime(jxDatetime);
+            data.setHkDatetime(hkDatetime);
+            data.setStatus(EBorrowStatus.LOANING.getCode());
+            data.setUpdater(updater);
+            data.setUpdateDatetime(now);
+            data.setRemark(remark);
             count = borrowDAO.updateLoan(data);
+        }
+        return count;
+    }
+
+    @Override
+    public int cancel(Borrow data, String updater, String remark) {
+        int count = 0;
+        if (data != null) {
+            data.setStatus(EBorrowStatus.CANCEL.getCode());
+            data.setUpdater(updater);
+            data.setUpdateDatetime(new Date());
+            data.setRemark(remark);
+            count = borrowDAO.updateCancel(data);
         }
         return count;
     }

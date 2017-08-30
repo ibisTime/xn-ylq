@@ -40,6 +40,8 @@ public class XN623030 extends AProcessor {
         Apply condition = new Apply();
         condition.setStatus(req.getStatus());
         condition.setStatusList(req.getStatusList());
+        condition.setApplyUser(req.getApplyUser());
+        condition.setProductCode(req.getProductCode());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = IApplyAO.DEFAULT_ORDER_COLUMN;

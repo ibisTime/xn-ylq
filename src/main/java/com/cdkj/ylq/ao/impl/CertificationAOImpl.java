@@ -76,7 +76,7 @@ public class CertificationAOImpl implements ICertificationAO {
         InfoIdentifyPic data = new InfoIdentifyPic();
         data.setIdentifyPic(pic);
         Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_IDENTIFY_PIC.getCode());
+            ECertiKey.INFO_IDENTIFY_PIC);
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setResult(JsonUtil.Object2Json(data));
@@ -114,7 +114,7 @@ public class CertificationAOImpl implements ICertificationAO {
             infoIdentify.setRealName(res.getRealName());
             infoIdentify.setIdNo(res.getIdNo());
             Certification certification = certificationBO.getCertification(
-                userId, ECertiKey.INFO_IDENTIFY_FACE.getCode());
+                userId, ECertiKey.INFO_IDENTIFY_FACE);
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoIdentify));
@@ -149,7 +149,7 @@ public class CertificationAOImpl implements ICertificationAO {
             throw new BizException("xn623000", "请先进行人脸识别");
         }
         Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_IDENTIFY.getCode());
+            ECertiKey.INFO_IDENTIFY);
         InfoIdentify infoIdentify = certiInfo.getInfoIdentifyFace();
         SYSConfig config = sysConfigBO.getSYSConfig(
             SysConstants.IDENTIFY_VALID_DAYS, ESystemCode.YLQ.getCode(),
@@ -181,7 +181,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public void submitInfoBasic(XN623040Req req) {
         InfoBasic data = getInfoBasic(req);
         Certification certification = certificationBO.getCertification(
-            req.getUserId(), ECertiKey.INFO_BASIC.getCode());
+            req.getUserId(), ECertiKey.INFO_BASIC);
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setResult(JsonUtil.Object2Json(data));
@@ -204,7 +204,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public void submitInfoOccupation(XN623041Req req) {
         InfoOccupation data = getInfoOccupation(req);
         Certification certification = certificationBO.getCertification(
-            req.getUserId(), ECertiKey.INFO_OCCUPATION.getCode());
+            req.getUserId(), ECertiKey.INFO_OCCUPATION);
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setResult(JsonUtil.Object2Json(data));
@@ -227,7 +227,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public void submitInfoContact(XN623042Req req) {
         InfoContact data = getInfoContact(req);
         Certification certification = certificationBO.getCertification(
-            req.getUserId(), ECertiKey.INFO_CONTACT.getCode());
+            req.getUserId(), ECertiKey.INFO_CONTACT);
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setResult(JsonUtil.Object2Json(data));
@@ -250,7 +250,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public void submitInfoBankcard(XN623043Req req) {
         InfoBankcard data = getInfoBankcard(req);
         Certification certification = certificationBO.getCertification(
-            req.getUserId(), ECertiKey.INFO_BANKCARD.getCode());
+            req.getUserId(), ECertiKey.INFO_BANKCARD);
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setResult(JsonUtil.Object2Json(data));
@@ -301,7 +301,7 @@ public class CertificationAOImpl implements ICertificationAO {
             wifiMac, imei);
 
         Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_ANTIFRAUD.getCode());
+            ECertiKey.INFO_ANTIFRAUD);
         SYSConfig config = sysConfigBO.getSYSConfig(
             SysConstants.ANTIFRAUD_VALID_DAYS, ESystemCode.YLQ.getCode(),
             ESystemCode.YLQ.getCode());
@@ -343,7 +343,7 @@ public class CertificationAOImpl implements ICertificationAO {
             infoIdentify.getRealName(), infoIdentify.getIdNo());
         if (infoZMCredit.isAuthorized()) {
             Certification certification = certificationBO.getCertification(
-                userId, ECertiKey.INFO_ZMCREDIT.getCode());
+                userId, ECertiKey.INFO_ZMCREDIT);
             SYSConfig config = sysConfigBO.getSYSConfig(
                 SysConstants.ANTIFRAUD_VALID_DAYS, ESystemCode.YLQ.getCode(),
                 ESystemCode.YLQ.getCode());
@@ -379,7 +379,7 @@ public class CertificationAOImpl implements ICertificationAO {
         MxReportData mxReportData = certiBO.doMxReportDataGet(taskId);
         if (mxReportData != null) {
             Certification certification = certificationBO.getCertification(
-                userId, ECertiKey.INFO_CARRIER.getCode());
+                userId, ECertiKey.INFO_CARRIER);
             SYSConfig config = sysConfigBO.getSYSConfig(
                 SysConstants.ANTIFRAUD_VALID_DAYS, ESystemCode.YLQ.getCode(),
                 ESystemCode.YLQ.getCode());
@@ -448,7 +448,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public InfoAmount getMyCreditAmount(String userId) {
         InfoAmount infoAmount = null;
         Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_AMOUNT.getCode());
+            ECertiKey.INFO_AMOUNT);
         if (certification != null) {
             infoAmount = JsonUtil.json2Bean(certification.getResult(),
                 InfoAmount.class);

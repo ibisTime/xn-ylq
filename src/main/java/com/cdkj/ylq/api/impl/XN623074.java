@@ -19,7 +19,7 @@ import com.cdkj.ylq.exception.ParaException;
 import com.cdkj.ylq.spring.SpringContextHolder;
 
 /** 
- * 确认坏账
+ * 归档
  * @author: haiqingzheng 
  * @since: 2017年8月16日 下午4:31:31 
  * @history:

@@ -23,6 +23,7 @@ import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.SYSConfig;
+import com.cdkj.ylq.dto.res.XN623020Res;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
@@ -52,17 +53,17 @@ public class ApplyAOImpl implements IApplyAO {
     private ISYSConfigBO sysConfigBO;
 
     @Override
-    public String submitApply(String applyUser, String productCode) {
-        userBO.getRemoteUser(applyUser);
+    public XN623020Res submitApply(String applyUser, String productCode) {
+        XN623020Res res = new XN623020Res();
         String status = EApplyStatus.TO_CERTI.getCode();
         Certification identify = certificationBO.getCertification(applyUser,
-            ECertiKey.INFO_IDENTIFY.getCode());
+            ECertiKey.INFO_IDENTIFY);
         Certification antifraud = certificationBO.getCertification(applyUser,
-            ECertiKey.INFO_ANTIFRAUD.getCode());
+            ECertiKey.INFO_ANTIFRAUD);
         Certification zmcredit = certificationBO.getCertification(applyUser,
-            ECertiKey.INFO_ZMCREDIT.getCode());
+            ECertiKey.INFO_ZMCREDIT);
         Certification carrier = certificationBO.getCertification(applyUser,
-            ECertiKey.INFO_CARRIER.getCode());
+            ECertiKey.INFO_CARRIER);
         if (identify != null && antifraud != null && zmcredit != null
                 && carrier != null) {
             if (EBoolean.YES.getCode().equals(identify.getFlag())
@@ -78,25 +79,28 @@ public class ApplyAOImpl implements IApplyAO {
             if (EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())) {
                 apply.setStatus(status);
                 applyBO.refreshStatus(apply);
-                return apply.getCode();
+                res.setCode(apply.getCode());
+                res.setStatus(status);
             } else {
                 throw new BizException("xn623020", "您已经有一个申请");
             }
-
+        } else {
+            Apply data = new Apply();
+            String code = OrderNoGenerater.generateM(EGeneratePrefix.APPLY
+                .getCode());
+            data.setCode(code);
+            data.setApplyUser(applyUser);
+            data.setApplyDatetime(new Date());
+            data.setProductCode(productCode);
+            data.setStatus(status);
+            data.setUpdater(applyUser);
+            data.setUpdateDatetime(new Date());
+            data.setRemark("新申请");
+            applyBO.saveApply(data);
+            res.setCode(code);
+            res.setStatus(status);
         }
-        Apply data = new Apply();
-        String code = OrderNoGenerater.generateM(EGeneratePrefix.APPLY
-            .getCode());
-        data.setCode(code);
-        data.setApplyUser(applyUser);
-        data.setApplyDatetime(new Date());
-        data.setProductCode(productCode);
-        data.setStatus(status);
-        data.setUpdater(applyUser);
-        data.setUpdateDatetime(new Date());
-        data.setRemark("新申请");
-        applyBO.saveApply(data);
-        return code;
+        return res;
     }
 
     @Override
@@ -128,7 +132,7 @@ public class ApplyAOImpl implements IApplyAO {
             InfoAmount infoAmount = new InfoAmount();
             infoAmount.setSxAmount(sxAmount);
             Certification certification = certificationBO.getCertification(
-                apply.getApplyUser(), ECertiKey.INFO_AMOUNT.getCode());
+                apply.getApplyUser(), ECertiKey.INFO_AMOUNT);
             SYSConfig config = sysConfigBO.getSYSConfig(
                 SysConstants.AMOUNT_VALID_DAYS, ESystemCode.YLQ.getCode(),
                 ESystemCode.YLQ.getCode());
@@ -159,7 +163,7 @@ public class ApplyAOImpl implements IApplyAO {
         }
         applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
 
-        String content = "恭喜您，您的借款申请已经通过审核，请登录APP进行自助借款操作";
+        String content = "恭喜您，您的借款申请已经通过审核，请登录APP进行自助借款操作。";
         if (EBoolean.NO.getCode().equals(approveResult)) {
             content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote + "，请登录APP查看详情。";
         }

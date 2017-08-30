@@ -116,6 +116,14 @@
 		WHERE id = #{id}
 	</update>
 	
+	<update id="update_useCancel" parameterType="userCoupon">
+		UPDATE t_user_coupon
+		SET
+		status = #{status}
+		,borrow_code = NULL
+		WHERE borrow_code = #{borrowCode}
+	</update>
+	
 	<update id="update_recycle" parameterType="userCoupon">
 		UPDATE t_user_coupon
 		SET

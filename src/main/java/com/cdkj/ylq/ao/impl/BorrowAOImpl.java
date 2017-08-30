@@ -18,17 +18,19 @@ import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
+import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.AmountUtil;
-import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
+import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
+import com.cdkj.ylq.domain.InfoBankcard;
 import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.UserCoupon;
@@ -71,12 +73,15 @@ public class BorrowAOImpl implements IBorrowAO {
     @Autowired
     private IAccountBO accountBO;
 
+    @Autowired
+    private ISmsOutBO smsOutBO;
+
     @Override
     @Transactional
     public String borrow(String userId, Long couponId) {
         // 授信额度信息校验
         Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_AMOUNT.getCode());
+            ECertiKey.INFO_AMOUNT);
         if (certification == null) {
             throw new BizException("623070", "您还没有额度，请先选择产品进行申请");
         }
@@ -98,6 +103,10 @@ public class BorrowAOImpl implements IBorrowAO {
         }
         // 产品
         Product product = productBO.getProduct(certification.getRef());
+
+        String code = OrderNoGenerater.generateM(EGeneratePrefix.BORROW
+            .getCode());
+        Date now = new Date();
         // 优惠金额
         Long yhAmount = 0L;
         if (couponId != null) {
@@ -110,11 +119,8 @@ public class BorrowAOImpl implements IBorrowAO {
                 throw new BizException("623070", "不可使用该优惠券");
             }
             yhAmount = userCoupon.getAmount();
+            userCouponBO.use(userCoupon, code);
         }
-
-        String code = OrderNoGenerater.generateM(EGeneratePrefix.BORROW
-            .getCode());
-        Date now = new Date();
         // 借款总额
         Long borrowAmount = infoAmount.getSxAmount();
         // 利息
@@ -175,6 +181,13 @@ public class BorrowAOImpl implements IBorrowAO {
         List<Borrow> borrowList = results.getList();
         for (Borrow borrow : borrowList) {
             borrow.setUser(userBO.getRemoteUser(borrow.getApplyUser()));
+            Certification certification = certificationBO.getCertification(
+                borrow.getApplyUser(), ECertiKey.INFO_BANKCARD);
+            if (certification != null
+                    && StringUtils.isNotBlank(certification.getResult())) {
+                borrow.setInfoBankcard(JsonUtil.json2Bean(
+                    certification.getResult(), InfoBankcard.class));
+            }
         }
         return results;
     }
@@ -189,6 +202,13 @@ public class BorrowAOImpl implements IBorrowAO {
     public Borrow getBorrow(String code) {
         Borrow borrow = borrowBO.getBorrow(code);
         borrow.setUser(userBO.getRemoteUser(borrow.getApplyUser()));
+        Certification certification = certificationBO.getCertification(
+            borrow.getApplyUser(), ECertiKey.INFO_BANKCARD);
+        if (certification != null
+                && StringUtils.isNotBlank(certification.getResult())) {
+            borrow.setInfoBankcard(JsonUtil.json2Bean(
+                certification.getResult(), InfoBankcard.class));
+        }
         return borrow;
     }
 
@@ -199,23 +219,27 @@ public class BorrowAOImpl implements IBorrowAO {
         if (!EBorrowStatus.TO_LOAN.getCode().equals(borrow.getStatus())) {
             throw new BizException("623071", "借款不处于待放款状态");
         }
-        Date now = new Date();
-        Date fkDatetime = now;
-        Date jxDatetime = DateUtil.getTomorrowStart(fkDatetime);
-        Date hkDatetime = DateUtil.getRelativeDateOfDays(jxDatetime,
-            borrow.getDuration());
-        borrow.setFkDatetime(fkDatetime);
-        borrow.setJxDatetime(jxDatetime);
-        borrow.setHkDatetime(hkDatetime);
-        borrow.setStatus(EBorrowStatus.LOANING.getCode());
-        borrow.setUpdater(updater);
-        borrow.setUpdateDatetime(now);
-        borrow.setRemark(remark);
-        borrowBO.loan(borrow);
+        borrowBO.loan(borrow, updater, remark);
 
         Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
         apply.setStatus(EApplyStatus.LOANING.getCode());
         applyBO.refreshStatus(apply);
+
+        smsOutBO.sentContent(apply.getApplyUser(),
+            "恭喜您，您的" + CalculationUtil.diviUp(borrow.getAmount())
+                    + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
+    }
+
+    @Override
+    @Transactional
+    public void cancel(String code, String updater, String remark) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.TO_LOAN.getCode().equals(borrow.getStatus())) {
+            throw new BizException("623071", "借款不处于待放款状态");
+        }
+        userCouponBO.useCancel(borrow.getCode());
+        borrowBO.cancel(borrow, updater, remark);
+
     }
 
     @Override
@@ -264,14 +288,29 @@ public class BorrowAOImpl implements IBorrowAO {
             throw new BizException("XN000000", "找不到对应的借款记录");
         }
         Borrow borrow = borrowList.get(0);
-        if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())) {
+        if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
             // 更新订单支付金额
             borrowBO.repaySuccess(borrow, amount, payCode, payType);
             // 更新申请单状态
             Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
             apply.setStatus(EApplyStatus.REPAY.getCode());
             applyBO.refreshStatus(apply);
+            // 额度重置为0
+            Certification certification = certificationBO.getCertification(
+                apply.getApplyUser(), ECertiKey.INFO_AMOUNT);
+            InfoAmount infoAmount = JsonUtil.json2Bean(
+                certification.getResult(), InfoAmount.class);
+            Date now = new Date();
+            infoAmount.setSxAmount(0L);
+            certification.setResult(JsonUtil.Object2Json(infoAmount));
+            certification.setCerDatetime(now);
+            certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+            certificationBO.refreshCertification(certification);
             userId = borrow.getApplyUser();
+            smsOutBO.sentContent(apply.getApplyUser(),
+                "您的" + CalculationUtil.diviUp(borrow.getAmount())
+                        + "借款已经成功还款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
         } else {
             logger.info("订单号：" + borrow.getCode() + "已支付，重复回调");
         }
@@ -334,6 +373,12 @@ public class BorrowAOImpl implements IBorrowAO {
         borrow.setUpdateDatetime(new Date());
         borrow.setRemark("已逾期");
         borrowBO.overdue(borrow);
+
+        // 更新申请单状态
+        Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
+        apply.setStatus(EApplyStatus.OVERDUE.getCode());
+        applyBO.refreshStatus(apply);
+
     }
 
     @Override
@@ -345,4 +390,5 @@ public class BorrowAOImpl implements IBorrowAO {
         data.setRemark(remark);
         borrowBO.archive(data);
     }
+
 }

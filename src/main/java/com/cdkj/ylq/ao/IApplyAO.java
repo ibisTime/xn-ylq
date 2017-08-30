@@ -2,12 +2,13 @@ package com.cdkj.ylq.ao;
 
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Apply;
+import com.cdkj.ylq.dto.res.XN623020Res;
 
 public interface IApplyAO {
     static final String DEFAULT_ORDER_COLUMN = "code";
 
     // 提交申请
-    public String submitApply(String applyUser, String productCode);
+    public XN623020Res submitApply(String applyUser, String productCode);
 
     // 取消申请
     public void cancalApply(String applyUser);

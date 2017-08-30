@@ -107,12 +107,34 @@ public class Borrow extends ABaseDO {
     // 用户信息
     private User user;
 
+    // 银行卡信息
+    private InfoBankcard infoBankcard;
+
     // *** 查询字段 ****
     // 状态列表
     private List<String> statusList;
 
     // 当前时间
     private Date curDatetime;
+
+    // 编号模糊查询
+    private String codeForQuery;
+
+    public InfoBankcard getInfoBankcard() {
+        return infoBankcard;
+    }
+
+    public void setInfoBankcard(InfoBankcard infoBankcard) {
+        this.infoBankcard = infoBankcard;
+    }
+
+    public String getCodeForQuery() {
+        return codeForQuery;
+    }
+
+    public void setCodeForQuery(String codeForQuery) {
+        this.codeForQuery = codeForQuery;
+    }
 
     public String getLevel() {
         return level;
