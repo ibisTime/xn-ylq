@@ -255,3 +255,17 @@ CREATE TABLE `tsys_role` (
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET FOREIGN_KEY_CHECKS = 1;
+
+CREATE TABLE `tstd_mobile_modify` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `old_mobile` varchar(16) DEFAULT NULL COMMENT '旧手机号',
+  `new_mobile` varchar(16) DEFAULT NULL COMMENT '新手机号',
+  `status` varchar(32) DEFAULT NULL COMMENT '状态',
+  `apply_datetime` datetime DEFAULT NULL COMMENT '申请时间',
+  `updater` varchar(32) DEFAULT NULL COMMENT '最后更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '最后更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
