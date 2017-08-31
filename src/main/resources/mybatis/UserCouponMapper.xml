@@ -43,7 +43,7 @@
 				AND t.borrow_code = #{borrowCode}
 			</if>
 			<if test="productAmount != null and productAmount != '' ">
-				<![CDATA[AND t.start_amount >= #{productAmount}]]>
+				<![CDATA[AND t.start_amount <= #{productAmount}]]>
 			</if>
 		</trim>
 	</sql>

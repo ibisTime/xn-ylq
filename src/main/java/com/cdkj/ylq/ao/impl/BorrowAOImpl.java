@@ -239,7 +239,10 @@ public class BorrowAOImpl implements IBorrowAO {
         }
         userCouponBO.useCancel(borrow.getCode());
         borrowBO.cancel(borrow, updater, remark);
-
+        // 更新申请单状态
+        Apply apply = applyBO.getCurrentApply(borrow.getApplyUser());
+        apply.setStatus(EApplyStatus.APPROVE_YES.getCode());
+        applyBO.refreshStatus(apply);
     }
 
     @Override

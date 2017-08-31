@@ -20,8 +20,7 @@ public interface IUserCouponAO {
             UserCoupon condition);
 
     // 客户端：可使用的优惠券查询
-    public List<UserCoupon> queryCouponList(UserCoupon condition,
-            String productCode);
+    public List<UserCoupon> queryCouponList(UserCoupon condition, Long amount);
 
     // oss：用户优惠券分页查询
     public Paginable<UserCoupon> queryUserCouponPage(int start, int limit,

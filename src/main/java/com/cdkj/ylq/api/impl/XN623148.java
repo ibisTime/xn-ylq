@@ -46,7 +46,8 @@ public class XN623148 extends AProcessor {
             orderColumn = IUserCouponAO.DEFAULT_ORDER_COLUMN;
         }
         condition.setOrder(orderColumn, req.getOrderDir());
-        return userCouponAO.queryCouponList(condition, req.getProductCode());
+        return userCouponAO.queryCouponList(condition,
+            StringValidater.toLong(req.getAmount()));
     }
 
     /** 
@@ -55,7 +56,7 @@ public class XN623148 extends AProcessor {
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN623148Req.class);
-        StringValidater.validateBlank(req.getUserId(), req.getProductCode());
+        StringValidater.validateBlank(req.getUserId(), req.getAmount());
     }
 
 }

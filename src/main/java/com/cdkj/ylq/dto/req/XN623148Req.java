@@ -7,8 +7,8 @@ public class XN623148Req extends APageReq {
     // 用户编号（必填）
     private String userId;
 
-    // 产品编号（必填）
-    private String productCode;
+    // 实际借款金额（必填）
+    private String amount;
 
     public String getUserId() {
         return userId;
@@ -18,12 +18,12 @@ public class XN623148Req extends APageReq {
         this.userId = userId;
     }
 
-    public String getProductCode() {
-        return productCode;
+    public String getAmount() {
+        return amount;
     }
 
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 
 }

@@ -147,12 +147,21 @@ public class ProductAOImpl implements IProductAO {
                         }
                         product.setIsLocked(EBoolean.NO.getCode());
                     } else {
-                        product.setIsLocked(EBoolean.YES.getCode());
+                        if (Integer.valueOf(curProductLevel.getCode()) >= Integer
+                            .valueOf((product.getLevel()))) {
+                            product
+                                .setUserProductStatus(EUserProductStatus.TO_APPLY
+                                    .getCode());
+                            product.setIsLocked(EBoolean.NO.getCode());
+                        } else {
+                            product.setIsLocked(EBoolean.YES.getCode());
+                        }
                     }
                 }
             } else {
                 for (Product product : products) {
-                    if (curProductLevel.getCode().equals(product.getLevel())) {
+                    if (Integer.valueOf(curProductLevel.getCode()) >= Integer
+                        .valueOf((product.getLevel()))) {
                         product
                             .setUserProductStatus(EUserProductStatus.TO_APPLY
                                 .getCode());

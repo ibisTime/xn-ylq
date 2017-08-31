@@ -13,7 +13,6 @@ import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Coupon;
-import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.UserCoupon;
 import com.cdkj.ylq.enums.ECouponStatus;
 import com.cdkj.ylq.enums.EUserCouponStatus;
@@ -74,10 +73,8 @@ public class UserCouponAOImpl implements IUserCouponAO {
     }
 
     @Override
-    public List<UserCoupon> queryCouponList(UserCoupon condition,
-            String productCode) {
-        Product product = productBO.getProduct(productCode);
-        condition.setProductAmount(product.getAmount());
+    public List<UserCoupon> queryCouponList(UserCoupon condition, Long amount) {
+        condition.setProductAmount(amount);
         return userCouponBO.queryUserCouponList(condition);
     }
 
