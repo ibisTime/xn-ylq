@@ -18,7 +18,7 @@ public class RepayApply extends ABaseDO {
     private String code;
 
     // 针对借款编号
-    private String borrowCode;
+    private String refNo;
 
     // 打款类型
     private String type;
@@ -47,6 +47,18 @@ public class RepayApply extends ABaseDO {
     // 状态
     private String status;
 
+    // ****辅助字段******
+
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public String getCode() {
         return code;
     }
@@ -55,12 +67,12 @@ public class RepayApply extends ABaseDO {
         this.code = code;
     }
 
-    public String getBorrowCode() {
-        return borrowCode;
+    public String getRefNo() {
+        return refNo;
     }
 
-    public void setBorrowCode(String borrowCode) {
-        this.borrowCode = borrowCode;
+    public void setRefNo(String refNo) {
+        this.refNo = refNo;
     }
 
     public String getType() {

@@ -10,8 +10,8 @@ import java.util.Map;
  */
 public enum EGeneratePrefix {
 
-    PRODUCT("CP", "产品"), APPLY("AP-", "额度申请"), BORROW("SIGN-", "借款"), PAY_GROUP(
-            "PG", "支付组号"), REPAY_APPLY("RA", "打款申请");
+    PRODUCT("CP", "产品"), APPLY("AP", "额度申请"), BORROW("JZB", "借款"), PAY_GROUP(
+            "PG", "支付组号"), REPAY_APPLY("RA", "打款申请"), RENEWAL("XQ", "续期记录");
 
     public static Map<String, EGeneratePrefix> getMap() {
         Map<String, EGeneratePrefix> map = new HashMap<String, EGeneratePrefix>();

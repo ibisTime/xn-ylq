@@ -14,7 +14,10 @@ public interface IBorrowAO {
             String approveNote);
 
     // 管理端：放款
-    public void loan(String code, String updater, String remark);
+    public void doLoan(String code, String result, String updater, String remark);
+
+    // 客户端：打款失败后，我已修改银行卡，重新申请放款
+    public void resubmitLoan(String code);
 
     // 客户端：我要还款
     public Object repay(String code, String payType);

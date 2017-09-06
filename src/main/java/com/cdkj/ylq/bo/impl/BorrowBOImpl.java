@@ -14,6 +14,7 @@ import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IBorrowDAO;
 import com.cdkj.ylq.domain.Borrow;
+import com.cdkj.ylq.domain.Renewal;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EPayType;
@@ -85,7 +86,7 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     }
 
     @Override
-    public int loan(Borrow data, String updater, String remark) {
+    public int loanSuccess(Borrow data, String updater, String remark) {
         int count = 0;
         if (data != null) {
             Date now = new Date();
@@ -100,7 +101,31 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
             data.setUpdater(updater);
             data.setUpdateDatetime(now);
             data.setRemark(remark);
-            count = borrowDAO.updateLoan(data);
+            count = borrowDAO.updateLoanSuccess(data);
+        }
+        return count;
+    }
+
+    @Override
+    public int loanFailure(Borrow data, String updater, String remark) {
+        int count = 0;
+        if (data != null) {
+            Date now = new Date();
+            data.setStatus(EBorrowStatus.LOAN_NO.getCode());
+            data.setUpdater(updater);
+            data.setUpdateDatetime(now);
+            data.setRemark(remark);
+            count = borrowDAO.updateLoanSuccess(data);
+        }
+        return count;
+    }
+
+    @Override
+    public int resubmitLoan(Borrow borrow) {
+        int count = 0;
+        if (borrow != null) {
+            borrow.setStatus(EBorrowStatus.APPROVE_YES.getCode());
+            count = borrowDAO.updateResubmitLoan(borrow);
         }
         return count;
     }
@@ -148,32 +173,45 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     }
 
     @Override
-    public int renewalSuccess(Borrow borrow, Long payAmount, String payCode,
-            String payType) {
+    public int renewalSuccess(Borrow borrow, Renewal renewal, Long payAmount) {
         int count = 0;
-        if (borrow != null && StringUtils.isNotBlank(borrow.getCode())) {
-            Date now = new Date();
+        if (renewal != null && StringUtils.isNotBlank(renewal.getBorrowCode())) {
+            borrow.setTotalAmount(borrow.getTotalAmount()
+                    - borrow.getYqlxAmount());
+            borrow.setYqDays(0);
+            borrow.setYqlxAmount(0L);
+            borrow.setJxDatetime(renewal.getStartDate());
+            borrow.setHkDatetime(renewal.getEndDate());
+            borrow.setRenewalCount(borrow.getRenewalCount() + 1);
             borrow.setStatus(EBorrowStatus.LOANING.getCode());
             borrow.setUpdater(borrow.getApplyUser());
-            borrow.setUpdateDatetime(now);
-            borrow.setRemark("借款续期中");
-            count = borrowDAO.updateRenewalSuccess(borrow);
-        }
-        return count;
-    }
-
-    @Override
-    public int renewalOffline(Borrow borrow, Long amount, String updater) {
-        int count = 0;
-        if (borrow != null && StringUtils.isNotBlank(borrow.getCode())) {
-            borrow.setStatus(EBorrowStatus.LOANING.getCode());
-            borrow.setUpdater(updater);
             borrow.setUpdateDatetime(new Date());
             borrow.setRemark("借款续期中");
             count = borrowDAO.updateRenewalSuccess(borrow);
         }
         return count;
     }
+
+    // @Override
+    // public int renewalOffline(Borrow borrow, Renewal renewal, Long amount,
+    // String updater) {
+    // int count = 0;
+    // if (borrow != null && StringUtils.isNotBlank(borrow.getCode())) {
+    // borrow.setTotalAmount(borrow.getTotalAmount()
+    // - borrow.getYqlxAmount());
+    // borrow.setYqDays(0);
+    // borrow.setYqlxAmount(0L);
+    // borrow.setJxDatetime(renewal.getStartDate());
+    // borrow.setHkDatetime(renewal.getEndDate());
+    // borrow.setRenewalCount(borrow.getRenewalCount() + 1);
+    // borrow.setStatus(EBorrowStatus.LOANING.getCode());
+    // borrow.setUpdater(updater);
+    // borrow.setUpdateDatetime(new Date());
+    // borrow.setRemark("借款续期中");
+    // count = borrowDAO.updateRenewalOffline(borrow);
+    // }
+    // return count;
+    // }
 
     @Override
     public int confirmBad(Borrow data) {

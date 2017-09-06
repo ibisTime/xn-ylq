@@ -42,6 +42,18 @@ public class Borrow extends ABaseDO {
     // 约定还款时间
     private Date hkDatetime;
 
+    // 利息利率
+    private Double lxRate;
+
+    // 快速信审费利率
+    private Double xsRate;
+
+    // 账户管理费利率
+    private Double glRate;
+
+    // 服务费利率
+    private Double fwRate;
+
     // 正常应付利息
     private Long lxAmount;
 
@@ -87,6 +99,9 @@ public class Borrow extends ABaseDO {
     // 支付方式
     private String payType;
 
+    // 续期次数
+    private Integer renewalCount;
+
     // 状态
     private String status;
 
@@ -119,6 +134,15 @@ public class Borrow extends ABaseDO {
     // 银行卡信息
     private Bankcard bankcard;
 
+    // 续期时间起
+    private Date renewalStartDate;
+
+    // 续期时间止
+    private Date renewalEndDate;
+
+    // 续期需支付总金额
+    private Long renewalAmount;
+
     // *** 查询字段 ****
     // 状态列表
     private List<String> statusList;
@@ -134,6 +158,17 @@ public class Borrow extends ABaseDO {
 
     // 逾期天数止
     private Integer yqDaysEnd;
+
+    // 是否逾期
+    private String isOverdue;
+
+    public String getIsOverdue() {
+        return isOverdue;
+    }
+
+    public void setIsOverdue(String isOverdue) {
+        this.isOverdue = isOverdue;
+    }
 
     public String getCodeForQuery() {
         return codeForQuery;
@@ -445,6 +480,70 @@ public class Borrow extends ABaseDO {
 
     public void setYqDaysEnd(Integer yqDaysEnd) {
         this.yqDaysEnd = yqDaysEnd;
+    }
+
+    public Double getLxRate() {
+        return lxRate;
+    }
+
+    public void setLxRate(Double lxRate) {
+        this.lxRate = lxRate;
+    }
+
+    public Double getXsRate() {
+        return xsRate;
+    }
+
+    public void setXsRate(Double xsRate) {
+        this.xsRate = xsRate;
+    }
+
+    public Double getGlRate() {
+        return glRate;
+    }
+
+    public void setGlRate(Double glRate) {
+        this.glRate = glRate;
+    }
+
+    public Double getFwRate() {
+        return fwRate;
+    }
+
+    public void setFwRate(Double fwRate) {
+        this.fwRate = fwRate;
+    }
+
+    public Integer getRenewalCount() {
+        return renewalCount;
+    }
+
+    public void setRenewalCount(Integer renewalCount) {
+        this.renewalCount = renewalCount;
+    }
+
+    public Date getRenewalStartDate() {
+        return renewalStartDate;
+    }
+
+    public void setRenewalStartDate(Date renewalStartDate) {
+        this.renewalStartDate = renewalStartDate;
+    }
+
+    public Date getRenewalEndDate() {
+        return renewalEndDate;
+    }
+
+    public void setRenewalEndDate(Date renewalEndDate) {
+        this.renewalEndDate = renewalEndDate;
+    }
+
+    public Long getRenewalAmount() {
+        return renewalAmount;
+    }
+
+    public void setRenewalAmount(Long renewalAmount) {
+        this.renewalAmount = renewalAmount;
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,9 @@ import com.cdkj.ylq.exception.BizException;
 @Component
 public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
         ISYSConfigBO {
+
+    static Logger logger = Logger.getLogger(SYSConfigBOImpl.class);
+
     @Autowired
     private ISYSConfigDAO sysConfigDAO;
 
@@ -96,6 +100,34 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     @Override
     public SYSConfig getSYSConfig(String key, String systemCode) {
         return getSYSConfig(key, systemCode, systemCode);
+    }
+
+    @Override
+    public Double getDoubleValue(String key, String companyCode,
+            String systemCode) {
+        Double result = 0.0;
+        SYSConfig config = getSYSConfig(key, companyCode, systemCode);
+        try {
+            result = Double.valueOf(config.getCvalue());
+        } catch (Exception e) {
+            logger.error("参数名为" + key + "的配置转换成Double类型发生错误, 原因："
+                    + e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public Integer getIntegerValue(String key, String companyCode,
+            String systemCode) {
+        Integer result = 0;
+        SYSConfig config = getSYSConfig(key, companyCode, systemCode);
+        try {
+            result = Integer.valueOf(config.getCvalue());
+        } catch (Exception e) {
+            logger.error("参数名为" + key + "的配置转换成Integer类型发生错误, 原因："
+                    + e.getMessage());
+        }
+        return result;
     }
 
 }

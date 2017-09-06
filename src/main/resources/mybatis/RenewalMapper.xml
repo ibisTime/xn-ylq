@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.IRenewalDAO">
+	<resultMap id="renewal_DB_Result" type="renewal">
+		<result column="code" property="code" />
+		<result column="apply_user" property="applyUser" />
+		<result column="borrow_code" property="borrowCode" />
+		<result column="step" property="step" />
+		<result column="cycle" property="cycle" />
+		<result column="start_date" property="startDate" />
+		<result column="end_date" property="endDate" />
+		<result column="yq_amount" property="yqAmount" />
+		<result column="xs_amount" property="xsAmount" />
+		<result column="gl_amount" property="glAmount" />
+		<result column="fw_amount" property="fwAmount" />
+		<result column="lx_amount" property="lxAmount" />
+		<result column="total_amount" property="totalAmount" />
+		<result column="pay_datetime" property="payDatetime" />
+		<result column="pay_type" property="payType" />
+		<result column="pay_code" property="payCode" />
+		<result column="pay_group" property="payGroup" />
+		<result column="create_datetime" property="createDatetime" />
+		<result column="status" property="status" />
+		<result column="cur_no" property="curNo" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+			<if test="applyUser != null and applyUser != '' ">
+				AND t.apply_user = #{applyUser}
+			</if>
+			<if test="borrowCode != null and borrowCode != '' ">
+				AND t.borrow_code = #{borrowCode}
+			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
+			<if test="payGroup != null and payGroup != '' ">
+				AND t.pay_group = #{payGroup}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_renewal" parameterType="renewal" resultMap="renewal_DB_Result">
+		SELECT
+		t.code
+		,t.apply_user
+		,t.borrow_code
+		,t.step
+		,t.cycle
+		,t.start_date
+		,t.end_date
+		,t.yq_amount
+		,t.xs_amount
+		,t.gl_amount
+		,t.fw_amount
+		,t.lx_amount
+		,t.total_amount
+		,t.pay_datetime
+		,t.pay_type
+		,t.pay_code
+		,t.pay_group
+		,t.create_datetime
+		,t.status
+		,t.cur_no
+		FROM
+		t_renewal t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_renewal_count" parameterType="renewal"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM t_renewal t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_renewal" parameterType="renewal">
+		INSERT INTO
+		t_renewal(
+		code
+		,apply_user
+		,borrow_code
+		,step
+		,cycle
+		,start_date
+		,end_date
+		,yq_amount
+		,xs_amount
+		,gl_amount
+		,fw_amount
+		,lx_amount
+		,total_amount
+		,pay_datetime
+		,pay_code
+		,pay_group
+		,create_datetime
+		,status
+		,cur_no
+		)
+		VALUES(
+		#{code}
+		,#{applyUser}
+		,#{borrowCode}
+		,#{step}
+		,#{cycle}
+		,#{startDate}
+		,#{endDate}
+		,#{yqAmount}
+		,#{xsAmount}
+		,#{glAmount}
+		,#{fwAmount}
+		,#{lxAmount}
+		,#{totalAmount}
+		,#{payDatetime}
+		,#{payCode}
+		,#{payGroup}
+		,#{createDatetime}
+		,#{status}
+		,#{curNo}
+		)
+	</insert>
+
+	<update id="update_renewalSuccess" parameterType="renewal">
+		UPDATE t_renewal
+		SET
+		pay_datetime = #{payDatetime}
+		,pay_code = #{payCode}
+		,pay_type = #{payType}
+		,status = #{status}
+		,cur_no = #{curNo}
+		WHERE code = #{code}
+	</update>
+
+
+</mapper>

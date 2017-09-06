@@ -56,9 +56,9 @@ public class RepayApplyBOImpl extends PaginableBOImpl<RepayApply> implements
     }
 
     @Override
-    public List<RepayApply> queryCurrentRepayApplyList(String borrowCode) {
+    public List<RepayApply> queryCurrentRepayApplyList(String applyUser) {
         RepayApply condition = new RepayApply();
-        condition.setBorrowCode(borrowCode);
+        condition.setApplyUser(applyUser);
         condition.setStatus(ERepayApplyStatus.TO_APPROVE.getCode());
         return repayApplyDAO.selectList(condition);
     }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.cdkj.ylq.bo.base.IPaginableBO;
 import com.cdkj.ylq.domain.Borrow;
+import com.cdkj.ylq.domain.Renewal;
 import com.cdkj.ylq.enums.EProductLevel;
 
 public interface IBorrowBO extends IPaginableBO<Borrow> {
@@ -19,7 +20,11 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
     public void doApprove(Borrow data, String status, String approver,
             String approveNote);
 
-    public int loan(Borrow data, String updater, String remark);
+    public int loanSuccess(Borrow data, String updater, String remark);
+
+    public int loanFailure(Borrow data, String updater, String remark);
+
+    public int resubmitLoan(Borrow borrow);
 
     public String addPayGroup(String code);
 
@@ -32,10 +37,7 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     public int repayOffline(Borrow borrow, Long repayAmount, String updater);
 
-    public int renewalSuccess(Borrow borrow, Long payAmount, String payCode,
-            String payType);
-
-    public int renewalOffline(Borrow borrow, Long amount, String updater);
+    public int renewalSuccess(Borrow borrow, Renewal renewal, Long payAmount);
 
     public int archive(Borrow data);
 

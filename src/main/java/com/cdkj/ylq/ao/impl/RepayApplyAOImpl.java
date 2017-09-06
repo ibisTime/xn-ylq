@@ -9,15 +9,19 @@ import com.cdkj.ylq.ao.IRepayApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.ICertificationBO;
+import com.cdkj.ylq.bo.IRenewalBO;
 import com.cdkj.ylq.bo.IRepayApplyBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
+import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.domain.Borrow;
+import com.cdkj.ylq.domain.Renewal;
 import com.cdkj.ylq.domain.RepayApply;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBorrowStatus;
+import com.cdkj.ylq.enums.ERenewalStatus;
 import com.cdkj.ylq.enums.ERepayApplyStatus;
 import com.cdkj.ylq.enums.ERepayApplyType;
 import com.cdkj.ylq.exception.BizException;
@@ -41,7 +45,13 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
     private ISmsOutBO smsOutBO;
 
     @Autowired
+    private IUserBO userBO;
+
+    @Autowired
     private ICouponConditionAO couponConditionAO;
+
+    @Autowired
+    private IRenewalBO renewalBO;
 
     @Override
     @Transactional
@@ -67,7 +77,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         if (EBoolean.YES.getCode().equals(approveResult)) {
             status = ERepayApplyStatus.APPROVE_YES.getCode();
 
-            Borrow borrow = borrowBO.getBorrow(repayApply.getBorrowCode());
+            Borrow borrow = borrowBO.getBorrow(repayApply.getRefNo());
             if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                     && !EBorrowStatus.OVERDUE.getCode().equals(
                         borrow.getStatus())) {
@@ -82,7 +92,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             // 发放优惠券
             couponConditionAO.repaySuccess(repayApply.getApplyUser());
             smsContent = "您的" + CalculationUtil.diviUp(borrow.getAmount())
-                    + "借款已经成功还款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";
+                    + "借款（合同编号：" + borrow.getCode() + "）已经成功还款，详情查看请登录APP。";
         } else if (EBoolean.NO.getCode().equals(approveResult)) {
             status = ERepayApplyStatus.APPROVE_NO.getCode();
             smsContent = "您的线下还款申请审核未通过，原因：" + approveNote + "。";
@@ -98,15 +108,24 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         if (EBoolean.YES.getCode().equals(approveResult)) {
             status = ERepayApplyStatus.APPROVE_YES.getCode();
 
-            Borrow borrow = borrowBO.getBorrow(repayApply.getBorrowCode());
+            Renewal renewal = renewalBO.getRenewal(repayApply.getRefNo());
+            if (!ERenewalStatus.TO_PAY.getCode().equals(renewal.getStatus())) {
+                throw new BizException("xn623000", "续期申请记录不处于待支付状态");
+            }
+
+            Borrow borrow = borrowBO.getBorrow(renewal.getBorrowCode());
             if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                     && !EBorrowStatus.OVERDUE.getCode().equals(
                         borrow.getStatus())) {
                 throw new BizException("xn623000", "关联的借款订单不处于待还款状态");
             }
-            borrowBO.renewalOffline(borrow, repayApply.getAmount(), approver);
+            // 更新借款订单
+            borrowBO.renewalSuccess(borrow, renewal, repayApply.getAmount());
+            // 更新申请单状态
+            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                EApplyStatus.LOANING);
             smsContent = "您的" + CalculationUtil.diviUp(borrow.getAmount())
-                    + "借款已经成功续费，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";
+                    + "借款（合同编号：" + borrow.getCode() + "）已经成功续期，详情查看请登录APP。";
         } else if (EBoolean.NO.getCode().equals(approveResult)) {
             status = ERepayApplyStatus.APPROVE_NO.getCode();
             smsContent = "您的线下续期申请审核未通过，原因：" + approveNote + "。";
@@ -118,12 +137,19 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
     @Override
     public Paginable<RepayApply> queryRepayApplyPage(int start, int limit,
             RepayApply condition) {
-        return repayApplyBO.getPaginable(start, limit, condition);
+        Paginable<RepayApply> results = repayApplyBO.getPaginable(start, limit,
+            condition);
+        for (RepayApply repayApply : results.getList()) {
+            repayApply.setUser(userBO.getRemoteUser(repayApply.getApplyUser()));
+        }
+        return results;
     }
 
     @Override
     public RepayApply getRepayApply(String code) {
-        return repayApplyBO.getRepayApply(code);
+        RepayApply repayApply = repayApplyBO.getRepayApply(code);
+        repayApply.setUser(userBO.getRemoteUser(repayApply.getApplyUser()));
+        return repayApply;
     }
 
 }

@@ -18,6 +18,7 @@ import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
+import com.cdkj.ylq.bo.IRenewalBO;
 import com.cdkj.ylq.bo.IRepayApplyBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
@@ -35,6 +36,7 @@ import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.Product;
+import com.cdkj.ylq.domain.Renewal;
 import com.cdkj.ylq.domain.RepayApply;
 import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.User;
@@ -48,6 +50,7 @@ import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EPayType;
+import com.cdkj.ylq.enums.ERenewalStatus;
 import com.cdkj.ylq.enums.ERepayApplyStatus;
 import com.cdkj.ylq.enums.ERepayApplyType;
 import com.cdkj.ylq.enums.ESysUser;
@@ -90,6 +93,9 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Autowired
     private IRepayApplyBO repayApplyBO;
+
+    @Autowired
+    private IRenewalBO renewalBO;
 
     @Override
     @Transactional
@@ -144,16 +150,16 @@ public class BorrowAOImpl implements IBorrowAO {
         Long borrowAmount = infoAmount.getSxAmount();
         // 利息
         Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getLxRate()));
+            product.getLxRate())) * product.getDuration();
         // 快速信审费
         Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getXsRate()));
+            product.getXsRate())) * product.getDuration();
         // 账户管理费
         Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getGlRate()));
+            product.getGlRate())) * product.getDuration();
         // 服务费
         Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getFwRate()));
+            product.getFwRate())) * product.getDuration();
         // 应还金额
         Long totalAmount = borrowAmount;
 
@@ -166,19 +172,25 @@ public class BorrowAOImpl implements IBorrowAO {
         borrow.setLevel(product.getLevel());
         borrow.setDuration(product.getDuration());
 
+        borrow.setLxRate(product.getLxRate());
         borrow.setLxAmount(lxAmount);
+        borrow.setXsRate(product.getXsRate());
         borrow.setXsAmount(xsAmount);
+        borrow.setGlRate(product.getGlRate());
+
         borrow.setGlAmount(glAmount);
+        borrow.setFwRate(product.getFwRate());
         borrow.setFwAmount(fwAmount);
         borrow.setYhAmount(yhAmount);
-
         borrow.setRate1(product.getYqRate1());
+
         borrow.setRate2(product.getYqRate2());
         borrow.setYqlxAmount(0L);
         borrow.setYqDays(0);
         borrow.setTotalAmount(totalAmount);
-
         borrow.setRealHkAmount(0L);
+
+        borrow.setRenewalCount(0);
         borrow.setStatus(EBorrowStatus.TO_APPROVE.getCode());
         borrow.setUpdater(userId);
         borrow.setUpdateDatetime(now);
@@ -212,7 +224,53 @@ public class BorrowAOImpl implements IBorrowAO {
     @Override
     public Paginable<Borrow> queryMyBorrowPage(int start, int limit,
             Borrow condition) {
-        return borrowBO.getPaginable(start, limit, condition);
+        Paginable<Borrow> results = borrowBO.getPaginable(start, limit,
+            condition);
+        for (Borrow borrow : results.getList()) {
+            if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                    || EBorrowStatus.OVERDUE.getCode().equals(
+                        borrow.getStatus())) {
+                Integer step = sysConfigBO.getIntegerValue(
+                    SysConstants.RENEWAL_STEP, ESystemCode.YLQ.getCode(),
+                    ESystemCode.YLQ.getCode());
+                if (step > 0) {
+                    Integer cycle = 1;
+                    Date now = new Date();
+                    Date startDate = null;
+                    if (now.after(borrow.getHkDatetime())) {
+                        startDate = DateUtil.getTomorrowStart(now);
+                    } else {
+                        startDate = DateUtil.getTomorrowStart(borrow
+                            .getHkDatetime());
+                    }
+                    Date endDate = DateUtil.getRelativeDate(startDate, step
+                            * cycle * 24 * 3600 - 1);
+
+                    // 借款总额
+                    Long borrowAmount = borrow.getAmount();
+                    // 利息
+                    Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
+                        borrowAmount, borrow.getLxRate())) * step * cycle;
+                    // 快速信审费
+                    Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
+                        borrowAmount, borrow.getXsRate())) * step * cycle;
+                    // 账户管理费
+                    Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
+                        borrowAmount, borrow.getGlRate())) * step * cycle;
+                    // 服务费
+                    Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
+                        borrowAmount, borrow.getFwRate())) * step * cycle;
+                    // 续期总金额
+                    Long totalAmount = borrow.getYqlxAmount() + lxAmount
+                            + xsAmount + glAmount + fwAmount;
+                    borrow.setRenewalStartDate(startDate);
+                    borrow.setRenewalEndDate(endDate);
+                    borrow.setRenewalAmount(totalAmount);
+                }
+            }
+
+        }
+        return results;
     }
 
     @Override
@@ -220,6 +278,46 @@ public class BorrowAOImpl implements IBorrowAO {
         Borrow borrow = borrowBO.getBorrow(code);
         borrow.setUser(userBO.getRemoteUser(borrow.getApplyUser()));
         borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
+        if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
+            Integer step = sysConfigBO.getIntegerValue(
+                SysConstants.RENEWAL_STEP, ESystemCode.YLQ.getCode(),
+                ESystemCode.YLQ.getCode());
+            if (step > 0) {
+                Integer cycle = 1;
+                Date now = new Date();
+                Date startDate = null;
+                if (now.after(borrow.getHkDatetime())) {
+                    startDate = DateUtil.getTomorrowStart(now);
+                } else {
+                    startDate = DateUtil.getTomorrowStart(borrow
+                        .getHkDatetime());
+                }
+                Date endDate = DateUtil.getRelativeDate(startDate, step * cycle
+                        * 24 * 3600 - 1);
+
+                // 借款总额
+                Long borrowAmount = borrow.getAmount();
+                // 利息
+                Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
+                    borrowAmount, borrow.getLxRate())) * step * cycle;
+                // 快速信审费
+                Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
+                    borrowAmount, borrow.getXsRate())) * step * cycle;
+                // 账户管理费
+                Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
+                    borrowAmount, borrow.getGlRate())) * step * cycle;
+                // 服务费
+                Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
+                    borrowAmount, borrow.getFwRate())) * step * cycle;
+                // 续期总金额
+                Long totalAmount = borrow.getYqlxAmount() + lxAmount + xsAmount
+                        + glAmount + fwAmount;
+                borrow.setRenewalStartDate(startDate);
+                borrow.setRenewalEndDate(endDate);
+                borrow.setRenewalAmount(totalAmount);
+            }
+        }
         return borrow;
     }
 
@@ -263,20 +361,37 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Override
     @Transactional
-    public void loan(String code, String updater, String remark) {
+    public void doLoan(String code, String result, String updater, String remark) {
         Borrow borrow = borrowBO.getBorrow(code);
         if (!EBorrowStatus.APPROVE_YES.getCode().equals(borrow.getStatus())) {
             throw new BizException("623071", "借款不处于待放款状态");
         }
-        borrowBO.loan(borrow, updater, remark);
+        String smsContent = null;
+        if (EBoolean.YES.getCode().equals(result)) {
+            borrowBO.loanSuccess(borrow, updater, remark);
+            // 更新申请单状态
+            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                EApplyStatus.LOANING);
+            smsContent = "恭喜您，您的" + CalculationUtil.diviUp(borrow.getAmount())
+                    + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";
+        } else {
+            borrowBO.loanFailure(borrow, updater, remark);
+            smsContent = "很抱歉，您的" + CalculationUtil.diviUp(borrow.getAmount())
+                    + "借款(合同编号:" + borrow.getCode() + ")放款失败，原因为：" + remark
+                    + "，详情查看请登录APP。";
+        }
+        if (StringUtils.isNotBlank(smsContent)) {
+            smsOutBO.sentContent(borrow.getApplyUser(), smsContent);
+        }
+    }
 
-        // 更新申请单状态
-        applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-            EApplyStatus.LOANING);
-
-        smsOutBO.sentContent(borrow.getApplyUser(),
-            "恭喜您，您的" + CalculationUtil.diviUp(borrow.getAmount())
-                    + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
+    @Override
+    public void resubmitLoan(String code) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.LOAN_NO.getCode().equals(borrow.getStatus())) {
+            throw new BizException("623071", "借款不处于打款失败状态，不能重新提交");
+        }
+        borrowBO.resubmitLoan(borrow);
     }
 
     @Override
@@ -299,15 +414,15 @@ public class BorrowAOImpl implements IBorrowAO {
 
     private Object doRepayOffline(Borrow borrow) {
         List<RepayApply> result = repayApplyBO
-            .queryCurrentRepayApplyList(borrow.getCode());
+            .queryCurrentRepayApplyList(borrow.getApplyUser());
         if (result.size() > 0) {
-            throw new BizException("xn623000", "该借款已经有一条待审核的打款申请，请勿重复提交");
+            throw new BizException("xn623000", "您已经有一条待审核的打款申请，请勿重复提交");
         }
         RepayApply repayApply = new RepayApply();
         String code = OrderNoGenerater.generateM(EGeneratePrefix.REPAY_APPLY
             .getCode());
         repayApply.setCode(code);
-        repayApply.setBorrowCode(borrow.getCode());
+        repayApply.setRefNo(borrow.getCode());
         repayApply.setType(ERepayApplyType.REPAY.getCode());
         repayApply.setAmount(borrow.getTotalAmount());
         repayApply.setApplyUser(borrow.getApplyUser());
@@ -370,37 +485,40 @@ public class BorrowAOImpl implements IBorrowAO {
     }
 
     @Override
+    @Transactional
     public Object renewal(String code, String payType) {
         Borrow borrow = borrowBO.getBorrow(code);
         if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                 && !EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
-            throw new BizException("xn6230000", "借款不处于可以续期状态");
+            throw new BizException("xn6230000", "借款不处于可以续期的状态");
         }
+        // 落地待支付的续期记录
+        Renewal renewal = renewalBO.applyRenewal(borrow);
         if (EPayType.ALIPAY.getCode().equals(payType)) {
-            return doRenewalAlipay(borrow);
+            return doRenewalAlipay(renewal);
         } else if (EPayType.WEIXIN_APP.getCode().equals(payType)) {
-            return doRenewalWechat(borrow);
+            return doRenewalWechat(renewal);
         } else if (EPayType.OFFLINE.getCode().equals(payType)) {
-            return doRenewalOffline(borrow);
+            return doRenewalOffline(renewal);
         } else {
             throw new BizException("xn6230000", "暂不支持此支付方式");
         }
     }
 
-    private Object doRenewalOffline(Borrow borrow) {
+    private Object doRenewalOffline(Renewal renewal) {
         List<RepayApply> result = repayApplyBO
-            .queryCurrentRepayApplyList(borrow.getCode());
+            .queryCurrentRepayApplyList(renewal.getApplyUser());
         if (result.size() > 0) {
-            throw new BizException("xn623000", "该借款已经有一条待审核的打款申请，请勿重复提交");
+            throw new BizException("xn623000", "您已经有一条待审核的打款申请，请勿重复提交");
         }
         RepayApply repayApply = new RepayApply();
         String code = OrderNoGenerater.generateM(EGeneratePrefix.REPAY_APPLY
             .getCode());
         repayApply.setCode(code);
-        repayApply.setBorrowCode(borrow.getCode());
+        repayApply.setRefNo(renewal.getCode());
         repayApply.setType(ERepayApplyType.RENEWAL.getCode());
-        repayApply.setAmount(borrow.getTotalAmount());
-        repayApply.setApplyUser(borrow.getApplyUser());
+        repayApply.setAmount(renewal.getTotalAmount());
+        repayApply.setApplyUser(renewal.getApplyUser());
 
         repayApply.setApplyNote("线下续期申请");
         repayApply.setApplyDatetime(new Date());
@@ -410,24 +528,22 @@ public class BorrowAOImpl implements IBorrowAO {
         return new BooleanRes(true);
     }
 
-    private Object doRenewalWechat(Borrow borrow) {
-        Long rmbAmount = borrow.getTotalAmount();
-        User user = userBO.getRemoteUser(borrow.getApplyUser());
-        String payGroup = borrowBO.addPayGroup(borrow.getCode());
+    private Object doRenewalWechat(Renewal renewal) {
+        Long rmbAmount = renewal.getTotalAmount();
+        User user = userBO.getRemoteUser(renewal.getApplyUser());
         return accountBO.doWeiXinPayRemote(user.getUserId(),
-            ESysUser.SYS_USER_YLQ.getCode(), payGroup, borrow.getCode(),
-            EBizType.YLQ_REPAY, EBizType.YLQ_RENEWAL.getValue() + "-微信",
-            rmbAmount);
+            ESysUser.SYS_USER_YLQ.getCode(), renewal.getPayGroup(),
+            renewal.getBorrowCode(), EBizType.YLQ_REPAY,
+            EBizType.YLQ_RENEWAL.getValue() + "-微信", rmbAmount);
     }
 
-    private Object doRenewalAlipay(Borrow borrow) {
-        Long rmbAmount = borrow.getTotalAmount();
-        User user = userBO.getRemoteUser(borrow.getApplyUser());
-        String payGroup = borrowBO.addPayGroup(borrow.getCode());
+    private Object doRenewalAlipay(Renewal renewal) {
+        Long rmbAmount = renewal.getTotalAmount();
+        User user = userBO.getRemoteUser(renewal.getApplyUser());
         return accountBO.doAlipayRemote(user.getUserId(),
-            ESysUser.SYS_USER_YLQ.getCode(), payGroup, borrow.getCode(),
-            EBizType.YLQ_REPAY, EBizType.YLQ_RENEWAL.getValue() + "-支付宝",
-            rmbAmount);
+            ESysUser.SYS_USER_YLQ.getCode(), renewal.getPayGroup(),
+            renewal.getBorrowCode(), EBizType.YLQ_REPAY,
+            EBizType.YLQ_RENEWAL.getValue() + "-支付宝", rmbAmount);
     }
 
     @Override
@@ -435,24 +551,30 @@ public class BorrowAOImpl implements IBorrowAO {
     public String renewalSuccess(String payGroup, String payType,
             String payCode, Long amount) {
         String userId = null;
-        List<Borrow> borrowList = borrowBO.queryBorrowListByPayGroup(payGroup);
-        if (CollectionUtils.isEmpty(borrowList)) {
-            throw new BizException("XN000000", "找不到对应的借款记录");
+        List<Renewal> renewalList = renewalBO
+            .queryRenewalListByPayGroup(payGroup);
+        if (CollectionUtils.isEmpty(renewalList)) {
+            throw new BizException("XN000000", "找不到对应的续期记录");
         }
-        Borrow borrow = borrowList.get(0);
-        if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
-                || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
-            // 更新订单支付金额
-            borrowBO.repaySuccess(borrow, amount, payCode, payType);
+        Renewal renewal = renewalList.get(0);
+        Borrow borrow = borrowBO.getBorrow(renewal.getBorrowCode());
+        if (ERenewalStatus.TO_PAY.getCode().equals(renewal.getStatus())) {
+            if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                    && !EBorrowStatus.OVERDUE.getCode().equals(
+                        borrow.getStatus())) {
+                throw new BizException("xn623000", "关联的借款订单不处于待还款状态");
+            }
+            // 更新借款订单
+            borrowBO.renewalSuccess(borrow, renewal, amount);
+            renewalBO.renewalSuccess(renewal, payCode, payType,
+                borrow.getRenewalCount() + 1);
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-                EApplyStatus.REPAY);
-            // 额度重置为0
-            certificationBO.resetSxAmount(borrow.getApplyUser());
+                EApplyStatus.LOANING);
             userId = borrow.getApplyUser();
             smsOutBO.sentContent(borrow.getApplyUser(),
                 "您的" + CalculationUtil.diviUp(borrow.getAmount())
-                        + "借款已经成功还款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
+                        + "借款已经成功续期，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
         } else {
             logger.info("订单号：" + borrow.getCode() + "已支付，重复回调");
         }

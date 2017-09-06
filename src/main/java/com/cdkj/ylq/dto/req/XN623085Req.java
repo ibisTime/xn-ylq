@@ -40,6 +40,17 @@ public class XN623085Req extends APageReq {
     // 逾期天数止
     private String yqDaysEnd;
 
+    // 是否逾期
+    private String isOverdue;
+
+    public String getIsOverdue() {
+        return isOverdue;
+    }
+
+    public void setIsOverdue(String isOverdue) {
+        this.isOverdue = isOverdue;
+    }
+
     public List<String> getStatusList() {
         return statusList;
     }

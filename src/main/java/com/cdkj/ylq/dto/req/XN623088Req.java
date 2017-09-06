@@ -17,8 +17,8 @@ public class XN623088Req extends APageReq {
 
     private static final long serialVersionUID = -7585865863094749310L;
 
-    // 针对借款编号（选填）
-    private String borrowCode;
+    // 关联编号（选填）
+    private String refNo;
 
     // 打款类型（选填）
     private String type;
@@ -32,12 +32,12 @@ public class XN623088Req extends APageReq {
     // 状态（选填）
     private String status;
 
-    public String getBorrowCode() {
-        return borrowCode;
+    public String getRefNo() {
+        return refNo;
     }
 
-    public void setBorrowCode(String borrowCode) {
-        this.borrowCode = borrowCode;
+    public void setRefNo(String refNo) {
+        this.refNo = refNo;
     }
 
     public String getType() {
@@ -71,5 +71,4 @@ public class XN623088Req extends APageReq {
     public void setStatus(String status) {
         this.status = status;
     }
-
 }

@@ -78,6 +78,18 @@ public class User extends ABaseDO {
     // 是否被拉入黑名单
     private String blacklistFlag;
 
+    // 是否绑定银行卡
+    private String bankcardFlag;
+
+    // 借款次数
+    private Integer borrowCount;
+
+    // 逾期代码
+    private String overdueCode;
+
+    // 续期次数
+    private Integer renewalCount;
+
     public String getIdKind() {
         return idKind;
     }
@@ -224,6 +236,38 @@ public class User extends ABaseDO {
 
     public String getArea() {
         return area;
+    }
+
+    public String getBankcardFlag() {
+        return bankcardFlag;
+    }
+
+    public void setBankcardFlag(String bankcardFlag) {
+        this.bankcardFlag = bankcardFlag;
+    }
+
+    public Integer getBorrowCount() {
+        return borrowCount;
+    }
+
+    public void setBorrowCount(Integer borrowCount) {
+        this.borrowCount = borrowCount;
+    }
+
+    public String getOverdueCode() {
+        return overdueCode;
+    }
+
+    public void setOverdueCode(String overdueCode) {
+        this.overdueCode = overdueCode;
+    }
+
+    public Integer getRenewalCount() {
+        return renewalCount;
+    }
+
+    public void setRenewalCount(Integer renewalCount) {
+        this.renewalCount = renewalCount;
     }
 
     public void setArea(String area) {

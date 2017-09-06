@@ -46,6 +46,7 @@ public class XN623085 extends AProcessor {
         condition
             .setYqDaysStart(StringValidater.toInteger(req.getYqDaysStart()));
         condition.setYqDaysEnd(StringValidater.toInteger(req.getYqDaysEnd()));
+        condition.setIsOverdue(req.getIsOverdue());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = IBorrowAO.DEFAULT_ORDER_COLUMN;

@@ -45,6 +45,10 @@
 		<property name="paginableDAO" ref="repayApplyDAOImpl"/>
 	</bean>	
 	
+	<bean id="renewalBO" class="com.cdkj.ylq.bo.impl.RenewalBOImpl">
+		<property name="paginableDAO" ref="renewalDAOImpl"/>
+	</bean>	
+	
 	<bean id="sysDictBO" class="com.cdkj.ylq.bo.impl.SYSDictBOImpl">
 		<property name="paginableDAO" ref="sysDictDAOImpl"/>
 	</bean>	

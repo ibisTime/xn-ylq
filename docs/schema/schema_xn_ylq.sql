@@ -152,3 +152,17 @@ CREATE TABLE `t_coupon_condition` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
+CREATE TABLE `t_repay_apply` (
+  `code` VARCHAR(32) NOT NULL COMMENT '编号',
+  `borrow_code` VARCHAR(32) NULL COMMENT '针对借款编号',
+  `type` VARCHAR(32) NULL COMMENT '打款类型',
+  `amount` BIGINT(32) NULL COMMENT '打款金额',
+  `apply_user` VARCHAR(32) NULL COMMENT '申请人',
+  `apply_note` VARCHAR(255) NULL COMMENT '申请备注',
+  `apply_datetime` DATETIME NULL COMMENT '申请时间',
+  `approver` VARCHAR(32) NULL COMMENT '审核人',
+  `approve_note` VARCHAR(255) NULL COMMENT '审核说明',
+  `approve_datetime` DATETIME NULL COMMENT '审核时间',
+  `status` VARCHAR(32) NULL COMMENT '状态',
+  PRIMARY KEY (`code`)  COMMENT '')
+ENGINE = InnoDB DEFAULT CHARSET=utf8;

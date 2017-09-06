@@ -18,6 +18,9 @@ public class XN623071Req {
     // 借款编号（必填）
     private String code;
 
+    // 打款是否成功（必填）
+    private String result;
+
     // 最后更新人（必填）
     private String updater;
 
@@ -30,6 +33,14 @@ public class XN623071Req {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public String getUpdater() {

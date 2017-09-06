@@ -4,7 +4,7 @@
 <mapper namespace="com.cdkj.ylq.dao.IRepayApplyDAO">
 	<resultMap id="repayApply_DB_Result" type="repayApply">
 		<result column="code" property="code" />
-		<result column="borrow_code" property="borrowCode" />
+		<result column="ref_no" property="refNo" />
 		<result column="type" property="type" />
 		<result column="amount" property="amount" />
 		<result column="apply_user" property="applyUser" />
@@ -20,8 +20,8 @@
 			<if test="code != null and code != '' ">
 				AND t.code = #{code}
 			</if>
-			<if test="borrowCode != null and borrowCode != '' ">
-				AND t.borrow_code = #{borrowCode}
+			<if test="refNo != null and refNo != '' ">
+				AND t.ref_no = #{refNo}
 			</if>
 			<if test="type != null and type != '' ">
 				AND t.type = #{type}
@@ -40,7 +40,7 @@
 	<select id="select_repayApply" parameterType="repayApply" resultMap="repayApply_DB_Result">
 		SELECT
 		t.code
-		,t.borrow_code
+		,t.ref_no
 		,t.type
 		,t.amount
 		,t.apply_user
@@ -70,7 +70,7 @@
 		INSERT INTO
 		t_repay_apply(
 		code
-		,borrow_code
+		,ref_no
 		,type
 		,amount
 		,apply_user
@@ -80,7 +80,7 @@
 		)
 		VALUES(
 		#{code}
-		,#{borrowCode}
+		,#{refNo}
 		,#{type}
 		,#{amount}
 		,#{applyUser}

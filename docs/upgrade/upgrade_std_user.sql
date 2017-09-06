@@ -1,1 +1,2 @@
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','customerService','联系客服','admin',now(),'联系客服','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','repayOfflineAccount','线下打款账号','admin',now(),'线下打款账号','CD-YLQ000014','CD-YLQ000014');

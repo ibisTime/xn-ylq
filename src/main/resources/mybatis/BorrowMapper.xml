@@ -12,9 +12,13 @@
 		<result column="fk_datetime" property="fkDatetime" />
 		<result column="jx_datetime" property="jxDatetime" />
 		<result column="hk_datetime" property="hkDatetime" />
+		<result column="lx_rate" property="lxRate" />
 		<result column="lx_amount" property="lxAmount" />
+		<result column="xs_rate" property="xsRate" />
 		<result column="xs_amount" property="xsAmount" />
+		<result column="gl_rate" property="glRate" />
 		<result column="gl_amount" property="glAmount" />
+		<result column="fw_rate" property="fwRate" />
 		<result column="fw_amount" property="fwAmount" />
 		<result column="yh_amount" property="yhAmount" />
 		<result column="rate1" property="rate1" />
@@ -27,6 +31,7 @@
 		<result column="pay_code" property="payCode" />
 		<result column="pay_group" property="payGroup" />
 		<result column="pay_type" property="payType" />
+		<result column="renewal_count" property="renewalCount" />
 		<result column="status" property="status" />
 		<result column="is_archive" property="isArchive" />
 		<result column="approver" property="approver" />
@@ -77,6 +82,15 @@
 			<if test="yqDaysEnd != null and yqDaysEnd != '' ">
 				<![CDATA[AND t.yq_days <= #{yqDaysEnd}]]>
 			</if>
+			<choose>
+				 <when test="isOverdue == 0">
+				  	AND t.yq_days = 0
+				 </when>
+				 <when test="isOverdue == 1">
+				  	AND t.yq_days > 0
+				 </when>
+			</choose>
+			
 		</trim>
 	</sql>
 	<select id="select_borrow" parameterType="borrow" resultMap="borrow_DB_Result">
@@ -90,9 +104,13 @@
 		,t.fk_datetime
 		,t.jx_datetime
 		,t.hk_datetime
+		,t.lx_rate
 		,t.lx_amount
+		,t.xs_rate
 		,t.xs_amount
+		,t.gl_rate
 		,t.gl_amount
+		,t.fw_rate
 		,t.fw_amount
 		,t.yh_amount
 		,t.rate1
@@ -105,6 +123,7 @@
 		,t.pay_code
 		,t.pay_group
 		,t.pay_type
+		,t.renewal_count
 		,t.status
 		,t.is_archive
 		,t.approver
@@ -141,9 +160,13 @@
 		,fk_datetime
 		,jx_datetime
 		,hk_datetime
+		,lx_rate
 		,lx_amount
+		,xs_rate
 		,xs_amount
+		,gl_rate
 		,gl_amount
+		,fw_rate
 		,fw_amount
 		,yh_amount
 		,rate1
@@ -152,6 +175,7 @@
 		,yq_days
 		,total_amount
 		,real_hk_amount
+		,renewal_count
 		,status
 		,updater
 		,update_datetime
@@ -167,9 +191,13 @@
 		,#{fkDatetime}
 		,#{jxDatetime}
 		,#{hkDatetime}
+		,#{lxRate}
 		,#{lxAmount}
+		,#{xsRate}
 		,#{xsAmount}
+		,#{glRate}
 		,#{glAmount}
+		,#{fwRate}
 		,#{fwAmount}
 		,#{yhAmount}
 		,#{rate1}
@@ -178,6 +206,7 @@
 		,#{yqDays}
 		,#{totalAmount}
 		,#{realHkAmount}
+		,#{renewalCount}
 		,#{status}
 		,#{updater}
 		,#{updateDatetime}
@@ -198,7 +227,7 @@
 		WHERE code = #{code}
 	</update>
 	
-	<update id="update_loan" parameterType="borrow">
+	<update id="update_loanSuccess" parameterType="borrow">
 		UPDATE t_borrow
 		SET
 		fk_datetime = #{fkDatetime}
@@ -208,6 +237,23 @@
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_loanFailure" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_resubmitLoan" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		status = #{status}
 		WHERE code = #{code}
 	</update>
 	
@@ -248,8 +294,12 @@
 	<update id="update_renewalSuccess" parameterType="borrow">
 		UPDATE t_borrow
 		SET
-		,pay_code = #{payCode}
-		,pay_type = #{payType}
+		total_amount = #{totalAmount}
+		,yq_days = #{yqDays}
+		,yqlx_amount = #{yqlxAmount}
+		,jx_datetime = #{jxDatetime}
+		,hk_datetime = #{hkDatetime}
+		,renewal_count = #{renewalCount}
 		,status = #{status}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
@@ -257,18 +307,6 @@
 		WHERE code = #{code}
 	</update>
 	
-	<update id="update_renewalOffline" parameterType="borrow">
-		UPDATE t_borrow
-		SET
-		real_hk_datetime = #{realHkDatetime}
-		,real_hk_amount = #{realHkAmount}
-		,pay_type = #{payType}
-		,status = #{status}
-		,updater = #{updater}
-		,update_datetime = #{updateDatetime}
-		,remark = #{remark}
-		WHERE code = #{code}
-	</update>
 	
 	<update id="update_confirmBad" parameterType="borrow">
 		UPDATE t_borrow
