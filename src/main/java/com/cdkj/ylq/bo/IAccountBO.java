@@ -9,6 +9,7 @@
 package com.cdkj.ylq.bo;
 
 import com.cdkj.ylq.domain.Account;
+import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.dto.res.XN002500Res;
 import com.cdkj.ylq.dto.res.XN002501Res;
 import com.cdkj.ylq.dto.res.XN002510Res;
@@ -74,5 +75,7 @@ public interface IAccountBO {
     public XN002510Res doAlipayRemote(String applyUser, String toUser,
             String payGroup, String refNo, EBizType bizType, String bizNote,
             Long amount);
+
+    public Bankcard getBankcard(String userId);
 
 }

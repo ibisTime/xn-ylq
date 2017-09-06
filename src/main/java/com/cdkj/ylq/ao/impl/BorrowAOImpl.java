@@ -18,21 +18,28 @@ import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
+import com.cdkj.ylq.bo.IRepayApplyBO;
+import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.AmountUtil;
+import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
+import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
-import com.cdkj.ylq.domain.InfoBankcard;
+import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.Product;
+import com.cdkj.ylq.domain.RepayApply;
+import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.UserCoupon;
+import com.cdkj.ylq.dto.res.BooleanRes;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBizType;
 import com.cdkj.ylq.enums.EBoolean;
@@ -41,7 +48,10 @@ import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EPayType;
+import com.cdkj.ylq.enums.ERepayApplyStatus;
+import com.cdkj.ylq.enums.ERepayApplyType;
 import com.cdkj.ylq.enums.ESysUser;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.enums.EUserCouponStatus;
 import com.cdkj.ylq.exception.BizException;
 
@@ -74,6 +84,12 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Autowired
     private ISmsOutBO smsOutBO;
+
+    @Autowired
+    private ISYSConfigBO sysConfigBO;
+
+    @Autowired
+    private IRepayApplyBO repayApplyBO;
 
     @Override
     @Transactional
@@ -188,13 +204,7 @@ public class BorrowAOImpl implements IBorrowAO {
         List<Borrow> borrowList = results.getList();
         for (Borrow borrow : borrowList) {
             borrow.setUser(userBO.getRemoteUser(borrow.getApplyUser()));
-            Certification certification = certificationBO.getCertification(
-                borrow.getApplyUser(), ECertiKey.INFO_BANKCARD);
-            if (certification != null
-                    && StringUtils.isNotBlank(certification.getResult())) {
-                borrow.setInfoBankcard(JsonUtil.json2Bean(
-                    certification.getResult(), InfoBankcard.class));
-            }
+            borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
         }
         return results;
     }
@@ -209,13 +219,7 @@ public class BorrowAOImpl implements IBorrowAO {
     public Borrow getBorrow(String code) {
         Borrow borrow = borrowBO.getBorrow(code);
         borrow.setUser(userBO.getRemoteUser(borrow.getApplyUser()));
-        Certification certification = certificationBO.getCertification(
-            borrow.getApplyUser(), ECertiKey.INFO_BANKCARD);
-        if (certification != null
-                && StringUtils.isNotBlank(certification.getResult())) {
-            borrow.setInfoBankcard(JsonUtil.json2Bean(
-                certification.getResult(), InfoBankcard.class));
-        }
+        borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
         return borrow;
     }
 
@@ -280,15 +284,40 @@ public class BorrowAOImpl implements IBorrowAO {
         Borrow borrow = borrowBO.getBorrow(code);
         if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                 && !EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
-            throw new BizException("623071", "借款不处于待还款状态");
+            throw new BizException("xn6230000", "借款不处于待还款状态");
         }
         if (EPayType.ALIPAY.getCode().equals(payType)) {
             return doRepayAlipay(borrow);
         } else if (EPayType.WEIXIN_APP.getCode().equals(payType)) {
             return doRepayWechat(borrow);
+        } else if (EPayType.OFFLINE.getCode().equals(payType)) {
+            return doRepayOffline(borrow);
         } else {
-            throw new BizException("623071", "暂不支持此支付方式");
+            throw new BizException("xn6230000", "暂不支持此支付方式");
         }
+    }
+
+    private Object doRepayOffline(Borrow borrow) {
+        List<RepayApply> result = repayApplyBO
+            .queryCurrentRepayApplyList(borrow.getCode());
+        if (result.size() > 0) {
+            throw new BizException("xn623000", "该借款已经有一条待审核的打款申请，请勿重复提交");
+        }
+        RepayApply repayApply = new RepayApply();
+        String code = OrderNoGenerater.generateM(EGeneratePrefix.REPAY_APPLY
+            .getCode());
+        repayApply.setCode(code);
+        repayApply.setBorrowCode(borrow.getCode());
+        repayApply.setType(ERepayApplyType.REPAY.getCode());
+        repayApply.setAmount(borrow.getTotalAmount());
+        repayApply.setApplyUser(borrow.getApplyUser());
+
+        repayApply.setApplyNote("线下还款申请");
+        repayApply.setApplyDatetime(new Date());
+        repayApply.setStatus(ERepayApplyStatus.TO_APPROVE.getCode());
+        repayApplyBO.saveRepayApply(repayApply);
+
+        return new BooleanRes(true);
     }
 
     private Object doRepayWechat(Borrow borrow) {
@@ -338,6 +367,129 @@ public class BorrowAOImpl implements IBorrowAO {
             logger.info("订单号：" + borrow.getCode() + "已支付，重复回调");
         }
         return userId;
+    }
+
+    @Override
+    public Object renewal(String code, String payType) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                && !EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
+            throw new BizException("xn6230000", "借款不处于可以续期状态");
+        }
+        if (EPayType.ALIPAY.getCode().equals(payType)) {
+            return doRenewalAlipay(borrow);
+        } else if (EPayType.WEIXIN_APP.getCode().equals(payType)) {
+            return doRenewalWechat(borrow);
+        } else if (EPayType.OFFLINE.getCode().equals(payType)) {
+            return doRenewalOffline(borrow);
+        } else {
+            throw new BizException("xn6230000", "暂不支持此支付方式");
+        }
+    }
+
+    private Object doRenewalOffline(Borrow borrow) {
+        List<RepayApply> result = repayApplyBO
+            .queryCurrentRepayApplyList(borrow.getCode());
+        if (result.size() > 0) {
+            throw new BizException("xn623000", "该借款已经有一条待审核的打款申请，请勿重复提交");
+        }
+        RepayApply repayApply = new RepayApply();
+        String code = OrderNoGenerater.generateM(EGeneratePrefix.REPAY_APPLY
+            .getCode());
+        repayApply.setCode(code);
+        repayApply.setBorrowCode(borrow.getCode());
+        repayApply.setType(ERepayApplyType.RENEWAL.getCode());
+        repayApply.setAmount(borrow.getTotalAmount());
+        repayApply.setApplyUser(borrow.getApplyUser());
+
+        repayApply.setApplyNote("线下续期申请");
+        repayApply.setApplyDatetime(new Date());
+        repayApply.setStatus(ERepayApplyStatus.TO_APPROVE.getCode());
+        repayApplyBO.saveRepayApply(repayApply);
+
+        return new BooleanRes(true);
+    }
+
+    private Object doRenewalWechat(Borrow borrow) {
+        Long rmbAmount = borrow.getTotalAmount();
+        User user = userBO.getRemoteUser(borrow.getApplyUser());
+        String payGroup = borrowBO.addPayGroup(borrow.getCode());
+        return accountBO.doWeiXinPayRemote(user.getUserId(),
+            ESysUser.SYS_USER_YLQ.getCode(), payGroup, borrow.getCode(),
+            EBizType.YLQ_REPAY, EBizType.YLQ_RENEWAL.getValue() + "-微信",
+            rmbAmount);
+    }
+
+    private Object doRenewalAlipay(Borrow borrow) {
+        Long rmbAmount = borrow.getTotalAmount();
+        User user = userBO.getRemoteUser(borrow.getApplyUser());
+        String payGroup = borrowBO.addPayGroup(borrow.getCode());
+        return accountBO.doAlipayRemote(user.getUserId(),
+            ESysUser.SYS_USER_YLQ.getCode(), payGroup, borrow.getCode(),
+            EBizType.YLQ_REPAY, EBizType.YLQ_RENEWAL.getValue() + "-支付宝",
+            rmbAmount);
+    }
+
+    @Override
+    @Transactional
+    public String renewalSuccess(String payGroup, String payType,
+            String payCode, Long amount) {
+        String userId = null;
+        List<Borrow> borrowList = borrowBO.queryBorrowListByPayGroup(payGroup);
+        if (CollectionUtils.isEmpty(borrowList)) {
+            throw new BizException("XN000000", "找不到对应的借款记录");
+        }
+        Borrow borrow = borrowList.get(0);
+        if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
+            // 更新订单支付金额
+            borrowBO.repaySuccess(borrow, amount, payCode, payType);
+            // 更新申请单状态
+            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                EApplyStatus.REPAY);
+            // 额度重置为0
+            certificationBO.resetSxAmount(borrow.getApplyUser());
+            userId = borrow.getApplyUser();
+            smsOutBO.sentContent(borrow.getApplyUser(),
+                "您的" + CalculationUtil.diviUp(borrow.getAmount())
+                        + "借款已经成功还款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
+        } else {
+            logger.info("订单号：" + borrow.getCode() + "已支付，重复回调");
+        }
+        return userId;
+    }
+
+    @Override
+    public void cuishou(String code) {
+        List<String> mobiles = new ArrayList<String>();
+        String userId = null;
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
+            throw new BizException("xn6230000", "订单不处于逾期状态，不允许催收");
+        }
+        userId = borrow.getApplyUser();
+        User user = userBO.getRemoteUser(userId);
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_CONTACT);
+        InfoContact infoContact = JsonUtil.json2Bean(certification.getResult(),
+            InfoContact.class);
+        SYSConfig config = sysConfigBO.getSYSConfig(
+            SysConstants.SEND_SMS_COUNT, ESystemCode.YLQ.getCode(),
+            ESystemCode.YLQ.getCode());
+        int count = Integer.valueOf(config.getCvalue());
+        String content = "先生/女士，您好，请通知***（手机号）（身份证号隐藏其中几位），其在【九州宝】的欠款已严重逾期。若***不能及时处理，我司将要求其准备好相关材料（身份证、户口本等）等待相应司法流程，我司保留委托第三方机构上门催款的权利，届时产生的责任和影响由其本人承担！打扰之处敬请谅解，客服热线******，谢谢！【九州宝】";
+        mobiles.add(infoContact.getFamilyMobile());
+        mobiles.add(infoContact.getSocietyMobile());
+
+        certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_CARRIER);
+        String report = certification.getResult();
+
+        // todo 去魔蝎联系人前N个
+        for (String mobile : mobiles) {
+            smsOutBO.sendContent(mobile, content, ESystemCode.YLQ.getCode(),
+                ESystemCode.YLQ.getCode());
+        }
     }
 
     @Override
@@ -419,6 +571,27 @@ public class BorrowAOImpl implements IBorrowAO {
         data.setUpdateDatetime(new Date());
         data.setRemark(remark);
         borrowBO.archive(data);
+    }
+
+    @Override
+    public void doCheckWillRepayDaily() {
+        logger.info("***************开始扫描即将到期借款***************");
+        Borrow condition = new Borrow();
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(EBorrowStatus.LOANING.getCode());
+        condition.setStatusList(statusList);
+        condition.setHkDatetime(DateUtil.getRelativeDateOfDays(
+            DateUtil.getTodayEnd(), 1));
+        List<Borrow> borrowList = borrowBO.queryBorrowList(condition);
+        if (CollectionUtils.isNotEmpty(borrowList)) {
+            for (Borrow borrow : borrowList) {
+                smsOutBO.sentContent(borrow.getApplyUser(), "您的"
+                        + CalculationUtil.diviUp(borrow.getAmount())
+                        + "借款即将到期，合同编号为" + borrow.getCode()
+                        + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。");
+            }
+        }
+        logger.info("***************结束扫描即将到期借款***************");
     }
 
 }

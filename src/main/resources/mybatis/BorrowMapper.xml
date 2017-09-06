@@ -59,6 +59,9 @@
 			<if test="isArchive != null and isArchive != '' ">
 				AND t.is_archive = #{isArchive}
 			</if>
+			<if test="hkDatetime != null and hkDatetime != '' ">
+				AND t.hk_datetime = #{hkDatetime}
+			</if>
 			<if test="curDatetime != null and curDatetime != '' ">
 				<![CDATA[AND t.hk_datetime <= #{curDatetime}]]>
 			</if>
@@ -67,6 +70,12 @@
                 <foreach item="item" index="index" collection="statusList" open="(" separator="," close=")">
 	            	#{item}
                 </foreach> 
+			</if>
+			<if test="yqDaysStart != null and yqDaysStart != '' ">
+				<![CDATA[AND t.yq_days >= #{yqDaysStart}]]>
+			</if>
+			<if test="yqDaysEnd != null and yqDaysEnd != '' ">
+				<![CDATA[AND t.yq_days <= #{yqDaysEnd}]]>
 			</if>
 		</trim>
 	</sql>
@@ -217,6 +226,46 @@
 		,pay_code = #{payCode}
 		,pay_type = #{payType}
 		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_repayOffline" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		real_hk_datetime = #{realHkDatetime}
+		,real_hk_amount = #{realHkAmount}
+		,pay_type = #{payType}
+		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_renewalSuccess" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		,pay_code = #{payCode}
+		,pay_type = #{payType}
+		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_renewalOffline" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		real_hk_datetime = #{realHkDatetime}
+		,real_hk_amount = #{realHkAmount}
+		,pay_type = #{payType}
+		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
 		WHERE code = #{code}
 	</update>

@@ -11,6 +11,7 @@ package com.cdkj.ylq.api.impl;
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
+import com.cdkj.ylq.common.PhoneUtil;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.dto.req.XN623042Req;
 import com.cdkj.ylq.dto.res.BooleanRes;
@@ -49,5 +50,7 @@ public class XN623042 extends AProcessor {
         StringValidater.validateBlank(req.getUserId(), req.getFamilyRelation(),
             req.getFamilyMobile(), req.getSocietyRelation(),
             req.getSocietyMobile());
+        PhoneUtil.checkMobile(req.getFamilyMobile(), "请填写正确的手机号码");
+        PhoneUtil.checkMobile(req.getSocietyMobile(), "请填写正确的手机号码");
     }
 }

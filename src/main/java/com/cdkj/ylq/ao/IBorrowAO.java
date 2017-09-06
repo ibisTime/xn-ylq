@@ -16,12 +16,22 @@ public interface IBorrowAO {
     // 管理端：放款
     public void loan(String code, String updater, String remark);
 
-    // 客户端：我要还款，返回三方支付所需参数
+    // 客户端：我要还款
     public Object repay(String code, String payType);
 
     // 客户端：还款成功回调
     public String repaySuccess(String payGroup, String payType, String payCode,
             Long amount);
+
+    // 客户端：我要续期
+    public Object renewal(String code, String payType);
+
+    // 客户端：续期成功回调
+    public String renewalSuccess(String payGroup, String payType,
+            String payCode, Long amount);
+
+    // 管理端：催收（发送短信至紧急联系人和运营商联系人中排名前N的手机）
+    public void cuishou(String code);
 
     // 管理端：确认坏账
     public void confirmBad(String code, String updater, String remark);
@@ -41,5 +51,8 @@ public interface IBorrowAO {
 
     // 定时器调用：每日00:00:00点检查逾期情况
     public void doCheckOverdueDaily();
+
+    // 定时器调用：每日17:00:00点检查即将到期借款
+    public void doCheckWillRepayDaily();
 
 }

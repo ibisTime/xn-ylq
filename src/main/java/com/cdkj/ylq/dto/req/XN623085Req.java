@@ -34,6 +34,12 @@ public class XN623085Req extends APageReq {
     // 状态List（选填）
     private List<String> statusList;
 
+    // 逾期天数起
+    private String yqDaysStart;
+
+    // 逾期天数止
+    private String yqDaysEnd;
+
     public List<String> getStatusList() {
         return statusList;
     }
@@ -72,6 +78,22 @@ public class XN623085Req extends APageReq {
 
     public void setIsArchive(String isArchive) {
         this.isArchive = isArchive;
+    }
+
+    public String getYqDaysStart() {
+        return yqDaysStart;
+    }
+
+    public void setYqDaysStart(String yqDaysStart) {
+        this.yqDaysStart = yqDaysStart;
+    }
+
+    public String getYqDaysEnd() {
+        return yqDaysEnd;
+    }
+
+    public void setYqDaysEnd(String yqDaysEnd) {
+        this.yqDaysEnd = yqDaysEnd;
     }
 
 }

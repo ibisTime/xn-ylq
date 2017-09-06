@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.dto.req.XN001200Req;
+import com.cdkj.ylq.dto.req.XN001201Req;
 import com.cdkj.ylq.http.BizConnecter;
 import com.cdkj.ylq.http.JsonUtils;
 
@@ -25,6 +26,23 @@ public class SmsOutBOImpl implements ISmsOutBO {
             req.setUserId(ownerId);
             req.setContent(content);
             BizConnecter.getBizData("001200", JsonUtils.object2Json(req),
+                Object.class);
+        } catch (Exception e) {
+            logger.error("调用短信发送服务异常, 原因：" + e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendContent(String mobile, String content, String companyCode,
+            String systemCode) {
+        try {
+            XN001201Req req = new XN001201Req();
+            req.setTokenId(mobile);
+            req.setMobile(mobile);
+            req.setContent(content);
+            req.setCompanyCode(companyCode);
+            req.setSystemCode(systemCode);
+            BizConnecter.getBizData("001201", JsonUtils.object2Json(req),
                 Object.class);
         } catch (Exception e) {
             logger.error("调用短信发送服务异常, 原因：" + e.getMessage());

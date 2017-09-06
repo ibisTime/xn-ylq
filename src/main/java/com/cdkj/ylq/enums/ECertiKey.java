@@ -26,8 +26,6 @@ public enum ECertiKey {
 
     , INFO_CONTACT("INFO_CONTACT", "紧急联系人")
 
-    , INFO_BANKCARD("INFO_BANKCARD", "银行卡信息")
-
     , INFO_ANTIFRAUD("INFO_ANTIFRAUD", "欺诈信息")
 
     , INFO_ZMCREDIT("INFO_ZMCREDIT", "芝麻信用认证")

@@ -14,4 +14,6 @@ public class SysConstants {
 
     public static final String AMOUNT_VALID_DAYS = "amountValidDays"; // 额度有效天数
 
+    public static final String SEND_SMS_COUNT = "sendSmsCount"; // 催收联系人数量
+
 }

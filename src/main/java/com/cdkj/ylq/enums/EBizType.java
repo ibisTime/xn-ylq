@@ -9,7 +9,7 @@ import java.util.Map;
  * @history:
  */
 public enum EBizType {
-    YLQ_REPAY("YLQ_REPAY", "九州宝还款");
+    YLQ_REPAY("YLQ_REPAY", "还款"), YLQ_RENEWAL("YLQ_REPAY", "续期");
 
     public static Map<String, EBizType> getBizTypeMap() {
         Map<String, EBizType> map = new HashMap<String, EBizType>();

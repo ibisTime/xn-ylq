@@ -9,6 +9,7 @@
 	    <typeAlias alias="couponCondition" type="com.cdkj.ylq.domain.CouponCondition" />
 	    <typeAlias alias="userCoupon" type="com.cdkj.ylq.domain.UserCoupon" />
 	    <typeAlias alias="borrow" type="com.cdkj.ylq.domain.Borrow" />
+	    <typeAlias alias="repayApply" type="com.cdkj.ylq.domain.RepayApply" />
 	    
 	    <typeAlias alias="sysDict" type="com.cdkj.ylq.domain.SYSDict" />
 	    <typeAlias alias="sysConfig" type="com.cdkj.ylq.domain.SYSConfig" />

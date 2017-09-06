@@ -22,6 +22,7 @@ import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
+import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.res.XN623020Res;
@@ -123,6 +124,10 @@ public class ApplyAOImpl implements IApplyAO {
         String status = EApplyStatus.APPROVE_NO.getCode();
         if (EBoolean.YES.getCode().equals(approveResult)) {
             status = EApplyStatus.APPROVE_YES.getCode();
+            Product product = productBO.getProduct(apply.getProductCode());
+            if (sxAmount > product.getAmount()) {
+                throw new BizException("xn623021", "授信金融不能大于申请产品的金额");
+            }
             // 落地授信信息
             InfoAmount infoAmount = new InfoAmount();
             infoAmount.setSxAmount(sxAmount);

@@ -6,7 +6,8 @@ package com.cdkj.ylq.enums;
  * @history:
  */
 public enum EPayType {
-    YE("1", "余额"), WEIXIN_APP("2", "微信APP"), ALIPAY("3", "支付宝");
+    YE("1", "余额"), WEIXIN_APP("2", "微信APP"), ALIPAY("3", "支付宝"), OFFLINE("4",
+            "线下");
 
     EPayType(String code, String value) {
         this.code = code;

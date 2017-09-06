@@ -11,7 +11,6 @@ import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
 import com.cdkj.ylq.dto.req.XN623042Req;
-import com.cdkj.ylq.dto.req.XN623043Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
 import com.cdkj.ylq.dto.res.XN798013Res;
 import com.cdkj.ylq.dto.res.XN798014Res;
@@ -21,7 +20,8 @@ public interface ICertificationAO {
     static final String DEFAULT_ORDER_COLUMN = "apply_datetime";
 
     // 提交身份证照片
-    public void submitIdentifyPic(String userId, String pic);
+    public void submitIdentifyPic(String userId, String identifyPic,
+            String identifyPicReverse, String identifyPicHand);
 
     // 芝麻认证第一步，返回bizNo
     public XN798013Res doZhimaVerify(String userId, String idKind, String idNo,
@@ -43,7 +43,7 @@ public interface ICertificationAO {
     public void submitInfoContact(XN623042Req req);
 
     // 提交银行卡信息
-    public void submitInfoBankcard(XN623043Req req);
+    // public void submitInfoBankcard(XN623043Req req);
 
     // 提交个人信息，开始欺诈认证
     public void submitPersonalInfo(String userId, String ip, String mac,

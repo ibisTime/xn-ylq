@@ -55,6 +55,8 @@ public class CallbackConroller {
                     if (StringUtils.isNotBlank(userId)) {
                         couponConditionAO.repaySuccess(userId);
                     }
+                } else if (EBizType.YLQ_RENEWAL.getCode().equals(bizType)) {
+                    borrowAO.renewalSuccess(payGroup, payType, payCode, amount);
                 }
             } catch (Exception e) {
                 logger.error("支付回调异常payGroup <" + payGroup + "> payCode <"

@@ -15,6 +15,7 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','carrierValidDays','7','admin',now(),'运营商认证有效天数','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','addressBookValidDays','7','admin',now(),'通讯录认证有效天数','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','amountValidDays','7','admin',now(),'额度有效天数','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','sendSmsCount','5','admin',now(),'催收联系人数量','CD-YLQ000014','CD-YLQ000014');
 
 /*
 -- Query: SELECT * FROM xn_ylq.t_coupon

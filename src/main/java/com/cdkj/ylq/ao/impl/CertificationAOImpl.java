@@ -27,7 +27,6 @@ import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoAntifraud;
-import com.cdkj.ylq.domain.InfoBankcard;
 import com.cdkj.ylq.domain.InfoBasic;
 import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.InfoIdentify;
@@ -40,7 +39,6 @@ import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
 import com.cdkj.ylq.dto.req.XN623042Req;
-import com.cdkj.ylq.dto.req.XN623043Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
 import com.cdkj.ylq.dto.res.XN798013Res;
 import com.cdkj.ylq.dto.res.XN798014Res;
@@ -74,9 +72,12 @@ public class CertificationAOImpl implements ICertificationAO {
     private ISYSConfigBO sysConfigBO;
 
     @Override
-    public void submitIdentifyPic(String userId, String pic) {
+    public void submitIdentifyPic(String userId, String identifyPic,
+            String identifyPicReverse, String identifyPicHand) {
         InfoIdentifyPic data = new InfoIdentifyPic();
-        data.setIdentifyPic(pic);
+        data.setIdentifyPic(identifyPic);
+        data.setIdentifyPicReverse(identifyPicReverse);
+        data.setIdentifyPicHand(identifyPicHand);
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_IDENTIFY_PIC);
         if (certification != null) {
@@ -248,28 +249,28 @@ public class CertificationAOImpl implements ICertificationAO {
         }
     }
 
-    @Override
-    public void submitInfoBankcard(XN623043Req req) {
-        InfoBankcard data = getInfoBankcard(req);
-        Certification certification = certificationBO.getCertification(
-            req.getUserId(), ECertiKey.INFO_BANKCARD);
-        if (certification != null) {
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(data));
-            certification.setCerDatetime(new Date());
-            certification.setRef("");
-            certificationBO.refreshCertification(certification);
-        } else {
-            certification = new Certification();
-            certification.setUserId(req.getUserId());
-            certification.setCertiKey(ECertiKey.INFO_BANKCARD.getCode());
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(data));
-            certification.setCerDatetime(new Date());
-            certification.setRef("");
-            certificationBO.saveCertification(certification);
-        }
-    }
+    // @Override
+    // public void submitInfoBankcard(XN623043Req req) {
+    // InfoBankcard data = getInfoBankcard(req);
+    // Certification certification = certificationBO.getCertification(
+    // req.getUserId(), ECertiKey.INFO_BANKCARD);
+    // if (certification != null) {
+    // certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+    // certification.setResult(JsonUtil.Object2Json(data));
+    // certification.setCerDatetime(new Date());
+    // certification.setRef("");
+    // certificationBO.refreshCertification(certification);
+    // } else {
+    // certification = new Certification();
+    // certification.setUserId(req.getUserId());
+    // certification.setCertiKey(ECertiKey.INFO_BANKCARD.getCode());
+    // certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+    // certification.setResult(JsonUtil.Object2Json(data));
+    // certification.setCerDatetime(new Date());
+    // certification.setRef("");
+    // certificationBO.saveCertification(certification);
+    // }
+    // }
 
     @Override
     public void submitPersonalInfo(String userId, String ip, String mac,
@@ -288,17 +289,17 @@ public class CertificationAOImpl implements ICertificationAO {
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoContactFlag())) {
             throw new BizException("xn623000", "请先完善紧急联系人信息");
         }
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoBankcardFlag())) {
-            throw new BizException("xn623000", "请先完善银行卡信息");
-        }
+        // if (EBoolean.NO.getCode().equals(certiInfo.getInfoBankcardFlag())) {
+        // throw new BizException("xn623000", "请先完善银行卡信息");
+        // }
         InfoBasic infoBasic = certiInfo.getInfoBasic();
-        InfoBankcard infoBankcard = certiInfo.getInfoBankcard();
+        // InfoBankcard infoBankcard = certiInfo.getInfoBankcard();
         InfoIdentify infoIdentify = certiInfo.getInfoIdentify();
 
         InfoAntifraud infoAntifraud = certiBO.doZhimaCreditAntifraud(
             user.getSystemCode(), user.getCompanyCode(), user.getMobile(),
-            infoIdentify.getIdNo(), infoIdentify.getRealName(),
-            infoBankcard.getCardNo(), infoBasic.getEmail(),
+            infoIdentify.getIdNo(), infoIdentify.getRealName(), null,
+            infoBasic.getEmail(),
             infoBasic.getProvinceCity() + infoBasic.getAddress(), ip, mac,
             wifiMac, imei);
 
@@ -517,7 +518,6 @@ public class CertificationAOImpl implements ICertificationAO {
         res.setInfoBasicFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoOccupationFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoContactFlag(ECertificationStatus.TO_CERTI.getCode());
-        res.setInfoBankcardFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoAntifraudFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoZMCreditFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoCarrierFlag(ECertificationStatus.TO_CERTI.getCode());
@@ -579,15 +579,6 @@ public class CertificationAOImpl implements ICertificationAO {
                     certification.getFlag())) {
                     res.setInfoContact(JsonUtil.json2Bean(
                         certification.getResult(), InfoContact.class));
-                }
-            }
-            if (ECertiKey.INFO_BANKCARD.getCode().equals(
-                certification.getCertiKey())) {
-                res.setInfoBankcardFlag(certification.getFlag());
-                if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())) {
-                    res.setInfoBankcard(JsonUtil.json2Bean(
-                        certification.getResult(), InfoBankcard.class));
                 }
             }
 
@@ -691,14 +682,6 @@ public class CertificationAOImpl implements ICertificationAO {
         certificationBO.saveCertification(certification3);
         certifications.add(certification3);
 
-        // 银行卡信息
-        Certification certification4 = new Certification();
-        certification4.setUserId(userId);
-        certification4.setCertiKey(ECertiKey.INFO_BANKCARD.getCode());
-        certification4.setFlag(ECertificationStatus.TO_CERTI.getCode());
-        certificationBO.saveCertification(certification4);
-        certifications.add(certification4);
-
         // 欺诈信息
         Certification antifraud = new Certification();
         antifraud.setUserId(userId);
@@ -772,20 +755,22 @@ public class CertificationAOImpl implements ICertificationAO {
     private InfoContact getInfoContact(XN623042Req req) {
         InfoContact data = new InfoContact();
         data.setFamilyRelation(req.getFamilyRelation());
+        data.setFamilyName(req.getFamilyName());
         data.setFamilyMobile(req.getFamilyMobile());
         data.setSocietyRelation(req.getSocietyRelation());
+        data.setSocietyName(req.getSocietyName());
         data.setSocietyMobile(req.getSocietyMobile());
         return data;
     }
 
-    private InfoBankcard getInfoBankcard(XN623043Req req) {
-        InfoBankcard data = new InfoBankcard();
-        data.setBank(req.getBank());
-        data.setPrivinceCity(req.getPrivinceCity());
-        data.setMobile(req.getMobile());
-        data.setCardNo(req.getCardNo());
-        return data;
-    }
+    // private InfoBankcard getInfoBankcard(XN623043Req req) {
+    // InfoBankcard data = new InfoBankcard();
+    // data.setBank(req.getBank());
+    // data.setPrivinceCity(req.getPrivinceCity());
+    // data.setMobile(req.getMobile());
+    // data.setCardNo(req.getCardNo());
+    // return data;
+    // }
 
     @Override
     public void doCheckValidDaily() {

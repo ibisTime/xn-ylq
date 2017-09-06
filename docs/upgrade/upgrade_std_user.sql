@@ -1,0 +1,1 @@
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('richText','customerService','联系客服','admin',now(),'联系客服','CD-YLQ000014','CD-YLQ000014');

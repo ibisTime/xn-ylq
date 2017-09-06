@@ -9,7 +9,6 @@
 package com.cdkj.ylq.dto.res;
 
 import com.cdkj.ylq.domain.InfoAntifraud;
-import com.cdkj.ylq.domain.InfoBankcard;
 import com.cdkj.ylq.domain.InfoBasic;
 import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.InfoIdentify;
@@ -62,12 +61,6 @@ public class XN623050Res {
 
     // 紧急联系人信息
     private InfoContact infoContact;
-
-    // 银行卡标识
-    private String infoBankcardFlag;
-
-    // 银行卡信息
-    private InfoBankcard infoBankcard;
 
     // 欺诈信息标识
     private String infoAntifraudFlag;
@@ -198,22 +191,6 @@ public class XN623050Res {
 
     public void setInfoContact(InfoContact infoContact) {
         this.infoContact = infoContact;
-    }
-
-    public String getInfoBankcardFlag() {
-        return infoBankcardFlag;
-    }
-
-    public void setInfoBankcardFlag(String infoBankcardFlag) {
-        this.infoBankcardFlag = infoBankcardFlag;
-    }
-
-    public InfoBankcard getInfoBankcard() {
-        return infoBankcard;
-    }
-
-    public void setInfoBankcard(InfoBankcard infoBankcard) {
-        this.infoBankcard = infoBankcard;
     }
 
     public String getInfoAntifraudFlag() {

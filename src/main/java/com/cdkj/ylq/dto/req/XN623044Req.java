@@ -21,6 +21,12 @@ public class XN623044Req {
     // 身份证正面（必填）
     private String identifyPic;
 
+    // 身份证反面（必填）
+    private String identifyPicReverse;
+
+    // 手持身份证（必填）
+    private String identifyPicHand;
+
     public String getUserId() {
         return userId;
     }
@@ -35,5 +41,21 @@ public class XN623044Req {
 
     public void setIdentifyPic(String identifyPic) {
         this.identifyPic = identifyPic;
+    }
+
+    public String getIdentifyPicReverse() {
+        return identifyPicReverse;
+    }
+
+    public void setIdentifyPicReverse(String identifyPicReverse) {
+        this.identifyPicReverse = identifyPicReverse;
+    }
+
+    public String getIdentifyPicHand() {
+        return identifyPicHand;
+    }
+
+    public void setIdentifyPicHand(String identifyPicHand) {
+        this.identifyPicHand = identifyPicHand;
     }
 }

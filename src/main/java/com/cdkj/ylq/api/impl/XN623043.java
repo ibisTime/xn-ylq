@@ -36,7 +36,7 @@ public class XN623043 extends AProcessor {
      */
     @Override
     public Object doBusiness() throws BizException {
-        certificationAO.submitInfoBankcard(req);
+        // certificationAO.submitInfoBankcard(req);
         return new BooleanRes(true);
     }
 

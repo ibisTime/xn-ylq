@@ -117,7 +117,7 @@ public class Borrow extends ABaseDO {
     private User user;
 
     // 银行卡信息
-    private InfoBankcard infoBankcard;
+    private Bankcard bankcard;
 
     // *** 查询字段 ****
     // 状态列表
@@ -129,13 +129,11 @@ public class Borrow extends ABaseDO {
     // 编号模糊查询
     private String codeForQuery;
 
-    public InfoBankcard getInfoBankcard() {
-        return infoBankcard;
-    }
+    // 逾期天数起
+    private Integer yqDaysStart;
 
-    public void setInfoBankcard(InfoBankcard infoBankcard) {
-        this.infoBankcard = infoBankcard;
-    }
+    // 逾期天数止
+    private Integer yqDaysEnd;
 
     public String getCodeForQuery() {
         return codeForQuery;
@@ -423,6 +421,30 @@ public class Borrow extends ABaseDO {
 
     public void setApproveDatetime(Date approveDatetime) {
         this.approveDatetime = approveDatetime;
+    }
+
+    public Bankcard getBankcard() {
+        return bankcard;
+    }
+
+    public void setBankcard(Bankcard bankcard) {
+        this.bankcard = bankcard;
+    }
+
+    public Integer getYqDaysStart() {
+        return yqDaysStart;
+    }
+
+    public void setYqDaysStart(Integer yqDaysStart) {
+        this.yqDaysStart = yqDaysStart;
+    }
+
+    public Integer getYqDaysEnd() {
+        return yqDaysEnd;
+    }
+
+    public void setYqDaysEnd(Integer yqDaysEnd) {
+        this.yqDaysEnd = yqDaysEnd;
     }
 
 }

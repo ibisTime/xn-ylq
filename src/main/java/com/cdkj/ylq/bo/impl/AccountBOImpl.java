@@ -13,12 +13,14 @@ import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.PropertiesUtil;
 import com.cdkj.ylq.domain.Account;
+import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.dto.req.XN002050Req;
 import com.cdkj.ylq.dto.req.XN002051Req;
 import com.cdkj.ylq.dto.req.XN002100Req;
 import com.cdkj.ylq.dto.req.XN002500Req;
 import com.cdkj.ylq.dto.req.XN002501Req;
 import com.cdkj.ylq.dto.req.XN002510Req;
+import com.cdkj.ylq.dto.req.XN802016Req;
 import com.cdkj.ylq.dto.res.XN002050Res;
 import com.cdkj.ylq.dto.res.XN002051Res;
 import com.cdkj.ylq.dto.res.XN002500Res;
@@ -26,6 +28,7 @@ import com.cdkj.ylq.dto.res.XN002501Res;
 import com.cdkj.ylq.dto.res.XN002510Res;
 import com.cdkj.ylq.enums.EBizType;
 import com.cdkj.ylq.enums.ECurrency;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.http.BizConnecter;
 import com.cdkj.ylq.http.JsonUtils;
@@ -184,6 +187,24 @@ public class AccountBOImpl implements IAccountBO {
         XN002510Res res = BizConnecter.getBizData("002510",
             JsonUtil.Object2Json(req), XN002510Res.class);
         return res;
+    }
+
+    @Override
+    public Bankcard getBankcard(String userId) {
+        Bankcard bankcard = null;
+        XN802016Req req = new XN802016Req();
+        req.setUserId(userId);
+        req.setSystemCode(ESystemCode.YLQ.getCode());
+        String jsonStr = BizConnecter.getBizData("802016",
+            JsonUtils.object2Json(req));
+        Gson gson = new Gson();
+        List<Bankcard> list = gson.fromJson(jsonStr,
+            new TypeToken<List<Bankcard>>() {
+            }.getType());
+        if (CollectionUtils.isNotEmpty(list)) {
+            bankcard = list.get(0);
+        }
+        return bankcard;
     }
 
 }

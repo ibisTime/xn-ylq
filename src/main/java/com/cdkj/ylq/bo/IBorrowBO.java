@@ -30,6 +30,13 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
     public int repaySuccess(Borrow borrow, Long payAmount, String payCode,
             String payType);
 
+    public int repayOffline(Borrow borrow, Long repayAmount, String updater);
+
+    public int renewalSuccess(Borrow borrow, Long payAmount, String payCode,
+            String payType);
+
+    public int renewalOffline(Borrow borrow, Long amount, String updater);
+
     public int archive(Borrow data);
 
     public List<Borrow> queryBorrowListByPayGroup(String payGroup);

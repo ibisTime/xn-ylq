@@ -18,11 +18,17 @@ public class InfoContact {
     // 亲属关系
     private String familyRelation;
 
+    // 亲属名字（必填）
+    private String familyName;
+
     // 亲属联系人手机号码
     private String familyMobile;
 
     // 社会关系
     private String societyRelation;
+
+    // 社会联系人名字（必填）
+    private String societyName;
 
     // 社会联系人手机号码
     private String societyMobile;
@@ -57,6 +63,22 @@ public class InfoContact {
 
     public void setSocietyMobile(String societyMobile) {
         this.societyMobile = societyMobile;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public String getSocietyName() {
+        return societyName;
+    }
+
+    public void setSocietyName(String societyName) {
+        this.societyName = societyName;
     }
 
 }
