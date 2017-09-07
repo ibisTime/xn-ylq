@@ -72,6 +72,10 @@ public class UserBOImpl implements IUserBO {
             user.setCompanyCode(res.getCompanyCode());
             user.setSystemCode(res.getSystemCode());
             user.setBlacklistFlag(res.getBlacklistFlag());
+            user.setBorrowCount(0);
+            user.setOverdueCode("123");
+            user.setRenewalCount(0);
+
         }
         return user;
     }

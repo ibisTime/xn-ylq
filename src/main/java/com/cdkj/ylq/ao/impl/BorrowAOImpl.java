@@ -42,6 +42,7 @@ import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.UserCoupon;
 import com.cdkj.ylq.dto.res.BooleanRes;
+import com.cdkj.ylq.dto.res.XN623091Res;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBizType;
 import com.cdkj.ylq.enums.EBoolean;
@@ -714,6 +715,17 @@ public class BorrowAOImpl implements IBorrowAO {
             }
         }
         logger.info("***************结束扫描即将到期借款***************");
+    }
+
+    @Override
+    public XN623091Res isBorrowing(String userId) {
+        XN623091Res res = new XN623091Res();
+        res.setIsBorrowFlag(EBoolean.NO.getCode());
+        Borrow borrow = borrowBO.getCurrentBorrow(userId);
+        if (borrow != null) {
+            res.setIsBorrowFlag(EBoolean.YES.getCode());
+        }
+        return res;
     }
 
 }

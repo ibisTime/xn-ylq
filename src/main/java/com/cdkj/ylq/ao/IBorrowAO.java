@@ -2,6 +2,7 @@ package com.cdkj.ylq.ao;
 
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Borrow;
+import com.cdkj.ylq.dto.res.XN623091Res;
 
 public interface IBorrowAO {
     static final String DEFAULT_ORDER_COLUMN = "code";
@@ -57,5 +58,8 @@ public interface IBorrowAO {
 
     // 定时器调用：每日17:00:00点检查即将到期借款
     public void doCheckWillRepayDaily();
+
+    // 查询用户当前是否有借款
+    public XN623091Res isBorrowing(String userId);
 
 }
