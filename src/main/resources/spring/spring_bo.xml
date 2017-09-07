@@ -49,6 +49,10 @@
 		<property name="paginableDAO" ref="renewalDAOImpl"/>
 	</bean>	
 	
+	<bean id="overdueBO" class="com.cdkj.ylq.bo.impl.OverdueBOImpl">
+		<property name="paginableDAO" ref="overdueDAOImpl"/>
+	</bean>	
+	
 	<bean id="sysDictBO" class="com.cdkj.ylq.bo.impl.SYSDictBOImpl">
 		<property name="paginableDAO" ref="sysDictDAOImpl"/>
 	</bean>	

@@ -1,8 +1,12 @@
 package com.cdkj.ylq.bo.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.cdkj.ylq.bo.IBorrowBO;
+import com.cdkj.ylq.bo.IOverdueBO;
+import com.cdkj.ylq.bo.IRenewalBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.User;
@@ -29,6 +33,15 @@ import com.cdkj.ylq.http.JsonUtils;
  */
 @Component
 public class UserBOImpl implements IUserBO {
+
+    @Autowired
+    private IBorrowBO borrowBO;
+
+    @Autowired
+    private IRenewalBO renewalBO;
+
+    @Autowired
+    private IOverdueBO overdueBO;
 
     @Override
     public void checkTradePwd(String userId, String tradePwd) {
@@ -72,9 +85,10 @@ public class UserBOImpl implements IUserBO {
             user.setCompanyCode(res.getCompanyCode());
             user.setSystemCode(res.getSystemCode());
             user.setBlacklistFlag(res.getBlacklistFlag());
-            user.setBorrowCount(0);
-            user.setOverdueCode("123");
-            user.setRenewalCount(0);
+
+            user.setBorrowCount(borrowBO.getTotalBorrowCount(userId));
+            user.setOverdueCode(overdueBO.getOverdueCode(userId));
+            user.setRenewalCount(renewalBO.getTotalRenewalCount(userId));
 
         }
         return user;

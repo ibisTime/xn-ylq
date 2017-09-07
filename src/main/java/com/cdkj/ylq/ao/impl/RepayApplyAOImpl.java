@@ -9,6 +9,7 @@ import com.cdkj.ylq.ao.IRepayApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.ICertificationBO;
+import com.cdkj.ylq.bo.IOverdueBO;
 import com.cdkj.ylq.bo.IRenewalBO;
 import com.cdkj.ylq.bo.IRepayApplyBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
@@ -21,6 +22,7 @@ import com.cdkj.ylq.domain.RepayApply;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBorrowStatus;
+import com.cdkj.ylq.enums.EOverdueDeal;
 import com.cdkj.ylq.enums.EPayType;
 import com.cdkj.ylq.enums.ERenewalStatus;
 import com.cdkj.ylq.enums.ERepayApplyStatus;
@@ -54,6 +56,9 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
     @Autowired
     private IRenewalBO renewalBO;
 
+    @Autowired
+    private IOverdueBO overdueBO;
+
     @Override
     @Transactional
     public void doApprove(String code, String approveResult, String approver,
@@ -84,6 +89,13 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                         borrow.getStatus())) {
                 throw new BizException("xn623000", "关联的借款订单不处于待还款状态");
             }
+            // 如果是逾期还款，逾期记录落地
+            if (borrow.getYqDays() > 0) {
+                overdueBO.saveOverdue(borrow.getApplyUser(), borrow.getCode(),
+                    borrow.getYqDays(), borrow.getYqlxAmount(),
+                    EOverdueDeal.REPAY.getCode());
+            }
+            // 更新借款订单信息
             borrowBO.repayOffline(borrow, repayApply.getAmount(), approver);
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
@@ -120,10 +132,19 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                         borrow.getStatus())) {
                 throw new BizException("xn623000", "关联的借款订单不处于待还款状态");
             }
+            Integer renewalCount = borrow.getRenewalCount();
+            // 如果是逾期还款，逾期记录落地
+            if (borrow.getYqDays() > 0) {
+                overdueBO.saveOverdue(borrow.getApplyUser(), borrow.getCode(),
+                    borrow.getYqDays(), borrow.getYqlxAmount(),
+                    EOverdueDeal.RENEWAL.getCode());
+            }
             // 更新借款订单
             borrowBO.renewalSuccess(borrow, renewal, repayApply.getAmount());
+            // 更新续期记录
             renewalBO.renewalSuccess(renewal, "线下", EPayType.OFFLINE.getCode(),
-                borrow.getRenewalCount() + 1);
+                renewalCount + 1);
+
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                 EApplyStatus.LOANING);
@@ -144,6 +165,13 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             condition);
         for (RepayApply repayApply : results.getList()) {
             repayApply.setUser(userBO.getRemoteUser(repayApply.getApplyUser()));
+            if (ERepayApplyType.REPAY.getCode().equals(repayApply.getType())) {
+                repayApply.setBorrow(borrowBO.getBorrow(repayApply.getRefNo()));
+            } else if (ERepayApplyType.RENEWAL.getCode().equals(
+                repayApply.getType())) {
+                repayApply.setRenewal(renewalBO.getRenewal(repayApply
+                    .getRefNo()));
+            }
         }
         return results;
     }
@@ -152,6 +180,12 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
     public RepayApply getRepayApply(String code) {
         RepayApply repayApply = repayApplyBO.getRepayApply(code);
         repayApply.setUser(userBO.getRemoteUser(repayApply.getApplyUser()));
+        if (ERepayApplyType.REPAY.getCode().equals(repayApply.getType())) {
+            repayApply.setBorrow(borrowBO.getBorrow(repayApply.getRefNo()));
+        } else if (ERepayApplyType.RENEWAL.getCode().equals(
+            repayApply.getType())) {
+            repayApply.setRenewal(renewalBO.getRenewal(repayApply.getRefNo()));
+        }
         return repayApply;
     }
 

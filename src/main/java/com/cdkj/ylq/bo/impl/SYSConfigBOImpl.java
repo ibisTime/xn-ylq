@@ -130,4 +130,11 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
         return result;
     }
 
+    @Override
+    public String getStringValue(String key, String companyCode,
+            String systemCode) {
+        SYSConfig config = getSYSConfig(key, companyCode, systemCode);
+        return config.getCvalue();
+    }
+
 }

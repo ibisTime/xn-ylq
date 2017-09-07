@@ -167,7 +167,7 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
             borrow.setUpdater(updater);
             borrow.setUpdateDatetime(new Date());
             borrow.setRemark("已成功还款");
-            count = borrowDAO.updateRepaySuccess(borrow);
+            count = borrowDAO.updateRepayOffline(borrow);
         }
         return count;
     }
@@ -214,9 +214,13 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     // }
 
     @Override
-    public int confirmBad(Borrow data) {
+    public int confirmBad(Borrow data, String updater, String remark) {
         int count = 0;
         if (data != null) {
+            data.setStatus(EBorrowStatus.BAD.getCode());
+            data.setUpdater(updater);
+            data.setUpdateDatetime(new Date());
+            data.setRemark(remark);
             count = borrowDAO.updateConfirmBad(data);
         }
         return count;
@@ -271,6 +275,23 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     public int archive(Borrow data) {
         int count = 0;
         count = borrowDAO.updateArchive(data);
+        return count;
+    }
+
+    @Override
+    public int getTotalBorrowCount(String userId) {
+        int count = 0;
+        if (StringUtils.isNotBlank(userId)) {
+            Borrow condition = new Borrow();
+            condition.setApplyUser(userId);
+            List<String> statusList = new ArrayList<String>();
+            statusList.add(EBorrowStatus.LOANING.getCode());
+            statusList.add(EBorrowStatus.REPAY.getCode());
+            statusList.add(EBorrowStatus.OVERDUE.getCode());
+            statusList.add(EBorrowStatus.BAD.getCode());
+            condition.setStatusList(statusList);
+            count = borrowDAO.selectTotalCount(condition).intValue();
+        }
         return count;
     }
 

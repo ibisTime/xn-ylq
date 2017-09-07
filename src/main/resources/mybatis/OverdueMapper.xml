@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.IOverdueDAO">
+	<resultMap id="overdue_DB_Result" type="overdue">
+		<result column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="borrow_code" property="borrowCode" />
+		<result column="days" property="days" />
+		<result column="amount" property="amount" />
+		<result column="result" property="result" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="id != null and id != '' ">
+				AND t.id = #{id}
+			</if>
+			<if test="userId != null and userId != '' ">
+				AND t.user_id = #{userId}
+			</if>
+			<if test="borrowCode != null and borrowCode != '' ">
+				AND t.borrow_code = #{borrowCode}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_overdue" parameterType="overdue" resultMap="overdue_DB_Result">
+		SELECT
+		t.id
+		,t.user_id
+		,t.borrow_code
+		,t.days
+		,t.amount
+		,t.result
+		FROM
+		t_overdue t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_overdue_count" parameterType="overdue"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM t_overdue t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_overdue" parameterType="overdue">
+		INSERT INTO
+		t_overdue(
+		user_id
+		,borrow_code
+		,days
+		,amount
+		,result
+		)
+		VALUES(
+		#{userId}
+		,#{borrowCode}
+		,#{days}
+		,#{amount}
+		,#{result}
+		)
+	</insert>
+
+</mapper>

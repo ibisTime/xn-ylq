@@ -46,17 +46,18 @@ CREATE TABLE `t_renewal` (
 ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `t_overdue` (
-  `code` VARCHAR(32) NOT NULL COMMENT '编号',
+  `id` BIGINT(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `user_id` VARCHAR(32) NULL COMMENT '用户编号',
-  `borrow_code` VARCHAR(32) NULL COMMENT '借款编号',
-  `yq_days` INT(11) NULL COMMENT '逾期天数',
-  `yq_amount` BIGINT(32) NULL COMMENT '逾期金额',
-  `result` VARCHAR(32) NOT NULL COMMENT '逾期结果',
-  PRIMARY KEY (`code`)  COMMENT '')
+  `borrow_code` VARCHAR(32) NULL COMMENT '关联借款订单号',
+  `days` INT(11) NULL COMMENT '逾期天数',
+  `amount` BIGINT(32) NULL COMMENT '逾期金额',
+  `result` VARCHAR(32) NULL COMMENT '逾期后处理',
+  PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','sendSmsCount','5','admin',now(),'催收联系人数量','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','renewalStep','7','admin',now(),'续期步长','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','renewalLimit','5','admin',now(),'最大续期次数','CD-YLQ000014','CD-YLQ000014');
 
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','pay_type','4','线下','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 

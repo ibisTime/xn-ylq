@@ -17,6 +17,9 @@ public class XN623088Req extends APageReq {
 
     private static final long serialVersionUID = -7585865863094749310L;
 
+    // 编号（选填）
+    private String code;
+
     // 关联编号（选填）
     private String refNo;
 
@@ -31,6 +34,14 @@ public class XN623088Req extends APageReq {
 
     // 状态（选填）
     private String status;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getRefNo() {
         return refNo;

@@ -19,4 +19,6 @@ public interface IRenewalBO extends IPaginableBO<Renewal> {
 
     public Renewal getRenewal(String code);
 
+    public int getTotalRenewalCount(String userId);
+
 }

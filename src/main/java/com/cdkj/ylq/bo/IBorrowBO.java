@@ -28,7 +28,7 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     public String addPayGroup(String code);
 
-    public int confirmBad(Borrow data);
+    public int confirmBad(Borrow data, String updater, String remark);
 
     public int overdue(Borrow data);
 
@@ -45,5 +45,7 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     // 用户当前可借产品等级
     public EProductLevel getUserBorrowLevel(String userId);
+
+    public int getTotalBorrowCount(String userId);
 
 }

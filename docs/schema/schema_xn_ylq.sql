@@ -195,3 +195,13 @@ CREATE TABLE `t_renewal` (
   `cur_no` INT(11) NULL COMMENT '第几次续期',
   PRIMARY KEY (`code`)  COMMENT '')
 ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `t_overdue` (
+  `id` BIGINT(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `user_id` VARCHAR(32) NULL COMMENT '用户编号',
+  `borrow_code` VARCHAR(32) NULL COMMENT '关联借款订单号',
+  `days` INT(11) NULL COMMENT '逾期天数',
+  `amount` BIGINT(32) NULL COMMENT '逾期金额',
+  `result` VARCHAR(32) NULL COMMENT '逾期后处理',
+  PRIMARY KEY (`id`)  COMMENT '')
+ENGINE = InnoDB DEFAULT CHARSET=utf8;

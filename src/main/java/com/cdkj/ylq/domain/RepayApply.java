@@ -47,9 +47,18 @@ public class RepayApply extends ABaseDO {
     // 状态
     private String status;
 
+    // ****查询字段******
+
+    // 订单编号模糊查询
+    private String codeForQuery;
+
     // ****辅助字段******
 
     private User user;
+
+    private Borrow borrow;
+
+    private Renewal renewal;
 
     public User getUser() {
         return user;
@@ -145,6 +154,30 @@ public class RepayApply extends ABaseDO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCodeForQuery() {
+        return codeForQuery;
+    }
+
+    public void setCodeForQuery(String codeForQuery) {
+        this.codeForQuery = codeForQuery;
+    }
+
+    public Borrow getBorrow() {
+        return borrow;
+    }
+
+    public void setBorrow(Borrow borrow) {
+        this.borrow = borrow;
+    }
+
+    public Renewal getRenewal() {
+        return renewal;
+    }
+
+    public void setRenewal(Renewal renewal) {
+        this.renewal = renewal;
     }
 
 }

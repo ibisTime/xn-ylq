@@ -17,6 +17,7 @@ import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.ICertificationBO;
+import com.cdkj.ylq.bo.IOverdueBO;
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IRenewalBO;
 import com.cdkj.ylq.bo.IRepayApplyBO;
@@ -35,10 +36,10 @@ import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoContact;
+import com.cdkj.ylq.domain.MXReport;
 import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.Renewal;
 import com.cdkj.ylq.domain.RepayApply;
-import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.UserCoupon;
 import com.cdkj.ylq.dto.res.BooleanRes;
@@ -50,6 +51,7 @@ import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
+import com.cdkj.ylq.enums.EOverdueDeal;
 import com.cdkj.ylq.enums.EPayType;
 import com.cdkj.ylq.enums.ERenewalStatus;
 import com.cdkj.ylq.enums.ERepayApplyStatus;
@@ -97,6 +99,9 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Autowired
     private IRenewalBO renewalBO;
+
+    @Autowired
+    private IOverdueBO overdueBO;
 
     @Override
     @Transactional
@@ -468,6 +473,12 @@ public class BorrowAOImpl implements IBorrowAO {
         Borrow borrow = borrowList.get(0);
         if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                 || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
+            // 如果是逾期还款，逾期记录落地
+            if (borrow.getYqDays() > 0) {
+                overdueBO.saveOverdue(borrow.getApplyUser(), borrow.getCode(),
+                    borrow.getYqDays(), borrow.getYqlxAmount(),
+                    EOverdueDeal.REPAY.getCode());
+            }
             // 更新订单支付金额
             borrowBO.repaySuccess(borrow, amount, payCode, payType);
             // 更新申请单状态
@@ -565,10 +576,18 @@ public class BorrowAOImpl implements IBorrowAO {
                         borrow.getStatus())) {
                 throw new BizException("xn623000", "关联的借款订单不处于待还款状态");
             }
+            Integer renewalCount = borrow.getRenewalCount();
+            // 如果是逾期还款，逾期记录落地
+            if (borrow.getYqDays() > 0) {
+                overdueBO.saveOverdue(borrow.getApplyUser(), borrow.getCode(),
+                    borrow.getYqDays(), borrow.getYqlxAmount(),
+                    EOverdueDeal.RENEWAL.getCode());
+            }
             // 更新借款订单
             borrowBO.renewalSuccess(borrow, renewal, amount);
+            // 更新续期记录
             renewalBO.renewalSuccess(renewal, payCode, payType,
-                borrow.getRenewalCount() + 1);
+                renewalCount + 1);
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                 EApplyStatus.LOANING);
@@ -585,29 +604,37 @@ public class BorrowAOImpl implements IBorrowAO {
     @Override
     public void cuishou(String code) {
         List<String> mobiles = new ArrayList<String>();
-        String userId = null;
         Borrow borrow = borrowBO.getBorrow(code);
         if (!EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
             throw new BizException("xn6230000", "订单不处于逾期状态，不允许催收");
         }
-        userId = borrow.getApplyUser();
+        String userId = borrow.getApplyUser();
         User user = userBO.getRemoteUser(userId);
-        Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_CONTACT);
+        // 获取紧急联系人号码
+        Certification certification = certificationBO.getCertification(
+            borrow.getApplyUser(), ECertiKey.INFO_CONTACT);
         InfoContact infoContact = JsonUtil.json2Bean(certification.getResult(),
             InfoContact.class);
-        SYSConfig config = sysConfigBO.getSYSConfig(
-            SysConstants.SEND_SMS_COUNT, ESystemCode.YLQ.getCode(),
-            ESystemCode.YLQ.getCode());
-        int count = Integer.valueOf(config.getCvalue());
-        String content = "先生/女士，您好，请通知***（手机号）（身份证号隐藏其中几位），其在【九州宝】的欠款已严重逾期。若***不能及时处理，我司将要求其准备好相关材料（身份证、户口本等）等待相应司法流程，我司保留委托第三方机构上门催款的权利，届时产生的责任和影响由其本人承担！打扰之处敬请谅解，客服热线******，谢谢！【九州宝】";
         mobiles.add(infoContact.getFamilyMobile());
         mobiles.add(infoContact.getSocietyMobile());
 
+        // 获取运营商中排名前N个的联系人
+        int count = sysConfigBO.getIntegerValue(SysConstants.SEND_SMS_COUNT,
+            ESystemCode.YLQ.getCode(), ESystemCode.YLQ.getCode());
         certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_CARRIER);
         String report = certification.getResult();
-
+        MXReport mxReport = JsonUtil.json2Bean(report, MXReport.class);
+        for (int i = 0; i < count; i++) {
+            mobiles.add(mxReport.getCall_contact_detail().get(i).getPeer_num());
+        }
+        String content = "先生/女士，您好，请通知"
+                + user.getMobile()
+                + "（"
+                + user.getIdNo()
+                + "），其在【九州宝】的欠款已严重逾期。若"
+                + user.getMobile()
+                + "不能及时处理，我司将要求其准备好相关材料（身份证、户口本等）等待相应司法流程，我司保留委托第三方机构上门催款的权利，届时产生的责任和影响由其本人承担！打扰之处敬请谅解，客服热线0579-342424，谢谢！【九州宝】";
         // todo 去魔蝎联系人前N个
         for (String mobile : mobiles) {
             smsOutBO.sendContent(mobile, content, ESystemCode.YLQ.getCode(),
@@ -622,19 +649,19 @@ public class BorrowAOImpl implements IBorrowAO {
         if (!EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
             throw new BizException("623073", "借款不处于逾期状态");
         }
-        borrow.setStatus(EBorrowStatus.BAD.getCode());
-        borrow.setUpdater(updater);
-        borrow.setUpdateDatetime(new Date());
-        borrow.setRemark(remark);
-        borrowBO.confirmBad(borrow);
-
+        // 更新借款订单信息
+        borrowBO.confirmBad(borrow, updater, remark);
+        // 如果是逾期还款，逾期记录落地
+        if (borrow.getYqDays() > 0) {
+            overdueBO.saveOverdue(borrow.getApplyUser(), borrow.getCode(),
+                borrow.getYqDays(), borrow.getYqlxAmount(),
+                EOverdueDeal.BAD.getCode());
+        }
         // 更新申请单状态
         applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
             EApplyStatus.BAD);
-
         // 额度重置为0
         certificationBO.resetSxAmount(borrow.getApplyUser());
-
         // 将用户拉入黑名单
         userBO.addBlacklist(borrow.getApplyUser(), "bad_debt", updater,
             "借钱不还，已确认坏账");

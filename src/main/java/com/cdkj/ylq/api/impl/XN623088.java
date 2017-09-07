@@ -40,6 +40,7 @@ public class XN623088 extends AProcessor {
     @Override
     public Object doBusiness() throws BizException {
         RepayApply condition = new RepayApply();
+        condition.setCodeForQuery(req.getCode());
         condition.setRefNo(req.getRefNo());
         condition.setType(req.getType());
         condition.setApplyUser(req.getApplyUser());
