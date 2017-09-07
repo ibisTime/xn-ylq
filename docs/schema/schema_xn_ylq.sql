@@ -24,9 +24,13 @@ CREATE TABLE `t_borrow` (
   `fk_datetime` datetime DEFAULT NULL COMMENT '放款时间',
   `jx_datetime` datetime DEFAULT NULL COMMENT '计息时间',
   `hk_datetime` datetime DEFAULT NULL COMMENT '约定还款时间',
+  `lx_rate` decimal(18,8) DEFAULT NULL COMMENT '正常利息利率'
   `lx_amount` bigint(32) DEFAULT NULL COMMENT '正常应付利息',
+  `xs_rate` decimal(18,8) DEFAULT NULL COMMENT '快速信审费利率'
   `xs_amount` bigint(32) DEFAULT NULL COMMENT '快速信审费',
+  `gl_rate` decimal(18,8) DEFAULT NULL COMMENT '账户管理费利率'
   `gl_amount` bigint(32) DEFAULT NULL COMMENT '账户管理费',
+  `fw_rate` decimal(18,8) DEFAULT NULL COMMENT '服务费利率'
   `fw_amount` bigint(32) DEFAULT NULL COMMENT '服务费',
   `yh_amount` bigint(32) DEFAULT NULL COMMENT '优惠金额',
   `rate1` decimal(18,8) DEFAULT NULL COMMENT '7天内逾期利率',
@@ -39,6 +43,7 @@ CREATE TABLE `t_borrow` (
   `pay_code` varchar(32) DEFAULT NULL COMMENT '支付编号',
   `pay_group` varchar(32) DEFAULT NULL COMMENT '支付组号',
   `pay_type` varchar(32) DEFAULT NULL COMMENT '支付方式',
+  `renewal_count` int(11) DEFAULT NULL COMMENT '续期次数',
   `status` varchar(32) DEFAULT NULL COMMENT '状态',
   `is_archive` varchar(32) DEFAULT '0' COMMENT '是否归档',
   `approver` varchar(32) DEFAULT NULL COMMENT '审核人',
@@ -164,5 +169,29 @@ CREATE TABLE `t_repay_apply` (
   `approve_note` VARCHAR(255) NULL COMMENT '审核说明',
   `approve_datetime` DATETIME NULL COMMENT '审核时间',
   `status` VARCHAR(32) NULL COMMENT '状态',
+  PRIMARY KEY (`code`)  COMMENT '')
+ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `t_renewal` (
+  `code` VARCHAR(32) NOT NULL COMMENT '编号',
+  `apply_user` VARCHAR(32) NULL COMMENT '申请人',
+  `borrow_code` VARCHAR(32) NULL COMMENT '借款编号',
+  `step` INT(11) NULL COMMENT '续期步长',
+  `cycle` INT(11) NULL COMMENT '续期周期',
+  `start_date` DATETIME NULL COMMENT '开始时间',
+  `end_date` DATETIME NULL COMMENT '结束时间',
+  `yq_amount` BIGINT(32) NULL COMMENT '续期前逾期费',
+  `xs_amount` BIGINT(32) NULL COMMENT '快速信审费',
+  `gl_amount` BIGINT(32) NULL COMMENT '账户管理费',
+  `fw_amount` BIGINT(32) NULL COMMENT '服务费',
+  `lx_amount` BIGINT(32) NULL COMMENT '利息',
+  `total_amount` BIGINT(32) NULL COMMENT '续费总费用',
+  `pay_datetime` DATETIME NULL COMMENT '支付时间',
+  `pay_type` VARCHAR(32)  NULL COMMENT '支付方式',
+  `pay_code` VARCHAR(32)  NULL COMMENT '三方支付编号',
+  `pay_group` VARCHAR(32)  NULL COMMENT '支付组号',
+  `create_datetime` DATETIME NULL COMMENT '创建时间',
+  `status` VARCHAR(32)  NULL COMMENT '状态',
+  `cur_no` INT(11) NULL COMMENT '第几次续期',
   PRIMARY KEY (`code`)  COMMENT '')
 ENGINE = InnoDB DEFAULT CHARSET=utf8;
