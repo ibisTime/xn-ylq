@@ -24,7 +24,7 @@ CREATE TABLE `t_borrow` (
   `fk_datetime` datetime DEFAULT NULL COMMENT '放款时间',
   `jx_datetime` datetime DEFAULT NULL COMMENT '计息时间',
   `hk_datetime` datetime DEFAULT NULL COMMENT '约定还款时间',
-  `lx_rate` decimal(18,8) DEFAULT NULL COMMENT '正常利息利率'
+  `lx_rate` decimal(18,8) DEFAULT NULL COMMENT '正常利息利率',
   `lx_amount` bigint(32) DEFAULT NULL COMMENT '正常应付利息',
   `xs_rate` decimal(18,8) DEFAULT NULL COMMENT '快速信审费利率'
   `xs_amount` bigint(32) DEFAULT NULL COMMENT '快速信审费',
