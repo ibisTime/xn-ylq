@@ -8,7 +8,7 @@ ADD COLUMN `renewal_count` INT(11) NULL COMMENT '续期次数' AFTER `pay_type`;
 
 CREATE TABLE `t_repay_apply` (
   `code` VARCHAR(32) NOT NULL COMMENT '编号',
-  `borrow_code` VARCHAR(32) NULL COMMENT '针对借款编号',
+  `ref_no` VARCHAR(32) NULL COMMENT '关联订单号',
   `type` VARCHAR(32) NULL COMMENT '打款类型',
   `amount` BIGINT(32) NULL COMMENT '打款金额',
   `apply_user` VARCHAR(32) NULL COMMENT '申请人',

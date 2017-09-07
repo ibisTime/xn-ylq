@@ -21,6 +21,7 @@ import com.cdkj.ylq.domain.RepayApply;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBorrowStatus;
+import com.cdkj.ylq.enums.EPayType;
 import com.cdkj.ylq.enums.ERenewalStatus;
 import com.cdkj.ylq.enums.ERepayApplyStatus;
 import com.cdkj.ylq.enums.ERepayApplyType;
@@ -121,6 +122,8 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             }
             // 更新借款订单
             borrowBO.renewalSuccess(borrow, renewal, repayApply.getAmount());
+            renewalBO.renewalSuccess(renewal, "线下", EPayType.OFFLINE.getCode(),
+                borrow.getRenewalCount() + 1);
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                 EApplyStatus.LOANING);

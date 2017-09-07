@@ -26,11 +26,11 @@ CREATE TABLE `t_borrow` (
   `hk_datetime` datetime DEFAULT NULL COMMENT '约定还款时间',
   `lx_rate` decimal(18,8) DEFAULT NULL COMMENT '正常利息利率',
   `lx_amount` bigint(32) DEFAULT NULL COMMENT '正常应付利息',
-  `xs_rate` decimal(18,8) DEFAULT NULL COMMENT '快速信审费利率'
+  `xs_rate` decimal(18,8) DEFAULT NULL COMMENT '快速信审费利率',
   `xs_amount` bigint(32) DEFAULT NULL COMMENT '快速信审费',
-  `gl_rate` decimal(18,8) DEFAULT NULL COMMENT '账户管理费利率'
+  `gl_rate` decimal(18,8) DEFAULT NULL COMMENT '账户管理费利率',
   `gl_amount` bigint(32) DEFAULT NULL COMMENT '账户管理费',
-  `fw_rate` decimal(18,8) DEFAULT NULL COMMENT '服务费利率'
+  `fw_rate` decimal(18,8) DEFAULT NULL COMMENT '服务费利率',
   `fw_amount` bigint(32) DEFAULT NULL COMMENT '服务费',
   `yh_amount` bigint(32) DEFAULT NULL COMMENT '优惠金额',
   `rate1` decimal(18,8) DEFAULT NULL COMMENT '7天内逾期利率',
@@ -159,7 +159,7 @@ CREATE TABLE `t_coupon_condition` (
 
 CREATE TABLE `t_repay_apply` (
   `code` VARCHAR(32) NOT NULL COMMENT '编号',
-  `borrow_code` VARCHAR(32) NULL COMMENT '针对借款编号',
+  `ref_no` VARCHAR(32) NULL COMMENT '关联订单号',
   `type` VARCHAR(32) NULL COMMENT '打款类型',
   `amount` BIGINT(32) NULL COMMENT '打款金额',
   `apply_user` VARCHAR(32) NULL COMMENT '申请人',
