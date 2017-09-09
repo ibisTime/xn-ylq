@@ -19,4 +19,8 @@ public class SysConstants {
     public static final String RENEWAL_STEP = "renewalStep"; // 续期步长
 
     public static final String RENEWAL_LIMIT = "renewalLimit"; // 最大续期次数
+
+    public static final String MX_URL = "mxUrl"; // 魔蝎URL
+
+    public static final String MX_TOKEN = "mxToken"; // 魔蝎token
 }

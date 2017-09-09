@@ -19,7 +19,6 @@ import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Renewal;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.ERenewalStatus;
-import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 
 @Component
@@ -40,14 +39,12 @@ public class RenewalBOImpl extends PaginableBOImpl<Renewal> implements
         String payGroup = OrderNoGenerater.generateM(EGeneratePrefix.PAY_GROUP
             .getCode());
         // 续期周期，为0或者不配置的，表示续期功能关闭
-        Integer step = sysConfigBO.getIntegerValue(SysConstants.RENEWAL_STEP,
-            ESystemCode.YLQ.getCode(), ESystemCode.YLQ.getCode());
+        Integer step = sysConfigBO.getIntegerValue(SysConstants.RENEWAL_STEP);
         if (step <= 0) {
             throw new BizException("xn623000", "平台暂未开放续期功能，敬请期待！");
         }
         // 最大续期次数
-        Integer limit = sysConfigBO.getIntegerValue(SysConstants.RENEWAL_LIMIT,
-            ESystemCode.YLQ.getCode(), ESystemCode.YLQ.getCode());
+        Integer limit = sysConfigBO.getIntegerValue(SysConstants.RENEWAL_LIMIT);
         if (borrow.getRenewalCount() >= limit) {
             throw new BizException("xn623000", "续期次数已达上限，请及时还款！");
         }

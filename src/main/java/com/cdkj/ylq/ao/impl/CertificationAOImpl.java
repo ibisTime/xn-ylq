@@ -1,8 +1,16 @@
 package com.cdkj.ylq.ao.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -35,7 +43,6 @@ import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
-import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
@@ -48,7 +55,6 @@ import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EIDKind;
-import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
@@ -155,14 +161,13 @@ public class CertificationAOImpl implements ICertificationAO {
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_IDENTIFY);
         InfoIdentify infoIdentify = certiInfo.getInfoIdentifyFace();
-        SYSConfig config = sysConfigBO.getSYSConfig(
-            SysConstants.IDENTIFY_VALID_DAYS, ESystemCode.YLQ.getCode(),
-            ESystemCode.YLQ.getCode());
+        Integer config = sysConfigBO
+            .getIntegerValue(SysConstants.IDENTIFY_VALID_DAYS);
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setCerDatetime(new Date());
             certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+                DateUtil.getTodayStart(), config));
             certification.setResult(JsonUtil.Object2Json(infoIdentify));
             certification.setRef("");
             certificationBO.refreshCertification(certification);
@@ -174,7 +179,7 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setResult(JsonUtil.Object2Json(infoIdentify));
             certification.setCerDatetime(new Date());
             certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+                DateUtil.getTodayStart(), config));
             certification.setRef("");
             certificationBO.saveCertification(certification);
         }
@@ -306,15 +311,14 @@ public class CertificationAOImpl implements ICertificationAO {
 
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_ANTIFRAUD);
-        SYSConfig config = sysConfigBO.getSYSConfig(
-            SysConstants.ANTIFRAUD_VALID_DAYS, ESystemCode.YLQ.getCode(),
-            ESystemCode.YLQ.getCode());
+        Integer config = sysConfigBO
+            .getIntegerValue(SysConstants.ANTIFRAUD_VALID_DAYS);
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setResult(JsonUtil.Object2Json(infoAntifraud));
             certification.setCerDatetime(new Date());
             certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+                DateUtil.getTodayStart(), config));
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         } else {
@@ -325,7 +329,7 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setResult(JsonUtil.Object2Json(infoAntifraud));
             certification.setCerDatetime(new Date());
             certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+                DateUtil.getTodayStart(), config));
             certification.setRef("");
             certificationBO.saveCertification(certification);
         }
@@ -348,16 +352,14 @@ public class CertificationAOImpl implements ICertificationAO {
         if (infoZMCredit.isAuthorized()) {
             Certification certification = certificationBO.getCertification(
                 userId, ECertiKey.INFO_ZMCREDIT);
-            SYSConfig config = sysConfigBO.getSYSConfig(
-                SysConstants.ANTIFRAUD_VALID_DAYS, ESystemCode.YLQ.getCode(),
-                ESystemCode.YLQ.getCode());
+            Integer config = sysConfigBO
+                .getIntegerValue(SysConstants.ZMSCORE_VALID_DAYS);
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoZMCredit));
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(),
-                    Integer.valueOf(config.getCvalue())));
+                    DateUtil.getTodayStart(), config));
                 certification.setRef("");
                 certificationBO.refreshCertification(certification);
             } else {
@@ -368,8 +370,7 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setResult(JsonUtil.Object2Json(infoZMCredit));
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(),
-                    Integer.valueOf(config.getCvalue())));
+                    DateUtil.getTodayStart(), config));
                 certification.setRef("");
                 certificationBO.saveCertification(certification);
             }
@@ -384,16 +385,14 @@ public class CertificationAOImpl implements ICertificationAO {
         if (mxReportData != null) {
             Certification certification = certificationBO.getCertification(
                 userId, ECertiKey.INFO_CARRIER);
-            SYSConfig config = sysConfigBO.getSYSConfig(
-                SysConstants.CARRIER_VALID_DAYS, ESystemCode.YLQ.getCode(),
-                ESystemCode.YLQ.getCode());
+            Integer config = sysConfigBO
+                .getIntegerValue(SysConstants.CARRIER_VALID_DAYS);
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(mxReportData.getReportData());
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(),
-                    Integer.valueOf(config.getCvalue())));
+                    DateUtil.getTodayStart(), config));
                 certification.setRef("");
                 certificationBO.refreshCertification(certification);
             } else {
@@ -404,8 +403,7 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setResult(mxReportData.getReportData());
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(),
-                    Integer.valueOf(config.getCvalue())));
+                    DateUtil.getTodayStart(), config));
                 certification.setRef("");
                 certificationBO.saveCertification(certification);
             }
@@ -418,34 +416,39 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
+    @Transactional
     public void doMxCarrierCallback(MxCarrierNofification notification) {
+        logger.info("&**&*&* 开始魔蝎回调 &*&*&*&*&");
         String userId = notification.getUser_id();
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_CARRIER);
-        SYSConfig config = sysConfigBO.getSYSConfig(
-            SysConstants.CARRIER_VALID_DAYS, ESystemCode.YLQ.getCode(),
-            ESystemCode.YLQ.getCode());
-        if (certification != null) {
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(notification));
-            certification.setCerDatetime(new Date());
-            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
-            certification.setRef("");
-            certificationBO.refreshCertification(certification);
-        } else {
-            certification = new Certification();
-            certification.setUserId(userId);
-            certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(notification));
-            certification.setCerDatetime(new Date());
-            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
-            certification.setRef("");
-            certificationBO.saveCertification(certification);
-        }
-        if (EBoolean.YES.getCode().equals(notification.getResult())) {
+        Integer config = sysConfigBO
+            .getIntegerValue(SysConstants.CARRIER_VALID_DAYS);
+        // 认证成功
+        if (notification.isResult()) {
+            String report = getMxReport(notification.getMobile(),
+                notification.getTask_id());
+            logger.info("&**&*&* 魔蝎报告： &*&*&*&*&" + report);
+            if (certification != null) {
+                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+                certification.setResult(JsonUtil.Object2Json(notification));
+                certification.setCerDatetime(new Date());
+                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                    DateUtil.getTodayStart(), config));
+                certification.setRef(report);
+                certificationBO.refreshCertification(certification);
+            } else {
+                certification = new Certification();
+                certification.setUserId(userId);
+                certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
+                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+                certification.setResult(JsonUtil.Object2Json(notification));
+                certification.setCerDatetime(new Date());
+                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                    DateUtil.getTodayStart(), config));
+                certification.setRef(report);
+                certificationBO.saveCertification(certification);
+            }
             Apply apply = applyBO.getCurrentApply(userId);
             if (apply != null) {
                 applyBO.toDoApprove(apply);
@@ -458,15 +461,14 @@ public class CertificationAOImpl implements ICertificationAO {
             List<InfoAddressBook> addressBookList) {
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_ADDRESS_BOOK);
-        SYSConfig config = sysConfigBO.getSYSConfig(
-            SysConstants.ADDRESS_BOOK_VALID_DAYS, ESystemCode.YLQ.getCode(),
-            ESystemCode.YLQ.getCode());
+        Integer config = sysConfigBO
+            .getIntegerValue(SysConstants.ADDRESS_BOOK_VALID_DAYS);
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setResult(JsonUtil.Object2Json(addressBookList));
             certification.setCerDatetime(new Date());
             certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+                DateUtil.getTodayStart(), config));
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         } else {
@@ -477,7 +479,7 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setResult(JsonUtil.Object2Json(addressBookList));
             certification.setCerDatetime(new Date());
             certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+                DateUtil.getTodayStart(), config));
             certification.setRef("");
             certificationBO.saveCertification(certification);
         }
@@ -838,4 +840,76 @@ public class CertificationAOImpl implements ICertificationAO {
         logger.info("***************结束扫描认证结果***************");
     }
 
+    private String getMxReport(String mobile, String taskId) {
+        String report = null;
+        String url = sysConfigBO.getStringValue(SysConstants.MX_URL);
+        String token = sysConfigBO.getStringValue(SysConstants.MX_TOKEN);
+        String urlString = String.format(url, mobile, taskId);
+        Properties formProperties = new Properties();
+        formProperties.put("Authorization", "token " + token);
+        try {
+            logger.info(urlString);
+            report = requestGet(urlString, null, formProperties);
+        } catch (Exception e) {
+            logger.error("获取魔蝎报告异常");
+        }
+        return report;
+    }
+
+    public static String requestGet(String urlString, byte[] requestData,
+            Properties requestProperties) throws Exception {
+        String responseData = null;
+
+        HttpURLConnection con = null;
+
+        try {
+            URL url = new URL(urlString);
+            con = (HttpURLConnection) url.openConnection();
+
+            if ((requestProperties != null) && (requestProperties.size() > 0)) {
+                for (Map.Entry<Object, Object> entry : requestProperties
+                    .entrySet()) {
+                    String key = String.valueOf(entry.getKey());
+                    String value = String.valueOf(entry.getValue());
+                    con.setRequestProperty(key, value);
+                }
+            }
+            con.setConnectTimeout(10000);
+            con.setRequestMethod("GET"); // 置为GET方法
+            con.setDoInput(true); // 开启输入流
+            con.setDoOutput(true); // 开启输出流
+            // con.setUseCaches(false); // 不使用缓存
+            // logger.debug("打开连接:" + url);
+            con.connect();
+            // 如果请求数据不为空，输出该数据。
+            if (requestData != null) {
+                DataOutputStream out = new DataOutputStream(
+                    con.getOutputStream());
+                out.write(requestData);
+                out.flush();
+                out.close();
+            }
+            InputStream bStream = con.getInputStream();
+            ByteArrayOutputStream bOutStream = new ByteArrayOutputStream();
+            GZIPInputStream gis = new GZIPInputStream(bStream);
+            byte[] buffer = new byte[1];
+            int len;
+
+            while ((len = gis.read(buffer)) != -1) {
+                bOutStream.write(buffer, 0, len);
+            }
+            bOutStream.close();
+            gis.close();
+            responseData = new String(bOutStream.toByteArray());
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (con != null) {
+                con.disconnect();
+                con = null;
+            }
+        }
+
+        return responseData;
+    }
 }

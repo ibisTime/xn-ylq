@@ -28,7 +28,7 @@ public class MxCarrierNofification {
     private Long timestamp;
 
     // 报告结果. true - 成功; false - 失败
-    private String result;
+    private boolean result;
 
     // 成功时为前台界面展示的加密请求报文，失败时为失败原因
     private String message;
@@ -71,11 +71,11 @@ public class MxCarrierNofification {
         this.timestamp = timestamp;
     }
 
-    public String getResult() {
+    public boolean isResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(boolean result) {
         this.result = result;
     }
 

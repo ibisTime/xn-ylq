@@ -236,9 +236,8 @@ public class BorrowAOImpl implements IBorrowAO {
             if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                     || EBorrowStatus.OVERDUE.getCode().equals(
                         borrow.getStatus())) {
-                Integer step = sysConfigBO.getIntegerValue(
-                    SysConstants.RENEWAL_STEP, ESystemCode.YLQ.getCode(),
-                    ESystemCode.YLQ.getCode());
+                Integer step = sysConfigBO
+                    .getIntegerValue(SysConstants.RENEWAL_STEP);
                 if (step > 0) {
                     Integer cycle = 1;
                     Date now = new Date();
@@ -286,9 +285,8 @@ public class BorrowAOImpl implements IBorrowAO {
         borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
         if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                 || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
-            Integer step = sysConfigBO.getIntegerValue(
-                SysConstants.RENEWAL_STEP, ESystemCode.YLQ.getCode(),
-                ESystemCode.YLQ.getCode());
+            Integer step = sysConfigBO
+                .getIntegerValue(SysConstants.RENEWAL_STEP);
             if (step > 0) {
                 Integer cycle = 1;
                 Date now = new Date();
@@ -619,11 +617,10 @@ public class BorrowAOImpl implements IBorrowAO {
         mobiles.add(infoContact.getSocietyMobile());
 
         // 获取运营商中排名前N个的联系人
-        int count = sysConfigBO.getIntegerValue(SysConstants.SEND_SMS_COUNT,
-            ESystemCode.YLQ.getCode(), ESystemCode.YLQ.getCode());
+        int count = sysConfigBO.getIntegerValue(SysConstants.SEND_SMS_COUNT);
         certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_CARRIER);
-        String report = certification.getResult();
+        String report = certification.getRef();
         MXReport mxReport = JsonUtil.json2Bean(report, MXReport.class);
         for (int i = 0; i < count; i++) {
             mobiles.add(mxReport.getCall_contact_detail().get(i).getPeer_num());

@@ -15,6 +15,7 @@ import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.dao.ISYSConfigDAO;
 import com.cdkj.ylq.domain.SYSConfig;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 
 /**
@@ -103,10 +104,10 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     }
 
     @Override
-    public Double getDoubleValue(String key, String companyCode,
-            String systemCode) {
+    public Double getDoubleValue(String key) {
         Double result = 0.0;
-        SYSConfig config = getSYSConfig(key, companyCode, systemCode);
+        SYSConfig config = getSYSConfig(key, ESystemCode.YLQ.getCode(),
+            ESystemCode.YLQ.getCode());
         try {
             result = Double.valueOf(config.getCvalue());
         } catch (Exception e) {
@@ -117,10 +118,10 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     }
 
     @Override
-    public Integer getIntegerValue(String key, String companyCode,
-            String systemCode) {
+    public Integer getIntegerValue(String key) {
         Integer result = 0;
-        SYSConfig config = getSYSConfig(key, companyCode, systemCode);
+        SYSConfig config = getSYSConfig(key, ESystemCode.YLQ.getCode(),
+            ESystemCode.YLQ.getCode());
         try {
             result = Integer.valueOf(config.getCvalue());
         } catch (Exception e) {
@@ -131,9 +132,9 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     }
 
     @Override
-    public String getStringValue(String key, String companyCode,
-            String systemCode) {
-        SYSConfig config = getSYSConfig(key, companyCode, systemCode);
+    public String getStringValue(String key) {
+        SYSConfig config = getSYSConfig(key, ESystemCode.YLQ.getCode(),
+            ESystemCode.YLQ.getCode());
         return config.getCvalue();
     }
 

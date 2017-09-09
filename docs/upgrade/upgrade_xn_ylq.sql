@@ -5,6 +5,8 @@ ADD COLUMN `gl_rate` DECIMAL(18,8) NULL COMMENT '账户管理费利率' AFTER `x
 ADD COLUMN `fw_rate` DECIMAL(18,8) NULL COMMENT '服务费利率' AFTER `gl_amount`,
 ADD COLUMN `renewal_count` INT(11) NULL COMMENT '续期次数' AFTER `pay_type`;
 
+ALTER TABLE `t_certification` 
+CHANGE COLUMN `ref` `ref` LONGTEXT NULL DEFAULT NULL COMMENT '关联申请单' ;
 
 CREATE TABLE `t_repay_apply` (
   `code` VARCHAR(32) NOT NULL COMMENT '编号',
@@ -58,6 +60,8 @@ ENGINE = InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','sendSmsCount','5','admin',now(),'催收联系人数量','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','renewalStep','7','admin',now(),'续期步长','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','renewalLimit','5','admin',now(),'最大续期次数','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','mxUrl','https://api.51datakey.com/carrier/v3/mobiles/%s/mxreport?task_id=%s','admin',now(),'魔蝎URL','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','mxToken','76216f728af3416083f20a13f9ddb2a9','admin',now(),'魔蝎token','CD-YLQ000014','CD-YLQ000014');
 
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','pay_type','4','线下','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 

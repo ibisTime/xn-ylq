@@ -23,7 +23,6 @@ import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.Product;
-import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.res.XN623020Res;
 import com.cdkj.ylq.enums.EApplyStatus;
@@ -31,7 +30,6 @@ import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
-import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
@@ -133,16 +131,14 @@ public class ApplyAOImpl implements IApplyAO {
             infoAmount.setSxAmount(sxAmount);
             Certification certification = certificationBO.getCertification(
                 apply.getApplyUser(), ECertiKey.INFO_AMOUNT);
-            SYSConfig config = sysConfigBO.getSYSConfig(
-                SysConstants.AMOUNT_VALID_DAYS, ESystemCode.YLQ.getCode(),
-                ESystemCode.YLQ.getCode());
+            Integer config = sysConfigBO
+                .getIntegerValue(SysConstants.AMOUNT_VALID_DAYS);
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoAmount));
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(),
-                    Integer.valueOf(config.getCvalue())));
+                    DateUtil.getTodayStart(), config));
                 certification.setRef(apply.getProductCode());
                 certificationBO.refreshCertification(certification);
             } else {
@@ -153,8 +149,7 @@ public class ApplyAOImpl implements IApplyAO {
                 certification.setResult(JsonUtil.Object2Json(sxAmount));
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(),
-                    Integer.valueOf(config.getCvalue())));
+                    DateUtil.getTodayStart(), config));
                 certification.setRef(apply.getProductCode());
                 certificationBO.saveCertification(certification);
             }
