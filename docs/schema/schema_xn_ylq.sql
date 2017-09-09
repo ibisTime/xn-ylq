@@ -64,7 +64,7 @@ CREATE TABLE `t_certification` (
   `result` longtext COMMENT '认证结果',
   `cer_datetime` datetime DEFAULT NULL COMMENT '认证时间',
   `valid_datetime` datetime DEFAULT NULL COMMENT '有效时间',
-  `ref` varchar(45) DEFAULT NULL COMMENT '关联申请单',
+  `ref` longtext DEFAULT NULL COMMENT '关联申请单',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8;
 

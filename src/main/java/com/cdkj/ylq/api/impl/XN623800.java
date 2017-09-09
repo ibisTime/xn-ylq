@@ -44,7 +44,7 @@ public class XN623800 extends AProcessor {
         XN805041Res res = userAO.doRegister(req.getMobile(), req.getLoginPwd(),
             req.getUserReferee(), req.getUserRefereeKind(),
             req.getSmsCaptcha(), req.getKind(), req.getIsRegHx(),
-            req.getProvince(), req.getCity(), req.getArea(),
+            req.getProvince(), req.getCity(), req.getArea(), req.getAddress(),
             req.getCompanyCode(), req.getSystemCode());
 
         if (StringUtils.isNotBlank(res.getUserReferee())) {

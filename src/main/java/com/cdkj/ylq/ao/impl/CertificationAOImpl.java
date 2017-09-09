@@ -428,7 +428,6 @@ public class CertificationAOImpl implements ICertificationAO {
         if (notification.isResult()) {
             String report = getMxReport(notification.getMobile(),
                 notification.getTask_id());
-            logger.info("&**&*&* 魔蝎报告： &*&*&*&*&" + report);
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(notification));
@@ -851,7 +850,7 @@ public class CertificationAOImpl implements ICertificationAO {
             logger.info(urlString);
             report = requestGet(urlString, null, formProperties);
         } catch (Exception e) {
-            logger.error("获取魔蝎报告异常");
+            logger.error("获取魔蝎报告异常,原因：" + e.getMessage());
         }
         return report;
     }

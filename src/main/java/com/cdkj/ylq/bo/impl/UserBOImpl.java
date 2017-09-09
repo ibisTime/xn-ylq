@@ -133,7 +133,7 @@ public class UserBOImpl implements IUserBO {
     public XN805041Res doRegister(String mobile, String loginPwd,
             String userReferee, String userRefereeKind, String smsCaptcha,
             String kind, String isRegHx, String province, String city,
-            String area, String companyCode, String systemCode) {
+            String area, String address, String companyCode, String systemCode) {
         XN805041Req req = new XN805041Req();
         req.setMobile(mobile);
         req.setLoginPwd(loginPwd);
@@ -145,6 +145,7 @@ public class UserBOImpl implements IUserBO {
         req.setProvince(province);
         req.setCity(city);
         req.setArea(area);
+        req.setAddress(address);
         req.setCompanyCode(companyCode);
         req.setSystemCode(systemCode);
         return BizConnecter.getBizData("805041", JsonUtils.object2Json(req),

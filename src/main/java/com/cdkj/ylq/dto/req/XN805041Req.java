@@ -28,6 +28,9 @@ public class XN805041Req {
     // 区(选填)
     private String area;
 
+    // 详细地址(选填)
+    private String address;
+
     // 是否注册环信(必填)
     private String isRegHx;
 
@@ -107,6 +110,14 @@ public class XN805041Req {
 
     public void setArea(String area) {
         this.area = area;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getIsRegHx() {

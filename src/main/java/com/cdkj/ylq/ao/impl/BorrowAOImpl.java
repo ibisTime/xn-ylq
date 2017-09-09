@@ -292,7 +292,7 @@ public class BorrowAOImpl implements IBorrowAO {
                 Date now = new Date();
                 Date startDate = null;
                 if (now.after(borrow.getHkDatetime())) {
-                    startDate = DateUtil.getTomorrowStart(now);
+                    startDate = DateUtil.getTodayStart();
                 } else {
                     startDate = DateUtil.getTomorrowStart(borrow
                         .getHkDatetime());
@@ -625,17 +625,16 @@ public class BorrowAOImpl implements IBorrowAO {
         for (int i = 0; i < count; i++) {
             mobiles.add(mxReport.getCall_contact_detail().get(i).getPeer_num());
         }
-        String content = "先生/女士，您好，请通知"
-                + user.getMobile()
-                + "（"
-                + user.getIdNo()
-                + "），其在【九州宝】的欠款已严重逾期。若"
-                + user.getMobile()
-                + "不能及时处理，我司将要求其准备好相关材料（身份证、户口本等）等待相应司法流程，我司保留委托第三方机构上门催款的权利，届时产生的责任和影响由其本人承担！打扰之处敬请谅解，客服热线0579-342424，谢谢！【九州宝】";
+        StringBuffer sb = new StringBuffer(user.getIdNo());
+        String contentTemplate = sysConfigBO
+            .getStringValue(SysConstants.SMS_CUISHOU);
+        contentTemplate = String.format(contentTemplate, user.getMobile(), sb
+            .replace(8, 11, "****").toString(), user.getMobile());
+
         // todo 去魔蝎联系人前N个
         for (String mobile : mobiles) {
-            smsOutBO.sendContent(mobile, content, ESystemCode.YLQ.getCode(),
-                ESystemCode.YLQ.getCode());
+            smsOutBO.sendContent(mobile, contentTemplate,
+                ESystemCode.YLQ.getCode(), ESystemCode.YLQ.getCode());
         }
     }
 

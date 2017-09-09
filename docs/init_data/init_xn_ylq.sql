@@ -18,6 +18,10 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','sendSmsCount','5','admin',now(),'催收联系人数量','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','renewalStep','7','admin',now(),'续期步长','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','renewalLimit','5','admin',now(),'最大续期次数','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','smsCuishou','先生/女士，您好，请通知%s（%s），其在【九州宝】的欠款已严重逾期。若%s不能及时处理，产生的责任和影响由其本人承担！打扰之处敬请谅解。','admin',now(),'催收短信模板','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','mxUrl','https://api.51datakey.com/carrier/v3/mobiles/%s/mxreport?task_id=%s','admin',now(),'魔蝎URL','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','mxApiKey','96ee985a972a4685be2bb423588e008f','admin',now(),'魔蝎apiKey','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','mxToken','76216f728af3416083f20a13f9ddb2a9','admin',now(),'魔蝎token','CD-YLQ000014','CD-YLQ000014');
 
 /*
 -- Query: SELECT * FROM xn_ylq.t_coupon

@@ -23,4 +23,6 @@ public class SysConstants {
     public static final String MX_URL = "mxUrl"; // 魔蝎URL
 
     public static final String MX_TOKEN = "mxToken"; // 魔蝎token
+
+    public static final String SMS_CUISHOU = "smsCuishou"; // 催收短信
 }

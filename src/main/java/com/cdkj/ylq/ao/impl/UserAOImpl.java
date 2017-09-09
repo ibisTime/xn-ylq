@@ -36,11 +36,11 @@ public class UserAOImpl implements IUserAO {
     public XN805041Res doRegister(String mobile, String loginPwd,
             String userReferee, String userRefereeKind, String smsCaptcha,
             String kind, String isRegHx, String province, String city,
-            String area, String companyCode, String systemCode) {
+            String area, String address, String companyCode, String systemCode) {
         // 注册
         XN805041Res res = userBO.doRegister(mobile, loginPwd, userReferee,
             userRefereeKind, smsCaptcha, kind, isRegHx, province, city, area,
-            companyCode, systemCode);
+            address, companyCode, systemCode);
 
         return res;
     }

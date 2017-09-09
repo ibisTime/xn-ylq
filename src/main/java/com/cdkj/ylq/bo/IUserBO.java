@@ -26,7 +26,7 @@ public interface IUserBO {
     public XN805041Res doRegister(String mobile, String loginPwd,
             String userReferee, String userRefereeKind, String smsCaptcha,
             String kind, String isRegHx, String province, String city,
-            String area, String companyCode, String systemCode);
+            String area, String address, String companyCode, String systemCode);
 
     // 将用户拉入黑名单
     public void addBlacklist(String userId, String type, String updater,
