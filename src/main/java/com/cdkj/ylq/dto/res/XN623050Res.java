@@ -15,6 +15,7 @@ import com.cdkj.ylq.domain.InfoIdentify;
 import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.MxCarrierNofification;
 
 /** 
  * @author: haiqingzheng 
@@ -78,7 +79,7 @@ public class XN623050Res {
     private String infoCarrierFlag;
 
     // 运营商报告
-    private String infoCarrier;
+    private MxCarrierNofification infoCarrier;
 
     // 通讯录标识
     private String infoAddressBookFlag;
@@ -89,11 +90,11 @@ public class XN623050Res {
     // 通讯录标识
     private String wechatFlag;
 
-    public String getInfoCarrier() {
+    public MxCarrierNofification getInfoCarrier() {
         return infoCarrier;
     }
 
-    public void setInfoCarrier(String infoCarrier) {
+    public void setInfoCarrier(MxCarrierNofification infoCarrier) {
         this.infoCarrier = infoCarrier;
     }
 

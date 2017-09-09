@@ -7,6 +7,7 @@ import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
@@ -52,8 +53,11 @@ public interface ICertificationAO {
     // 芝麻信用分查询（同时查询行业关注名单）
     public InfoZMCredit doZhimaCreditScoreGet(String userId);
 
-    // 魔蝎运营商认证
+    // 魔蝎运营商认证，主动查询
     public MxReportData doCarrierVerify(String userId, String taskId);
+
+    // 魔蝎运营商认证回调处理
+    public void doMxCarrierCallback(MxCarrierNofification notification);
 
     // 通讯录认证
     public void doAddressBookVerify(String userId,

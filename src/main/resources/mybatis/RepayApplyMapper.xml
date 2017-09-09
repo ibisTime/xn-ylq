@@ -26,6 +26,9 @@
 			<if test="refNo != null and refNo != '' ">
 				AND t.ref_no = #{refNo}
 			</if>
+			<if test="refNoForQuery != null and refNoForQuery != '' ">
+				AND t.ref_no like "%"#{refNoForQuery}"%"
+			</if>
 			<if test="type != null and type != '' ">
 				AND t.type = #{type}
 			</if>

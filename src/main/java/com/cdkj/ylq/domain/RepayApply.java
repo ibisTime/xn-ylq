@@ -52,6 +52,9 @@ public class RepayApply extends ABaseDO {
     // 订单编号模糊查询
     private String codeForQuery;
 
+    // 关联订单号模糊查询
+    private String refNoForQuery;
+
     // ****辅助字段******
 
     private User user;
@@ -178,6 +181,14 @@ public class RepayApply extends ABaseDO {
 
     public void setRenewal(Renewal renewal) {
         this.renewal = renewal;
+    }
+
+    public String getRefNoForQuery() {
+        return refNoForQuery;
+    }
+
+    public void setRefNoForQuery(String refNoForQuery) {
+        this.refNoForQuery = refNoForQuery;
     }
 
 }

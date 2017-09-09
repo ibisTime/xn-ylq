@@ -17,6 +17,9 @@ public interface IApplyAO {
     public void doApprove(String code, String approveResult, Long sxAmount,
             String approver, String approveNote);
 
+    // 获取用户当前正在进行中的申请记录
+    public Apply getCurrentApply(String userId);
+
     public Paginable<Apply> queryApplyPage(int start, int limit, Apply condition);
 
     public Apply getApply(String code);

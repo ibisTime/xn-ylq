@@ -190,4 +190,9 @@ public class ApplyAOImpl implements IApplyAO {
         return apply;
     }
 
+    @Override
+    public Apply getCurrentApply(String userId) {
+        return applyBO.getCurrentApply(userId);
+    }
+
 }

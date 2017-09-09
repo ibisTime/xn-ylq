@@ -33,6 +33,7 @@ import com.cdkj.ylq.domain.InfoIdentify;
 import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.User;
@@ -384,7 +385,7 @@ public class CertificationAOImpl implements ICertificationAO {
             Certification certification = certificationBO.getCertification(
                 userId, ECertiKey.INFO_CARRIER);
             SYSConfig config = sysConfigBO.getSYSConfig(
-                SysConstants.ANTIFRAUD_VALID_DAYS, ESystemCode.YLQ.getCode(),
+                SysConstants.CARRIER_VALID_DAYS, ESystemCode.YLQ.getCode(),
                 ESystemCode.YLQ.getCode());
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
@@ -414,6 +415,42 @@ public class CertificationAOImpl implements ICertificationAO {
             }
         }
         return mxReportData;
+    }
+
+    @Override
+    public void doMxCarrierCallback(MxCarrierNofification notification) {
+        String userId = notification.getUser_id();
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_CARRIER);
+        SYSConfig config = sysConfigBO.getSYSConfig(
+            SysConstants.CARRIER_VALID_DAYS, ESystemCode.YLQ.getCode(),
+            ESystemCode.YLQ.getCode());
+        if (certification != null) {
+            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(notification));
+            certification.setCerDatetime(new Date());
+            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+            certification.setRef("");
+            certificationBO.refreshCertification(certification);
+        } else {
+            certification = new Certification();
+            certification.setUserId(userId);
+            certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
+            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(notification));
+            certification.setCerDatetime(new Date());
+            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                DateUtil.getTodayStart(), Integer.valueOf(config.getCvalue())));
+            certification.setRef("");
+            certificationBO.saveCertification(certification);
+        }
+        if (EBoolean.YES.getCode().equals(notification.getResult())) {
+            Apply apply = applyBO.getCurrentApply(userId);
+            if (apply != null) {
+                applyBO.toDoApprove(apply);
+            }
+        }
     }
 
     @Override
@@ -613,7 +650,8 @@ public class CertificationAOImpl implements ICertificationAO {
                     certification.getFlag())
                         || ECertificationStatus.INVALID.getCode().equals(
                             certification.getFlag())) {
-                    res.setInfoCarrier(certification.getResult());
+                    res.setInfoCarrier(JsonUtil.json2Bean(
+                        certification.getResult(), MxCarrierNofification.class));
                 }
             }
 
