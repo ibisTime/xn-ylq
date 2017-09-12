@@ -62,4 +62,6 @@ public interface IBorrowAO {
     // 查询用户当前是否有借款
     public XN623091Res isBorrowing(String userId);
 
+    public void editRemark(String code, String remark);
+
 }

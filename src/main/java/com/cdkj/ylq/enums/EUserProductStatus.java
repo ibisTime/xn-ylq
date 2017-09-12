@@ -16,7 +16,7 @@ package com.cdkj.ylq.enums;
 public enum EUserProductStatus {
     TO_APPLY("0", "可申请"), TO_CERTI("1", "认证中"), TO_APPROVE("2", "人工审核中"), APPROVE_NO(
             "3", "已驳回"), APPROVE_YES("4", "已有额度"), TO_LOAN("5", "等待放款中"), LOANING(
-            "6", "生效中"), OVERDUE("7", "已逾期");
+            "6", "生效中"), OVERDUE("7", "已逾期"), LOAN_NO("11", "打款失败");
 
     EUserProductStatus(String code, String value) {
         this.code = code;

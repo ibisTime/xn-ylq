@@ -341,6 +341,11 @@
 		WHERE code = #{code}
 	</update>
 	
-
+    <update id="update_remark" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		remark = #{remark}
+		WHERE code = #{code}
+	</update>
 
 </mapper>

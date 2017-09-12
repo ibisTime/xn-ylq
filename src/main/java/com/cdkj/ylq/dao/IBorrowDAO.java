@@ -30,4 +30,6 @@ public interface IBorrowDAO extends IBaseDAO<Borrow> {
 
     public int updateArchive(Borrow data);
 
+    public int updateRemark(Borrow data);
+
 }

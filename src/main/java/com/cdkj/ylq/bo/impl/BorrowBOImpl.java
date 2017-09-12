@@ -242,6 +242,7 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
         statusList.add(EBorrowStatus.TO_APPROVE.getCode());
         statusList.add(EBorrowStatus.APPROVE_YES.getCode());
         statusList.add(EBorrowStatus.LOANING.getCode());
+        statusList.add(EBorrowStatus.LOAN_NO.getCode());
         statusList.add(EBorrowStatus.OVERDUE.getCode());
         condition.setApplyUser(userId);
         condition.setStatusList(statusList);
@@ -291,6 +292,18 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
             statusList.add(EBorrowStatus.BAD.getCode());
             condition.setStatusList(statusList);
             count = borrowDAO.selectTotalCount(condition).intValue();
+        }
+        return count;
+    }
+
+    @Override
+    public int refreshRemark(String code, String remark) {
+        int count = 0;
+        if (StringUtils.isNotBlank(code)) {
+            Borrow data = new Borrow();
+            data.setCode(code);
+            data.setRemark(remark);
+            count = borrowDAO.updateRemark(data);
         }
         return count;
     }

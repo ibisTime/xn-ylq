@@ -380,6 +380,9 @@ public class BorrowAOImpl implements IBorrowAO {
                     + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";
         } else {
             borrowBO.loanFailure(borrow, updater, remark);
+            // 更新申请单状态
+            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                EApplyStatus.LOAN_NO);
             smsContent = "很抱歉，您的" + CalculationUtil.diviUp(borrow.getAmount())
                     + "借款(合同编号:" + borrow.getCode() + ")放款失败，原因为：" + remark
                     + "，详情查看请登录APP。";
@@ -390,12 +393,16 @@ public class BorrowAOImpl implements IBorrowAO {
     }
 
     @Override
+    @Transactional
     public void resubmitLoan(String code) {
         Borrow borrow = borrowBO.getBorrow(code);
         if (!EBorrowStatus.LOAN_NO.getCode().equals(borrow.getStatus())) {
             throw new BizException("623071", "借款不处于打款失败状态，不能重新提交");
         }
         borrowBO.resubmitLoan(borrow);
+        // 更新申请单状态
+        applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+            EApplyStatus.TO_LOAN);
     }
 
     @Override
@@ -749,6 +756,11 @@ public class BorrowAOImpl implements IBorrowAO {
             res.setIsBorrowFlag(EBoolean.YES.getCode());
         }
         return res;
+    }
+
+    @Override
+    public void editRemark(String code, String remark) {
+        borrowBO.refreshRemark(code, remark);
     }
 
 }

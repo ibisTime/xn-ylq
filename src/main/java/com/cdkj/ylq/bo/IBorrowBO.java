@@ -48,4 +48,6 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     public int getTotalBorrowCount(String userId);
 
+    public int refreshRemark(String code, String remark);
+
 }
