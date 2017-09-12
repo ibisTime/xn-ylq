@@ -69,6 +69,9 @@ public class User extends ABaseDO {
     // 区(县)
     private String area;
 
+    // 具体地址
+    private String address;
+
     // 公司编号
     private String companyCode;
 
@@ -236,6 +239,14 @@ public class User extends ABaseDO {
 
     public String getArea() {
         return area;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getBankcardFlag() {

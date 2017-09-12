@@ -417,8 +417,81 @@ public class CertificationAOImpl implements ICertificationAO {
 
     @Override
     @Transactional
-    public void doMxCarrierCallback(MxCarrierNofification notification) {
-        logger.info("&**&*&* 开始魔蝎回调 &*&*&*&*&");
+    public void doMxCarrierTaskSubmitCallback(MxCarrierNofification notification) {
+        logger.info("&**&*&* 开始魔蝎回调——任务创建通知 &*&*&*&*&");
+        String userId = notification.getUser_id();
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_CARRIER);
+        if (certification != null) {
+            certificationBO.refreshFlag(certification,
+                ECertificationStatus.CERTING);
+        } else {
+            certification = new Certification();
+            certification.setUserId(userId);
+            certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
+            certification.setFlag(ECertificationStatus.CERTING.getCode());
+            certificationBO.saveCertification(certification);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void doMxCarrierTaskCallback(MxCarrierNofification notification) {
+        logger.info("&**&*&* 开始魔蝎回调——登录完成后通知 &*&*&*&*&");
+        if (notification.isResult()) {
+            String userId = notification.getUser_id();
+            Certification certification = certificationBO.getCertification(
+                userId, ECertiKey.INFO_CARRIER);
+            if (certification != null) {
+                certificationBO.refreshFlag(certification,
+                    ECertificationStatus.CERTING);
+            } else {
+                certification = new Certification();
+                certification.setUserId(userId);
+                certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
+                certification.setFlag(ECertificationStatus.CERTING.getCode());
+                certificationBO.saveCertification(certification);
+            }
+        } else {
+            String userId = notification.getUser_id();
+            Certification certification = certificationBO.getCertification(
+                userId, ECertiKey.INFO_CARRIER);
+            if (certification != null) {
+                certificationBO.refreshFlag(certification,
+                    ECertificationStatus.TO_CERTI);
+            } else {
+                certification = new Certification();
+                certification.setUserId(userId);
+                certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
+                certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+                certificationBO.saveCertification(certification);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void doMxCarrierTaskFailCallback(MxCarrierNofification notification) {
+        logger.info("&**&*&* 开始魔蝎回调——任务采集失败通知 &*&*&*&*&");
+        String userId = notification.getUser_id();
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_CARRIER);
+        if (certification != null) {
+            certificationBO.refreshFlag(certification,
+                ECertificationStatus.TO_CERTI);
+        } else {
+            certification = new Certification();
+            certification.setUserId(userId);
+            certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
+            certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+            certificationBO.saveCertification(certification);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void doMxCarrierReportCallback(MxCarrierNofification notification) {
+        logger.info("&**&*&* 开始魔蝎回调——资信报告通知 &*&*&*&*&");
         String userId = notification.getUser_id();
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_CARRIER);
@@ -507,6 +580,8 @@ public class CertificationAOImpl implements ICertificationAO {
         }
         // 组装认证结果信息
         XN623050Res res = transferCertiInfo(certifications);
+        res.setUserId(userId);
+        res.setUserInfo(userBO.getRemoteUser(userId));
         return res;
     }
 
@@ -911,4 +986,5 @@ public class CertificationAOImpl implements ICertificationAO {
 
         return responseData;
     }
+
 }

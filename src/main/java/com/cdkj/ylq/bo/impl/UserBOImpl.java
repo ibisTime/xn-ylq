@@ -85,6 +85,10 @@ public class UserBOImpl implements IUserBO {
             user.setCompanyCode(res.getCompanyCode());
             user.setSystemCode(res.getSystemCode());
             user.setBlacklistFlag(res.getBlacklistFlag());
+            user.setProvince(res.getProvince());
+            user.setCity(res.getCity());
+            user.setArea(res.getArea());
+            user.setAddress(res.getAddress());
 
             user.setBorrowCount(borrowBO.getTotalBorrowCount(userId));
             user.setOverdueCode(overdueBO.getOverdueCode(userId));

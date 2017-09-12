@@ -16,6 +16,7 @@ import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.MxCarrierNofification;
+import com.cdkj.ylq.domain.User;
 
 /** 
  * @author: haiqingzheng 
@@ -26,6 +27,9 @@ public class XN623050Res {
 
     // 用户编号
     private String userId;
+
+    // 用户信息
+    private User userInfo;
 
     // 身份证上传标识
     private String infoIdentifyPicFlag;
@@ -104,6 +108,14 @@ public class XN623050Res {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public User getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(User userInfo) {
+        this.userInfo = userInfo;
     }
 
     public String getInfoIdentifyPicFlag() {

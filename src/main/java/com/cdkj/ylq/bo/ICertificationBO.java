@@ -5,12 +5,15 @@ import java.util.List;
 import com.cdkj.ylq.bo.base.IPaginableBO;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.enums.ECertiKey;
+import com.cdkj.ylq.enums.ECertificationStatus;
 
 public interface ICertificationBO extends IPaginableBO<Certification> {
 
     public String saveCertification(Certification data);
 
     public int refreshCertification(Certification data);
+
+    public int refreshFlag(Certification data, ECertificationStatus status);
 
     public Certification getCertification(Long id);
 

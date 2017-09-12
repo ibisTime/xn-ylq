@@ -38,6 +38,12 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
     }
 
     @Override
+    public int refreshFlag(Certification data, ECertificationStatus status) {
+        data.setFlag(status.getCode());
+        return certificationDAO.updateFlag(data);
+    }
+
+    @Override
     public Certification getCertification(Long id) {
         Certification data = null;
         if (id != null) {

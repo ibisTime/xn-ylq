@@ -1,7 +1,8 @@
 package com.cdkj.ylq.enums;
 
 public enum ECertificationStatus {
-    TO_CERTI("0", "未认证"), CERTI_YES("1", "已认证"), INVALID("2", "已过期");
+    TO_CERTI("0", "未认证"), CERTI_YES("1", "已认证"), INVALID("2", "已过期"), CERTING(
+            "3", "认证中");
 
     ECertificationStatus(String code, String value) {
         this.code = code;

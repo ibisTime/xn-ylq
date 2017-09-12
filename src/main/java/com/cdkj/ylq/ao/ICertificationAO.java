@@ -56,8 +56,17 @@ public interface ICertificationAO {
     // 魔蝎运营商认证，主动查询
     public MxReportData doCarrierVerify(String userId, String taskId);
 
-    // 魔蝎运营商认证回调处理
-    public void doMxCarrierCallback(MxCarrierNofification notification);
+    // 魔蝎运营商任务提交通知回调处理
+    public void doMxCarrierTaskSubmitCallback(MxCarrierNofification notification);
+
+    // 魔蝎运营商登录完成通知回调处理
+    public void doMxCarrierTaskCallback(MxCarrierNofification notification);
+
+    // 魔蝎运营商采集任务失败通知回调处理
+    public void doMxCarrierTaskFailCallback(MxCarrierNofification notification);
+
+    // 魔蝎运营商资信报告通知回调处理
+    public void doMxCarrierReportCallback(MxCarrierNofification notification);
 
     // 通讯录认证
     public void doAddressBookVerify(String userId,

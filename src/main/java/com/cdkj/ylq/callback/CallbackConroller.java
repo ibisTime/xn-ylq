@@ -128,12 +128,35 @@ public class CallbackConroller {
             return;
         }
 
+        // 任务提交
+        // if (StringUtils.equals(eventName.toLowerCase(), "task.submit")) {
+        // // 通知状态变更为 '认证中'
+        // MxCarrierNofification notification = JsonUtil.json2Bean(body,
+        // MxCarrierNofification.class);
+        // certificationAO.doMxCarrierTaskSubmitCallback(notification);
+        // }
+
+        // 登录完成后的通知，包括登录成功或者失败
+        if (StringUtils.equals(eventName.toLowerCase(), "task")) {
+            MxCarrierNofification notification = JsonUtil.json2Bean(body,
+                MxCarrierNofification.class);
+            certificationAO.doMxCarrierTaskCallback(notification);
+        }
+
+        // 任务采集失败
+        if (StringUtils.equals(eventName.toLowerCase(), "task.fail")) {
+            // 通知状态变更为 '认证失败'
+            MxCarrierNofification notification = JsonUtil.json2Bean(body,
+                MxCarrierNofification.class);
+            certificationAO.doMxCarrierTaskFailCallback(notification);
+        }
+
         // 如果事件类型是report(用户报告通知)
         if (StringUtils.equals(eventName.toLowerCase(), "report")) {
             try {
                 MxCarrierNofification notification = JsonUtil.json2Bean(body,
                     MxCarrierNofification.class);
-                certificationAO.doMxCarrierCallback(notification);
+                certificationAO.doMxCarrierReportCallback(notification);
             } catch (Exception e) {
                 logger.error("body convert to object error", e);
             }
