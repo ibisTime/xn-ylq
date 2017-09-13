@@ -141,17 +141,6 @@ public class ApplyAOImpl implements IApplyAO {
                     DateUtil.getTodayStart(), config));
                 certification.setRef(apply.getProductCode());
                 certificationBO.refreshCertification(certification);
-            } else {
-                certification = new Certification();
-                certification.setUserId(apply.getApplyUser());
-                certification.setCertiKey(ECertiKey.INFO_AMOUNT.getCode());
-                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(JsonUtil.Object2Json(sxAmount));
-                certification.setCerDatetime(new Date());
-                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(), config));
-                certification.setRef(apply.getProductCode());
-                certificationBO.saveCertification(certification);
             }
         } else {
             sxAmount = 0L;

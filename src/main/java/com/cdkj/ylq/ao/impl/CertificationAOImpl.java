@@ -93,15 +93,6 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
-        } else {
-            certification = new Certification();
-            certification.setUserId(userId);
-            certification.setCertiKey(ECertiKey.INFO_IDENTIFY_PIC.getCode());
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(data));
-            certification.setCerDatetime(new Date());
-            certification.setRef("");
-            certificationBO.saveCertification(certification);
         }
     }
 
@@ -131,16 +122,6 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setCerDatetime(new Date());
                 certification.setRef("");
                 certificationBO.refreshCertification(certification);
-            } else {
-                certification = new Certification();
-                certification.setUserId(userId);
-                certification.setCertiKey(ECertiKey.INFO_IDENTIFY_FACE
-                    .getCode());
-                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(JsonUtil.Object2Json(infoIdentify));
-                certification.setCerDatetime(new Date());
-                certification.setRef("");
-                certificationBO.saveCertification(certification);
             }
             userBO.doIdentify(userId, EIDKind.IDCard.getCode(),
                 infoIdentify.getIdNo(), infoIdentify.getRealName());
@@ -171,19 +152,7 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setResult(JsonUtil.Object2Json(infoIdentify));
             certification.setRef("");
             certificationBO.refreshCertification(certification);
-        } else {
-            certification = new Certification();
-            certification.setUserId(userId);
-            certification.setCertiKey(ECertiKey.INFO_IDENTIFY.getCode());
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(infoIdentify));
-            certification.setCerDatetime(new Date());
-            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), config));
-            certification.setRef("");
-            certificationBO.saveCertification(certification);
         }
-
     }
 
     @Override
@@ -197,15 +166,6 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
-        } else {
-            certification = new Certification();
-            certification.setUserId(req.getUserId());
-            certification.setCertiKey(ECertiKey.INFO_BASIC.getCode());
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(data));
-            certification.setCerDatetime(new Date());
-            certification.setRef("");
-            certificationBO.saveCertification(certification);
         }
     }
 
@@ -220,15 +180,6 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
-        } else {
-            certification = new Certification();
-            certification.setUserId(req.getUserId());
-            certification.setCertiKey(ECertiKey.INFO_OCCUPATION.getCode());
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(data));
-            certification.setCerDatetime(new Date());
-            certification.setRef("");
-            certificationBO.saveCertification(certification);
         }
     }
 
@@ -243,15 +194,6 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
-        } else {
-            certification = new Certification();
-            certification.setUserId(req.getUserId());
-            certification.setCertiKey(ECertiKey.INFO_CONTACT.getCode());
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(data));
-            certification.setCerDatetime(new Date());
-            certification.setRef("");
-            certificationBO.saveCertification(certification);
         }
     }
 
@@ -321,17 +263,6 @@ public class CertificationAOImpl implements ICertificationAO {
                 DateUtil.getTodayStart(), config));
             certification.setRef("");
             certificationBO.refreshCertification(certification);
-        } else {
-            certification = new Certification();
-            certification.setUserId(userId);
-            certification.setCertiKey(ECertiKey.INFO_ANTIFRAUD.getCode());
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(infoAntifraud));
-            certification.setCerDatetime(new Date());
-            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), config));
-            certification.setRef("");
-            certificationBO.saveCertification(certification);
         }
     }
 
@@ -362,17 +293,6 @@ public class CertificationAOImpl implements ICertificationAO {
                     DateUtil.getTodayStart(), config));
                 certification.setRef("");
                 certificationBO.refreshCertification(certification);
-            } else {
-                certification = new Certification();
-                certification.setUserId(userId);
-                certification.setCertiKey(ECertiKey.INFO_ZMCREDIT.getCode());
-                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(JsonUtil.Object2Json(infoZMCredit));
-                certification.setCerDatetime(new Date());
-                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(), config));
-                certification.setRef("");
-                certificationBO.saveCertification(certification);
             }
         }
         return infoZMCredit;
@@ -395,17 +315,6 @@ public class CertificationAOImpl implements ICertificationAO {
                     DateUtil.getTodayStart(), config));
                 certification.setRef("");
                 certificationBO.refreshCertification(certification);
-            } else {
-                certification = new Certification();
-                certification.setUserId(userId);
-                certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
-                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(mxReportData.getReportData());
-                certification.setCerDatetime(new Date());
-                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(), config));
-                certification.setRef("");
-                certificationBO.saveCertification(certification);
             }
             Apply apply = applyBO.getCurrentApply(userId);
             if (apply != null) {
@@ -425,12 +334,6 @@ public class CertificationAOImpl implements ICertificationAO {
         if (certification != null) {
             certificationBO.refreshFlag(certification,
                 ECertificationStatus.CERTING);
-        } else {
-            certification = new Certification();
-            certification.setUserId(userId);
-            certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
-            certification.setFlag(ECertificationStatus.CERTING.getCode());
-            certificationBO.saveCertification(certification);
         }
     }
 
@@ -445,12 +348,6 @@ public class CertificationAOImpl implements ICertificationAO {
             if (certification != null) {
                 certificationBO.refreshFlag(certification,
                     ECertificationStatus.CERTING);
-            } else {
-                certification = new Certification();
-                certification.setUserId(userId);
-                certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
-                certification.setFlag(ECertificationStatus.CERTING.getCode());
-                certificationBO.saveCertification(certification);
             }
         } else {
             String userId = notification.getUser_id();
@@ -459,12 +356,6 @@ public class CertificationAOImpl implements ICertificationAO {
             if (certification != null) {
                 certificationBO.refreshFlag(certification,
                     ECertificationStatus.TO_CERTI);
-            } else {
-                certification = new Certification();
-                certification.setUserId(userId);
-                certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
-                certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
-                certificationBO.saveCertification(certification);
             }
         }
     }
@@ -479,12 +370,6 @@ public class CertificationAOImpl implements ICertificationAO {
         if (certification != null) {
             certificationBO.refreshFlag(certification,
                 ECertificationStatus.TO_CERTI);
-        } else {
-            certification = new Certification();
-            certification.setUserId(userId);
-            certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
-            certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
-            certificationBO.saveCertification(certification);
         }
     }
 
@@ -509,17 +394,6 @@ public class CertificationAOImpl implements ICertificationAO {
                     DateUtil.getTodayStart(), config));
                 certification.setRef(report);
                 certificationBO.refreshCertification(certification);
-            } else {
-                certification = new Certification();
-                certification.setUserId(userId);
-                certification.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
-                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(JsonUtil.Object2Json(notification));
-                certification.setCerDatetime(new Date());
-                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(), config));
-                certification.setRef(report);
-                certificationBO.saveCertification(certification);
             }
             Apply apply = applyBO.getCurrentApply(userId);
             if (apply != null) {
@@ -543,17 +417,6 @@ public class CertificationAOImpl implements ICertificationAO {
                 DateUtil.getTodayStart(), config));
             certification.setRef("");
             certificationBO.refreshCertification(certification);
-        } else {
-            certification = new Certification();
-            certification.setUserId(userId);
-            certification.setCertiKey(ECertiKey.INFO_ADDRESS_BOOK.getCode());
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(addressBookList));
-            certification.setCerDatetime(new Date());
-            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), config));
-            certification.setRef("");
-            certificationBO.saveCertification(certification);
         }
     }
 
@@ -576,7 +439,8 @@ public class CertificationAOImpl implements ICertificationAO {
             .queryCertificationList(userId);
         // 如果查询不到，说明是新用户，初始化认证结果
         if (CollectionUtils.isEmpty(certifications)) {
-            certifications = initialCertification(userId);
+            // certifications = initialCertification(userId);
+            throw new BizException("xn623000", "个人认证信息初始化失败");
         }
         // 组装认证结果信息
         XN623050Res res = transferCertiInfo(certifications);
@@ -608,17 +472,6 @@ public class CertificationAOImpl implements ICertificationAO {
                         DateUtil.getTodayStart(),
                         certification.getValidDatetime()));
             }
-        } else {
-            infoAmount = new InfoAmount();
-            infoAmount.setSxAmount(0L);
-            Certification creditAmount = new Certification();
-            creditAmount.setUserId(userId);
-            creditAmount.setCertiKey(ECertiKey.INFO_AMOUNT.getCode());
-            creditAmount.setFlag(ECertificationStatus.TO_CERTI.getCode());
-            infoAmount.setSxAmount(0L);
-            infoAmount.setFlag(ECertificationStatus.TO_CERTI.getCode());
-            creditAmount.setResult(JsonUtil.Object2Json(infoAmount));
-            certificationBO.saveCertification(creditAmount);
         }
         return infoAmount;
     }
@@ -745,7 +598,8 @@ public class CertificationAOImpl implements ICertificationAO {
         return res;
     }
 
-    private List<Certification> initialCertification(String userId) {
+    @Override
+    public List<Certification> initialCertification(String userId) {
         List<Certification> certifications = new ArrayList<Certification>();
 
         // 实名认证信息

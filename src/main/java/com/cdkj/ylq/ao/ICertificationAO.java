@@ -89,4 +89,6 @@ public interface ICertificationAO {
     // 定时器：每日检查认证是否已过期
     public void doCheckValidDaily();
 
+    public List<Certification> initialCertification(String userId);
+
 }

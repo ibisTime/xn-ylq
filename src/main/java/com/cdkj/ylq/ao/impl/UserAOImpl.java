@@ -11,6 +11,7 @@ package com.cdkj.ylq.ao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.ao.IUserAO;
 import com.cdkj.ylq.bo.ICouponConditionBO;
 import com.cdkj.ylq.bo.IUserBO;
@@ -29,6 +30,9 @@ public class UserAOImpl implements IUserAO {
     @Autowired
     private ICouponConditionBO couponConditionBO;
 
+    @Autowired
+    private ICertificationAO certificationAO;
+
     /** 
      * @see com.cdkj.ylq.ao.IUserAO#doRegister(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
@@ -41,6 +45,9 @@ public class UserAOImpl implements IUserAO {
         XN805041Res res = userBO.doRegister(mobile, loginPwd, userReferee,
             userRefereeKind, smsCaptcha, kind, isRegHx, province, city, area,
             address, companyCode, systemCode);
+
+        // 分配认证信息
+        certificationAO.initialCertification(res.getUserId());
 
         return res;
     }

@@ -150,7 +150,6 @@ INSERT INTO `tsys_menu` (`code`,`name`,`type`,`url`,`order_no`,`updater`,`update
 truncate `tsys_menu_role`;
 INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`system_code`) VALUES ('sysAdmin','YLQSM201600000000000000','admin','2017-09-20 00:14:26',NULL,'CD-YLQ000014');
 INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`system_code`) VALUES ('sysAdmin','SM201707261741263791893','admin','2017-09-20 00:14:26',NULL,'CD-YLQ000014');
-INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`system_code`) VALUES ('sysAdmin','SM201707261745530413766','admin','2017-09-20 00:14:26',NULL,'CD-YLQ000014');
 INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`system_code`) VALUES ('sysAdmin','SM201707261817561904796','admin','2017-09-20 00:14:26',NULL,'CD-YLQ000014');
 INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`system_code`) VALUES ('sysAdmin','SM20170726182557630657','admin','2017-09-20 00:14:26',NULL,'CD-YLQ000014');
 INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`system_code`) VALUES ('sysAdmin','SM201707271437582732708','admin','2017-09-20 00:14:26',NULL,'CD-YLQ000014');
