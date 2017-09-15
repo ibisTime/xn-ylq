@@ -32,6 +32,8 @@ import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
+import com.cdkj.ylq.domain.Bankcard;
+import com.cdkj.ylq.domain.BaofooPay;
 import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
@@ -365,7 +367,8 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Override
     @Transactional
-    public void doLoan(String code, String result, String updater, String remark) {
+    public void doLoanOffline(String code, String result, String updater,
+            String remark) {
         Borrow borrow = borrowBO.getBorrow(code);
         if (!EBorrowStatus.APPROVE_YES.getCode().equals(borrow.getStatus())) {
             throw new BizException("623071", "借款不处于待放款状态");
@@ -390,6 +393,43 @@ public class BorrowAOImpl implements IBorrowAO {
         if (StringUtils.isNotBlank(smsContent)) {
             smsOutBO.sentContent(borrow.getApplyUser(), smsContent);
         }
+    }
+
+    @Override
+    @Transactional
+    public void doLoanBaofoo(String code, String updater, String remark) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.APPROVE_YES.getCode().equals(borrow.getStatus())) {
+            throw new BizException("623071", "借款不处于待放款状态");
+        }
+        // 更新借款订单状态为申请代付中
+        borrowBO.baofooPaySubmit(borrow, updater, remark);
+
+        User user = userBO.getRemoteUser(borrow.getApplyUser());
+        Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
+
+        List<BaofooPay> baofooPayList = new ArrayList<BaofooPay>();
+        BaofooPay baofooPay = new BaofooPay();
+        baofooPay.setTransNo(code);
+        baofooPay.setToAccName(user.getRealName());
+        baofooPay.setToAccNo(bankcard.getBankcardNumber());
+        baofooPay.setToBankName(bankcard.getBankName());
+        baofooPay.setTransCardId(user.getIdNo());
+        baofooPay.setTransMobile(user.getMobile());
+        baofooPay.setTransSummary("九州宝-代付（借款订单：" + code + "）");
+        baofooPayList.add(baofooPay);
+        accountBO.baofooPay(baofooPayList);
+    }
+
+    @Override
+    public void doLoanBaofooQuery(String code) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.PAY_SUBMIT.getCode().equals(borrow.getStatus())) {
+            throw new BizException("623071", "借款不处于代付申请中状态");
+        }
+        List<String> borrowCodeList = new ArrayList<String>();
+        borrowCodeList.add(code);
+        accountBO.baofooPayQuery(borrowCodeList);
     }
 
     @Override

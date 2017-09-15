@@ -10,6 +10,12 @@ public interface IBorrowDAO extends IBaseDAO<Borrow> {
 
     public int updateLoanSuccess(Borrow data);
 
+    public int updateBaofooPaySubmit(Borrow data);
+
+    public int updateBaofooPaySuccess(Borrow data);
+
+    public int updateBaofooPayFailure(Borrow data);
+
     public int updateLoanFailure(Borrow data);
 
     public int updateResubmitLoan(Borrow data);

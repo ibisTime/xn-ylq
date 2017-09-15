@@ -14,8 +14,15 @@ public interface IBorrowAO {
     public void doApprove(String code, String approveResult, String approver,
             String approveNote);
 
-    // 管理端：放款
-    public void doLoan(String code, String result, String updater, String remark);
+    // 管理端：线下放款
+    public void doLoanOffline(String code, String result, String updater,
+            String remark);
+
+    // 管理端：宝付代付
+    public void doLoanBaofoo(String code, String updater, String remark);
+
+    // 管理端：宝付代付结果查询
+    public void doLoanBaofooQuery(String code);
 
     // 客户端：打款失败后，我已修改银行卡，重新申请放款
     public void resubmitLoan(String code);

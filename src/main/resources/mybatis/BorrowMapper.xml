@@ -250,6 +250,39 @@
 		WHERE code = #{code}
 	</update>
 	
+	<update id="update_baofooPaySubmit" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_baofooPaySuccess" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		fk_datetime = #{fkDatetime}
+		,jx_datetime = #{jxDatetime}
+		,hk_datetime = #{hkDatetime}
+		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_baofooPayFailure" parameterType="borrow">
+		UPDATE t_borrow
+		SET
+		status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
 	<update id="update_resubmitLoan" parameterType="borrow">
 		UPDATE t_borrow
 		SET

@@ -14,15 +14,16 @@ import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.PropertiesUtil;
 import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.Bankcard;
+import com.cdkj.ylq.domain.BaofooPay;
 import com.cdkj.ylq.dto.req.XN002050Req;
-import com.cdkj.ylq.dto.req.XN002051Req;
 import com.cdkj.ylq.dto.req.XN002100Req;
 import com.cdkj.ylq.dto.req.XN002500Req;
 import com.cdkj.ylq.dto.req.XN002501Req;
 import com.cdkj.ylq.dto.req.XN002510Req;
 import com.cdkj.ylq.dto.req.XN802016Req;
+import com.cdkj.ylq.dto.req.XN802165Req;
+import com.cdkj.ylq.dto.req.XN802166Req;
 import com.cdkj.ylq.dto.res.XN002050Res;
-import com.cdkj.ylq.dto.res.XN002051Res;
 import com.cdkj.ylq.dto.res.XN002500Res;
 import com.cdkj.ylq.dto.res.XN002501Res;
 import com.cdkj.ylq.dto.res.XN002510Res;
@@ -116,16 +117,6 @@ public class AccountBOImpl implements IAccountBO {
     }
 
     @Override
-    public Double getExchangeRateRemote(ECurrency currency) {
-        XN002051Req req = new XN002051Req();
-        req.setFromCurrency(ECurrency.CNY.getCode());
-        req.setToCurrency(currency.getCode());
-        XN002051Res res = BizConnecter.getBizData("002051",
-            JsonUtil.Object2Json(req), XN002051Res.class);
-        return res.getRate();
-    }
-
-    @Override
     public XN002500Res doWeiXinPayRemote(String applyUser, String toUser,
             String payGroup, String refNo, EBizType bizType, String bizNote,
             Long amount) {
@@ -205,6 +196,32 @@ public class AccountBOImpl implements IAccountBO {
             bankcard = list.get(0);
         }
         return bankcard;
+    }
+
+    @Override
+    public void baofooPay(List<BaofooPay> baofooPayList) {
+        XN802165Req req = new XN802165Req();
+        req.setPayInfoList(baofooPayList);
+        req.setBackUrl(PropertiesUtil.Config.PAY_BACK_URL);
+        req.setCompanyCode(ESystemCode.YLQ.getCode());
+        req.setSystemCode(ESystemCode.YLQ.getCode());
+        BizConnecter.getBizData("802165", JsonUtil.Object2Json(req));
+    }
+
+    @Override
+    public void baofooPayQuery(List<String> borrowCodeList) {
+        XN802166Req req = new XN802166Req();
+        req.setBorrowCodeList(borrowCodeList);
+        req.setCompanyCode(ESystemCode.YLQ.getCode());
+        req.setSystemCode(ESystemCode.YLQ.getCode());
+        BizConnecter.getBizData("802166", JsonUtil.Object2Json(req));
+    }
+
+    @Override
+    public boolean baofooWithhold(String bankCode, String accountNo,
+            String idNo, String realName, String mobile, Long transAmount) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

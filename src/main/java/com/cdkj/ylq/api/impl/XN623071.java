@@ -35,7 +35,7 @@ public class XN623071 extends AProcessor {
      */
     @Override
     public Object doBusiness() throws BizException {
-        borrowAO.doLoan(req.getCode(), req.getResult(), req.getUpdater(),
+        borrowAO.doLoanOffline(req.getCode(), req.getResult(), req.getUpdater(),
             req.getRemark());
         return new BooleanRes(true);
     }

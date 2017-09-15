@@ -121,6 +121,32 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     }
 
     @Override
+    public int baofooPaySubmit(Borrow data, String updater, String remark) {
+        int count = 0;
+        if (data != null) {
+            Date now = new Date();
+            data.setStatus(EBorrowStatus.PAY_SUBMIT.getCode());
+            data.setUpdater(updater);
+            data.setUpdateDatetime(now);
+            data.setRemark(remark);
+            count = borrowDAO.updateBaofooPaySubmit(data);
+        }
+        return count;
+    }
+
+    @Override
+    public int baofooPaySuccess(Borrow data) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int baofooPayFailure(Borrow data) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
     public int resubmitLoan(Borrow borrow) {
         int count = 0;
         if (borrow != null) {

@@ -24,6 +24,12 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     public int loanFailure(Borrow data, String updater, String remark);
 
+    public int baofooPaySubmit(Borrow data, String updater, String remark);
+
+    public int baofooPaySuccess(Borrow data);
+
+    public int baofooPayFailure(Borrow data);
+
     public int resubmitLoan(Borrow borrow);
 
     public String addPayGroup(String code);
