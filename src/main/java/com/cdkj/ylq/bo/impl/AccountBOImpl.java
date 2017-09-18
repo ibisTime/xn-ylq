@@ -23,10 +23,12 @@ import com.cdkj.ylq.dto.req.XN002510Req;
 import com.cdkj.ylq.dto.req.XN802016Req;
 import com.cdkj.ylq.dto.req.XN802165Req;
 import com.cdkj.ylq.dto.req.XN802166Req;
+import com.cdkj.ylq.dto.req.XN802167Req;
 import com.cdkj.ylq.dto.res.XN002050Res;
 import com.cdkj.ylq.dto.res.XN002500Res;
 import com.cdkj.ylq.dto.res.XN002501Res;
 import com.cdkj.ylq.dto.res.XN002510Res;
+import com.cdkj.ylq.dto.res.XN802167Res;
 import com.cdkj.ylq.enums.EBizType;
 import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.enums.ESystemCode;
@@ -220,8 +222,18 @@ public class AccountBOImpl implements IAccountBO {
     @Override
     public boolean baofooWithhold(String bankCode, String accountNo,
             String idNo, String realName, String mobile, Long transAmount) {
-        // TODO Auto-generated method stub
-        return false;
+        XN802167Req req = new XN802167Req();
+        req.setBankCode(bankCode);
+        req.setAccountNo(accountNo);
+        req.setIdNo(idNo);
+        req.setRealName(realName);
+        req.setMobile(mobile);
+        req.setTransAmount(String.valueOf(transAmount));
+        req.setCompanyCode(ESystemCode.YLQ.getCode());
+        req.setSystemCode(ESystemCode.YLQ.getCode());
+        XN802167Res res = BizConnecter.getBizData("802167",
+            JsonUtil.Object2Json(req), XN802167Res.class);
+        return res.isSuccess();
     }
 
 }

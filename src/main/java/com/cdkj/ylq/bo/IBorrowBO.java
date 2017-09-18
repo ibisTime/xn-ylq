@@ -17,18 +17,18 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     public Borrow getCurrentBorrow(String userId);
 
-    public void doApprove(Borrow data, String status, String approver,
+    public void doApprove(Borrow borrow, String status, String approver,
             String approveNote);
 
-    public int loanSuccess(Borrow data, String updater, String remark);
+    public int loanSuccess(Borrow borrow, String updater, String remark);
 
-    public int loanFailure(Borrow data, String updater, String remark);
+    public int loanFailure(Borrow borrow, String updater, String remark);
 
-    public int baofooPaySubmit(Borrow data, String updater, String remark);
+    public int baofooPaySubmit(Borrow borrow, String updater, String remark);
 
-    public int baofooPaySuccess(Borrow data);
+    public int baofooPaySuccess(Borrow borrow);
 
-    public int baofooPayFailure(Borrow data);
+    public int baofooPayFailure(Borrow borrow);
 
     public int resubmitLoan(Borrow borrow);
 

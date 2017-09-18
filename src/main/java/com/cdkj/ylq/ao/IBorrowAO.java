@@ -24,6 +24,9 @@ public interface IBorrowAO {
     // 管理端：宝付代付结果查询
     public void doLoanBaofooQuery(String code);
 
+    // 管理端：宝付代付结果查询回调
+    public void doLoanBaofooQueryCallback(String code, boolean result);
+
     // 客户端：打款失败后，我已修改银行卡，重新申请放款
     public void resubmitLoan(String code);
 
@@ -63,8 +66,14 @@ public interface IBorrowAO {
     // 定时器调用：每日00:00:00点检查逾期情况
     public void doCheckOverdueDaily();
 
-    // 定时器调用：每日17:00:00点检查即将到期借款
+    // 定时器调用：每日17:00:00点检查明天即将到期借款，并短信提醒
     public void doCheckWillRepayDaily();
+
+    // 定时器调用：每日17:00:00点检查今日到期借款，并自动扣款一次，短信提醒用户
+    public void doAutoRepayDaily();
+
+    // 定时器调用：每分钟调用一次，查询正在申请的代付结果
+    public void doBaofooPayQueryPerMinute();
 
     // 查询用户当前是否有借款
     public XN623091Res isBorrowing(String userId);

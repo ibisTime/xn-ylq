@@ -72,78 +72,99 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     }
 
     @Override
-    public void doApprove(Borrow data, String status, String approver,
+    public void doApprove(Borrow borrow, String status, String approver,
             String approveNote) {
         Date now = new Date();
-        data.setStatus(status);
-        data.setApprover(approver);
-        data.setApproveDatetime(now);
-        data.setApproveNote(approveNote);
-        data.setUpdater(approver);
-        data.setUpdateDatetime(now);
-        data.setRemark("已完成审核");
-        borrowDAO.updateApprove(data);
+        borrow.setStatus(status);
+        borrow.setApprover(approver);
+        borrow.setApproveDatetime(now);
+        borrow.setApproveNote(approveNote);
+        borrow.setUpdater(approver);
+        borrow.setUpdateDatetime(now);
+        borrow.setRemark("已完成审核");
+        borrowDAO.updateApprove(borrow);
     }
 
     @Override
-    public int loanSuccess(Borrow data, String updater, String remark) {
+    public int loanSuccess(Borrow borrow, String updater, String remark) {
         int count = 0;
-        if (data != null) {
+        if (borrow != null) {
             Date now = new Date();
             Date fkDatetime = now;
             Date jxDatetime = DateUtil.getTomorrowStart(fkDatetime);
             Date hkDatetime = DateUtil.getRelativeDate(jxDatetime,
-                data.getDuration() * 24 * 3600 - 1);
-            data.setFkDatetime(fkDatetime);
-            data.setJxDatetime(jxDatetime);
-            data.setHkDatetime(hkDatetime);
-            data.setStatus(EBorrowStatus.LOANING.getCode());
-            data.setUpdater(updater);
-            data.setUpdateDatetime(now);
-            data.setRemark(remark);
-            count = borrowDAO.updateLoanSuccess(data);
+                borrow.getDuration() * 24 * 3600 - 1);
+            borrow.setFkDatetime(fkDatetime);
+            borrow.setJxDatetime(jxDatetime);
+            borrow.setHkDatetime(hkDatetime);
+            borrow.setStatus(EBorrowStatus.LOANING.getCode());
+            borrow.setUpdater(updater);
+            borrow.setUpdateDatetime(now);
+            borrow.setRemark(remark);
+            count = borrowDAO.updateLoanSuccess(borrow);
         }
         return count;
     }
 
     @Override
-    public int loanFailure(Borrow data, String updater, String remark) {
+    public int loanFailure(Borrow borrow, String updater, String remark) {
         int count = 0;
-        if (data != null) {
+        if (borrow != null) {
             Date now = new Date();
-            data.setStatus(EBorrowStatus.LOAN_NO.getCode());
-            data.setUpdater(updater);
-            data.setUpdateDatetime(now);
-            data.setRemark(remark);
-            count = borrowDAO.updateLoanSuccess(data);
+            borrow.setStatus(EBorrowStatus.LOAN_NO.getCode());
+            borrow.setUpdater(updater);
+            borrow.setUpdateDatetime(now);
+            borrow.setRemark(remark);
+            count = borrowDAO.updateLoanSuccess(borrow);
         }
         return count;
     }
 
     @Override
-    public int baofooPaySubmit(Borrow data, String updater, String remark) {
+    public int baofooPaySubmit(Borrow borrow, String updater, String remark) {
         int count = 0;
-        if (data != null) {
+        if (borrow != null) {
             Date now = new Date();
-            data.setStatus(EBorrowStatus.PAY_SUBMIT.getCode());
-            data.setUpdater(updater);
-            data.setUpdateDatetime(now);
-            data.setRemark(remark);
-            count = borrowDAO.updateBaofooPaySubmit(data);
+            borrow.setStatus(EBorrowStatus.PAY_SUBMIT.getCode());
+            borrow.setUpdater(updater);
+            borrow.setUpdateDatetime(now);
+            borrow.setRemark("已申请宝付代付，等待返回结果");
+            count = borrowDAO.updateBaofooPaySubmit(borrow);
         }
         return count;
     }
 
     @Override
-    public int baofooPaySuccess(Borrow data) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int baofooPaySuccess(Borrow borrow) {
+        int count = 0;
+        if (borrow != null) {
+            Date now = new Date();
+            Date fkDatetime = now;
+            Date jxDatetime = DateUtil.getTomorrowStart(fkDatetime);
+            Date hkDatetime = DateUtil.getRelativeDate(jxDatetime,
+                borrow.getDuration() * 24 * 3600 - 1);
+            borrow.setFkDatetime(fkDatetime);
+            borrow.setJxDatetime(jxDatetime);
+            borrow.setHkDatetime(hkDatetime);
+            borrow.setStatus(EBorrowStatus.LOANING.getCode());
+            borrow.setUpdateDatetime(now);
+            borrow.setRemark("宝付代付成功");
+            count = borrowDAO.updateLoanSuccess(borrow);
+        }
+        return count;
     }
 
     @Override
-    public int baofooPayFailure(Borrow data) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int baofooPayFailure(Borrow borrow) {
+        int count = 0;
+        if (borrow != null) {
+            Date now = new Date();
+            borrow.setStatus(EBorrowStatus.APPROVE_YES.getCode());
+            borrow.setUpdateDatetime(now);
+            borrow.setRemark("宝付代付失败，待放款");
+            count = borrowDAO.updateBaofooPaySubmit(borrow);
+        }
+        return count;
     }
 
     @Override

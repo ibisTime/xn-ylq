@@ -58,11 +58,19 @@ public class CallbackConroller {
         String channelType = request.getParameter("channelType");
         String payGroup = request.getParameter("payGroup");
         String payCode = request.getParameter("payCode");
-        Long amount = Long.valueOf(request.getParameter("transAmount"));
+        String amountString = request.getParameter("transAmount");
+        Long amount = 0L;
+        if (StringUtils.isNotBlank(amountString)) {
+            amount = Long.valueOf(amountString);
+        }
         String bizType = request.getParameter("bizType");
         String payType = getPayType(channelType);
+        String transNo = request.getParameter("transNo");
         // 支付成功，商户处理后同步返回给微信参数
         if (!isSuccess) {
+            if (EBizType.YLQ_BAOFOO_PAY_QUERY.getCode().equals(bizType)) {
+                borrowAO.doLoanBaofooQueryCallback(transNo, false);
+            }
             logger.info("****业务类型<" + bizType + "> payGroup <" + payGroup
                     + "> payCode <" + payCode + ">回调失败****");
         } else {
@@ -75,7 +83,11 @@ public class CallbackConroller {
                     }
                 } else if (EBizType.YLQ_RENEWAL.getCode().equals(bizType)) {
                     borrowAO.renewalSuccess(payGroup, payType, payCode, amount);
+                } else if (EBizType.YLQ_BAOFOO_PAY_QUERY.getCode().equals(
+                    bizType)) {
+                    borrowAO.doLoanBaofooQueryCallback(transNo, true);
                 }
+
             } catch (Exception e) {
                 logger.error("支付回调异常payGroup <" + payGroup + "> payCode <"
                         + payCode + ">异常如下：" + e.getMessage());

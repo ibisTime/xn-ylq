@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IBorrowAO;
+import com.cdkj.ylq.ao.ICouponConditionAO;
 import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowBO;
@@ -66,8 +67,7 @@ import com.cdkj.ylq.exception.BizException;
 @Service
 public class BorrowAOImpl implements IBorrowAO {
 
-    protected static final Logger logger = LoggerFactory
-        .getLogger(IBorrowAO.class);
+    static final Logger logger = LoggerFactory.getLogger(BorrowAOImpl.class);
 
     @Autowired
     private IBorrowBO borrowBO;
@@ -104,6 +104,9 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Autowired
     private IOverdueBO overdueBO;
+
+    @Autowired
+    private ICouponConditionAO couponConditionAO;
 
     @Override
     @Transactional
@@ -416,6 +419,7 @@ public class BorrowAOImpl implements IBorrowAO {
         baofooPay.setToBankName(bankcard.getBankName());
         baofooPay.setTransCardId(user.getIdNo());
         baofooPay.setTransMobile(user.getMobile());
+        baofooPay.setTransMoney(borrow.getAmount());
         baofooPay.setTransSummary("九州宝-代付（借款订单：" + code + "）");
         baofooPayList.add(baofooPay);
         accountBO.baofooPay(baofooPayList);
@@ -430,6 +434,26 @@ public class BorrowAOImpl implements IBorrowAO {
         List<String> borrowCodeList = new ArrayList<String>();
         borrowCodeList.add(code);
         accountBO.baofooPayQuery(borrowCodeList);
+    }
+
+    @Override
+    public void doLoanBaofooQueryCallback(String code, boolean result) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.PAY_SUBMIT.getCode().equals(borrow.getStatus())) {
+            throw new BizException("623071", "借款不处于宝付代付申请中");
+        }
+        if (result) {
+            borrowBO.baofooPaySuccess(borrow);
+            // 更新申请单状态
+            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                EApplyStatus.LOANING);
+            String smsContent = "恭喜您，您的"
+                    + CalculationUtil.diviUp(borrow.getAmount())
+                    + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";
+            smsOutBO.sentContent(borrow.getApplyUser(), smsContent);
+        } else {
+            borrowBO.baofooPayFailure(borrow);
+        }
     }
 
     @Override
@@ -721,6 +745,10 @@ public class BorrowAOImpl implements IBorrowAO {
         condition.setStatusList(statusList);
         condition.setCurDatetime(new Date());
         List<Borrow> borrowList = borrowBO.queryBorrowList(condition);
+        if (borrowList != null) {
+            logger.info("***************共扫描到" + borrowList.size()
+                    + "条记录***************");
+        }
         if (CollectionUtils.isNotEmpty(borrowList)) {
             for (Borrow borrow : borrowList) {
                 overdue(borrow);
@@ -768,7 +796,7 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Override
     public void doCheckWillRepayDaily() {
-        logger.info("***************开始扫描即将到期借款***************");
+        logger.info("***************开始扫描明日到期借款，短信提醒***************");
         Borrow condition = new Borrow();
         List<String> statusList = new ArrayList<String>();
         statusList.add(EBorrowStatus.LOANING.getCode());
@@ -776,6 +804,10 @@ public class BorrowAOImpl implements IBorrowAO {
         condition.setHkDatetime(DateUtil.getRelativeDateOfDays(
             DateUtil.getTodayEnd(), 1));
         List<Borrow> borrowList = borrowBO.queryBorrowList(condition);
+        if (borrowList != null) {
+            logger.info("***************共扫描到" + borrowList.size()
+                    + "条记录***************");
+        }
         if (CollectionUtils.isNotEmpty(borrowList)) {
             for (Borrow borrow : borrowList) {
                 smsOutBO.sentContent(borrow.getApplyUser(), "您的"
@@ -784,7 +816,86 @@ public class BorrowAOImpl implements IBorrowAO {
                         + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。");
             }
         }
-        logger.info("***************结束扫描即将到期借款***************");
+        logger.info("***************结束扫描明日到期借款***************");
+    }
+
+    @Override
+    public void doAutoRepayDaily() {
+        logger.info("***************开始扫描今日到期借款，自动扣款***************");
+        Borrow condition = new Borrow();
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(EBorrowStatus.LOANING.getCode());
+        condition.setStatusList(statusList);
+        condition.setHkDatetime(DateUtil.getTodayEnd());
+        List<Borrow> borrowList = borrowBO.queryBorrowList(condition);
+        if (borrowList != null) {
+            logger.info("***************共扫描到" + borrowList.size()
+                    + "条记录***************");
+        }
+        if (CollectionUtils.isNotEmpty(borrowList)) {
+            for (Borrow borrow : borrowList) {
+                // 自动扣款
+                User user = userBO.getRemoteUser(borrow.getApplyUser());
+                Bankcard bankcard = accountBO
+                    .getBankcard(borrow.getApplyUser());
+                boolean isSuccess = accountBO.baofooWithhold(
+                    bankcard.getBankCode(), bankcard.getBankcardNumber(),
+                    user.getIdNo(), user.getRealName(), user.getMobile(),
+                    borrow.getTotalAmount());
+                if (isSuccess) {
+                    // 如果是逾期还款，逾期记录落地
+                    if (borrow.getYqDays() > 0) {
+                        overdueBO.saveOverdue(borrow.getApplyUser(),
+                            borrow.getCode(), borrow.getYqDays(),
+                            borrow.getYqlxAmount(),
+                            EOverdueDeal.REPAY.getCode());
+                    }
+                    // 更新订单支付金额
+                    borrowBO.repaySuccess(borrow, borrow.getTotalAmount(),
+                        "宝付代扣", EPayType.BAOFOO_WITHHOLD.getCode());
+                    // 更新申请单状态
+                    applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                        EApplyStatus.REPAY);
+                    // 额度重置为0
+                    certificationBO.resetSxAmount(borrow.getApplyUser());
+                    // 还款成功
+                    couponConditionAO.repaySuccess(borrow.getApplyUser());
+                    smsOutBO.sentContent(borrow.getApplyUser(), "您的"
+                            + CalculationUtil.diviUp(borrow.getAmount())
+                            + "借款(合同编号:" + borrow.getCode()
+                            + ")已经自动还款成功，详情查看请登录APP。");
+                } else {
+                    smsOutBO.sentContent(borrow.getApplyUser(), "您的"
+                            + CalculationUtil.diviUp(borrow.getAmount())
+                            + "借款(合同编号:" + borrow.getCode()
+                            + ")自动扣款失败，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。");
+                }
+            }
+        }
+        logger.info("***************结束扫描今日到期借款***************");
+    }
+
+    @Override
+    public void doBaofooPayQueryPerMinute() {
+        logger.info("***************开始扫描已申请代付的订单，查询代付结果***************");
+        Borrow condition = new Borrow();
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(EBorrowStatus.PAY_SUBMIT.getCode());
+        condition.setStatusList(statusList);
+        List<Borrow> borrowList = borrowBO.queryBorrowList(condition);
+        if (borrowList != null) {
+            logger.info("***************共扫描到" + borrowList.size()
+                    + "条记录***************");
+        }
+        if (CollectionUtils.isNotEmpty(borrowList)) {
+            for (Borrow borrow : borrowList) {
+                // 自动查询结果
+                List<String> borrowCodeList = new ArrayList<String>();
+                borrowCodeList.add(borrow.getCode());
+                accountBO.baofooPayQuery(borrowCodeList);
+            }
+        }
+        logger.info("***************结束扫描已申请代付的订单***************");
     }
 
     @Override
