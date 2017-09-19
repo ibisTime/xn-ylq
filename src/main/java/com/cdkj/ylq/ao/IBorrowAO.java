@@ -25,7 +25,8 @@ public interface IBorrowAO {
     public void doLoanBaofooQuery(String code);
 
     // 管理端：宝付代付结果查询回调
-    public void doLoanBaofooQueryCallback(String code, boolean result);
+    public void doLoanBaofooQueryCallback(String code, boolean result,
+            String remark);
 
     // 客户端：打款失败后，我已修改银行卡，重新申请放款
     public void resubmitLoan(String code);

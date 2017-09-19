@@ -155,13 +155,16 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     }
 
     @Override
-    public int baofooPayFailure(Borrow borrow) {
+    public int baofooPayFailure(Borrow borrow, String remark) {
         int count = 0;
         if (borrow != null) {
             Date now = new Date();
             borrow.setStatus(EBorrowStatus.APPROVE_YES.getCode());
             borrow.setUpdateDatetime(now);
-            borrow.setRemark("宝付代付失败，待放款");
+            borrow.setRemark("宝付代付失败");
+            if (StringUtils.isNotBlank(remark)) {
+                borrow.setRemark(borrow.getRemark() + "，原因:" + remark);
+            }
             count = borrowDAO.updateBaofooPaySubmit(borrow);
         }
         return count;

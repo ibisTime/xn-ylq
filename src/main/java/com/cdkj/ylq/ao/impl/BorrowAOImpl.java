@@ -437,7 +437,8 @@ public class BorrowAOImpl implements IBorrowAO {
     }
 
     @Override
-    public void doLoanBaofooQueryCallback(String code, boolean result) {
+    public void doLoanBaofooQueryCallback(String code, boolean result,
+            String remark) {
         Borrow borrow = borrowBO.getBorrow(code);
         if (!EBorrowStatus.PAY_SUBMIT.getCode().equals(borrow.getStatus())) {
             throw new BizException("623071", "借款不处于宝付代付申请中");
@@ -452,7 +453,7 @@ public class BorrowAOImpl implements IBorrowAO {
                     + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";
             smsOutBO.sentContent(borrow.getApplyUser(), smsContent);
         } else {
-            borrowBO.baofooPayFailure(borrow);
+            borrowBO.baofooPayFailure(borrow, remark);
         }
     }
 

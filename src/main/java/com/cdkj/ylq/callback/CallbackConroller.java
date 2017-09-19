@@ -66,10 +66,11 @@ public class CallbackConroller {
         String bizType = request.getParameter("bizType");
         String payType = getPayType(channelType);
         String transNo = request.getParameter("transNo");
+        String transRemark = request.getParameter("transRemark");
         // 支付成功，商户处理后同步返回给微信参数
         if (!isSuccess) {
             if (EBizType.YLQ_BAOFOO_PAY_QUERY.getCode().equals(bizType)) {
-                borrowAO.doLoanBaofooQueryCallback(transNo, false);
+                borrowAO.doLoanBaofooQueryCallback(transNo, false, transRemark);
             }
             logger.info("****业务类型<" + bizType + "> payGroup <" + payGroup
                     + "> payCode <" + payCode + ">回调失败****");
@@ -85,7 +86,8 @@ public class CallbackConroller {
                     borrowAO.renewalSuccess(payGroup, payType, payCode, amount);
                 } else if (EBizType.YLQ_BAOFOO_PAY_QUERY.getCode().equals(
                     bizType)) {
-                    borrowAO.doLoanBaofooQueryCallback(transNo, true);
+                    borrowAO.doLoanBaofooQueryCallback(transNo, true,
+                        transRemark);
                 }
 
             } catch (Exception e) {

@@ -28,7 +28,7 @@ public interface IBorrowBO extends IPaginableBO<Borrow> {
 
     public int baofooPaySuccess(Borrow borrow);
 
-    public int baofooPayFailure(Borrow borrow);
+    public int baofooPayFailure(Borrow borrow, String remark);
 
     public int resubmitLoan(Borrow borrow);
 
