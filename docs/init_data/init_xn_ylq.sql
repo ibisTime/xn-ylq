@@ -177,6 +177,7 @@ INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_d
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','pay_type','2','微信','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','pay_type','3','支付宝','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','pay_type','4','线下','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','pay_type','5','宝付代扣','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('0','','repay_apply_status','线下打款申请状态','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','repay_apply_status','0','待审核','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');

@@ -615,7 +615,7 @@ public class BorrowAOImpl implements IBorrowAO {
         User user = userBO.getRemoteUser(renewal.getApplyUser());
         return accountBO.doWeiXinPayRemote(user.getUserId(),
             ESysUser.SYS_USER_YLQ.getCode(), renewal.getPayGroup(),
-            renewal.getBorrowCode(), EBizType.YLQ_REPAY,
+            renewal.getBorrowCode(), EBizType.YLQ_RENEWAL,
             EBizType.YLQ_RENEWAL.getValue() + "-微信", rmbAmount);
     }
 
@@ -624,7 +624,7 @@ public class BorrowAOImpl implements IBorrowAO {
         User user = userBO.getRemoteUser(renewal.getApplyUser());
         return accountBO.doAlipayRemote(user.getUserId(),
             ESysUser.SYS_USER_YLQ.getCode(), renewal.getPayGroup(),
-            renewal.getBorrowCode(), EBizType.YLQ_REPAY,
+            renewal.getBorrowCode(), EBizType.YLQ_RENEWAL,
             EBizType.YLQ_RENEWAL.getValue() + "-支付宝", rmbAmount);
     }
 
