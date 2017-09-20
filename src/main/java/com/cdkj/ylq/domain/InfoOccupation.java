@@ -19,7 +19,7 @@ public class InfoOccupation {
     private String occupation;
 
     // 月收入
-    private Long income;
+    private String income;
 
     // 单位名称
     private String company;
@@ -41,11 +41,11 @@ public class InfoOccupation {
         this.occupation = occupation;
     }
 
-    public Long getIncome() {
+    public String getIncome() {
         return income;
     }
 
-    public void setIncome(Long income) {
+    public void setIncome(String income) {
         this.income = income;
     }
 

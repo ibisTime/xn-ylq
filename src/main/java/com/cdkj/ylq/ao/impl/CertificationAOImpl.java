@@ -7,12 +7,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.zip.GZIPInputStream;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +24,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.ICertificationAO;
+import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.ICertiBO;
 import com.cdkj.ylq.bo.ICertificationBO;
+import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.SysConstants;
+import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Apply;
+import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
@@ -43,11 +51,13 @@ import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
+import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
 import com.cdkj.ylq.dto.req.XN623042Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
+import com.cdkj.ylq.dto.res.XN623054Res;
 import com.cdkj.ylq.dto.res.XN798013Res;
 import com.cdkj.ylq.dto.res.XN798014Res;
 import com.cdkj.ylq.enums.EApplyStatus;
@@ -56,6 +66,9 @@ import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EIDKind;
 import com.cdkj.ylq.exception.BizException;
+import com.cdkj.ylq.tongdun.PreloanQueryResponse;
+import com.cdkj.ylq.tongdun.PreloanSubmitResponse;
+import com.cdkj.ylq.tongdun.RiskServicePreloan;
 
 @Service
 public class CertificationAOImpl implements ICertificationAO {
@@ -77,6 +90,12 @@ public class CertificationAOImpl implements ICertificationAO {
 
     @Autowired
     private ISYSConfigBO sysConfigBO;
+
+    @Autowired
+    private IProductBO productBO;
+
+    @Autowired
+    private IAccountBO accountBO;
 
     @Override
     public void submitIdentifyPic(String userId, String identifyPic,
@@ -421,6 +440,129 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
+    public XN623054Res doTongDunPreloanSubmit(String userId) {
+        XN623054Res res = new XN623054Res();
+        RiskServicePreloan service = new RiskServicePreloan();
+        Map<String, Object> params = new HashMap<String, Object>();
+        // 个人信息
+        User user = userBO.getRemoteUser(userId);
+        // 银行卡信息
+        Bankcard bankcard = accountBO.getBankcard(userId);
+        // 申请信息
+        Apply apply = applyBO.getCurrentApply(userId);
+        if (apply == null) {
+            throw new BizException("xn623054", "该用户暂时没有贷前申请");
+        }
+        // 申请产品信信息
+        Product product = productBO.getProduct(apply.getProductCode());
+
+        if (apply != null && product != null) {
+            params.put("loan_amount",
+                CalculationUtil.diviUp(product.getAmount())); // 申请借款金额
+            params.put("loan_term", product.getDuration()); // 申请借款期限
+            params.put("loan_term_unit", "DAY"); // 期限单位
+            params.put("loan_date", DateUtil.dateToStr(
+                apply.getApplyDatetime(), DateUtil.FRONT_DATE_FORMAT_STRING)); // 申请借款日期
+            params.put("purpose", "消费"); // 借款用途
+        }
+        if (bankcard != null) {
+            params.put("card_number", bankcard.getBankcardNumber()); // 银行卡
+        }
+        if (user != null) {
+            params.put("mobile", user.getMobile()); // 手机号
+            params.put("name", user.getRealName()); // 姓名
+            params.put("id_number", user.getIdNo()); // 身份证号
+            params.put("apply_province", user.getProvince()); // 进件省份
+            params.put("apply_city", user.getCity()); // 进件城市
+            if (StringUtils.isBlank(user.getRealName())) {
+                params.put("is_id_checked", "false"); // 是否通过实名认证
+            } else {
+                params.put("is_id_checked", "true"); // 是否通过实名认证
+            }
+        }
+
+        XN623050Res xn623050Res = getCertiInfo(userId);
+        if (!xn623050Res.getInfoBasicFlag().equals(
+            ECertificationStatus.TO_CERTI.getCode())) {
+            params.put("diploma",
+                service.getDiploma(xn623050Res.getInfoBasic().getEducation())); // 学历
+            params.put("marriage",
+                service.getMarriage(xn623050Res.getInfoBasic().getMarriage())); // 婚姻
+            params.put("home_address", xn623050Res.getInfoBasic()
+                .getProvinceCity() + xn623050Res.getInfoBasic().getAddress()); // 家庭地址
+            params.put("qq", xn623050Res.getInfoBasic().getQq()); // qq
+            params.put("email", xn623050Res.getInfoBasic().getEmail()); // 电子邮箱
+        }
+        if (!xn623050Res.getInfoOccupationFlag().equals(
+            ECertificationStatus.TO_CERTI.getCode())) {
+            params.put("career", ""); // 职业
+            params.put("annual_income", service.getAnnualIncome(xn623050Res
+                .getInfoOccupation().getIncome())); // 年收入
+            params.put("company_name", xn623050Res.getInfoOccupation()
+                .getCompany()); // 工作单位
+            params.put("company_address", xn623050Res.getInfoOccupation()
+                .getProvinceCity()
+                    + xn623050Res.getInfoOccupation().getAddress()); // 单位地址
+            params
+                .put("work_phone", xn623050Res.getInfoOccupation().getPhone()); // 单位座机
+        }
+        if (!xn623050Res.getInfoContactFlag().equals(
+            ECertificationStatus.TO_CERTI.getCode())) {
+            InfoContact infoContact = xn623050Res.getInfoContact();
+            String contact1_relation = "";
+            if ("0".equals(infoContact.getFamilyRelation())) {
+                contact1_relation = "father";
+            } else if ("1".equals(infoContact.getFamilyRelation())) {
+                contact1_relation = "spouse";
+            } else if ("2".equals(infoContact.getFamilyRelation())) {
+                contact1_relation = "other_relative";
+            }
+            String contact2_relation = "";
+            if ("0".equals(infoContact.getSocietyRelation())) {
+                contact1_relation = "others";
+            } else if ("1".equals(infoContact.getSocietyRelation())) {
+                contact1_relation = "coworker";
+            } else if ("2".equals(infoContact.getSocietyRelation())) {
+                contact1_relation = "friend";
+            }
+            params.put("contact1_relation", contact1_relation); // 第一联系人社会关系
+            params.put("concatc1_name", infoContact.getFamilyName()); // 第一联系人姓名
+            params.put("contact1_mobile", infoContact.getFamilyMobile()); // 第一联系人手机号
+            params.put("contact2_relation", contact2_relation);
+            params.put("contact2_name", infoContact.getSocietyName());
+            params.put("contact2_mobile", infoContact.getSocietyMobile());
+        }
+
+        PreloanSubmitResponse riskPreloanResponse = service.apply(params);
+        System.out.println(riskPreloanResponse.toString());
+        if (riskPreloanResponse.getSuccess()) {
+            // 等待一定时间后，可调用query接口查询结果。
+            // 时间建议：5s后可调用
+            try {
+                Thread.sleep(5 * 1000);
+            } catch (Exception e) {
+                //
+            }
+            // query接口获取结果
+            PreloanQueryResponse response = service.query(riskPreloanResponse
+                .getReport_id());
+            res.setTdData(JSONObject.fromObject(response).toString());
+            res.setPersonInfo(JSONObject.fromObject(params).toString());
+            return res;
+            // 其他处理 。。。
+        } else {
+            throw new BizException("xn623000", "同盾贷前审核信息提交发送错误，请过一段时间重新尝试！");
+        }
+
+    }
+
+    @Override
+    public void doTongDunPreloanQuery(String userId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     public Paginable<Certification> queryCertificationPage(int start,
             int limit, Certification condition) {
         return certificationBO.getPaginable(start, limit, condition);
@@ -712,7 +854,7 @@ public class CertificationAOImpl implements ICertificationAO {
     private InfoOccupation getInfoOccupation(XN623041Req req) {
         InfoOccupation data = new InfoOccupation();
         data.setOccupation(req.getOccupation());
-        data.setIncome(StringValidater.toLong(req.getIncome()));
+        data.setIncome(req.getIncome());
         data.setCompany(req.getCompany());
         data.setProvinceCity(req.getProvinceCity());
         data.setAddress(req.getAddress());

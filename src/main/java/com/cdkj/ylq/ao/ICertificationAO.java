@@ -13,6 +13,7 @@ import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
 import com.cdkj.ylq.dto.req.XN623042Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
+import com.cdkj.ylq.dto.res.XN623054Res;
 import com.cdkj.ylq.dto.res.XN798013Res;
 import com.cdkj.ylq.dto.res.XN798014Res;
 import com.cdkj.ylq.enums.ECertiKey;
@@ -71,6 +72,12 @@ public interface ICertificationAO {
     // 通讯录认证
     public void doAddressBookVerify(String userId,
             List<InfoAddressBook> addressBookList);
+
+    // 同盾贷前审核提交
+    public XN623054Res doTongDunPreloanSubmit(String userId);
+
+    // 同盾贷前审核查询
+    public void doTongDunPreloanQuery(String userId);
 
     // 查询个人超详细的认证信息（可形成用户报告）
     public XN623050Res getCertiInfo(String userId);
