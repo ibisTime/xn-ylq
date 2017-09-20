@@ -97,6 +97,9 @@ public class CertificationAOImpl implements ICertificationAO {
     @Autowired
     private IAccountBO accountBO;
 
+    @Autowired
+    private RiskServicePreloan riskServicePreloan;
+
     @Override
     public void submitIdentifyPic(String userId, String identifyPic,
             String identifyPicReverse, String identifyPicHand) {
@@ -442,7 +445,6 @@ public class CertificationAOImpl implements ICertificationAO {
     @Override
     public XN623054Res doTongDunPreloanSubmit(String userId) {
         XN623054Res res = new XN623054Res();
-        RiskServicePreloan service = new RiskServicePreloan();
         Map<String, Object> params = new HashMap<String, Object>();
         // 个人信息
         User user = userBO.getRemoteUser(userId);
@@ -484,10 +486,10 @@ public class CertificationAOImpl implements ICertificationAO {
         XN623050Res xn623050Res = getCertiInfo(userId);
         if (!xn623050Res.getInfoBasicFlag().equals(
             ECertificationStatus.TO_CERTI.getCode())) {
-            params.put("diploma",
-                service.getDiploma(xn623050Res.getInfoBasic().getEducation())); // 学历
-            params.put("marriage",
-                service.getMarriage(xn623050Res.getInfoBasic().getMarriage())); // 婚姻
+            params.put("diploma", riskServicePreloan.getDiploma(xn623050Res
+                .getInfoBasic().getEducation())); // 学历
+            params.put("marriage", riskServicePreloan.getMarriage(xn623050Res
+                .getInfoBasic().getMarriage())); // 婚姻
             params.put("home_address", xn623050Res.getInfoBasic()
                 .getProvinceCity() + xn623050Res.getInfoBasic().getAddress()); // 家庭地址
             params.put("qq", xn623050Res.getInfoBasic().getQq()); // qq
@@ -496,8 +498,8 @@ public class CertificationAOImpl implements ICertificationAO {
         if (!xn623050Res.getInfoOccupationFlag().equals(
             ECertificationStatus.TO_CERTI.getCode())) {
             params.put("career", ""); // 职业
-            params.put("annual_income", service.getAnnualIncome(xn623050Res
-                .getInfoOccupation().getIncome())); // 年收入
+            params.put("annual_income", riskServicePreloan
+                .getAnnualIncome(xn623050Res.getInfoOccupation().getIncome())); // 年收入
             params.put("company_name", xn623050Res.getInfoOccupation()
                 .getCompany()); // 工作单位
             params.put("company_address", xn623050Res.getInfoOccupation()
@@ -533,7 +535,8 @@ public class CertificationAOImpl implements ICertificationAO {
             params.put("contact2_mobile", infoContact.getSocietyMobile());
         }
 
-        PreloanSubmitResponse riskPreloanResponse = service.apply(params);
+        PreloanSubmitResponse riskPreloanResponse = riskServicePreloan
+            .apply(params);
         System.out.println(riskPreloanResponse.toString());
         if (riskPreloanResponse.getSuccess()) {
             // 等待一定时间后，可调用query接口查询结果。
@@ -544,8 +547,8 @@ public class CertificationAOImpl implements ICertificationAO {
                 //
             }
             // query接口获取结果
-            PreloanQueryResponse response = service.query(riskPreloanResponse
-                .getReport_id());
+            PreloanQueryResponse response = riskServicePreloan
+                .query(riskPreloanResponse.getReport_id());
             res.setTdData(JSONObject.fromObject(response).toString());
             res.setPersonInfo(JSONObject.fromObject(params).toString());
             return res;

@@ -12,29 +12,40 @@ import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.common.JsonUtil;
+import com.cdkj.ylq.common.SysConstants;
 
 /**
  * @author: haiqingzheng 
  * @since: 2017年9月19日 下午4:28:28 
  * @history:
  */
+@Component
 public class RiskServicePreloan {
+
+    @Autowired
+    ISYSConfigBO sysConfigBO;
 
     private static final Log log = LogFactory.getLog(RiskServicePreloan.class);
 
-    private static final String submitUrl = "https://apitest.tongdun.cn/preloan/apply/v5";
-
-    private static final String queryUrl = "https://apitest.tongdun.cn/preloan/report/v9";
+    // private static final String submitUrl =
+    // "https://apitest.tongdun.cn/preloan/apply/v5";
+    //
+    // private static final String queryUrl =
+    // "https://apitest.tongdun.cn/preloan/report/v9";
 
     private static final long WAIT_TIME = 5 * 1000;
 
-    private static final String PARTNER_CODE = "jiuzhou";// 合作方标识
-
-    private static final String PARTNER_KEY = "af52d445b7344653b1bb8ca8b5ce3878";// 合作方密钥
-
-    private static final String PARTNER_APP = "jiuzhou_and";// 应用名
+    // private static final String PARTNER_CODE = "jiuzhou";// 合作方标识
+    //
+    // private static final String PARTNER_KEY =
+    // "af52d445b7344653b1bb8ca8b5ce3878";// 合作方密钥
+    //
+    // private static final String PARTNER_APP = "jiuzhou_and";// 应用名
 
     private HttpsURLConnection conn;
 
@@ -51,10 +62,16 @@ public class RiskServicePreloan {
 
         PreloanSubmitResponse submitResponse = new PreloanSubmitResponse();
         try {
-            String urlString = new StringBuilder().append(submitUrl)
-                .append("?partner_code=").append(PARTNER_CODE)
-                .append("&partner_key=").append(PARTNER_KEY)
-                .append("&app_name=").append(PARTNER_APP).toString();
+            String urlString = new StringBuilder()
+                .append(sysConfigBO.getStringValue(SysConstants.TD_SUBMIT_URL))
+                .append("?partner_code=")
+                .append(
+                    sysConfigBO.getStringValue(SysConstants.TD_PARTNER_CODE))
+                .append("&partner_key=")
+                .append(sysConfigBO.getStringValue(SysConstants.TD_PARTNER_KEY))
+                .append("&app_name=")
+                .append(sysConfigBO.getStringValue(SysConstants.TD_PARTNER_APP))
+                .toString();
             URL url = new URL(urlString);
             // 组织请求参数
             StringBuilder postBody = new StringBuilder();
@@ -111,9 +128,13 @@ public class RiskServicePreloan {
     public PreloanQueryResponse query(String reportId) {
         PreloanQueryResponse queryResponse = new PreloanQueryResponse();
         try {
-            String urlString = new StringBuilder().append(queryUrl)
-                .append("?partner_code=").append(PARTNER_CODE)
-                .append("&partner_key=").append(PARTNER_KEY)
+            String urlString = new StringBuilder()
+                .append(sysConfigBO.getStringValue(SysConstants.TD_QUERY_URL))
+                .append("?partner_code=")
+                .append(
+                    sysConfigBO.getStringValue(SysConstants.TD_PARTNER_CODE))
+                .append("&partner_key=")
+                .append(sysConfigBO.getStringValue(SysConstants.TD_PARTNER_KEY))
                 .append("&report_id=").append(reportId).toString();
             URL url = new URL(urlString);
 

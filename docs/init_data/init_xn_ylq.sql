@@ -22,6 +22,11 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','mxUrl','https://api.51datakey.com/carrier/v3/mobiles/%s/mxreport?task_id=%s','admin',now(),'魔蝎URL','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','mxApiKey','96ee985a972a4685be2bb423588e008f','admin',now(),'魔蝎apiKey','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','mxToken','76216f728af3416083f20a13f9ddb2a9','admin',now(),'魔蝎token','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdSubmitUrl','https://apitest.tongdun.cn/preloan/apply/v5','admin',now(),'同盾贷前审核信息提交URL','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdQueryUrl','https://apitest.tongdun.cn/preloan/report/v9','admin',now(),'同盾贷前审核查询URL','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdPartnerCode','jiuzhou','admin',now(),'合作方标识','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdPartnerKey','af52d445b7344653b1bb8ca8b5ce3878','admin',now(),'合作方密钥','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdPartnerApp','jiuzhou_and','admin',now(),'应用名','CD-YLQ000014','CD-YLQ000014');
 
 /*
 -- Query: SELECT * FROM xn_ylq.t_coupon

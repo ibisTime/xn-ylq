@@ -25,4 +25,14 @@ public class SysConstants {
     public static final String MX_TOKEN = "mxToken"; // 魔蝎token
 
     public static final String SMS_CUISHOU = "smsCuishou"; // 催收短信
+
+    public static final String TD_SUBMIT_URL = "tdSubmitUrl"; // 同盾贷前审核信息提交URL
+
+    public static final String TD_QUERY_URL = "tdQueryUrl"; // 同盾贷前审核查询URL
+
+    public static final String TD_PARTNER_CODE = "tdPartnerCode"; // 合作方标识
+
+    public static final String TD_PARTNER_KEY = "tdPartnerKey"; // 合作方密钥
+
+    public static final String TD_PARTNER_APP = "tdPartnerApp"; // 应用名
 }
