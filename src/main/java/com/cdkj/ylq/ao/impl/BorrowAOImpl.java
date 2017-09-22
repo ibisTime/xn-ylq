@@ -419,7 +419,9 @@ public class BorrowAOImpl implements IBorrowAO {
         baofooPay.setToBankName(bankcard.getBankName());
         baofooPay.setTransCardId(user.getIdNo());
         baofooPay.setTransMobile(user.getMobile());
-        baofooPay.setTransMoney(borrow.getAmount());
+        baofooPay.setTransMoney(borrow.getAmount() - borrow.getFwAmount()
+                - borrow.getLxAmount() - borrow.getGlAmount()
+                - borrow.getXsAmount() + borrow.getYhAmount());
         baofooPay.setTransSummary("九州宝-代付（借款订单：" + code + "）");
         baofooPayList.add(baofooPay);
         accountBO.baofooPay(baofooPayList);
@@ -842,7 +844,7 @@ public class BorrowAOImpl implements IBorrowAO {
                 boolean isSuccess = accountBO.baofooWithhold(
                     bankcard.getBankCode(), bankcard.getBankcardNumber(),
                     user.getIdNo(), user.getRealName(), user.getMobile(),
-                    borrow.getTotalAmount());
+                    borrow.getTotalAmount(), borrow.getCode());
                 if (isSuccess) {
                     // 如果是逾期还款，逾期记录落地
                     if (borrow.getYqDays() > 0) {

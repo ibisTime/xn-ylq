@@ -2,11 +2,14 @@ package com.cdkj.ylq.callback;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -178,6 +181,14 @@ public class CallbackConroller {
 
         writeMessage(httpServletResponse, HttpServletResponse.SC_CREATED,
             "default eventtype");
+    }
+
+    /* 借贷通回调处理 */
+    @RequestMapping("/jdt/notice")
+    public synchronized void doCallbackJDT(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+        Map<String, String> params = request.getParameterMap();
+        logger.info("借贷通获客-实时通告" + JSONObject.fromObject(params));
     }
 
     private String getPayType(String channelType) {

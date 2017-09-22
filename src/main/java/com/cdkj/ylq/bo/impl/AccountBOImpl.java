@@ -221,7 +221,8 @@ public class AccountBOImpl implements IAccountBO {
 
     @Override
     public boolean baofooWithhold(String bankCode, String accountNo,
-            String idNo, String realName, String mobile, Long transAmount) {
+            String idNo, String realName, String mobile, Long transAmount,
+            String refNo) {
         XN802167Req req = new XN802167Req();
         req.setBankCode(bankCode);
         req.setAccountNo(accountNo);
@@ -229,6 +230,7 @@ public class AccountBOImpl implements IAccountBO {
         req.setRealName(realName);
         req.setMobile(mobile);
         req.setTransAmount(String.valueOf(transAmount));
+        req.setRefNo(refNo);
         req.setCompanyCode(ESystemCode.YLQ.getCode());
         req.setSystemCode(ESystemCode.YLQ.getCode());
         XN802167Res res = BizConnecter.getBizData("802167",

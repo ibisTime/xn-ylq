@@ -61,6 +61,7 @@ public interface IAccountBO {
 
     // 宝付代扣
     public boolean baofooWithhold(String bankCode, String accountNo,
-            String idNo, String realName, String mobile, Long transAmount);
+            String idNo, String realName, String mobile, Long transAmount,
+            String refNo);
 
 }

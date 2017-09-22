@@ -20,6 +20,9 @@ public class XN802167Req {
     // 交易金额
     private String transAmount;
 
+    // 关联单号
+    private String refNo;
+
     // 公司编号
     private String companyCode;
 
@@ -72,6 +75,14 @@ public class XN802167Req {
 
     public void setTransAmount(String transAmount) {
         this.transAmount = transAmount;
+    }
+
+    public String getRefNo() {
+        return refNo;
+    }
+
+    public void setRefNo(String refNo) {
+        this.refNo = refNo;
     }
 
     public String getCompanyCode() {
