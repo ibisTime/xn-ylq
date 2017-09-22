@@ -297,6 +297,32 @@ CREATE TABLE `tbf_pay_order` (
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `tbf_withhold` (
+  `trans_id` varchar(32) NOT NULL COMMENT '商户订单号',
+  `bank_code` varchar(32) DEFAULT NULL COMMENT '银行编码',
+  `bankcard_number` varchar(32) DEFAULT NULL COMMENT '银行卡号',
+  `id_no` varchar(32) DEFAULT NULL COMMENT '身份证号',
+  `real_name` varchar(32) DEFAULT NULL COMMENT '真实姓名',
+  `mobile` varchar(32) DEFAULT NULL COMMENT '手机号',
+  `trans_amount` bigint(32) DEFAULT NULL COMMENT '代扣金额',
+  `ref_no` varchar(32) DEFAULT NULL COMMENT '关联订单号',
+  `resp_code` varchar(32) DEFAULT NULL COMMENT '应答码',
+  `resp_msg` varchar(255) DEFAULT NULL COMMENT '应答信息',
+  `member_id` varchar(32) DEFAULT NULL COMMENT '商户号',
+  `terminal_id` varchar(32) DEFAULT NULL COMMENT '终端号',
+  `txn_type` varchar(32) DEFAULT NULL COMMENT '交易类型',
+  `txn_sub_type` varchar(32) DEFAULT NULL COMMENT '交易子类',
+  `biz_type` varchar(32) DEFAULT NULL COMMENT '接入类型',
+  `trade_date` datetime DEFAULT NULL COMMENT '订单发送时间',
+  `trans_no` varchar(32) DEFAULT NULL COMMENT '宝付交易号',
+  `succ_amt` bigint(32) DEFAULT NULL COMMENT '成功金额',
+  `trans_serial_no` varchar(32) DEFAULT NULL COMMENT '商户流水号',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  `system_code` varchar(32) DEFAULT NULL COMMENT '系统编号',
+  PRIMARY KEY (`trans_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 DROP TABLE IF EXISTS `tsys_dict`;
 CREATE TABLE `tsys_dict` (
   `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '编号（自增长）',
