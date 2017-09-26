@@ -277,6 +277,8 @@ public class BorrowAOImpl implements IBorrowAO {
                     borrow.setRenewalEndDate(endDate);
                     borrow.setRenewalAmount(totalAmount);
                 }
+                borrow.setRemainDays(DateUtil.daysBetween(new Date(),
+                    borrow.getHkDatetime()));
             }
 
         }
@@ -326,6 +328,8 @@ public class BorrowAOImpl implements IBorrowAO {
                 borrow.setRenewalEndDate(endDate);
                 borrow.setRenewalAmount(totalAmount);
             }
+            borrow.setRemainDays(DateUtil.daysBetween(new Date(),
+                borrow.getHkDatetime()));
         }
         return borrow;
     }

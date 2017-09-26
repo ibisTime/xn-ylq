@@ -119,7 +119,8 @@ public class ApplyAOImpl implements IApplyAO {
         if (!EApplyStatus.TO_APPROVE.getCode().equals(apply.getStatus())) {
             throw new BizException("xn623021", "该申请记录不处于待审核状态");
         }
-        String status = EApplyStatus.APPROVE_NO.getCode();
+        String status = null;
+        String content = null;
         if (EBoolean.YES.getCode().equals(approveResult)) {
             status = EApplyStatus.APPROVE_YES.getCode();
             Product product = productBO.getProduct(apply.getProductCode());
@@ -142,15 +143,12 @@ public class ApplyAOImpl implements IApplyAO {
                 certification.setRef(apply.getProductCode());
                 certificationBO.refreshCertification(certification);
             }
+            content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote + "，请登录APP查看详情。";
         } else {
             sxAmount = 0L;
+            content = "恭喜您，您的借款申请已经通过审核，请登录APP进行自助借款操作。";
         }
         applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
-
-        String content = "恭喜您，您的借款申请已经通过审核，请登录APP进行自助借款操作。";
-        if (EBoolean.NO.getCode().equals(approveResult)) {
-            content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote + "，请登录APP查看详情。";
-        }
         smsOutBO.sentContent(apply.getApplyUser(), content);
     }
 

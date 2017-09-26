@@ -146,6 +146,9 @@ public class Borrow extends ABaseDO {
     // 续期需支付总金额
     private Long renewalAmount;
 
+    // 还款剩余天数
+    private Integer remainDays;
+
     // *** 查询字段 ****
     // 状态列表
     private List<String> statusList;
@@ -164,6 +167,14 @@ public class Borrow extends ABaseDO {
 
     // 是否逾期
     private String isOverdue;
+
+    public Integer getRemainDays() {
+        return remainDays;
+    }
+
+    public void setRemainDays(Integer remainDays) {
+        this.remainDays = remainDays;
+    }
 
     public String getIsOverdue() {
         return isOverdue;

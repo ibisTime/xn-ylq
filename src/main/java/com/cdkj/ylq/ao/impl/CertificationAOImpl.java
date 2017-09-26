@@ -453,9 +453,15 @@ public class CertificationAOImpl implements ICertificationAO {
         XN623054Res res = new XN623054Res();
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_TONGDUN_PRELOAN);
-        if (certification != null
-                && ECertificationStatus.TO_CERTI.getCode().equals(
-                    certification.getFlag())) {
+        if (certification == null) {
+            certification = new Certification();
+            certification.setUserId(userId);
+            certification.setCertiKey(ECertiKey.INFO_TONGDUN_PRELOAN.getCode());
+            certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+            certificationBO.saveCertification(certification);
+        }
+        if (ECertificationStatus.TO_CERTI.getCode().equals(
+            certification.getFlag())) {
             InfoTongDunPreLoan infoTongDunPreLoan = doTongDunPreLoanSubmitAndQuery(
                 userId, certification);
             if (infoTongDunPreLoan != null) {
@@ -474,6 +480,13 @@ public class CertificationAOImpl implements ICertificationAO {
     public void doTongDunPreLoanReload(String userId) {
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_TONGDUN_PRELOAN);
+        if (certification == null) {
+            certification = new Certification();
+            certification.setUserId(userId);
+            certification.setCertiKey(ECertiKey.INFO_TONGDUN_PRELOAN.getCode());
+            certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+            certificationBO.saveCertification(certification);
+        }
         doTongDunPreLoanSubmitAndQuery(userId, certification);
     }
 
@@ -627,9 +640,7 @@ public class CertificationAOImpl implements ICertificationAO {
         // 获取认证结果
         List<Certification> certifications = certificationBO
             .queryCertificationList(userId);
-        // 如果查询不到，说明是新用户，初始化认证结果
         if (CollectionUtils.isEmpty(certifications)) {
-            // certifications = initialCertification(userId);
             throw new BizException("xn623000", "个人认证信息初始化失败");
         }
         // 组装认证结果信息
