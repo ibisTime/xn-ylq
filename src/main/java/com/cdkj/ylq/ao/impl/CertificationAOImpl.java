@@ -48,6 +48,7 @@ import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.InfoIdentify;
 import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
+import com.cdkj.ylq.domain.InfoTongDunPreLoan;
 import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
@@ -245,7 +246,7 @@ public class CertificationAOImpl implements ICertificationAO {
     @Override
     public void submitPersonalInfo(String userId, String ip, String mac,
             String wifiMac, String imei) {
-        User user = userBO.getRemoteUser(userId);
+        // User user = userBO.getRemoteUser(userId);
         XN623050Res certiInfo = getCertiInfo(userId);
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
             throw new BizException("xn623000", "请先进行身份认证");
@@ -259,19 +260,22 @@ public class CertificationAOImpl implements ICertificationAO {
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoContactFlag())) {
             throw new BizException("xn623000", "请先完善紧急联系人信息");
         }
+        if (EBoolean.NO.getCode().equals(certiInfo.getInfoAddressBookFlag())) {
+            throw new BizException("xn623000", "请先完成通信录认证");
+        }
         // if (EBoolean.NO.getCode().equals(certiInfo.getInfoBankcardFlag())) {
         // throw new BizException("xn623000", "请先完善银行卡信息");
         // }
-        InfoBasic infoBasic = certiInfo.getInfoBasic();
+        // InfoBasic infoBasic = certiInfo.getInfoBasic();
         // InfoBankcard infoBankcard = certiInfo.getInfoBankcard();
-        InfoIdentify infoIdentify = certiInfo.getInfoIdentify();
+        // InfoIdentify infoIdentify = certiInfo.getInfoIdentify();
 
-        InfoAntifraud infoAntifraud = certiBO.doZhimaCreditAntifraud(
-            user.getSystemCode(), user.getCompanyCode(), user.getMobile(),
-            infoIdentify.getIdNo(), infoIdentify.getRealName(), null,
-            infoBasic.getEmail(),
-            infoBasic.getProvinceCity() + infoBasic.getAddress(), ip, mac,
-            wifiMac, imei);
+        // InfoAntifraud infoAntifraud = certiBO.doZhimaCreditAntifraud(
+        // user.getSystemCode(), user.getCompanyCode(), user.getMobile(),
+        // infoIdentify.getIdNo(), infoIdentify.getRealName(), null,
+        // infoBasic.getEmail(),
+        // infoBasic.getProvinceCity() + infoBasic.getAddress(), ip, mac,
+        // wifiMac, imei);
 
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_ANTIFRAUD);
@@ -279,7 +283,8 @@ public class CertificationAOImpl implements ICertificationAO {
             .getIntegerValue(SysConstants.ANTIFRAUD_VALID_DAYS);
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(infoAntifraud));
+            // certification.setResult(JsonUtil.Object2Json(infoAntifraud));
+            certification.setResult("欺诈识别保留，暂不启用");
             certification.setCerDatetime(new Date());
             certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                 DateUtil.getTodayStart(), config));
@@ -443,126 +448,144 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
-    public XN623054Res doTongDunPreloanSubmit(String userId) {
+    public XN623054Res doTongDunPreloanQuery(String userId) {
         XN623054Res res = new XN623054Res();
-        Map<String, Object> params = new HashMap<String, Object>();
-        // 个人信息
-        User user = userBO.getRemoteUser(userId);
-        // 银行卡信息
-        Bankcard bankcard = accountBO.getBankcard(userId);
-        // 申请信息
-        Apply apply = applyBO.getCurrentApply(userId);
-        if (apply == null) {
-            throw new BizException("xn623054", "该用户暂时没有贷前申请");
-        }
-        // 申请产品信信息
-        Product product = productBO.getProduct(apply.getProductCode());
-
-        if (apply != null && product != null) {
-            params.put("loan_amount",
-                CalculationUtil.diviUp(product.getAmount())); // 申请借款金额
-            params.put("loan_term", product.getDuration()); // 申请借款期限
-            params.put("loan_term_unit", "DAY"); // 期限单位
-            params.put("loan_date", DateUtil.dateToStr(
-                apply.getApplyDatetime(), DateUtil.FRONT_DATE_FORMAT_STRING)); // 申请借款日期
-            params.put("purpose", "消费"); // 借款用途
-        }
-        if (bankcard != null) {
-            params.put("card_number", bankcard.getBankcardNumber()); // 银行卡
-        }
-        if (user != null) {
-            params.put("mobile", user.getMobile()); // 手机号
-            params.put("name", user.getRealName()); // 姓名
-            params.put("id_number", user.getIdNo()); // 身份证号
-            params.put("apply_province", user.getProvince()); // 进件省份
-            params.put("apply_city", user.getCity()); // 进件城市
-            if (StringUtils.isBlank(user.getRealName())) {
-                params.put("is_id_checked", "false"); // 是否通过实名认证
-            } else {
-                params.put("is_id_checked", "true"); // 是否通过实名认证
-            }
-        }
-
-        XN623050Res xn623050Res = getCertiInfo(userId);
-        if (!xn623050Res.getInfoBasicFlag().equals(
-            ECertificationStatus.TO_CERTI.getCode())) {
-            params.put("diploma", riskServicePreloan.getDiploma(xn623050Res
-                .getInfoBasic().getEducation())); // 学历
-            params.put("marriage", riskServicePreloan.getMarriage(xn623050Res
-                .getInfoBasic().getMarriage())); // 婚姻
-            params.put("home_address", xn623050Res.getInfoBasic()
-                .getProvinceCity() + xn623050Res.getInfoBasic().getAddress()); // 家庭地址
-            params.put("qq", xn623050Res.getInfoBasic().getQq()); // qq
-            params.put("email", xn623050Res.getInfoBasic().getEmail()); // 电子邮箱
-        }
-        if (!xn623050Res.getInfoOccupationFlag().equals(
-            ECertificationStatus.TO_CERTI.getCode())) {
-            params.put("career", ""); // 职业
-            params.put("annual_income", riskServicePreloan
-                .getAnnualIncome(xn623050Res.getInfoOccupation().getIncome())); // 年收入
-            params.put("company_name", xn623050Res.getInfoOccupation()
-                .getCompany()); // 工作单位
-            params.put("company_address", xn623050Res.getInfoOccupation()
-                .getProvinceCity()
-                    + xn623050Res.getInfoOccupation().getAddress()); // 单位地址
-            params
-                .put("work_phone", xn623050Res.getInfoOccupation().getPhone()); // 单位座机
-        }
-        if (!xn623050Res.getInfoContactFlag().equals(
-            ECertificationStatus.TO_CERTI.getCode())) {
-            InfoContact infoContact = xn623050Res.getInfoContact();
-            String contact1_relation = "";
-            if ("0".equals(infoContact.getFamilyRelation())) {
-                contact1_relation = "father";
-            } else if ("1".equals(infoContact.getFamilyRelation())) {
-                contact1_relation = "spouse";
-            } else if ("2".equals(infoContact.getFamilyRelation())) {
-                contact1_relation = "other_relative";
-            }
-            String contact2_relation = "";
-            if ("0".equals(infoContact.getSocietyRelation())) {
-                contact1_relation = "others";
-            } else if ("1".equals(infoContact.getSocietyRelation())) {
-                contact1_relation = "coworker";
-            } else if ("2".equals(infoContact.getSocietyRelation())) {
-                contact1_relation = "friend";
-            }
-            params.put("contact1_relation", contact1_relation); // 第一联系人社会关系
-            params.put("concatc1_name", infoContact.getFamilyName()); // 第一联系人姓名
-            params.put("contact1_mobile", infoContact.getFamilyMobile()); // 第一联系人手机号
-            params.put("contact2_relation", contact2_relation);
-            params.put("contact2_name", infoContact.getSocietyName());
-            params.put("contact2_mobile", infoContact.getSocietyMobile());
-        }
-
-        PreloanSubmitResponse riskPreloanResponse = riskServicePreloan
-            .apply(params);
-        System.out.println(riskPreloanResponse.toString());
-        if (riskPreloanResponse.getSuccess()) {
-            // 等待一定时间后，可调用query接口查询结果。
-            // 时间建议：5s后可调用
-            try {
-                Thread.sleep(5 * 1000);
-            } catch (Exception e) {
-                //
-            }
-            // query接口获取结果
-            PreloanQueryResponse response = riskServicePreloan
-                .query(riskPreloanResponse.getReport_id());
-            res.setTdData(JSONObject.fromObject(response).toString());
-            res.setPersonInfo(JSONObject.fromObject(params).toString());
-            return res;
-            // 其他处理 。。。
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_TONGDUN_PRELOAN);
+        if (certification != null
+                && ECertificationStatus.CERTI_YES.getCode().equals(
+                    certification.getFlag())) {
+            res = JsonUtil.json2Bean(certification.getResult(),
+                XN623054Res.class);
         } else {
-            throw new BizException("xn623000", "同盾贷前审核信息提交发送错误，请过一段时间重新尝试！");
+            Map<String, Object> params = new HashMap<String, Object>();
+            // 个人信息
+            User user = userBO.getRemoteUser(userId);
+            // 银行卡信息
+            Bankcard bankcard = accountBO.getBankcard(userId);
+            // 申请信息
+            Apply apply = applyBO.getCurrentApply(userId);
+            if (apply == null) {
+                throw new BizException("xn623054", "该用户暂时没有贷前申请");
+            }
+            // 申请产品信信息
+            Product product = productBO.getProduct(apply.getProductCode());
+
+            if (apply != null && product != null) {
+                params.put("loan_amount",
+                    CalculationUtil.diviUp(product.getAmount())); // 申请借款金额
+                params.put("loan_term", product.getDuration()); // 申请借款期限
+                params.put("loan_term_unit", "DAY"); // 期限单位
+                params.put("loan_date",
+                    DateUtil.dateToStr(apply.getApplyDatetime(),
+                        DateUtil.FRONT_DATE_FORMAT_STRING)); // 申请借款日期
+                params.put("purpose", "消费"); // 借款用途
+            }
+            if (bankcard != null) {
+                params.put("card_number", bankcard.getBankcardNumber()); // 银行卡
+            }
+            if (user != null) {
+                params.put("mobile", user.getMobile()); // 手机号
+                params.put("name", user.getRealName()); // 姓名
+                params.put("id_number", user.getIdNo()); // 身份证号
+                params.put("apply_province", user.getProvince()); // 进件省份
+                params.put("apply_city", user.getCity()); // 进件城市
+                if (StringUtils.isBlank(user.getRealName())) {
+                    params.put("is_id_checked", "false"); // 是否通过实名认证
+                } else {
+                    params.put("is_id_checked", "true"); // 是否通过实名认证
+                }
+            }
+
+            XN623050Res xn623050Res = getCertiInfo(userId);
+            if (!xn623050Res.getInfoBasicFlag().equals(
+                ECertificationStatus.TO_CERTI.getCode())) {
+                params.put("diploma", riskServicePreloan.getDiploma(xn623050Res
+                    .getInfoBasic().getEducation())); // 学历
+                params.put("marriage", riskServicePreloan
+                    .getMarriage(xn623050Res.getInfoBasic().getMarriage())); // 婚姻
+                params.put("home_address", xn623050Res.getInfoBasic()
+                    .getProvinceCity()
+                        + xn623050Res.getInfoBasic().getAddress()); // 家庭地址
+                params.put("qq", xn623050Res.getInfoBasic().getQq()); // qq
+                params.put("email", xn623050Res.getInfoBasic().getEmail()); // 电子邮箱
+            }
+            if (!xn623050Res.getInfoOccupationFlag().equals(
+                ECertificationStatus.TO_CERTI.getCode())) {
+                params.put("career", ""); // 职业
+                params.put("annual_income", riskServicePreloan
+                    .getAnnualIncome(xn623050Res.getInfoOccupation()
+                        .getIncome())); // 年收入
+                params.put("company_name", xn623050Res.getInfoOccupation()
+                    .getCompany()); // 工作单位
+                params.put("company_address", xn623050Res.getInfoOccupation()
+                    .getProvinceCity()
+                        + xn623050Res.getInfoOccupation().getAddress()); // 单位地址
+                params.put("work_phone", xn623050Res.getInfoOccupation()
+                    .getPhone()); // 单位座机
+            }
+            if (!xn623050Res.getInfoContactFlag().equals(
+                ECertificationStatus.TO_CERTI.getCode())) {
+                InfoContact infoContact = xn623050Res.getInfoContact();
+                String contact1_relation = "";
+                if ("0".equals(infoContact.getFamilyRelation())) {
+                    contact1_relation = "father";
+                } else if ("1".equals(infoContact.getFamilyRelation())) {
+                    contact1_relation = "spouse";
+                } else if ("2".equals(infoContact.getFamilyRelation())) {
+                    contact1_relation = "other_relative";
+                }
+                String contact2_relation = "";
+                if ("0".equals(infoContact.getSocietyRelation())) {
+                    contact1_relation = "others";
+                } else if ("1".equals(infoContact.getSocietyRelation())) {
+                    contact1_relation = "coworker";
+                } else if ("2".equals(infoContact.getSocietyRelation())) {
+                    contact1_relation = "friend";
+                }
+                params.put("contact1_relation", contact1_relation); // 第一联系人社会关系
+                params.put("concatc1_name", infoContact.getFamilyName()); // 第一联系人姓名
+                params.put("contact1_mobile", infoContact.getFamilyMobile()); // 第一联系人手机号
+                params.put("contact2_relation", contact2_relation);
+                params.put("contact2_name", infoContact.getSocietyName());
+                params.put("contact2_mobile", infoContact.getSocietyMobile());
+            }
+
+            PreloanSubmitResponse riskPreloanResponse = riskServicePreloan
+                .apply(params);
+            System.out.println(riskPreloanResponse.toString());
+            if (riskPreloanResponse.getSuccess()) {
+                // 等待一定时间后，可调用query接口查询结果。
+                // 时间建议：5s后可调用
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (Exception e) {
+                    //
+                }
+                // query接口获取结果
+                PreloanQueryResponse response = riskServicePreloan
+                    .query(riskPreloanResponse.getReport_id());
+                res.setTdData(JSONObject.fromObject(response).toString());
+                res.setPersonInfo(JSONObject.fromObject(params).toString());
+                // 其他处理 。。。
+                Integer config = sysConfigBO
+                    .getIntegerValue(SysConstants.TONGDUN_PRELOAN_VALID_DAYS);
+                if (certification != null) {
+                    certification.setFlag(ECertificationStatus.CERTI_YES
+                        .getCode());
+                    certification.setResult(JsonUtil.Object2Json(res));
+                    certification.setCerDatetime(new Date());
+                    certification
+                        .setValidDatetime(DateUtil.getRelativeDateOfDays(
+                            DateUtil.getTodayStart(), config));
+                    certification.setRef("");
+                    certificationBO.refreshCertification(certification);
+                }
+            } else {
+                throw new BizException("xn623000", "同盾贷前审核信息提交发送错误，请过一段时间重新尝试！");
+            }
         }
-
-    }
-
-    @Override
-    public void doTongDunPreloanQuery(String userId) {
-        // TODO Auto-generated method stub
-
+        return res;
     }
 
     @Override
@@ -633,6 +656,7 @@ public class CertificationAOImpl implements ICertificationAO {
         res.setInfoZMCreditFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoCarrierFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoAddressBookFlag(ECertificationStatus.TO_CERTI.getCode());
+        res.setInfoTongDunPreLoanFlag(ECertificationStatus.TO_CERTI.getCode());
 
         for (Certification certification : certifications) {
             if (ECertiKey.INFO_IDENTIFY_PIC.getCode().equals(
@@ -726,6 +750,18 @@ public class CertificationAOImpl implements ICertificationAO {
                             certification.getFlag())) {
                     res.setInfoCarrier(JsonUtil.json2Bean(
                         certification.getResult(), MxCarrierNofification.class));
+                }
+            }
+
+            if (ECertiKey.INFO_TONGDUN_PRELOAN.getCode().equals(
+                certification.getCertiKey())) {
+                res.setInfoCarrierFlag(certification.getFlag());
+                if (ECertificationStatus.CERTI_YES.getCode().equals(
+                    certification.getFlag())
+                        || ECertificationStatus.INVALID.getCode().equals(
+                            certification.getFlag())) {
+                    res.setInfoTongDunPreLoan(JsonUtil.json2Bean(
+                        certification.getResult(), InfoTongDunPreLoan.class));
                 }
             }
 
@@ -826,6 +862,14 @@ public class CertificationAOImpl implements ICertificationAO {
         addressBook.setFlag(ECertificationStatus.TO_CERTI.getCode());
         certificationBO.saveCertification(addressBook);
         certifications.add(addressBook);
+
+        // 同盾贷前审核报告
+        Certification tongdunPreloan = new Certification();
+        tongdunPreloan.setUserId(userId);
+        tongdunPreloan.setCertiKey(ECertiKey.INFO_TONGDUN_PRELOAN.getCode());
+        tongdunPreloan.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        certificationBO.saveCertification(tongdunPreloan);
+        certifications.add(tongdunPreloan);
 
         // 授信额度
         Certification creditAmount = new Certification();

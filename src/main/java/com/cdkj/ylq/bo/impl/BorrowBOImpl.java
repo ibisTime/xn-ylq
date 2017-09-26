@@ -17,6 +17,7 @@ import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Renewal;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
+import com.cdkj.ylq.enums.ELoanType;
 import com.cdkj.ylq.enums.EPayType;
 import com.cdkj.ylq.enums.EProductLevel;
 import com.cdkj.ylq.exception.BizException;
@@ -97,6 +98,7 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
             borrow.setFkDatetime(fkDatetime);
             borrow.setJxDatetime(jxDatetime);
             borrow.setHkDatetime(hkDatetime);
+            borrow.setLoanType(ELoanType.OFFLINE.getCode());
             borrow.setStatus(EBorrowStatus.LOANING.getCode());
             borrow.setUpdater(updater);
             borrow.setUpdateDatetime(now);
@@ -146,6 +148,7 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
             borrow.setFkDatetime(fkDatetime);
             borrow.setJxDatetime(jxDatetime);
             borrow.setHkDatetime(hkDatetime);
+            borrow.setLoanType(ELoanType.BAOFOO.getCode());
             borrow.setStatus(EBorrowStatus.LOANING.getCode());
             borrow.setUpdateDatetime(now);
             borrow.setRemark("宝付代付成功");

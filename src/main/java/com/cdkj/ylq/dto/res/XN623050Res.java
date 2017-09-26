@@ -14,6 +14,7 @@ import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.InfoIdentify;
 import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
+import com.cdkj.ylq.domain.InfoTongDunPreLoan;
 import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.User;
@@ -93,6 +94,28 @@ public class XN623050Res {
 
     // 通讯录标识
     private String wechatFlag;
+
+    // 同盾贷前审核报告标识
+    private String infoTongDunPreLoanFlag;
+
+    // 同盾贷前审核报告
+    private InfoTongDunPreLoan infoTongDunPreLoan;
+
+    public String getInfoTongDunPreLoanFlag() {
+        return infoTongDunPreLoanFlag;
+    }
+
+    public void setInfoTongDunPreLoanFlag(String infoTongDunPreLoanFlag) {
+        this.infoTongDunPreLoanFlag = infoTongDunPreLoanFlag;
+    }
+
+    public InfoTongDunPreLoan getInfoTongDunPreLoan() {
+        return infoTongDunPreLoan;
+    }
+
+    public void setInfoTongDunPreLoan(InfoTongDunPreLoan infoTongDunPreLoan) {
+        this.infoTongDunPreLoan = infoTongDunPreLoan;
+    }
 
     public MxCarrierNofification getInfoCarrier() {
         return infoCarrier;

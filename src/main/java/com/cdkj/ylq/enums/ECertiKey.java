@@ -35,7 +35,10 @@ public enum ECertiKey {
     , INFO_AMOUNT("INFO_AMOUNT", "授信额度")
 
     // 可选认证
-    , INFO_ADDRESS_BOOK("INFO_ADDRESS_BOOK", "通讯录认证");
+    , INFO_ADDRESS_BOOK("INFO_ADDRESS_BOOK", "通讯录认证")
+
+    // 同盾贷前审核报告
+    , INFO_TONGDUN_PRELOAN("INFO_TONGDUN_PRELOAN", "同盾贷前审核报告");
 
     ECertiKey(String code, String value) {
         this.code = code;

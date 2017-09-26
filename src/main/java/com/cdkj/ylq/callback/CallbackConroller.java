@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cdkj.ylq.ao.IBorrowAO;
 import com.cdkj.ylq.ao.ICertificationAO;
-import com.cdkj.ylq.ao.ICouponConditionAO;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.enums.EBizType;
@@ -45,9 +44,6 @@ public class CallbackConroller {
 
     @Autowired
     IBorrowAO borrowAO;
-
-    @Autowired
-    ICouponConditionAO couponConditionAO;
 
     @Autowired
     ICertificationAO certificationAO;
@@ -80,11 +76,7 @@ public class CallbackConroller {
         } else {
             try {
                 if (EBizType.YLQ_REPAY.getCode().equals(bizType)) {
-                    String userId = borrowAO.repaySuccess(payGroup, payType,
-                        payCode, amount);
-                    if (StringUtils.isNotBlank(userId)) {
-                        couponConditionAO.repaySuccess(userId);
-                    }
+                    borrowAO.repaySuccess(payGroup, payType, payCode, amount);
                 } else if (EBizType.YLQ_RENEWAL.getCode().equals(bizType)) {
                     borrowAO.renewalSuccess(payGroup, payType, payCode, amount);
                 } else if (EBizType.YLQ_BAOFOO_PAY_QUERY.getCode().equals(
@@ -184,6 +176,7 @@ public class CallbackConroller {
     }
 
     /* 借贷通回调处理 */
+    @SuppressWarnings("unchecked")
     @RequestMapping("/jdt/notice")
     public synchronized void doCallbackJDT(HttpServletRequest request,
             HttpServletResponse response) throws IOException {

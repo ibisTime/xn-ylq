@@ -483,11 +483,47 @@ public class BorrowAOImpl implements IBorrowAO {
             return doRepayAlipay(borrow);
         } else if (EPayType.WEIXIN_APP.getCode().equals(payType)) {
             return doRepayWechat(borrow);
+        } else if (EPayType.BAOFOO_WITHHOLD.getCode().equals(payType)) {
+            return doRepayBaofoo(borrow);
         } else if (EPayType.OFFLINE.getCode().equals(payType)) {
             return doRepayOffline(borrow);
         } else {
             throw new BizException("xn6230000", "暂不支持此支付方式");
         }
+    }
+
+    private Object doRepayBaofoo(Borrow borrow) {
+        Long rmbAmount = borrow.getTotalAmount();
+        User user = userBO.getRemoteUser(borrow.getApplyUser());
+        Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
+        boolean isSuccess = accountBO.baofooWithhold(bankcard.getBankCode(),
+            bankcard.getBankcardNumber(), user.getIdNo(), user.getRealName(),
+            user.getMobile(), rmbAmount, borrow.getCode());
+        if (isSuccess) {
+            // 如果是逾期还款，逾期记录落地
+            if (borrow.getYqDays() > 0) {
+                overdueBO.saveOverdue(borrow.getApplyUser(), borrow.getCode(),
+                    borrow.getYqDays(), borrow.getYqlxAmount(),
+                    EOverdueDeal.REPAY.getCode());
+            }
+            // 更新订单支付金额
+            borrowBO.repaySuccess(borrow, rmbAmount, "宝付代扣",
+                EPayType.BAOFOO_WITHHOLD.getCode());
+            // 更新申请单状态
+            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                EApplyStatus.REPAY);
+            // 额度重置为0
+            certificationBO.resetSxAmount(borrow.getApplyUser());
+            // 发放优惠券
+            couponConditionAO.repaySuccess(borrow.getApplyUser());
+            // 发送短信
+            smsOutBO.sentContent(borrow.getApplyUser(),
+                "您的" + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号："
+                        + borrow.getCode() + "）已经成功还款，详情查看请登录APP。");
+        } else {
+            throw new BizException("xn623000", "宝付代扣失败，建议选择其他支付方式");
+        }
+        return new BooleanRes(true);
     }
 
     private Object doRepayOffline(Borrow borrow) {
@@ -535,9 +571,8 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Override
     @Transactional
-    public String repaySuccess(String payGroup, String payType, String payCode,
+    public void repaySuccess(String payGroup, String payType, String payCode,
             Long amount) {
-        String userId = null;
         List<Borrow> borrowList = borrowBO.queryBorrowListByPayGroup(payGroup);
         if (CollectionUtils.isEmpty(borrowList)) {
             throw new BizException("XN000000", "找不到对应的借款记录");
@@ -558,14 +593,15 @@ public class BorrowAOImpl implements IBorrowAO {
                 EApplyStatus.REPAY);
             // 额度重置为0
             certificationBO.resetSxAmount(borrow.getApplyUser());
-            userId = borrow.getApplyUser();
+            // 发放优惠券
+            couponConditionAO.repaySuccess(borrow.getApplyUser());
+            // 发送短信
             smsOutBO.sentContent(borrow.getApplyUser(),
-                "您的" + CalculationUtil.diviUp(borrow.getAmount())
-                        + "借款已经成功还款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
+                "您的" + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号："
+                        + borrow.getCode() + "）已经成功还款，详情查看请登录APP。");
         } else {
             logger.info("订单号：" + borrow.getCode() + "已支付，重复回调");
         }
-        return userId;
     }
 
     @Override
@@ -582,11 +618,46 @@ public class BorrowAOImpl implements IBorrowAO {
             return doRenewalAlipay(renewal);
         } else if (EPayType.WEIXIN_APP.getCode().equals(payType)) {
             return doRenewalWechat(renewal);
+        } else if (EPayType.BAOFOO_WITHHOLD.getCode().equals(payType)) {
+            return doRenewalBaofoo(renewal);
         } else if (EPayType.OFFLINE.getCode().equals(payType)) {
             return doRenewalOffline(renewal);
         } else {
             throw new BizException("xn6230000", "暂不支持此支付方式");
         }
+    }
+
+    private Object doRenewalBaofoo(Renewal renewal) {
+        Long rmbAmount = renewal.getTotalAmount();
+        User user = userBO.getRemoteUser(renewal.getApplyUser());
+        Bankcard bankcard = accountBO.getBankcard(renewal.getApplyUser());
+        boolean isSuccess = accountBO.baofooWithhold(bankcard.getBankCode(),
+            bankcard.getBankcardNumber(), user.getIdNo(), user.getRealName(),
+            user.getMobile(), rmbAmount, renewal.getBorrowCode());
+        if (isSuccess) {
+            Borrow borrow = borrowBO.getBorrow(renewal.getBorrowCode());
+            Integer renewalCount = borrow.getRenewalCount();
+            // 如果是逾期还款，逾期记录落地
+            if (borrow.getYqDays() > 0) {
+                overdueBO.saveOverdue(borrow.getApplyUser(), borrow.getCode(),
+                    borrow.getYqDays(), borrow.getYqlxAmount(),
+                    EOverdueDeal.RENEWAL.getCode());
+            }
+            // 更新借款订单
+            borrowBO.renewalSuccess(borrow, renewal, rmbAmount);
+            // 更新续期记录
+            renewalBO.renewalSuccess(renewal, "宝付代扣",
+                EPayType.BAOFOO_WITHHOLD.getCode(), renewalCount + 1);
+            // 更新申请单状态
+            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                EApplyStatus.LOANING);
+            smsOutBO.sentContent(borrow.getApplyUser(),
+                "您的" + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号："
+                        + borrow.getCode() + "）已经成功续期，详情查看请登录APP。");
+        } else {
+            throw new BizException("xn623000", "宝付代扣失败，建议选择其他支付方式");
+        }
+        return new BooleanRes(true);
     }
 
     private Object doRenewalOffline(Renewal renewal) {
@@ -632,9 +703,8 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Override
     @Transactional
-    public String renewalSuccess(String payGroup, String payType,
-            String payCode, Long amount) {
-        String userId = null;
+    public void renewalSuccess(String payGroup, String payType, String payCode,
+            Long amount) {
         List<Renewal> renewalList = renewalBO
             .queryRenewalListByPayGroup(payGroup);
         if (CollectionUtils.isEmpty(renewalList)) {
@@ -663,14 +733,12 @@ public class BorrowAOImpl implements IBorrowAO {
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                 EApplyStatus.LOANING);
-            userId = borrow.getApplyUser();
             smsOutBO.sentContent(borrow.getApplyUser(),
-                "您的" + CalculationUtil.diviUp(borrow.getAmount())
-                        + "借款已经成功续期，合同编号为" + borrow.getCode() + "，详情查看请登录APP。");
+                "您的" + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号："
+                        + borrow.getCode() + "）已经成功续期，详情查看请登录APP。");
         } else {
             logger.info("订单号：" + borrow.getCode() + "已支付，重复回调");
         }
-        return userId;
     }
 
     @Override

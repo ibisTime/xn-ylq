@@ -31,6 +31,7 @@
 		<result column="pay_code" property="payCode" />
 		<result column="pay_group" property="payGroup" />
 		<result column="pay_type" property="payType" />
+		<result column="loan_type" property="loanType" />
 		<result column="renewal_count" property="renewalCount" />
 		<result column="status" property="status" />
 		<result column="is_archive" property="isArchive" />
@@ -123,6 +124,7 @@
 		,t.pay_code
 		,t.pay_group
 		,t.pay_type
+		,t.loan_type
 		,t.renewal_count
 		,t.status
 		,t.is_archive
@@ -233,6 +235,7 @@
 		fk_datetime = #{fkDatetime}
 		,jx_datetime = #{jxDatetime}
 		,hk_datetime = #{hkDatetime}
+		,loan_type = #{loanType}
 		,status = #{status}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
@@ -266,6 +269,7 @@
 		fk_datetime = #{fkDatetime}
 		,jx_datetime = #{jxDatetime}
 		,hk_datetime = #{hkDatetime}
+		,loan_type = #{loanType}
 		,status = #{status}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}

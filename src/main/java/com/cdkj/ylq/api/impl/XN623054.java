@@ -35,7 +35,7 @@ public class XN623054 extends AProcessor {
      */
     @Override
     public Object doBusiness() throws BizException {
-        return certificationAO.doTongDunPreloanSubmit(req.getUserId());
+        return certificationAO.doTongDunPreloanQuery(req.getUserId());
     }
 
     /** 

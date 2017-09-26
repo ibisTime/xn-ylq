@@ -12,6 +12,8 @@ public class SysConstants {
 
     public static final String ADDRESS_BOOK_VALID_DAYS = "addressBookValidDays"; // 通讯录认证有效天数
 
+    public static final String TONGDUN_PRELOAN_VALID_DAYS = "tongdunPreLoanValidDays"; // 同盾贷前审核报告有效天数
+
     public static final String AMOUNT_VALID_DAYS = "amountValidDays"; // 额度有效天数
 
     public static final String SEND_SMS_COUNT = "sendSmsCount"; // 催收联系人数量

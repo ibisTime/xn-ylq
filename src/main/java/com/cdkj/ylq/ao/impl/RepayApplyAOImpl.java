@@ -104,6 +104,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             certificationBO.resetSxAmount(borrow.getApplyUser());
             // 发放优惠券
             couponConditionAO.repaySuccess(repayApply.getApplyUser());
+            // 发送短信
             smsContent = "您的" + CalculationUtil.diviUp(borrow.getAmount())
                     + "借款（合同编号：" + borrow.getCode() + "）已经成功还款，详情查看请登录APP。";
         } else if (EBoolean.NO.getCode().equals(approveResult)) {

@@ -96,8 +96,11 @@ public class Borrow extends ABaseDO {
     // 支付组号
     private String payGroup;
 
-    // 支付方式
+    // 还款方式
     private String payType;
+
+    // 放款方式
+    private String loanType;
 
     // 续期次数
     private Integer renewalCount;
@@ -544,6 +547,14 @@ public class Borrow extends ABaseDO {
 
     public void setRenewalAmount(Long renewalAmount) {
         this.renewalAmount = renewalAmount;
+    }
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
     }
 
 }

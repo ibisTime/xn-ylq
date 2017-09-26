@@ -74,10 +74,7 @@ public interface ICertificationAO {
             List<InfoAddressBook> addressBookList);
 
     // 同盾贷前审核提交
-    public XN623054Res doTongDunPreloanSubmit(String userId);
-
-    // 同盾贷前审核查询
-    public void doTongDunPreloanQuery(String userId);
+    public XN623054Res doTongDunPreloanQuery(String userId);
 
     // 查询个人超详细的认证信息（可形成用户报告）
     public XN623050Res getCertiInfo(String userId);
