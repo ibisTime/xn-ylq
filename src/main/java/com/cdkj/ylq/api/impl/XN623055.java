@@ -12,30 +12,32 @@ import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.StringValidater;
-import com.cdkj.ylq.dto.req.XN623054Req;
+import com.cdkj.ylq.dto.req.XN623055Req;
+import com.cdkj.ylq.dto.res.BooleanRes;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.ParaException;
 import com.cdkj.ylq.spring.SpringContextHolder;
 
 /** 
- * 同盾报告获取
+ * 同盾报告更新
  * @author: haiqingzheng 
  * @since: 2017年8月12日 下午12:07:58 
  * @history:
  */
-public class XN623054 extends AProcessor {
+public class XN623055 extends AProcessor {
 
     private ICertificationAO certificationAO = SpringContextHolder
         .getBean(ICertificationAO.class);
 
-    private XN623054Req req = null;
+    private XN623055Req req = null;
 
     /** 
      * @see com.cdkj.ylq.api.IProcessor#doBusiness()
      */
     @Override
     public Object doBusiness() throws BizException {
-        return certificationAO.doTongDunPreLoanQuery(req.getUserId());
+        certificationAO.doTongDunPreLoanReload(req.getUserId());
+        return new BooleanRes(true);
     }
 
     /** 
@@ -43,7 +45,7 @@ public class XN623054 extends AProcessor {
      */
     @Override
     public void doCheck(String inputparams) throws ParaException {
-        req = JsonUtil.json2Bean(inputparams, XN623054Req.class);
+        req = JsonUtil.json2Bean(inputparams, XN623055Req.class);
         StringValidater.validateBlank(req.getUserId());
     }
 }

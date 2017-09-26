@@ -73,8 +73,11 @@ public interface ICertificationAO {
     public void doAddressBookVerify(String userId,
             List<InfoAddressBook> addressBookList);
 
-    // 同盾贷前审核提交
-    public XN623054Res doTongDunPreloanQuery(String userId);
+    // 同盾贷前审核报告查询，优先拉取本地报告
+    public XN623054Res doTongDunPreLoanQuery(String userId);
+
+    // 更新同盾贷前审核报告
+    public void doTongDunPreLoanReload(String userId);
 
     // 查询个人超详细的认证信息（可形成用户报告）
     public XN623050Res getCertiInfo(String userId);
