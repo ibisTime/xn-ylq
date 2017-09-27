@@ -26,6 +26,7 @@ import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.res.XN623020Res;
 import com.cdkj.ylq.enums.EApplyStatus;
+import com.cdkj.ylq.enums.EApplyType;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
@@ -83,6 +84,7 @@ public class ApplyAOImpl implements IApplyAO {
             String code = OrderNoGenerater.generateM(EGeneratePrefix.APPLY
                 .getCode());
             data.setCode(code);
+            data.setType(EApplyType.JZB.getCode());
             data.setApplyUser(applyUser);
             data.setApplyDatetime(new Date());
             data.setProductCode(productCode);
@@ -143,10 +145,11 @@ public class ApplyAOImpl implements IApplyAO {
                 certification.setRef(apply.getProductCode());
                 certificationBO.refreshCertification(certification);
             }
-            content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote + "，请登录APP查看详情。";
+            content = "恭喜您，您的借款申请已经通过审核，请登录APP进行自助借款操作。";
         } else {
             sxAmount = 0L;
-            content = "恭喜您，您的借款申请已经通过审核，请登录APP进行自助借款操作。";
+            status = EApplyStatus.APPROVE_NO.getCode();
+            content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote + "，请登录APP查看详情。";
         }
         applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
         smsOutBO.sentContent(apply.getApplyUser(), content);

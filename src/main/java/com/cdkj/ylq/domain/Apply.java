@@ -18,6 +18,9 @@ public class Apply extends ABaseDO {
     // 编号
     private String code;
 
+    // 类型
+    private String type;
+
     // 申请人
     private String applyUser;
 
@@ -50,6 +53,9 @@ public class Apply extends ABaseDO {
 
     // 备注
     private String remark;
+
+    // 借贷通报告
+    private String jdtReport;
 
     // *** 辅助字段 ****
 
@@ -179,6 +185,22 @@ public class Apply extends ABaseDO {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getJdtReport() {
+        return jdtReport;
+    }
+
+    public void setJdtReport(String jdtReport) {
+        this.jdtReport = jdtReport;
     }
 
 }

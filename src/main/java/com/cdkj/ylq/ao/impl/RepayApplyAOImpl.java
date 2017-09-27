@@ -170,8 +170,10 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                 repayApply.setBorrow(borrowBO.getBorrow(repayApply.getRefNo()));
             } else if (ERepayApplyType.RENEWAL.getCode().equals(
                 repayApply.getType())) {
-                repayApply.setRenewal(renewalBO.getRenewal(repayApply
-                    .getRefNo()));
+                Renewal renewal = renewalBO.getRenewal(repayApply.getRefNo());
+                repayApply.setRenewal(renewal);
+                repayApply
+                    .setBorrow(borrowBO.getBorrow(renewal.getBorrowCode()));
             }
         }
         return results;
@@ -185,7 +187,9 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             repayApply.setBorrow(borrowBO.getBorrow(repayApply.getRefNo()));
         } else if (ERepayApplyType.RENEWAL.getCode().equals(
             repayApply.getType())) {
-            repayApply.setRenewal(renewalBO.getRenewal(repayApply.getRefNo()));
+            Renewal renewal = renewalBO.getRenewal(repayApply.getRefNo());
+            repayApply.setRenewal(renewal);
+            repayApply.setBorrow(borrowBO.getBorrow(renewal.getBorrowCode()));
         }
         return repayApply;
     }

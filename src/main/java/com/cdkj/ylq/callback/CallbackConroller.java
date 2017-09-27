@@ -2,14 +2,11 @@ package com.cdkj.ylq.callback;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cdkj.ylq.ao.IBorrowAO;
 import com.cdkj.ylq.ao.ICertificationAO;
+import com.cdkj.ylq.ao.IJdtAO;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.enums.EBizType;
@@ -47,6 +45,9 @@ public class CallbackConroller {
 
     @Autowired
     ICertificationAO certificationAO;
+
+    @Autowired
+    IJdtAO jdtAO;
 
     // ******第三方支付成功回调处理
 
@@ -176,12 +177,25 @@ public class CallbackConroller {
     }
 
     /* 借贷通回调处理 */
-    @SuppressWarnings("unchecked")
     @RequestMapping("/jdt/notice")
     public synchronized void doCallbackJDT(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
-        Map<String, String> params = request.getParameterMap();
-        logger.info("借贷通获客-实时通告" + JSONObject.fromObject(params));
+        try {
+            // 获取回调参数
+            PrintWriter out = response.getWriter();
+            String token = request.getParameter("token");
+            String uid = request.getParameter("uid");
+            String demandKey = request.getParameter("demandKey");
+            String demandId = request.getParameter("demandId");
+            String dataTime = request.getParameter("dataTime");
+            logger.info("借贷通获客-实时通告" + "token=" + token + " uid=" + uid
+                    + " demandKey=" + demandKey + " demandId=" + demandId
+                    + " dataTime=" + dataTime);
+            jdtAO.doGetNewMember(token, uid, demandKey, demandId, dataTime);
+            out.print("received");
+        } catch (Exception e) {
+            logger.info("借贷通实时通告处理异常,原因：" + e.getMessage());
+        }
     }
 
     private String getPayType(String channelType) {

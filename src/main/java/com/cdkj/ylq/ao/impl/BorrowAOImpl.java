@@ -228,6 +228,12 @@ public class BorrowAOImpl implements IBorrowAO {
         for (Borrow borrow : borrowList) {
             borrow.setUser(userBO.getRemoteUser(borrow.getApplyUser()));
             borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
+            if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                    || EBorrowStatus.OVERDUE.getCode().equals(
+                        borrow.getStatus())) {
+                borrow.setRemainDays(DateUtil.daysBetween(new Date(),
+                    borrow.getHkDatetime()));
+            }
         }
         return results;
     }
@@ -363,11 +369,10 @@ public class BorrowAOImpl implements IBorrowAO {
             // 返还额度
             certificationBO.refreshSxAmount(borrow.getApplyUser(),
                 borrow.getAmount());
-
             smsOutBO.sentContent(borrow.getApplyUser(), "很抱歉，您的"
-                    + CalculationUtil.diviUp(borrow.getAmount())
-                    + "借款未能审核通过，合同编号为" + borrow.getCode() + "，原因："
-                    + approveNote + "。");
+                    + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号为"
+                    + borrow.getCode() + ")额度使用受限，原因：" + approveNote
+                    + "，详情请咨询客服。");
         }
         borrowBO.doApprove(borrow, status, approver, approveNote);
     }

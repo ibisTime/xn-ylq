@@ -1,6 +1,7 @@
 package com.cdkj.ylq.bo;
 
 import com.cdkj.ylq.domain.User;
+import com.cdkj.ylq.dto.req.XN805042Req;
 import com.cdkj.ylq.dto.res.XN805041Res;
 import com.cdkj.ylq.enums.EUserKind;
 
@@ -31,4 +32,7 @@ public interface IUserBO {
     // 将用户拉入黑名单
     public void addBlacklist(String userId, String type, String updater,
             String remark);
+
+    // 前端用户代注册
+    public String doAddUser(XN805042Req req);
 }

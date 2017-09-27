@@ -59,6 +59,9 @@
 			<if test="status != null and status != '' ">
 				AND t.status = #{status}
 			</if>
+			<if test="loanType != null and loanType != '' ">
+				AND t.loan_type = #{loanType}
+			</if>
 			<if test="level != null and level != '' ">
 				AND t.level = #{level}
 			</if>

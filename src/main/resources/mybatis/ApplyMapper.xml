@@ -4,6 +4,7 @@
 <mapper namespace="com.cdkj.ylq.dao.IApplyDAO">
 	<resultMap id="apply_DB_Result" type="apply">
 		<result column="code" property="code" />
+		<result column="type" property="type" />
 		<result column="apply_user" property="applyUser" />
 		<result column="apply_datetime" property="applyDatetime" />
 		<result column="product_code" property="productCode" />
@@ -15,11 +16,15 @@
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
+		<result column="jdt_report" property="jdtReport" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="code != null and code != '' ">
 				AND t.code = #{code}
+			</if>
+			<if test="type != null and type != '' ">
+				AND t.type = #{type}
 			</if>
 			<if test="productCode != null and productCode != '' ">
 				AND t.product_code = #{productCode}
@@ -41,6 +46,7 @@
 	<select id="select_apply" parameterType="apply" resultMap="apply_DB_Result">
 		SELECT
 		t.code
+		,t.type
 		,t.apply_user
 		,t.apply_datetime
 		,t.product_code
@@ -52,6 +58,7 @@
 		,t.updater
 		,t.update_datetime
 		,t.remark
+		,t.jdt_report
 		FROM
 		t_apply t
 		<include refid="where_condition" />
@@ -72,6 +79,7 @@
 		INSERT INTO
 		t_apply(
 		code
+		,type
 		,apply_user
 		,apply_datetime
 		,product_code
@@ -83,9 +91,11 @@
 		,updater
 		,update_datetime
 		,remark
+		,jdt_report
 		)
 		VALUES(
 		#{code}
+		,#{type}
 		,#{applyUser}
 		,#{applyDatetime}
 		,#{productCode}
@@ -97,6 +107,7 @@
 		,#{updater}
 		,#{updateDatetime}
 		,#{remark}
+		,#{jdtReport}
 		)
 	</insert>
 

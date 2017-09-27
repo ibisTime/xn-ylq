@@ -15,10 +15,12 @@ import com.cdkj.ylq.dto.req.XN001100Req;
 import com.cdkj.ylq.dto.req.XN001102Req;
 import com.cdkj.ylq.dto.req.XN001400Req;
 import com.cdkj.ylq.dto.req.XN805041Req;
+import com.cdkj.ylq.dto.req.XN805042Req;
 import com.cdkj.ylq.dto.req.XN805190Req;
 import com.cdkj.ylq.dto.res.XN001102Res;
 import com.cdkj.ylq.dto.res.XN001400Res;
 import com.cdkj.ylq.dto.res.XN805041Res;
+import com.cdkj.ylq.dto.res.XN805042Res;
 import com.cdkj.ylq.enums.ESysUser;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.enums.EUserKind;
@@ -166,4 +168,12 @@ public class UserBOImpl implements IUserBO {
         req.setType(type);
         BizConnecter.getBizData("001001", JsonUtils.object2Json(req));
     }
+
+    @Override
+    public String doAddUser(XN805042Req req) {
+        XN805042Res res = BizConnecter.getBizData("805042",
+            JsonUtils.object2Json(req), XN805042Res.class);
+        return res.getUserId();
+    }
+
 }

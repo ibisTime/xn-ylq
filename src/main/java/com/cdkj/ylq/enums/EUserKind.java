@@ -14,8 +14,7 @@ package com.cdkj.ylq.enums;
  * @history:
  */
 public enum EUserKind {
-    F1("f1", "C端会员"), F2("f2", "B端商家"), Operator("01", "平台"), Taster("taster",
-            "试吃员");
+    Customer("C", "C端用户"), Merchant("B", "B端用户"), Plat("P", "平台用户");
 
     EUserKind(String code, String value) {
         this.code = code;

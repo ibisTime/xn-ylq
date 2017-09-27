@@ -28,6 +28,9 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdPartnerCode','jiuzhou','admin',now(),'合作方标识','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdPartnerKey','af52d445b7344653b1bb8ca8b5ce3878','admin',now(),'合作方密钥','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdPartnerApp','jiuzhou_and','admin',now(),'应用名','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','jtdUrl','http://admincit.lianzi360.com','admin',now(),'主机名称','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','jtdOrg','huoke','admin',now(),'企业客户账号名','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','jtdSecret','043acd7552dba895a624ce838bff264c','admin',now(),'客户秘钥','CD-YLQ000014','CD-YLQ000014');
 
 /*
 -- Query: SELECT * FROM xn_ylq.t_coupon

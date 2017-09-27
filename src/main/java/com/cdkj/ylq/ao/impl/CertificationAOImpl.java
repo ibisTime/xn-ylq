@@ -42,7 +42,6 @@ import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
-import com.cdkj.ylq.domain.InfoAntifraud;
 import com.cdkj.ylq.domain.InfoBasic;
 import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.InfoIdentify;
@@ -67,6 +66,7 @@ import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EIDKind;
 import com.cdkj.ylq.exception.BizException;
+import com.cdkj.ylq.http.HttpUtil;
 import com.cdkj.ylq.tongdun.PreloanQueryResponse;
 import com.cdkj.ylq.tongdun.PreloanSubmitResponse;
 import com.cdkj.ylq.tongdun.RiskServicePreloan;
@@ -75,7 +75,7 @@ import com.cdkj.ylq.tongdun.RiskServicePreloan;
 public class CertificationAOImpl implements ICertificationAO {
 
     protected static final Logger logger = LoggerFactory
-        .getLogger(ICertificationAO.class);
+        .getLogger(CertificationAOImpl.class);
 
     @Autowired
     private ICertificationBO certificationBO;
@@ -753,13 +753,13 @@ public class CertificationAOImpl implements ICertificationAO {
             if (ECertiKey.INFO_ANTIFRAUD.getCode().equals(
                 certification.getCertiKey())) {
                 res.setInfoAntifraudFlag(certification.getFlag());
-                if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())
-                        || ECertificationStatus.INVALID.getCode().equals(
-                            certification.getFlag())) {
-                    res.setInfoAntifraud(JsonUtil.json2Bean(
-                        certification.getResult(), InfoAntifraud.class));
-                }
+                // if (ECertificationStatus.CERTI_YES.getCode().equals(
+                // certification.getFlag())
+                // || ECertificationStatus.INVALID.getCode().equals(
+                // certification.getFlag())) {
+                // res.setInfoAntifraud(JsonUtil.json2Bean(
+                // certification.getResult(), InfoAntifraud.class));
+                // }
             }
 
             if (ECertiKey.INFO_ZMCREDIT.getCode().equals(
@@ -999,7 +999,7 @@ public class CertificationAOImpl implements ICertificationAO {
         formProperties.put("Authorization", "token " + token);
         try {
             logger.info(urlString);
-            report = requestGet(urlString, null, formProperties);
+            report = HttpUtil.requestGetGzip(urlString, null, formProperties);
         } catch (Exception e) {
             logger.error("获取魔蝎报告异常,原因：" + e.getMessage());
         }

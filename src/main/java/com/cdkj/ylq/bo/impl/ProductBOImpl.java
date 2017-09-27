@@ -1,6 +1,7 @@
 package com.cdkj.ylq.bo.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,11 @@ public class ProductBOImpl extends PaginableBOImpl<Product> implements
         data.setUpdateDatetime(new Date());
         data.setRemark(remark);
         return productDAO.updatePutOff(data);
+    }
+
+    @Override
+    public List<Product> queryProductList(Product condition) {
+        return productDAO.selectList(condition);
     }
 
 }

@@ -43,6 +43,17 @@ public class XN623085Req extends APageReq {
     // 是否逾期
     private String isOverdue;
 
+    // 放款方式
+    private String loanType;
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
+    }
+
     public String getIsOverdue() {
         return isOverdue;
     }
