@@ -206,3 +206,17 @@ CREATE TABLE `t_overdue` (
   `result` VARCHAR(32) NULL COMMENT '逾期后处理',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `t_contract` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `user_id` varchar(32) NOT NULL COMMENT '用户编号',
+  `borrow_code` varchar(32) NOT NULL COMMENT '借款编号',
+  `title` varchar(255) NOT NULL COMMENT '标题',
+  `content` text NOT NULL COMMENT '内容',
+  `type` char(1) NOT NULL COMMENT '类型',
+  `create_datetime` datetime NOT NULL COMMENT '创建时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `status` varchar(2) NOT NULL COMMENT '状态',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='电子合同表';

@@ -32,8 +32,6 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
     public String saveBorrow(Borrow data) {
         String code = null;
         if (data != null) {
-            code = OrderNoGenerater.generateM(EGeneratePrefix.BORROW.getCode());
-            data.setCode(code);
             borrowDAO.insert(data);
         }
         return code;

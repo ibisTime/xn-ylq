@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.ao.IJdtAO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IJdtBO;
@@ -65,6 +66,9 @@ public class JdtAOImpl implements IJdtAO {
     @Autowired
     IProductBO productBO;
 
+    @Autowired
+    private ICertificationAO certificationAO;
+
     /** 
      * @see com.cdkj.ylq.ao.IJdtAO#doGetNewMember(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
@@ -77,7 +81,7 @@ public class JdtAOImpl implements IJdtAO {
         String accessToken = jdtBO.getAccessToken();
         logger.info("借贷通-accessToken=" + accessToken);
         String report = jdtBO.getSSPData(accessToken, token);
-        logger.info("借贷通-report=" + report);
+        logger.info("借贷通-report获取成功");
         JSONObject reportJson = JSONObject.fromObject(report);
         JSONObject appInfoJson = JSONObject.fromObject(reportJson
             .get("appInfo"));
@@ -94,11 +98,15 @@ public class JdtAOImpl implements IJdtAO {
         req.setIdNo(idNo);
         req.setRealName(realName);
         req.setKind(EUserKind.Customer.getCode());
+        req.setUpdater("借贷通推送");
         req.setRemark("借贷通推送");
         req.setCompanyCode(ESystemCode.YLQ.getCode());
         req.setSystemCode(ESystemCode.YLQ.getCode());
         String userId = userBO.doAddUser(req);
         if (StringUtils.isNotBlank(userId)) {
+            // 分配认证信息
+            certificationAO.initialCertification(userId);
+            // 待申请
             Product condition = new Product();
             condition.setLevel(EProductLevel.ONE.getCode());
             List<Product> productList = productBO.queryProductList(condition);
@@ -116,6 +124,7 @@ public class JdtAOImpl implements IJdtAO {
                 data.setUpdater(userId);
                 data.setUpdateDatetime(new Date());
                 data.setRemark("借贷通推送");
+                data.setJdtReport(report);
                 applyBO.saveApply(data);
             }
         }

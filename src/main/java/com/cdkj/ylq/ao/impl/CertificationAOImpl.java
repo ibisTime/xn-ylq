@@ -788,7 +788,7 @@ public class CertificationAOImpl implements ICertificationAO {
 
             if (ECertiKey.INFO_TONGDUN_PRELOAN.getCode().equals(
                 certification.getCertiKey())) {
-                res.setInfoCarrierFlag(certification.getFlag());
+                res.setInfoTongDunPreLoanFlag(certification.getFlag());
                 if (ECertificationStatus.CERTI_YES.getCode().equals(
                     certification.getFlag())
                         || ECertificationStatus.INVALID.getCode().equals(
