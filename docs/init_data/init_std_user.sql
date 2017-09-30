@@ -29,11 +29,11 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('android-c','version','1.2.1','admin',now(),'最新版本号','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('android-c','forceUpdate','1','admin',now(),'是否强制更新','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('android-c','note','v121版本更新说明','admin',now(),'更新说明','CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('android-c','downloadUrl','http://m.yiliangqian.com:5309/ylq_release.apk','admin',now(),'Android下载地址','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('android-c','downloadUrl','http://116.62.193.233:5309/ylq_release.apk','admin',now(),'Android下载地址','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','version','1.2.1','admin',now(),'最新版本号','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','forceUpdate','1','admin',now(),'是否强制更新','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','note','v121版本更新说明','admin',now(),'更新说明','CD-YLQ000014','CD-YLQ000014');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','downloadUrl','https://itunes.apple.com/cn/app/健康e购/id1256905137?mt=8','admin',now(),'iOS下载地址','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','downloadUrl','http://m.yiliangqian.com/share/share-qrcord.html','admin',now(),'iOS下载地址','CD-YLQ000014','CD-YLQ000014');
 
 
 /*
