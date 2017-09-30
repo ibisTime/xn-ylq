@@ -73,7 +73,11 @@ public class ApplyAOImpl implements IApplyAO {
             }
             if (EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())) {
                 apply.setStatus(status);
-                applyBO.refreshStatus(apply);
+                apply.setType(EApplyType.JZB.getCode());
+                apply.setUpdater(applyUser);
+                apply.setUpdateDatetime(new Date());
+                apply.setRemark("重新提交申请");
+                applyBO.resubmit(apply);
                 res.setCode(apply.getCode());
                 res.setStatus(status);
             } else {

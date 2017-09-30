@@ -65,4 +65,9 @@ public class ApplyDAOImpl extends AMybatisTemplate implements IApplyDAO {
         return super.update(NAMESPACE.concat("update_status"), data);
     }
 
+    @Override
+    public int updateResubmit(Apply data) {
+        return super.update(NAMESPACE.concat("update_resubmit"), data);
+    }
+
 }

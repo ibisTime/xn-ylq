@@ -25,7 +25,7 @@ import com.cdkj.ylq.domain.User;
 public interface IContractBO extends IPaginableBO<Contract> {
 
     // 生成借款合同
-    public String generate(Product product, Borrow borrow, User user);
+    public String generate(User user, Bankcard bankcard, Borrow borrow);
 
     // 预览借款合同
     public String preview(User user, Bankcard bankcard, Product product,

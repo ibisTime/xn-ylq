@@ -148,6 +148,17 @@
 		status = #{status}
 		WHERE code = #{code}
 	</update>
+	
+	<update id="update_resubmit" parameterType="apply">
+		UPDATE t_apply
+		SET
+		status = #{status}
+		,type = #{type}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
 
 
 </mapper>

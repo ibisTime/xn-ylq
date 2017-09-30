@@ -18,6 +18,7 @@ import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowBO;
 import com.cdkj.ylq.bo.ICertificationBO;
+import com.cdkj.ylq.bo.IContractBO;
 import com.cdkj.ylq.bo.IOverdueBO;
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IRenewalBO;
@@ -107,6 +108,9 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Autowired
     private ICouponConditionAO couponConditionAO;
+
+    @Autowired
+    private IContractBO contractBO;
 
     @Override
     @Transactional
@@ -391,6 +395,11 @@ public class BorrowAOImpl implements IBorrowAO {
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                 EApplyStatus.LOANING);
+            // 生成电子合同
+            User user = userBO.getRemoteUser(borrow.getApplyUser());
+            Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
+            contractBO.generate(user, bankcard, borrow);
+            // 短信通知
             smsContent = "恭喜您，您的" + CalculationUtil.diviUp(borrow.getAmount())
                     + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";
         } else {
@@ -459,6 +468,11 @@ public class BorrowAOImpl implements IBorrowAO {
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                 EApplyStatus.LOANING);
+            // 生成电子合同
+            User user = userBO.getRemoteUser(borrow.getApplyUser());
+            Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
+            contractBO.generate(user, bankcard, borrow);
+            // 发送短信
             String smsContent = "恭喜您，您的"
                     + CalculationUtil.diviUp(borrow.getAmount())
                     + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";

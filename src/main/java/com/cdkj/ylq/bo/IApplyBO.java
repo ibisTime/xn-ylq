@@ -21,6 +21,8 @@ public interface IApplyBO extends IPaginableBO<Apply> {
 
     public void refreshStatus(Apply data);
 
+    public void resubmit(Apply data);
+
     public void refreshCurrentApplyStatus(String userId, EApplyStatus status);
 
 }

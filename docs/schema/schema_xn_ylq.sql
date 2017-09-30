@@ -1,5 +1,6 @@
 CREATE TABLE `t_apply` (
   `code` varchar(32) NOT NULL COMMENT '编号',
+  `type` varchar(32) NOT NULL COMMENT '类型',
   `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
   `apply_datetime` datetime DEFAULT NULL COMMENT '申请时间',
   `product_code` varchar(32) DEFAULT NULL COMMENT '产品编号',
@@ -11,6 +12,7 @@ CREATE TABLE `t_apply` (
   `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `jdt_report` longtext DEFAULT NULL COMMENT '借贷通资信报告',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

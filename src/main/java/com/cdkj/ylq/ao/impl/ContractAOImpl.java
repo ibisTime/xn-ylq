@@ -22,7 +22,6 @@ import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.Paginable;
-import com.cdkj.ylq.common.AmountUtil;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.domain.Certification;
@@ -30,11 +29,9 @@ import com.cdkj.ylq.domain.Contract;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.User;
-import com.cdkj.ylq.domain.UserCoupon;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
-import com.cdkj.ylq.enums.EUserCouponStatus;
 import com.cdkj.ylq.exception.BizException;
 
 /** 
@@ -101,36 +98,8 @@ public class ContractAOImpl implements IContractAO {
         }
         // 产品
         Product product = productBO.getProduct(certification.getRef());
-
-        // 优惠金额
-        Long yhAmount = 0L;
-        if (couponId != null) {
-            UserCoupon userCoupon = userCouponBO.getUserCoupon(couponId);
-            if (!EUserCouponStatus.TO_USE.getCode().equals(
-                userCoupon.getStatus())) {
-                throw new BizException("623070", "优惠券已不可使用");
-            }
-            if (infoAmount.getSxAmount() < userCoupon.getStartAmount()) {
-                throw new BizException("623070", "不可使用该优惠券");
-            }
-            yhAmount = userCoupon.getAmount();
-        }
         // 借款总额
         Long borrowAmount = infoAmount.getSxAmount();
-        // 利息
-        Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getLxRate())) * product.getDuration();
-        // 快速信审费
-        Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getXsRate())) * product.getDuration();
-        // 账户管理费
-        Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getGlRate())) * product.getDuration();
-        // 服务费
-        Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getFwRate())) * product.getDuration();
-        // 应还金额
-        Long totalAmount = borrowAmount;
         // 生成预览合同
         String contact = contractBO.preview(user, bankcard, product,
             borrowAmount);

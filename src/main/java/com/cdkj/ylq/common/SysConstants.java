@@ -44,9 +44,8 @@ public class SysConstants {
 
     public static final String JDT_SECRET = "jtdSecret"; // 客户秘钥
 
-    public static final String BORROW_PROTOCOL = "borrowProtocol";// 借款协议
+    public static final String BORROW_PROTOCOL = "borrowProtocol";// 借款协议模板
 
-    public static final String PARTY_A = "partyA";// 甲方
+    public static final String FW_RATE = "fwRate";// 服务利率
 
-    public static final String PARTY_A_ID_NO = "partyAIdNo";// 甲方身份证号码
 }

@@ -106,4 +106,9 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
         refreshStatus(apply);
     }
 
+    @Override
+    public void resubmit(Apply data) {
+        applyDAO.updateResubmit(data);
+    }
+
 }
