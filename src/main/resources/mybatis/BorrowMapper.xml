@@ -14,11 +14,8 @@
 		<result column="hk_datetime" property="hkDatetime" />
 		<result column="lx_rate" property="lxRate" />
 		<result column="lx_amount" property="lxAmount" />
-		<result column="xs_rate" property="xsRate" />
 		<result column="xs_amount" property="xsAmount" />
-		<result column="gl_rate" property="glRate" />
 		<result column="gl_amount" property="glAmount" />
-		<result column="fw_rate" property="fwRate" />
 		<result column="fw_amount" property="fwAmount" />
 		<result column="yh_amount" property="yhAmount" />
 		<result column="rate1" property="rate1" />
@@ -110,11 +107,8 @@
 		,t.hk_datetime
 		,t.lx_rate
 		,t.lx_amount
-		,t.xs_rate
 		,t.xs_amount
-		,t.gl_rate
 		,t.gl_amount
-		,t.fw_rate
 		,t.fw_amount
 		,t.yh_amount
 		,t.rate1
@@ -167,11 +161,8 @@
 		,hk_datetime
 		,lx_rate
 		,lx_amount
-		,xs_rate
 		,xs_amount
-		,gl_rate
 		,gl_amount
-		,fw_rate
 		,fw_amount
 		,yh_amount
 		,rate1
@@ -198,11 +189,8 @@
 		,#{hkDatetime}
 		,#{lxRate}
 		,#{lxAmount}
-		,#{xsRate}
 		,#{xsAmount}
-		,#{glRate}
 		,#{glAmount}
-		,#{fwRate}
 		,#{fwAmount}
 		,#{yhAmount}
 		,#{rate1}

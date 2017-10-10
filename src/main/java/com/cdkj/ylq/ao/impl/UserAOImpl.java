@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.ao.IUserAO;
-import com.cdkj.ylq.bo.ICouponConditionBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.dto.res.XN805041Res;
 
@@ -26,9 +25,6 @@ import com.cdkj.ylq.dto.res.XN805041Res;
 public class UserAOImpl implements IUserAO {
     @Autowired
     private IUserBO userBO;
-
-    @Autowired
-    private ICouponConditionBO couponConditionBO;
 
     @Autowired
     private ICertificationAO certificationAO;

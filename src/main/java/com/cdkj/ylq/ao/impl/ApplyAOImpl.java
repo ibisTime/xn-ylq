@@ -72,7 +72,7 @@ public class ApplyAOImpl implements IApplyAO {
                 throw new BizException("xn623020", "您已经有一个申请");
             }
             if (EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())) {
-                if (DateUtil.daysBetween(new Date(), apply.getApplyDatetime()) < 7) {
+                if (DateUtil.daysBetween(apply.getApplyDatetime(), new Date()) < 7) {
                     throw new BizException("xn623020",
                         "您在一周内已经有一个申请被驳回，请在一周后重新尝试。");
                 }

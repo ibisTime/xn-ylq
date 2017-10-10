@@ -12,9 +12,9 @@
 		<result column="yq_rate1" property="yqRate1" />
 		<result column="yq_rate2" property="yqRate2" />
 		<result column="lx_rate" property="lxRate" />
-		<result column="xs_rate" property="xsRate" />
-		<result column="gl_rate" property="glRate" />
-		<result column="fw_rate" property="fwRate" />
+		<result column="xs_amount" property="xsAmount" />
+		<result column="gl_amount" property="glAmount" />
+		<result column="fw_amount" property="fwAmount" />
 		<result column="status" property="status" />
 		<result column="ui_location" property="uiLocation" />
 		<result column="ui_order" property="uiOrder" />
@@ -54,9 +54,9 @@
 		,t.yq_rate1
 		,t.yq_rate2
 		,t.lx_rate
-		,t.xs_rate
-		,t.gl_rate
-		,t.fw_rate
+		,t.xs_amount
+		,t.gl_amount
+		,t.fw_amount
 		,t.status
 		,t.ui_location
 		,t.ui_order
@@ -92,9 +92,9 @@
 		,yq_rate1
 		,yq_rate2
 		,lx_rate
-		,xs_rate
-		,gl_rate
-		,fw_rate
+		,xs_amount
+		,gl_amount
+		,fw_amount
 		,status
 		,ui_location
 		,ui_order
@@ -113,9 +113,9 @@
 		,#{yqRate1}
 		,#{yqRate2}
 		,#{lxRate}
-		,#{xsRate}
-		,#{glRate}
-		,#{fwRate}
+		,#{xsAmount}
+		,#{glAmount}
+		,#{fwAmount}
 		,#{status}
 		,#{uiLocation}
 		,#{uiOrder}
@@ -137,9 +137,9 @@
 		,yq_rate1 = #{yqRate1}
 		,yq_rate2 = #{yqRate2}
 		,lx_rate = #{lxRate}
-		,xs_rate = #{xsRate}
-		,gl_rate = #{glRate}
-		,fw_rate = #{fwRate}
+		,xs_amount = #{xsAmount}
+		,gl_amount = #{glAmount}
+		,fw_amount = #{fwAmount}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
