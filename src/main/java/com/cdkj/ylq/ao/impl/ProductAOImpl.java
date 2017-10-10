@@ -68,10 +68,10 @@ public class ProductAOImpl implements IProductAO {
         data.setYqRate1(StringValidater.toDouble(req.getYqRate1()));
         data.setYqRate2(StringValidater.toDouble(req.getYqRate2()));
         data.setLxRate(StringValidater.toDouble(req.getLxRate()));
-        data.setXsRate(StringValidater.toDouble(req.getXsRate()));
+        data.setXsAmount(StringValidater.toLong(req.getXsAmount()));
 
-        data.setGlRate(StringValidater.toDouble(req.getGlRate()));
-        data.setFwRate(StringValidater.toDouble(req.getFwRate()));
+        data.setGlAmount(StringValidater.toLong(req.getGlAmount()));
+        data.setFwAmount(StringValidater.toLong(req.getFwAmount()));
         data.setStatus(EProductStatus.NEW.getCode());
         data.setUiLocation(EProductLocation.NORMAL.getCode());
         data.setUiOrder(0);
@@ -99,10 +99,10 @@ public class ProductAOImpl implements IProductAO {
         data.setYqRate1(StringValidater.toDouble(req.getYqRate1()));
         data.setYqRate2(StringValidater.toDouble(req.getYqRate2()));
         data.setLxRate(StringValidater.toDouble(req.getLxRate()));
-        data.setXsRate(StringValidater.toDouble(req.getXsRate()));
+        data.setXsAmount(StringValidater.toLong(req.getXsAmount()));
 
-        data.setGlRate(StringValidater.toDouble(req.getGlRate()));
-        data.setFwRate(StringValidater.toDouble(req.getFwRate()));
+        data.setGlAmount(StringValidater.toLong(req.getGlAmount()));
+        data.setFwAmount(StringValidater.toLong(req.getFwAmount()));
         data.setUpdater(req.getUpdater());
         data.setUpdateDatetime(new Date());
         data.setRemark(req.getRemark());
@@ -186,19 +186,7 @@ public class ProductAOImpl implements IProductAO {
         // 利息
         Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
             product.getLxRate())) * product.getDuration();
-        // 快速信审费
-        Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getXsRate())) * product.getDuration();
-        // 账户管理费
-        Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getGlRate())) * product.getDuration();
-        // 服务费
-        Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getFwRate())) * product.getDuration();
         product.setLxAmount(lxAmount);
-        product.setXsAmount(xsAmount);
-        product.setGlAmount(glAmount);
-        product.setFwAmount(fwAmount);
 
         return product;
     }
@@ -242,19 +230,7 @@ public class ProductAOImpl implements IProductAO {
         // 利息
         Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
             product.getLxRate())) * product.getDuration();
-        // 快速信审费
-        Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getXsRate())) * product.getDuration();
-        // 账户管理费
-        Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getGlRate())) * product.getDuration();
-        // 服务费
-        Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getFwRate())) * product.getDuration();
         product.setLxAmount(lxAmount);
-        product.setXsAmount(xsAmount);
-        product.setGlAmount(glAmount);
-        product.setFwAmount(fwAmount);
         product.setAmount(borrowAmount);
         return product;
     }

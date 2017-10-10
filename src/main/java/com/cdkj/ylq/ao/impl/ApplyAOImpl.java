@@ -72,6 +72,10 @@ public class ApplyAOImpl implements IApplyAO {
                 throw new BizException("xn623020", "您已经有一个申请");
             }
             if (EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())) {
+                if (DateUtil.daysBetween(new Date(), apply.getApplyDatetime()) < 7) {
+                    throw new BizException("xn623020",
+                        "您在一周内已经有一个申请被驳回，请在一周后重新尝试。");
+                }
                 apply.setStatus(status);
                 apply.setType(EApplyType.JZB.getCode());
                 apply.setUpdater(applyUser);
@@ -108,7 +112,6 @@ public class ApplyAOImpl implements IApplyAO {
         Apply apply = applyBO.getCurrentApply(applyUser);
         if (!EApplyStatus.TO_CERTI.getCode().equals(apply.getStatus())
                 && !EApplyStatus.TO_APPROVE.getCode().equals(apply.getStatus())
-                && !EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())
                 && !EApplyStatus.APPROVE_YES.getCode()
                     .equals(apply.getStatus())) {
             throw new BizException("xn623021", "当前状态不能取消");
@@ -153,7 +156,7 @@ public class ApplyAOImpl implements IApplyAO {
         } else {
             sxAmount = 0L;
             status = EApplyStatus.APPROVE_NO.getCode();
-            content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote + "，请登录APP查看详情。";
+            content = "很抱歉，您的借款申请未通过平台审核，失败原因为：系统审核，请保证填写的资料为本人真实资料,如需再次申请，请7天后再登陆APP提交审核。";
         }
         applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
         smsOutBO.sentContent(apply.getApplyUser(), content);

@@ -51,7 +51,13 @@ public interface IAccountBO {
             String payGroup, String refNo, EBizType bizType, String bizNote,
             Long amount);
 
+    // 银行卡查询
     public Bankcard getBankcard(String userId);
+
+    // 银行卡修改
+    public void editBankcard(String code, String realName,
+            String bankcardNumber, String bankCode, String bankName,
+            String status);
 
     // 宝付代付
     public void baofooPay(List<BaofooPay> baofooPayList);

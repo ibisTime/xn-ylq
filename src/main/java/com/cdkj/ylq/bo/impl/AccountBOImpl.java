@@ -20,6 +20,7 @@ import com.cdkj.ylq.dto.req.XN002100Req;
 import com.cdkj.ylq.dto.req.XN002500Req;
 import com.cdkj.ylq.dto.req.XN002501Req;
 import com.cdkj.ylq.dto.req.XN002510Req;
+import com.cdkj.ylq.dto.req.XN802012Req;
 import com.cdkj.ylq.dto.req.XN802016Req;
 import com.cdkj.ylq.dto.req.XN802165Req;
 import com.cdkj.ylq.dto.req.XN802166Req;
@@ -198,6 +199,20 @@ public class AccountBOImpl implements IAccountBO {
             bankcard = list.get(0);
         }
         return bankcard;
+    }
+
+    @Override
+    public void editBankcard(String code, String realName,
+            String bankcardNumber, String bankCode, String bankName,
+            String status) {
+        XN802012Req req = new XN802012Req();
+        req.setCode(code);
+        req.setRealName(realName);
+        req.setBankcardNumber(bankcardNumber);
+        req.setBankCode(bankCode);
+        req.setBankName(bankName);
+        req.setStatus(status);
+        BizConnecter.getBizData("802012", JsonUtil.Object2Json(req));
     }
 
     @Override

@@ -41,14 +41,14 @@ public class Product extends ABaseDO {
     // 利息利率
     private Double lxRate;
 
-    // 快速信审费利率
-    private Double xsRate;
+    // 快速信审费
+    private Long xsAmount;
 
-    // 账户管理费利率
-    private Double glRate;
+    // 账户管理费
+    private Long glAmount;
 
-    // 服务费利率
-    private Double fwRate;
+    // 服务费
+    private Long fwAmount;
 
     // 状态
     private String status;
@@ -75,15 +75,6 @@ public class Product extends ABaseDO {
 
     // 利息
     private Long lxAmount;
-
-    // 快速信审费
-    private Long xsAmount;
-
-    // 账户管理费
-    private Long glAmount;
-
-    // 服务费
-    private Long fwAmount;
 
     // 当前申请状态
     private String userProductStatus;
@@ -183,30 +174,6 @@ public class Product extends ABaseDO {
 
     public void setLxRate(Double lxRate) {
         this.lxRate = lxRate;
-    }
-
-    public Double getXsRate() {
-        return xsRate;
-    }
-
-    public void setXsRate(Double xsRate) {
-        this.xsRate = xsRate;
-    }
-
-    public Double getGlRate() {
-        return glRate;
-    }
-
-    public void setGlRate(Double glRate) {
-        this.glRate = glRate;
-    }
-
-    public Double getFwRate() {
-        return fwRate;
-    }
-
-    public void setFwRate(Double fwRate) {
-        this.fwRate = fwRate;
     }
 
     public String getStatus() {

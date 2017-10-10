@@ -167,14 +167,11 @@ public class BorrowAOImpl implements IBorrowAO {
         Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
             product.getLxRate())) * product.getDuration();
         // 快速信审费
-        Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getXsRate())) * product.getDuration();
+        Long xsAmount = product.getXsAmount();
         // 账户管理费
-        Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getGlRate())) * product.getDuration();
+        Long glAmount = product.getGlAmount();
         // 服务费
-        Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getFwRate())) * product.getDuration();
+        Long fwAmount = product.getFwAmount();
         // 应还金额
         Long totalAmount = borrowAmount;
 
@@ -189,25 +186,22 @@ public class BorrowAOImpl implements IBorrowAO {
 
         borrow.setLxRate(product.getLxRate());
         borrow.setLxAmount(lxAmount);
-        borrow.setXsRate(product.getXsRate());
         borrow.setXsAmount(xsAmount);
-        borrow.setGlRate(product.getGlRate());
-
         borrow.setGlAmount(glAmount);
-        borrow.setFwRate(product.getFwRate());
         borrow.setFwAmount(fwAmount);
+
         borrow.setYhAmount(yhAmount);
         borrow.setRate1(product.getYqRate1());
-
         borrow.setRate2(product.getYqRate2());
         borrow.setYqlxAmount(0L);
         borrow.setYqDays(0);
+
         borrow.setTotalAmount(totalAmount);
         borrow.setRealHkAmount(0L);
-
         borrow.setRenewalCount(0);
         borrow.setStatus(EBorrowStatus.TO_APPROVE.getCode());
         borrow.setUpdater(userId);
+
         borrow.setUpdateDatetime(now);
         borrow.setRemark("新申请借款");
 
@@ -272,14 +266,11 @@ public class BorrowAOImpl implements IBorrowAO {
                     Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
                         borrowAmount, borrow.getLxRate())) * step * cycle;
                     // 快速信审费
-                    Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
-                        borrowAmount, borrow.getXsRate())) * step * cycle;
+                    Long xsAmount = borrow.getXsAmount() * cycle;
                     // 账户管理费
-                    Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
-                        borrowAmount, borrow.getGlRate())) * step * cycle;
+                    Long glAmount = borrow.getGlAmount() * cycle;
                     // 服务费
-                    Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
-                        borrowAmount, borrow.getFwRate())) * step * cycle;
+                    Long fwAmount = borrow.getFwAmount() * cycle;
                     // 续期总金额
                     Long totalAmount = borrow.getYqlxAmount() + lxAmount
                             + xsAmount + glAmount + fwAmount;
@@ -323,14 +314,11 @@ public class BorrowAOImpl implements IBorrowAO {
                 Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
                     borrowAmount, borrow.getLxRate())) * step * cycle;
                 // 快速信审费
-                Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
-                    borrowAmount, borrow.getXsRate())) * step * cycle;
+                Long xsAmount = borrow.getXsAmount() * cycle;
                 // 账户管理费
-                Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
-                    borrowAmount, borrow.getGlRate())) * step * cycle;
+                Long glAmount = borrow.getGlAmount() * cycle;
                 // 服务费
-                Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(
-                    borrowAmount, borrow.getFwRate())) * step * cycle;
+                Long fwAmount = borrow.getFwAmount() * cycle;
                 // 续期总金额
                 Long totalAmount = borrow.getYqlxAmount() + lxAmount + xsAmount
                         + glAmount + fwAmount;
@@ -530,7 +518,7 @@ public class BorrowAOImpl implements IBorrowAO {
                     EOverdueDeal.REPAY.getCode());
             }
             // 更新订单支付金额
-            borrowBO.repaySuccess(borrow, rmbAmount, "宝付代扣",
+            borrowBO.repaySuccess(borrow, rmbAmount, "宝付银行卡代扣",
                 EPayType.BAOFOO_WITHHOLD.getCode());
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
@@ -544,7 +532,7 @@ public class BorrowAOImpl implements IBorrowAO {
                 "您的" + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号："
                         + borrow.getCode() + "）已经成功还款，详情查看请登录APP。");
         } else {
-            throw new BizException("xn623000", "宝付代扣失败，建议选择其他支付方式");
+            throw new BizException("xn623000", "银行卡代扣失败，建议选择其他支付方式");
         }
         return new BooleanRes(true);
     }
@@ -601,6 +589,7 @@ public class BorrowAOImpl implements IBorrowAO {
             throw new BizException("XN000000", "找不到对应的借款记录");
         }
         Borrow borrow = borrowList.get(0);
+        User user = userBO.getRemoteUser(borrow.getApplyUser());
         if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                 || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
             // 如果是逾期还款，逾期记录落地
@@ -616,8 +605,17 @@ public class BorrowAOImpl implements IBorrowAO {
                 EApplyStatus.REPAY);
             // 额度重置为0
             certificationBO.resetSxAmount(borrow.getApplyUser());
-            // 发放优惠券
+            // 借还成功发放优惠券
             couponConditionAO.repaySuccess(borrow.getApplyUser());
+            // 首次借还成功推荐人发放优惠券
+            Borrow condition = new Borrow();
+            condition.setApplyUser(borrow.getApplyUser());
+            condition.setStatus(EBorrowStatus.REPAY.getCode());
+            if (borrowBO.getTotalCount(condition) == 0) {
+                if (StringUtils.isNotBlank(user.getUserReferee())) {
+                    couponConditionAO.recommendSuccess(user.getUserReferee());
+                }
+            }
             // 发送短信
             smsOutBO.sentContent(borrow.getApplyUser(),
                 "您的" + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号："
@@ -669,7 +667,7 @@ public class BorrowAOImpl implements IBorrowAO {
             // 更新借款订单
             borrowBO.renewalSuccess(borrow, renewal, rmbAmount);
             // 更新续期记录
-            renewalBO.renewalSuccess(renewal, "宝付代扣",
+            renewalBO.renewalSuccess(renewal, "宝付银行卡代扣",
                 EPayType.BAOFOO_WITHHOLD.getCode(), renewalCount + 1);
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
@@ -678,7 +676,7 @@ public class BorrowAOImpl implements IBorrowAO {
                 "您的" + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号："
                         + borrow.getCode() + "）已经成功续期，详情查看请登录APP。");
         } else {
-            throw new BizException("xn623000", "宝付代扣失败，建议选择其他支付方式");
+            throw new BizException("xn623000", "银行卡代扣失败，建议选择其他支付方式");
         }
         return new BooleanRes(true);
     }
@@ -863,6 +861,13 @@ public class BorrowAOImpl implements IBorrowAO {
             yqlxAmount += AmountUtil.eraseLiUp(AmountUtil.mul(
                 borrow.getAmount(), borrow.getRate2()));
         }
+        // 逾期利息封顶
+        Double yqlxFdRate = sysConfigBO
+            .getDoubleValue(SysConstants.YQLX_FD_RATE);
+        Long fdAmount = AmountUtil.mul(borrow.getAmount(), yqlxFdRate);
+        if (yqlxAmount > fdAmount) {
+            yqlxAmount = fdAmount;
+        }
         borrow.setYqDays(yqDays);
         borrow.setYqlxAmount(yqlxAmount);
         borrow.setTotalAmount(borrow.getAmount() + yqlxAmount);
@@ -946,7 +951,7 @@ public class BorrowAOImpl implements IBorrowAO {
                     }
                     // 更新订单支付金额
                     borrowBO.repaySuccess(borrow, borrow.getTotalAmount(),
-                        "宝付代扣", EPayType.BAOFOO_WITHHOLD.getCode());
+                        "宝付银行卡代扣", EPayType.BAOFOO_WITHHOLD.getCode());
                     // 更新申请单状态
                     applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                         EApplyStatus.REPAY);

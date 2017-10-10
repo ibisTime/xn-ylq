@@ -40,13 +40,13 @@ public class XN623000Req {
     private String lxRate;
 
     // 快速信审费（必填）
-    private String xsRate;
+    private String xsAmount;
 
     // 账户管理费（必填）
-    private String glRate;
+    private String glAmount;
 
     // 服务费（必填）
-    private String fwRate;
+    private String fwAmount;
 
     // 最后更新人（必填）
     private String updater;
@@ -118,28 +118,28 @@ public class XN623000Req {
         this.lxRate = lxRate;
     }
 
-    public String getXsRate() {
-        return xsRate;
+    public String getXsAmount() {
+        return xsAmount;
     }
 
-    public void setXsRate(String xsRate) {
-        this.xsRate = xsRate;
+    public void setXsAmount(String xsAmount) {
+        this.xsAmount = xsAmount;
     }
 
-    public String getGlRate() {
-        return glRate;
+    public String getGlAmount() {
+        return glAmount;
     }
 
-    public void setGlRate(String glRate) {
-        this.glRate = glRate;
+    public void setGlAmount(String glAmount) {
+        this.glAmount = glAmount;
     }
 
-    public String getFwRate() {
-        return fwRate;
+    public String getFwAmount() {
+        return fwAmount;
     }
 
-    public void setFwRate(String fwRate) {
-        this.fwRate = fwRate;
+    public void setFwAmount(String fwAmount) {
+        this.fwAmount = fwAmount;
     }
 
     public String getUpdater() {

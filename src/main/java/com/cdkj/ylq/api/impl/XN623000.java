@@ -47,8 +47,8 @@ public class XN623000 extends AProcessor {
         req = JsonUtil.json2Bean(inputparams, XN623000Req.class);
         StringValidater.validateBlank(req.getName(), req.getLevel(),
             req.getAmount(), req.getDuration(), req.getYqRate1(),
-            req.getYqRate2(), req.getLxRate(), req.getXsRate(),
-            req.getGlRate(), req.getFwRate(), req.getUpdater());
+            req.getYqRate2(), req.getLxRate(), req.getXsAmount(),
+            req.getGlAmount(), req.getFwAmount(), req.getUpdater());
     }
 
 }

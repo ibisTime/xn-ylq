@@ -45,15 +45,6 @@ public class Borrow extends ABaseDO {
     // 利息利率
     private Double lxRate;
 
-    // 快速信审费利率
-    private Double xsRate;
-
-    // 账户管理费利率
-    private Double glRate;
-
-    // 服务费利率
-    private Double fwRate;
-
     // 正常应付利息
     private Long lxAmount;
 
@@ -502,30 +493,6 @@ public class Borrow extends ABaseDO {
 
     public void setLxRate(Double lxRate) {
         this.lxRate = lxRate;
-    }
-
-    public Double getXsRate() {
-        return xsRate;
-    }
-
-    public void setXsRate(Double xsRate) {
-        this.xsRate = xsRate;
-    }
-
-    public Double getGlRate() {
-        return glRate;
-    }
-
-    public void setGlRate(Double glRate) {
-        this.glRate = glRate;
-    }
-
-    public Double getFwRate() {
-        return fwRate;
-    }
-
-    public void setFwRate(Double fwRate) {
-        this.fwRate = fwRate;
     }
 
     public Integer getRenewalCount() {

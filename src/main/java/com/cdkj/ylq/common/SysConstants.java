@@ -22,6 +22,8 @@ public class SysConstants {
 
     public static final String RENEWAL_LIMIT = "renewalLimit"; // 最大续期次数
 
+    public static final String YQLX_FD_RATE = "yqlxFdRate"; // 逾期利息封顶（本金乘以该数值）
+
     public static final String MX_URL = "mxUrl"; // 魔蝎URL
 
     public static final String MX_TOKEN = "mxToken"; // 魔蝎token

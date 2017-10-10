@@ -67,14 +67,11 @@ public class RenewalBOImpl extends PaginableBOImpl<Renewal> implements
         Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
             borrow.getLxRate())) * step * cycle;
         // 快速信审费
-        Long xsAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            borrow.getXsRate())) * step * cycle;
+        Long xsAmount = borrow.getXsAmount() * cycle;
         // 账户管理费
-        Long glAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            borrow.getGlRate())) * step * cycle;
+        Long glAmount = borrow.getGlAmount() * cycle;
         // 服务费
-        Long fwAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            borrow.getFwRate())) * step * cycle;
+        Long fwAmount = borrow.getFwAmount() * cycle;
         // 续期总金额
         Long totalAmount = borrow.getYqlxAmount() + lxAmount + xsAmount
                 + glAmount + fwAmount;
