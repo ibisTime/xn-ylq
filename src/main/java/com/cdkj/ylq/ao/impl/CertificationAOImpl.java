@@ -344,7 +344,9 @@ public class CertificationAOImpl implements ICertificationAO {
                 certificationBO.refreshCertification(certification);
             }
             Apply apply = applyBO.getCurrentApply(userId);
-            if (apply != null) {
+            if (apply != null
+                    && EApplyStatus.TO_CERTI.getCode()
+                        .equals(apply.getStatus())) {
                 applyBO.toDoApprove(apply);
             }
         }
@@ -423,7 +425,9 @@ public class CertificationAOImpl implements ICertificationAO {
                 certificationBO.refreshCertification(certification);
             }
             Apply apply = applyBO.getCurrentApply(userId);
-            if (apply != null) {
+            if (apply != null
+                    && EApplyStatus.TO_CERTI.getCode()
+                        .equals(apply.getStatus())) {
                 applyBO.toDoApprove(apply);
             }
         }

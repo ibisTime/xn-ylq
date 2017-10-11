@@ -8,8 +8,6 @@
  */
 package com.cdkj.ylq.api.impl;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.cdkj.ylq.ao.ICouponConditionAO;
 import com.cdkj.ylq.ao.IUserAO;
 import com.cdkj.ylq.api.AProcessor;
@@ -46,10 +44,6 @@ public class XN623800 extends AProcessor {
             req.getSmsCaptcha(), req.getKind(), req.getIsRegHx(),
             req.getProvince(), req.getCity(), req.getArea(), req.getAddress(),
             req.getCompanyCode(), req.getSystemCode());
-
-        if (StringUtils.isNotBlank(res.getUserReferee())) {
-            couponConditionAO.recommendSuccess(res.getUserReferee());
-        }
         return res;
     }
 

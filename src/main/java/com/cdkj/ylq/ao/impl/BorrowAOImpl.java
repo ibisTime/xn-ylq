@@ -611,7 +611,7 @@ public class BorrowAOImpl implements IBorrowAO {
             Borrow condition = new Borrow();
             condition.setApplyUser(borrow.getApplyUser());
             condition.setStatus(EBorrowStatus.REPAY.getCode());
-            if (borrowBO.getTotalCount(condition) == 0) {
+            if (borrowBO.getTotalCount(condition) == 1) {
                 if (StringUtils.isNotBlank(user.getUserReferee())) {
                     couponConditionAO.recommendSuccess(user.getUserReferee());
                 }
