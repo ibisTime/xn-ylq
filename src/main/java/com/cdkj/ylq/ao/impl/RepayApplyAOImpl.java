@@ -1,6 +1,5 @@
 package com.cdkj.ylq.ao.impl;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Renewal;
 import com.cdkj.ylq.domain.RepayApply;
-import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBorrowStatus;
@@ -86,7 +84,6 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             status = ERepayApplyStatus.APPROVE_YES.getCode();
 
             Borrow borrow = borrowBO.getBorrow(repayApply.getRefNo());
-            User user = userBO.getRemoteUser(borrow.getApplyUser());
             if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                     && !EBorrowStatus.OVERDUE.getCode().equals(
                         borrow.getStatus())) {
@@ -107,15 +104,6 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             certificationBO.resetSxAmount(borrow.getApplyUser());
             // 发放优惠券
             couponConditionAO.repaySuccess(repayApply.getApplyUser());
-            // 首次借还成功推荐人发放优惠券
-            Borrow condition = new Borrow();
-            condition.setApplyUser(borrow.getApplyUser());
-            condition.setStatus(EBorrowStatus.REPAY.getCode());
-            if (borrowBO.getTotalCount(condition) == 1) {
-                if (StringUtils.isNotBlank(user.getUserReferee())) {
-                    couponConditionAO.recommendSuccess(user.getUserReferee());
-                }
-            }
             // 发送短信
             smsContent = "您的" + CalculationUtil.diviUp(borrow.getAmount())
                     + "借款（合同编号：" + borrow.getCode() + "）已经成功还款，详情查看请登录APP。";

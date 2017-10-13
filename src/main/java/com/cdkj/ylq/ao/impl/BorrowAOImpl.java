@@ -387,6 +387,15 @@ public class BorrowAOImpl implements IBorrowAO {
             User user = userBO.getRemoteUser(borrow.getApplyUser());
             Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
             contractBO.generate(user, bankcard, borrow);
+            // 首次借款成功推荐人发放优惠券
+            Borrow condition = new Borrow();
+            condition.setApplyUser(borrow.getApplyUser());
+            condition.setStatus(EBorrowStatus.REPAY.getCode());
+            if (borrowBO.getTotalCount(condition) == 1) {
+                if (StringUtils.isNotBlank(user.getUserReferee())) {
+                    couponConditionAO.recommendSuccess(user.getUserReferee());
+                }
+            }
             // 短信通知
             smsContent = "恭喜您，您的" + CalculationUtil.diviUp(borrow.getAmount())
                     + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";
@@ -460,6 +469,15 @@ public class BorrowAOImpl implements IBorrowAO {
             User user = userBO.getRemoteUser(borrow.getApplyUser());
             Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
             contractBO.generate(user, bankcard, borrow);
+            // 首次借款成功推荐人发放优惠券
+            Borrow condition = new Borrow();
+            condition.setApplyUser(borrow.getApplyUser());
+            condition.setStatus(EBorrowStatus.REPAY.getCode());
+            if (borrowBO.getTotalCount(condition) == 1) {
+                if (StringUtils.isNotBlank(user.getUserReferee())) {
+                    couponConditionAO.recommendSuccess(user.getUserReferee());
+                }
+            }
             // 发送短信
             String smsContent = "恭喜您，您的"
                     + CalculationUtil.diviUp(borrow.getAmount())
@@ -589,7 +607,6 @@ public class BorrowAOImpl implements IBorrowAO {
             throw new BizException("XN000000", "找不到对应的借款记录");
         }
         Borrow borrow = borrowList.get(0);
-        User user = userBO.getRemoteUser(borrow.getApplyUser());
         if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                 || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
             // 如果是逾期还款，逾期记录落地
@@ -607,15 +624,6 @@ public class BorrowAOImpl implements IBorrowAO {
             certificationBO.resetSxAmount(borrow.getApplyUser());
             // 借还成功发放优惠券
             couponConditionAO.repaySuccess(borrow.getApplyUser());
-            // 首次借还成功推荐人发放优惠券
-            Borrow condition = new Borrow();
-            condition.setApplyUser(borrow.getApplyUser());
-            condition.setStatus(EBorrowStatus.REPAY.getCode());
-            if (borrowBO.getTotalCount(condition) == 1) {
-                if (StringUtils.isNotBlank(user.getUserReferee())) {
-                    couponConditionAO.recommendSuccess(user.getUserReferee());
-                }
-            }
             // 发送短信
             smsOutBO.sentContent(borrow.getApplyUser(),
                 "您的" + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号："

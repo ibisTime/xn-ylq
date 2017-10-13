@@ -294,6 +294,7 @@ public class BorrowBOImpl extends PaginableBOImpl<Borrow> implements IBorrowBO {
         statusList.add(EBorrowStatus.APPROVE_YES.getCode());
         statusList.add(EBorrowStatus.LOANING.getCode());
         statusList.add(EBorrowStatus.LOAN_NO.getCode());
+        statusList.add(EBorrowStatus.PAY_SUBMIT.getCode());
         statusList.add(EBorrowStatus.OVERDUE.getCode());
         condition.setApplyUser(userId);
         condition.setStatusList(statusList);
