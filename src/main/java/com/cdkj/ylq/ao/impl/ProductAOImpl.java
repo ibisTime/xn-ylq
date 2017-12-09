@@ -144,6 +144,7 @@ public class ProductAOImpl implements IProductAO {
                         product.setApproveNote(apply.getApproveNote());
                         if (borrow != null) {
                             product.setBorrowCode(borrow.getCode());
+                            product.setBorrowInfo(borrow);
                         }
                         product.setIsLocked(EBoolean.NO.getCode());
                     } else {

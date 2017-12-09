@@ -34,6 +34,9 @@ public interface IBorrowAO {
     // 客户端：我要还款
     public Object repay(String code, String payType);
 
+    // 管理端：宝付代扣
+    public void doRepayBaofooOss(String code, String updater, String remark);
+
     // 客户端：还款成功回调
     public void repaySuccess(String payGroup, String payType, String payCode,
             Long amount);
@@ -70,8 +73,11 @@ public interface IBorrowAO {
     // 定时器调用：每日17:00:00点检查明天即将到期借款，并短信提醒
     public void doCheckWillRepayDaily();
 
-    // 定时器调用：每日17:00:00点检查今日到期借款，并自动扣款一次，短信提醒用户
+    // 定时器调用：每日14点、17点、22点检查今日到期借款，并自动扣款一次，短信提醒用户
     public void doAutoRepayDaily();
+
+    // 定时器调用：每日9点、12点、18点检查1-7天内逾期借款订单，并自动扣款一次，短信提醒用户
+    public void doAutoRepayOfOverdue();
 
     // 定时器调用：每分钟调用一次，查询正在申请的代付结果
     public void doBaofooPayQueryPerMinute();

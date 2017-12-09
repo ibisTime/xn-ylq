@@ -15,7 +15,7 @@ import java.util.List;
  * @since: 2017年8月16日 下午5:03:02 
  * @history:
  */
-public class XN623082Req {
+public class XN623084Req {
 
     // 借款编号（必填）
     private List<String> codeList;

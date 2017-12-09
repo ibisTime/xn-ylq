@@ -85,6 +85,9 @@ public class Product extends ABaseDO {
     // 借款编号 - 放款后返回
     private String borrowCode;
 
+    // 借款详情 - 放款后返回
+    private Borrow borrowInfo;
+
     // 是否锁定
     private String isLocked;
 
@@ -278,6 +281,14 @@ public class Product extends ABaseDO {
 
     public void setFwAmount(Long fwAmount) {
         this.fwAmount = fwAmount;
+    }
+
+    public Borrow getBorrowInfo() {
+        return borrowInfo;
+    }
+
+    public void setBorrowInfo(Borrow borrowInfo) {
+        this.borrowInfo = borrowInfo;
     }
 
 }

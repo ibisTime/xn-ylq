@@ -23,6 +23,7 @@
            	  <ref bean="userCouponTrigger"/>
            	  <ref bean="repayRemindTrigger"/>
            	  <ref bean="autoRepayTrigger"/>
+           	  <ref bean="autoRepayOfOverdueTrigger"/>
            	  <ref bean="doBaofooPayQueryTrigger"/>
           </list>  
        </property>  
@@ -51,11 +52,22 @@
 	
 	<bean id="autoRepayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
        <property name="jobDetail" ref="doAutoRepayDaily"/>  
-       <property name="cronExpression" value="0 0 18 * * ?"/><!-- 每天18点执行 -->
+       <property name="cronExpression" value="0 0 14,17,22 * * ?"/><!-- 每天14点、17点、22点执行 -->
 	</bean>
 	<bean id="doAutoRepayDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="borrowAOImpl"/>  
 	        <property name="targetMethod" value="doAutoRepayDaily"/>  
+	        <property name="concurrent" value="true"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
+	</bean>
+	
+	<!-- 逾期订单自动扣款  -->
+	<bean id="autoRepayOfOverdueTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail" ref="doAutoRepayOfOverdue"/>  
+       <property name="cronExpression" value="0 0 9,12,18 * * ?"/><!-- 每天9点、12点、18点执行 -->
+	</bean>
+	<bean id="doAutoRepayOfOverdue" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
+	        <property name="targetObject" ref="borrowAOImpl"/>  
+	        <property name="targetMethod" value="doAutoRepayOfOverdue"/>  
 	        <property name="concurrent" value="true"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
 	</bean>
 	

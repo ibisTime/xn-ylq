@@ -39,8 +39,6 @@ import com.cdkj.ylq.domain.BaofooPay;
 import com.cdkj.ylq.domain.Borrow;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
-import com.cdkj.ylq.domain.InfoContact;
-import com.cdkj.ylq.domain.MXReport;
 import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.Renewal;
 import com.cdkj.ylq.domain.RepayApply;
@@ -426,20 +424,24 @@ public class BorrowAOImpl implements IBorrowAO {
         User user = userBO.getRemoteUser(borrow.getApplyUser());
         Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
 
-        List<BaofooPay> baofooPayList = new ArrayList<BaofooPay>();
-        BaofooPay baofooPay = new BaofooPay();
-        baofooPay.setTransNo(code);
-        baofooPay.setToAccName(user.getRealName());
-        baofooPay.setToAccNo(bankcard.getBankcardNumber());
-        baofooPay.setToBankName(bankcard.getBankName());
-        baofooPay.setTransCardId(user.getIdNo());
-        baofooPay.setTransMobile(user.getMobile());
-        baofooPay.setTransMoney(borrow.getAmount() - borrow.getFwAmount()
-                - borrow.getLxAmount() - borrow.getGlAmount()
-                - borrow.getXsAmount() + borrow.getYhAmount());
-        baofooPay.setTransSummary("九州宝-代付（借款订单：" + code + "）");
-        baofooPayList.add(baofooPay);
-        accountBO.baofooPay(baofooPayList);
+        try {
+            List<BaofooPay> baofooPayList = new ArrayList<BaofooPay>();
+            BaofooPay baofooPay = new BaofooPay();
+            baofooPay.setTransNo(code);
+            baofooPay.setToAccName(user.getRealName());
+            baofooPay.setToAccNo(bankcard.getBankcardNumber());
+            baofooPay.setToBankName(bankcard.getBankName());
+            baofooPay.setTransCardId(user.getIdNo());
+            baofooPay.setTransMobile(user.getMobile());
+            baofooPay.setTransMoney(borrow.getAmount() - borrow.getFwAmount()
+                    - borrow.getLxAmount() - borrow.getGlAmount()
+                    - borrow.getXsAmount() + borrow.getYhAmount());
+            baofooPay.setTransSummary("九州宝-代付（借款订单：" + code + "）");
+            baofooPayList.add(baofooPay);
+            accountBO.baofooPay(baofooPayList);
+        } catch (Exception e) {
+            logger.error("宝付代付异常，原因：" + e.getMessage());
+        }
     }
 
     @Override
@@ -512,8 +514,8 @@ public class BorrowAOImpl implements IBorrowAO {
             return doRepayAlipay(borrow);
         } else if (EPayType.WEIXIN_APP.getCode().equals(payType)) {
             return doRepayWechat(borrow);
-        } else if (EPayType.BAOFOO_WITHHOLD.getCode().equals(payType)) {
-            return doRepayBaofoo(borrow);
+        } else if (EPayType.BAOFOO_WITHHOLD_USER.getCode().equals(payType)) {
+            return doRepayBaofoo(borrow, EPayType.BAOFOO_WITHHOLD_USER);
         } else if (EPayType.OFFLINE.getCode().equals(payType)) {
             return doRepayOffline(borrow);
         } else {
@@ -521,7 +523,21 @@ public class BorrowAOImpl implements IBorrowAO {
         }
     }
 
-    private Object doRepayBaofoo(Borrow borrow) {
+    @Override
+    public void doRepayBaofooOss(String code, String updater, String remark) {
+        Borrow borrow = borrowBO.getBorrow(code);
+        if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                && !EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
+            throw new BizException("xn6230000", "借款订单" + code + "不处于待还款状态");
+        }
+        try {
+            doRepayBaofoo(borrow, EPayType.BAOFOO_WITHHOLD_OSS);
+        } catch (Exception e) {
+            logger.error("宝付代扣异常，原因：" + e.getMessage());
+        }
+    }
+
+    private Object doRepayBaofoo(Borrow borrow, EPayType payType) {
         Long rmbAmount = borrow.getTotalAmount();
         User user = userBO.getRemoteUser(borrow.getApplyUser());
         Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
@@ -537,7 +553,7 @@ public class BorrowAOImpl implements IBorrowAO {
             }
             // 更新订单支付金额
             borrowBO.repaySuccess(borrow, rmbAmount, "宝付银行卡代扣",
-                EPayType.BAOFOO_WITHHOLD.getCode());
+                payType.getCode());
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                 EApplyStatus.REPAY);
@@ -550,7 +566,7 @@ public class BorrowAOImpl implements IBorrowAO {
                 "您的" + CalculationUtil.diviUp(borrow.getAmount()) + "借款（合同编号："
                         + borrow.getCode() + "）已经成功还款，详情查看请登录APP。");
         } else {
-            throw new BizException("xn623000", "银行卡代扣失败，建议选择其他支付方式");
+            throw new BizException("xn623000", "银行卡代扣失败");
         }
         return new BooleanRes(true);
     }
@@ -647,7 +663,7 @@ public class BorrowAOImpl implements IBorrowAO {
             return doRenewalAlipay(renewal);
         } else if (EPayType.WEIXIN_APP.getCode().equals(payType)) {
             return doRenewalWechat(renewal);
-        } else if (EPayType.BAOFOO_WITHHOLD.getCode().equals(payType)) {
+        } else if (EPayType.BAOFOO_WITHHOLD_USER.getCode().equals(payType)) {
             return doRenewalBaofoo(renewal);
         } else if (EPayType.OFFLINE.getCode().equals(payType)) {
             return doRenewalOffline(renewal);
@@ -676,7 +692,7 @@ public class BorrowAOImpl implements IBorrowAO {
             borrowBO.renewalSuccess(borrow, renewal, rmbAmount);
             // 更新续期记录
             renewalBO.renewalSuccess(renewal, "宝付银行卡代扣",
-                EPayType.BAOFOO_WITHHOLD.getCode(), renewalCount + 1);
+                EPayType.BAOFOO_WITHHOLD_USER.getCode(), renewalCount + 1);
             // 更新申请单状态
             applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                 EApplyStatus.LOANING);
@@ -772,41 +788,52 @@ public class BorrowAOImpl implements IBorrowAO {
 
     @Override
     public void cuishou(String code) {
-        List<String> mobiles = new ArrayList<String>();
+        // List<String> mobiles = new ArrayList<String>();
         Borrow borrow = borrowBO.getBorrow(code);
         if (!EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
             throw new BizException("xn6230000", "订单不处于逾期状态，不允许催收");
         }
         String userId = borrow.getApplyUser();
         User user = userBO.getRemoteUser(userId);
-        // 获取紧急联系人号码
-        Certification certification = certificationBO.getCertification(
-            borrow.getApplyUser(), ECertiKey.INFO_CONTACT);
-        InfoContact infoContact = JsonUtil.json2Bean(certification.getResult(),
-            InfoContact.class);
-        mobiles.add(infoContact.getFamilyMobile());
-        mobiles.add(infoContact.getSocietyMobile());
 
-        // 获取运营商中排名前N个的联系人
-        int count = sysConfigBO.getIntegerValue(SysConstants.SEND_SMS_COUNT);
-        certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_CARRIER);
-        String report = certification.getRef();
-        MXReport mxReport = JsonUtil.json2Bean(report, MXReport.class);
-        for (int i = 0; i < count; i++) {
-            mobiles.add(mxReport.getCall_contact_detail().get(i).getPeer_num());
-        }
         StringBuffer sb = new StringBuffer(user.getIdNo());
         String contentTemplate = sysConfigBO
             .getStringValue(SysConstants.SMS_CUISHOU);
         contentTemplate = String.format(contentTemplate, user.getMobile(), sb
             .replace(8, 11, "****").toString(), user.getMobile());
+        // 向本人发送催收短信
+        smsOutBO.sendContent(user.getMobile(), contentTemplate,
+            ESystemCode.YLQ.getCode(), ESystemCode.YLQ.getCode());
 
-        // todo 去魔蝎联系人前N个
-        for (String mobile : mobiles) {
-            smsOutBO.sendContent(mobile, contentTemplate,
-                ESystemCode.YLQ.getCode(), ESystemCode.YLQ.getCode());
-        }
+        // // 获取紧急联系人号码
+        // Certification certification = certificationBO.getCertification(
+        // borrow.getApplyUser(), ECertiKey.INFO_CONTACT);
+        // InfoContact infoContact =
+        // JsonUtil.json2Bean(certification.getResult(),
+        // InfoContact.class);
+        // mobiles.add(infoContact.getFamilyMobile());
+        // mobiles.add(infoContact.getSocietyMobile());
+        //
+        // // 获取运营商中排名前N个的联系人
+        // int count = sysConfigBO.getIntegerValue(SysConstants.SEND_SMS_COUNT);
+        // certification = certificationBO.getCertification(userId,
+        // ECertiKey.INFO_CARRIER);
+        // String report = certification.getRef();
+        // MXReport mxReport = JsonUtil.json2Bean(report, MXReport.class);
+        // for (int i = 0; i < count; i++) {
+        // mobiles.add(mxReport.getCall_contact_detail().get(i).getPeer_num());
+        // }
+        // StringBuffer sb = new StringBuffer(user.getIdNo());
+        // String contentTemplate = sysConfigBO
+        // .getStringValue(SysConstants.SMS_CUISHOU);
+        // contentTemplate = String.format(contentTemplate, user.getMobile(), sb
+        // .replace(8, 11, "****").toString(), user.getMobile());
+        //
+        // // todo 去魔蝎联系人前N个
+        // for (String mobile : mobiles) {
+        // smsOutBO.sendContent(mobile, contentTemplate,
+        // ESystemCode.YLQ.getCode(), ESystemCode.YLQ.getCode());
+        // }
     }
 
     @Override
@@ -959,7 +986,7 @@ public class BorrowAOImpl implements IBorrowAO {
                     }
                     // 更新订单支付金额
                     borrowBO.repaySuccess(borrow, borrow.getTotalAmount(),
-                        "宝付银行卡代扣", EPayType.BAOFOO_WITHHOLD.getCode());
+                        "宝付银行卡代扣", EPayType.BAOFOO_WITHHOLD_AUTO.getCode());
                     // 更新申请单状态
                     applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
                         EApplyStatus.REPAY);
@@ -980,6 +1007,63 @@ public class BorrowAOImpl implements IBorrowAO {
             }
         }
         logger.info("***************结束扫描今日到期借款***************");
+    }
+
+    @Override
+    public void doAutoRepayOfOverdue() {
+        logger.info("***************开始扫描逾期1-7天借款，自动扣款***************");
+        Borrow condition = new Borrow();
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(EBorrowStatus.OVERDUE.getCode());
+        condition.setStatusList(statusList);
+        condition.setYqDaysStart(1);
+        condition.setYqDaysEnd(7);
+        List<Borrow> borrowList = borrowBO.queryBorrowList(condition);
+        if (borrowList != null) {
+            logger.info("***************共扫描到" + borrowList.size()
+                    + "条记录***************");
+        }
+        if (CollectionUtils.isNotEmpty(borrowList)) {
+            for (Borrow borrow : borrowList) {
+                // 自动扣款
+                User user = userBO.getRemoteUser(borrow.getApplyUser());
+                Bankcard bankcard = accountBO
+                    .getBankcard(borrow.getApplyUser());
+                boolean isSuccess = accountBO.baofooWithhold(
+                    bankcard.getBankCode(), bankcard.getBankcardNumber(),
+                    user.getIdNo(), user.getRealName(), user.getMobile(),
+                    borrow.getTotalAmount(), borrow.getCode());
+                if (isSuccess) {
+                    // 如果是逾期还款，逾期记录落地
+                    if (borrow.getYqDays() > 0) {
+                        overdueBO.saveOverdue(borrow.getApplyUser(),
+                            borrow.getCode(), borrow.getYqDays(),
+                            borrow.getYqlxAmount(),
+                            EOverdueDeal.REPAY.getCode());
+                    }
+                    // 更新订单支付金额
+                    borrowBO.repaySuccess(borrow, borrow.getTotalAmount(),
+                        "宝付银行卡代扣", EPayType.BAOFOO_WITHHOLD_AUTO.getCode());
+                    // 更新申请单状态
+                    applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
+                        EApplyStatus.REPAY);
+                    // 额度重置为0
+                    certificationBO.resetSxAmount(borrow.getApplyUser());
+                    // 还款成功
+                    couponConditionAO.repaySuccess(borrow.getApplyUser());
+                    smsOutBO.sentContent(borrow.getApplyUser(), "您的"
+                            + CalculationUtil.diviUp(borrow.getAmount())
+                            + "借款(合同编号:" + borrow.getCode()
+                            + ")已经自动还款成功，详情查看请登录APP。");
+                } else {
+                    smsOutBO.sentContent(borrow.getApplyUser(), "您的"
+                            + CalculationUtil.diviUp(borrow.getAmount())
+                            + "借款(合同编号:" + borrow.getCode()
+                            + ")自动扣款失败，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。");
+                }
+            }
+        }
+        logger.info("***************结束扫描逾期1-7天借款***************");
     }
 
     @Override
