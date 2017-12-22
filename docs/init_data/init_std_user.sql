@@ -42,6 +42,7 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','forceUpdate','0','admin','2017-10-16 15:52:19','是否强制更新','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','note','v121版本更新说明','admin','2017-10-16 15:52:19','更新说明','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','downloadUrl','http://m.yiliangqian.com/share/share-qrcord.html','admin','2017-10-16 15:52:19','iOS下载地址','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('ios-c','copyright','Copyright ©福建省大田县鑫盛小额贷款有限公司','admin','2017-10-16 15:52:19','版权所属','CD-YLQ000014','CD-YLQ000014');
 
 
 /*

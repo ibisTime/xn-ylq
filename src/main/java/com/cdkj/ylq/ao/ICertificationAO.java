@@ -69,6 +69,13 @@ public interface ICertificationAO {
     // 魔蝎运营商资信报告通知回调处理
     public void doMxCarrierReportCallback(MxCarrierNofification notification);
 
+    // 数聚魔盒运营商任务提交通知
+    public void doTdCarrierTaskSubmitCallback(String userId);
+
+    // 数聚魔盒运营商任务完成通知
+    public void doTdCarrierTaskCompleteCallback(boolean isSuccess,
+            String userId, String taskId);
+
     // 通讯录认证
     public void doAddressBookVerify(String userId,
             List<InfoAddressBook> addressBookList);

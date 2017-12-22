@@ -50,4 +50,10 @@ public class SysConstants {
 
     public static final String FW_RATE = "fwRate";// 服务利率
 
+    public static final String SJ_QUERY_URL = "sjQueryUrl"; // 数聚磨合查询URL
+
+    public static final String SJ_PARTNER_CODE = "sjPartnerCode"; // 数聚磨合合作方标识
+
+    public static final String SJ_PARTNER_KEY = "sjPartnerKey"; // 数聚磨合合作方密钥
+
 }

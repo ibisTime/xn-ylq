@@ -70,6 +70,7 @@ import com.cdkj.ylq.http.HttpUtil;
 import com.cdkj.ylq.tongdun.PreloanQueryResponse;
 import com.cdkj.ylq.tongdun.PreloanSubmitResponse;
 import com.cdkj.ylq.tongdun.RiskServicePreloan;
+import com.cdkj.ylq.tongdun.YunYingShang;
 
 @Service
 public class CertificationAOImpl implements ICertificationAO {
@@ -100,6 +101,9 @@ public class CertificationAOImpl implements ICertificationAO {
 
     @Autowired
     private RiskServicePreloan riskServicePreloan;
+
+    @Autowired
+    private YunYingShang yunYingShang;
 
     @Override
     public void submitIdentifyPic(String userId, String identifyPic,
@@ -429,6 +433,50 @@ public class CertificationAOImpl implements ICertificationAO {
                     && EApplyStatus.TO_CERTI.getCode()
                         .equals(apply.getStatus())) {
                 applyBO.toDoApprove(apply);
+            }
+        }
+    }
+
+    @Override
+    public void doTdCarrierTaskSubmitCallback(String userId) {
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_CARRIER);
+        if (certification != null) {
+            certificationBO.refreshFlag(certification,
+                ECertificationStatus.CERTING);
+        }
+    }
+
+    @Override
+    public void doTdCarrierTaskCompleteCallback(boolean isSuccess,
+            String userId, String taskId) {
+        if (isSuccess) {
+            Certification certification = certificationBO.getCertification(
+                userId, ECertiKey.INFO_CARRIER);
+            Integer config = sysConfigBO
+                .getIntegerValue(SysConstants.CARRIER_VALID_DAYS);
+            String report = yunYingShang.query(taskId, userId);
+            if (certification != null) {
+                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+                certification.setResult(JsonUtil.Object2Json(report));
+                certification.setCerDatetime(new Date());
+                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                    DateUtil.getTodayStart(), config));
+                certification.setRef(report);
+                certificationBO.refreshCertification(certification);
+            }
+            Apply apply = applyBO.getCurrentApply(userId);
+            if (apply != null
+                    && EApplyStatus.TO_CERTI.getCode()
+                        .equals(apply.getStatus())) {
+                applyBO.toDoApprove(apply);
+            }
+        } else {
+            Certification certification = certificationBO.getCertification(
+                userId, ECertiKey.INFO_CARRIER);
+            if (certification != null) {
+                certificationBO.refreshFlag(certification,
+                    ECertificationStatus.TO_CERTI);
             }
         }
     }
