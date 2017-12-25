@@ -91,6 +91,9 @@ public class Product extends ABaseDO {
     // 是否锁定
     private String isLocked;
 
+    // 还款时间（正数代表还有几天还款，0表示当天还款，负数表示）
+    private Integer hkDays;
+
     public String getBorrowCode() {
         return borrowCode;
     }
@@ -289,6 +292,14 @@ public class Product extends ABaseDO {
 
     public void setBorrowInfo(Borrow borrowInfo) {
         this.borrowInfo = borrowInfo;
+    }
+
+    public Integer getHkDays() {
+        return hkDays;
+    }
+
+    public void setHkDays(Integer hkDays) {
+        this.hkDays = hkDays;
     }
 
 }
