@@ -2,6 +2,7 @@ package com.cdkj.ylq.bo.impl;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,6 +64,20 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
         condition.setUserId(userId);
         condition.setCertiKey(certiKey.getCode());
         return certificationDAO.select(condition);
+    }
+
+    @Override
+    public Certification getCarrierCertificationByTaskId(String taskId) {
+        Certification condition = new Certification();
+        condition.setFlag(ECertificationStatus.CERTING.getCode());
+        condition.setResult(taskId);
+        condition.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
+        List<Certification> resultList = certificationDAO.selectList(condition);
+        if (CollectionUtils.isEmpty(resultList)) {
+            throw new BizException("xn623000", "找不到taskId=" + taskId
+                    + "的运营商认证记录");
+        }
+        return resultList.get(0);
     }
 
     @Override

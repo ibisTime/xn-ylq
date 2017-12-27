@@ -53,6 +53,14 @@
 		<property name="paginableDAO" ref="overdueDAOImpl"/>
 	</bean>	
 	
+	<bean id="contractBO" class="com.cdkj.ylq.bo.impl.ContractBOImpl">
+		<property name="paginableDAO" ref="contractDAOImpl"/>
+	</bean>
+	
+	<bean id="statisticBO" class="com.cdkj.ylq.bo.impl.StatisticBOImpl">
+		<property name="paginableDAO" ref="statisticDAOImpl"/>
+	</bean>
+	
 	<bean id="sysDictBO" class="com.cdkj.ylq.bo.impl.SYSDictBOImpl">
 		<property name="paginableDAO" ref="sysDictDAOImpl"/>
 	</bean>	

@@ -20,6 +20,9 @@ public interface ICertificationBO extends IPaginableBO<Certification> {
     // 根据认证标识和用户ID获取认证记录
     public Certification getCertification(String userId, ECertiKey certiKey);
 
+    // 同盾运营商使用，认证中状态，根据taskid获取认证信息
+    public Certification getCarrierCertificationByTaskId(String taskId);
+
     // 根据userId查询用户认证信息列表
     public List<Certification> queryCertificationList(String userId);
 

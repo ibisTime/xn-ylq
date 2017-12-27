@@ -17,11 +17,17 @@
 			<if test="id != null and id != '' ">
 				AND t.id = #{id}
 			</if>
+			<if test="flag != null and flag != '' ">
+				AND t.flag = #{flag}
+			</if>
 			<if test="userId != null and userId != '' ">
 				AND t.user_id = #{userId}
 			</if>
 			<if test="certiKey != null and certiKey != '' ">
 				AND t.certi_key = #{certiKey}
+			</if>
+			<if test="result != null and result != '' ">
+				AND t.result = #{result}
 			</if>
 			<if test="ref != null and ref != '' ">
 				AND t.ref = #{ref}

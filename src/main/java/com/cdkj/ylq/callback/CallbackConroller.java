@@ -2,6 +2,7 @@ package com.cdkj.ylq.callback;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -18,11 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.cdkj.ylq.ao.IBorrowAO;
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.ao.IJdtAO;
+import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.enums.EBizType;
 import com.cdkj.ylq.enums.EChannelType;
 import com.cdkj.ylq.enums.EPayType;
+import com.cdkj.ylq.enums.ESystemCode;
+import com.cdkj.ylq.enums.EUserKind;
+import com.cdkj.ylq.tongdun.TDCarrierReponse;
 
 /** 
  * @author: haiqingzheng 
@@ -45,6 +50,9 @@ public class CallbackConroller {
 
     @Autowired
     ICertificationAO certificationAO;
+
+    @Autowired
+    IUserBO userBO;
 
     @Autowired
     IJdtAO jdtAO;
@@ -195,6 +203,63 @@ public class CallbackConroller {
             out.print("received");
         } catch (Exception e) {
             logger.info("借贷通实时通告处理异常,原因：" + e.getMessage());
+        }
+    }
+
+    // ******数聚磨合报告回调处理
+
+    @RequestMapping("/tdcarrier/notice")
+    public synchronized void doCallbackTdCarrier(@RequestBody String body,
+            ServletRequest request, ServletResponse response)
+            throws IOException {
+        if (StringUtils.isBlank(body)) {
+            logger.info("***进入数聚磨合回调,参数为空****");
+            return;
+        }
+        logger.info(body + "\n----------");
+        body = URLDecoder.decode(body, "utf-8");
+        String[] str1 = body.split("&");
+        String notify_data = null;
+        String notify_event = null;
+        String notify_type = null;
+        for (int i = 0; i < str1.length; i++) {
+            if (str1[i].subSequence(0, 11).equals("notify_data")) {
+                notify_data = (String) str1[i]
+                    .subSequence(12, str1[i].length());
+            } else if (str1[i].subSequence(0, 12).equals("notify_event")) {
+                notify_event = (String) str1[i].subSequence(13,
+                    str1[i].length());
+            } else if (str1[i].subSequence(0, 11).equals("notify_type")) {
+                notify_type = (String) str1[i]
+                    .subSequence(12, str1[i].length());
+            }
+        }
+        System.out.println(notify_data + "\n" + notify_event + "\n"
+                + notify_type);
+
+        boolean isSuccess = false;
+        if (StringUtils.equals(notify_event, "SUCCESS")) {
+            isSuccess = true;
+            // 通知类型:授权采集是 ACQUIRE ，魔盒 报告是 REPORT
+            // 如果事件类型是ACQUIRE(用户报告通知)
+            if (StringUtils.equals(notify_type, "ACQUIRE")) {
+                try {
+                    TDCarrierReponse notification = JsonUtil.json2Bean(
+                        notify_data, TDCarrierReponse.class);
+                    String userId = userBO.isUserExist(notification.getData()
+                        .getUser_mobile(), EUserKind.Customer, ESystemCode.YLQ
+                        .getCode());
+                    certificationAO.doTdCarrierTaskSubmitCallback(userId,
+                        notification.getTask_id());
+                    logger.info("SUCCESS:" + notification.getTask_id());
+                    // 经过多次测试认证，回调后直接查询回报错。回调后等待10s在去查询避免报错
+                    Thread.sleep(10 * 1000);
+                    certificationAO.doTdCarrierTaskCompleteCallback(isSuccess,
+                        userId, notification.getTask_id());
+                } catch (Exception e) {
+                    logger.error("数据魔盒运营商回调处理异常，原因：" + e.getMessage());
+                }
+            }
         }
     }
 

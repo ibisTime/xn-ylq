@@ -38,6 +38,16 @@ public class Contract extends ABaseDO {
     // 更改时间（只会在合同结束时更新）
     private Date updateDatetime;
 
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public String getCode() {
         return code;
     }

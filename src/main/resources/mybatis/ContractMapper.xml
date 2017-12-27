@@ -15,6 +15,18 @@
 		<result column="status" property="status" />
 		<result column="update_datetime" property="updateDatetime" />
 	</resultMap>
+	<resultMap id="contract_list_DB_Result" type="contract">
+		<result column="code" property="code" />
+		<result column="user_id" property="userId" />
+		<result column="borrow_code" property="borrowCode" />
+		<result column="title" property="title" />
+		
+		<result column="type" property="type" />
+		<result column="create_datetime" property="createDatetime" />
+		<result column="remark" property="remark" />
+		<result column="status" property="status" />
+		<result column="update_datetime" property="updateDatetime" />
+	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="code != null and code != '' ">
@@ -23,8 +35,11 @@
 			<if test="userId != null and userId != '' ">
 				AND t.user_id = #{userId}
 			</if>
+			<if test="title != null and title != '' ">
+				AND t.title like "%"#{title}"%"
+			</if>
 			<if test="borrowCode != null and borrowCode != '' ">
-				AND t.borrow_code = #{borrowCode}
+				AND t.borrow_code like "%"#{borrowCode}"%"
 			</if>
 			<if test="type != null and type != '' ">
 				AND t.type = #{type}
@@ -51,6 +66,23 @@
 		t_contract t 
 		<include refid="where_condition" />
 		ORDER BY t.code DESC
+	</select>
+	<select id="select_contract_list" parameterType="contract" resultMap="contract_list_DB_Result">
+		SELECT
+		code
+		,user_id
+		,borrow_code
+		,title
+		
+		,type
+		,create_datetime
+		,remark
+		,status
+		,update_datetime
+		FROM
+		t_contract t 
+		<include refid="where_condition" />
+		ORDER BY t.create_datetime DESC
 	</select>
 
 	<select id="select_contract_count" parameterType="contract" resultType="java.lang.Long">

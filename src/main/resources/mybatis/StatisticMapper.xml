@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.IStatisticDAO">
+	<resultMap id="statistic_DB_Result" type="statistic">
+		<result column="id" property="id" />
+		<result column="today" property="today" />
+		<result column="reg_num" property="regNum" />
+		<result column="certi_num" property="certiNum" />
+		<result column="zmxy_num" property="zmxyNum" />
+		<result column="carrier_num" property="carrierNum" />
+		<result column="jdt_num" property="jdtNum" />
+		<result column="apply_num" property="applyNum" />
+		<result column="fk_num" property="fkNum" />
+		<result column="fk_amount" property="fkAmount" />
+		<result column="order_amount" property="orderAmount" />
+		<result column="yhk_num" property="yhkNum" />
+		<result column="yhk_amount" property="yhkAmount" />
+		<result column="sjhk_num" property="sjhkNum" />
+		<result column="bfhk_num" property="bfhkNum" />
+		<result column="bfhk_amount" property="bfhkAmount" />
+		<result column="zfbhk_num" property="zfbhkNum" />
+		<result column="zfbhk_amount" property="zfbhkAmount" />
+		<result column="hk_amount" property="hkAmount" />
+		<result column="xq_num" property="xqNum" />
+		<result column="bfdk_num" property="bfdkNum" />
+		<result column="bfdk_amount" property="bfdkAmount" />
+		<result column="zfbdk_num" property="zfbdkNum" />
+		<result column="zfbdk_amount" property="zfbdkAmount" />
+		<result column="xq_total_amount" property="xqTotalAmount" />
+		<result column="yqhk_num" property="yqhkNum" />
+		<result column="yqhk_amount" property="yqhkAmount" />
+		<result column="bfyq_num" property="bfyqNum" />
+		<result column="bfyq_total_amount" property="bfyqTotalAmount" />
+		<result column="zfbyq_num" property="zfbyqNum" />
+		<result column="zfbyq_total_amount" property="zfbyqTotalAmount" />
+		<result column="ys_num" property="ysNum" />
+		<result column="ys_total_amount" property="ysTotalAmount" />
+		<result column="ysbj_total_amount" property="ysbjTotalAmount" />
+		<result column="ysfy_total_amount" property="ysfyTotalAmount" />
+		<result column="yq_count" property="yqCount" />
+		<result column="yq_total_amount" property="yqTotalAmount" />
+		<result column="yqbj_total_amount" property="yqbjTotalAmount" />
+		<result column="yqfy_total_amount" property="yqfyTotalAmount" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="id != null and id != '' ">
+				AND t.id = #{id}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_statistic" parameterType="statistic"
+		resultMap="statistic_DB_Result">
+		SELECT
+		t.id
+		,t.today
+		,t.reg_num
+		,t.certi_num
+		,t.zmxy_num
+		,t.carrier_num
+		,t.jdt_num
+		,t.apply_num
+		,t.fk_num
+		,t.fk_amount
+		,t.order_amount
+		,t.yhk_num
+		,t.yhk_amount
+		,t.sjhk_num
+		,t.bfhk_num
+		,t.bfhk_amount
+		,t.zfbhk_num
+		,t.zfbhk_amount
+		,t.hk_amount
+		,t.xq_num
+		,t.bfdk_num
+		,t.bfdk_amount
+		,t.zfbdk_num
+		,t.zfbdk_amount
+		,t.xq_total_amount
+		,t.yqhk_num
+		,t.yqhk_amount
+		,t.bfyq_num
+		,t.bfyq_total_amount
+		,t.zfbyq_num
+		,t.zfbyq_total_amount
+		,t.ys_num
+		,t.ys_total_amount
+		,t.ysbj_total_amount
+		,t.ysfy_total_amount
+		,t.yq_count
+		,t.yq_total_amount
+		,t.yqbj_total_amount
+		,t.yqfy_total_amount
+		FROM
+		t_statistic t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_statistic_count" parameterType="statistic"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM t_statistic t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_statistic" parameterType="statistic">
+		INSERT INTO
+		t_statistic(
+		today
+		,reg_num
+		,certi_num
+		,zmxy_num
+		,carrier_num
+		,jdt_num
+		,apply_num
+		,fk_num
+		,fk_amount
+		,order_amount
+		,yhk_num
+		,yhk_amount
+		,sjhk_num
+		,bfhk_num
+		,bfhk_amount
+		,zfbhk_num
+		,zfbhk_amount
+		,hk_amount
+		,xq_num
+		,bfdk_num
+		,bfdk_amount
+		,zfbdk_num
+		,zfbdk_amount
+		,xq_total_amount
+		,yqhk_num
+		,yqhk_amount
+		,bfyq_num
+		,bfyq_total_amount
+		,zfbyq_num
+		,zfbyq_total_amount
+		,ys_num
+		,ys_total_amount
+		,ysbj_total_amount
+		,ysfy_total_amount
+		,yq_count
+		,yq_total_amount
+		,yqbj_total_amount
+		,yqfy_total_amount
+		)
+		VALUES(
+		#{today}
+		,#{regNum}
+		,#{certiNum}
+		,#{zmxyNum}
+		,#{carrierNum}
+		,#{jdtNum}
+		,#{applyNum}
+		,#{fkNum}
+		,#{fkAmount}
+		,#{orderAmount}
+		,#{yhkNum}
+		,#{yhkAmount}
+		,#{sjhkNum}
+		,#{bfhkNum}
+		,#{bfhkAmount}
+		,#{zfbhkNum}
+		,#{zfbhkAmount}
+		,#{hkAmount}
+		,#{xqNum}
+		,#{bfdkNum}
+		,#{bfdkAmount}
+		,#{zfbdkNum}
+		,#{zfbdkAmount}
+		,#{xqTotalAmount}
+		,#{yqhkNum}
+		,#{yqhkAmount}
+		,#{bfyqNum}
+		,#{bfyqTotalAmount}
+		,#{zfbyqNum}
+		,#{zfbyqTotalAmount}
+		,#{ysNum}
+		,#{ysTotalAmount}
+		,#{ysbjTotalAmount}
+		,#{ysfyTotalAmount}
+		,#{yqCount}
+		,#{yqTotalAmount}
+		,#{yqbjTotalAmount}
+		,#{yqfyTotalAmount}
+		)
+	</insert>
+
+	<insert id="do_insert_statistic_daily" parameterType="statistic">
+        <![CDATA[
+
+		insert into
+		dev_ylq_xn_ylq.t_statistic(`today`,`reg_num`,`certi_num`,`zmxy_num`,`carrier_num`,`jdt_num`,`apply_num`,`fk_num`,`fk_amount`,`order_amount`,`yhk_num`,`yhk_amount`,`sjhk_num`,`bfhk_num`,`bfhk_amount`,`zfbhk_num`,`zfbhk_amount`,`hk_amount`,`xq_num`,`bfdk_num`,`bfdk_amount`,`zfbdk_num`,`zfbdk_amount`,`xq_total_amount`,`yqhk_num`,`yqhk_amount`,`bfyq_num`,`bfyq_total_amount`,`zfbyq_num`,`zfbyq_total_amount`,`ys_num`,`ys_total_amount`,`ysbj_total_amount`,`ysfy_total_amount`,`yq_count`,`yq_total_amount`,`yqbj_total_amount`,`yqfy_total_amount`)
+		(
+
+		SELECT
+		A0.today, A1.reg_num,A2.certi_num, A3.zmxy_num, A4.carrier_num, A5.jdt_num,
+		A6.apply_num, A7.fk_num, A8.fk_amount, A9.order_amount,
+		A10.yhk_num,
+		A11.yhk_amount,A12.sjhk_num,A13.bfhk_num,A14.bfhk_amount,A15.zfbhk_num,A16.zfbhk_amount,
+		A17.hk_amount,A18.xq_num,A19.bfdk_num,A20.bfdk_amount,A21.zfbdk_num,A22.zfbdk_amount,A23.xq_total_amount,
+		A24.yqhk_num,A25.yqhk_amount,A26.bfyq_num,A27.bfyq_total_amount,A28.zfbyq_num,A29.zfbyq_total_amount,
+		A30.ys_num,A31.ys_total_amount,A32.ysbj_total_amount,A33.ysfy_total_amount,A34.yq_count,A35.yq_total_amount,A36.yqbj_total_amount,A37.yqfy_total_amount
+		from
+		/*日期*/(SELECT NOW() as today) as A0,
+		/*注册人数*/(SELECT COUNT(*) as reg_num from dev_ylq_std_user.tstd_user where
+		TO_DAYS(create_datetime) = TO_DAYS(NOW())) as A1,
+		/*认证人数*/(SELECT COUNT(*) as certi_num from dev_ylq_xn_ylq.t_certification where
+		TO_DAYS(cer_datetime) = TO_DAYS(NOW()) and certi_key = 'INFO_CARRIER')
+		as A2,
+		/*芝麻认证人数*/(SELECT COUNT(*) as zmxy_num from dev_ylq_xn_ylq.t_certification where
+		TO_DAYS(cer_datetime) = TO_DAYS(NOW()) and certi_key =
+		'INFO_ZMCREDIT') as A3,
+		/*运营商认证人数*/(SELECT COUNT(*) as carrier_num from dev_ylq_xn_ylq.t_certification where
+		TO_DAYS(cer_datetime) = TO_DAYS(NOW()) and certi_key = 'INFO_CARRIER')
+		as A4,
+		/*借贷通导流人数*/(SELECT COUNT(*) as jdt_num from dev_ylq_std_user.tstd_user where
+		TO_DAYS(create_datetime) = TO_DAYS(NOW()) and remark = '借贷通推送') as A5,
+		/*申请人数*/(SELECT COUNT(*) as apply_num FROM dev_ylq_xn_ylq.t_apply
+		where TO_DAYS(apply_datetime) = TO_DAYS(NOW())) as A6,
+		/*放款单量*/(SELECT COUNT(*) as fk_num FROM dev_ylq_xn_ylq.t_borrow where
+		TO_DAYS(fk_datetime) = TO_DAYS(NOW())) as A7,
+		/*放款金额*/(SELECT COALESCE(SUM(amount),0) as fk_amount FROM dev_ylq_xn_ylq.t_borrow
+		where TO_DAYS(fk_datetime) = TO_DAYS(NOW())) as A8,
+		/*订单金额*/(SELECT COALESCE(SUM(amount),0) as order_amount FROM dev_ylq_xn_ylq.t_borrow
+		where TO_DAYS(sign_datetime) = TO_DAYS(NOW())) as A9,
+		/*当日应还款单量*/(SELECT COUNT(*) as yhk_num FROM dev_ylq_xn_ylq.t_borrow
+		where hk_datetime <= NOW() and status in ('3','5')) as A10,
+		/*当日应还款金额*/(SELECT COALESCE(SUM(amount),0) as yhk_amount FROM
+		dev_ylq_xn_ylq.t_borrow where hk_datetime <= NOW() and status in
+		('3','5')) as A11,
+		/*实际还款总单量*/(SELECT COUNT(*) as sjhk_num FROM dev_ylq_xn_ylq.t_borrow where
+		TO_DAYS(real_hk_datetime) = TO_DAYS(NOW())) as A12,
+		/*宝付代扣还款单量*/(SELECT COUNT(*) as bfhk_num FROM dev_ylq_xn_ylq.t_borrow
+		where TO_DAYS(real_hk_datetime) = TO_DAYS(NOW()) and pay_type='5' and
+		status='4' )as A13,
+		/*宝付代扣还款金额*/(SELECT COALESCE(SUM(real_hk_amount),0) as bfhk_amount FROM
+		dev_ylq_xn_ylq.t_borrow where TO_DAYS(real_hk_datetime) =
+		TO_DAYS(NOW()) and pay_type='5' and status='4' )as A14,
+		/*支付宝还款单量*/(SELECT COUNT(*) as zfbhk_num FROM dev_ylq_xn_ylq.t_borrow
+		where TO_DAYS(real_hk_datetime) = TO_DAYS(NOW()) and pay_type='3' and
+		status='4' )as A15,
+		/*支付宝还款金额*/(SELECT COALESCE(SUM(real_hk_amount),0) as zfbhk_amount FROM
+		dev_ylq_xn_ylq.t_borrow where TO_DAYS(real_hk_datetime) =
+		TO_DAYS(NOW()) and pay_type='3' and status='4' )as A16,
+		/*实际还款总金额*/(SELECT COALESCE(SUM(real_hk_amount),0) as hk_amount FROM
+		dev_ylq_xn_ylq.t_borrow where TO_DAYS(real_hk_datetime) =
+		TO_DAYS(NOW()) and status='4' )as A17,
+		/*续期总单量*/(SELECT COUNT(*) as xq_num FROM dev_ylq_xn_ylq.t_renewal where
+		TO_DAYS(create_datetime) = TO_DAYS(NOW()) and status='1')as A18,
+		/*宝付代扣续期单量*/(SELECT COUNT(*) as bfdk_num FROM dev_ylq_xn_ylq.t_renewal
+		where TO_DAYS(create_datetime) = TO_DAYS(NOW()) and pay_type='5' and
+		status='1' ) as A19,
+		/*宝付代扣续期金额*/(SELECT COALESCE(SUM(total_amount),0) as bfdk_amount FROM
+		dev_ylq_xn_ylq.t_renewal where TO_DAYS(create_datetime) =
+		TO_DAYS(NOW()) and pay_type='5' and status='1' )as A20,
+		/*支付宝代扣续期单量*/(SELECT COUNT(*) as zfbdk_num FROM
+		dev_ylq_xn_ylq.t_renewal where TO_DAYS(create_datetime) =
+		TO_DAYS(NOW()) and pay_type='3' and status='1' ) as A21,
+		/*支付宝代扣续期金额*/(SELECT COALESCE(SUM(total_amount),0) as zfbdk_amount
+		FROM dev_ylq_xn_ylq.t_renewal where TO_DAYS(create_datetime) =
+		TO_DAYS(NOW()) and pay_type='3' and status='1' )as A22,
+		/*续期总金额*/(SELECT COALESCE(SUM(total_amount),0) as xq_total_amount FROM
+		dev_ylq_xn_ylq.t_renewal where TO_DAYS(create_datetime) =
+		TO_DAYS(NOW()) and status='1' )as A23,
+
+		/*逾期还款单量*/(SELECT COUNT(*) as yqhk_num FROM dev_ylq_xn_ylq.t_borrow where status='5'
+		)as A24,
+		/*逾期还款金额*/(SELECT COALESCE(SUM(total_amount),0) as yqhk_amount FROM
+		dev_ylq_xn_ylq.t_borrow where status='5' )as A25,
+		/*宝付代扣逾期还款单量*/(SELECT COUNT(*) as bfyq_num FROM
+		dev_ylq_xn_ylq.t_borrow where status='5' and pay_type='5' and
+		yq_days>0)as A26,
+		/*宝付代扣逾期还款金额*/(SELECT COALESCE(SUM(total_amount),0) as bfyq_total_amount FROM
+		dev_ylq_xn_ylq.t_borrow where status='5' and pay_type='5' and
+		yq_days>0)as A27,
+		/*支付宝逾期还款单量*/(SELECT COUNT(*) as zfbyq_num FROM dev_ylq_xn_ylq.t_borrow where status='5'
+		and pay_type='5' and yq_days>0)as A28,
+		/*支付宝逾期还款金额*/(SELECT COALESCE(SUM(total_amount),0) as zfbyq_total_amount FROM
+		dev_ylq_xn_ylq.t_borrow where status='5' and pay_type='5' and
+		yq_days>0)as A29,
+
+		/*当前应收单量*/(SELECT COUNT(*) as ys_num FROM dev_ylq_xn_ylq.t_borrow where status
+		in('5','6'))as A30,
+		/*当前应收金额*/(SELECT COALESCE(SUM(total_amount),0) as ys_total_amount FROM
+		dev_ylq_xn_ylq.t_borrow where status in('5','6'))as A31,
+
+		/*当前应收本金*/(SELECT COALESCE(SUM(amount),0) as ysbj_total_amount FROM
+		dev_ylq_xn_ylq.t_borrow where status in('5','6'))as A32,
+		/*当前应收费用*/(SELECT
+		COALESCE(SUM(total_amount),0)-COALESCE(SUM(amount),0) as
+		ysfy_total_amount FROM dev_ylq_xn_ylq.t_borrow where status
+		in('5','6')) as A33,
+
+		/*当前逾期单量*/(SELECT COUNT(*) as yq_count FROM dev_ylq_xn_ylq.t_borrow where status='5'
+		)as A34,
+		/*当前逾期金额*/(SELECT (COALESCE(SUM(amount),0) + COALESCE(SUM(yqlx_amount),0)) as
+		yq_total_amount FROM dev_ylq_xn_ylq.t_borrow where status='5' )as A35,
+		/*当前逾期本金*/(SELECT COALESCE(SUM(amount),0) as yqbj_total_amount FROM
+		dev_ylq_xn_ylq.t_borrow where status='5' )as A36,
+		/*当前逾期费用*/(SELECT COALESCE(SUM(yqlx_amount),0) as yqfy_total_amount FROM
+		dev_ylq_xn_ylq.t_borrow where status='5' )as A37
+
+		)
+
+]]>
+
+	</insert>
+
+</mapper>

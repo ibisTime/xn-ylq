@@ -109,13 +109,18 @@ public class ContractAOImpl implements IContractAO {
     @Override
     public Paginable<Contract> queryContractPage(int start, int limit,
             Contract condition) {
-        return contractBO.getPaginable(start, limit, condition);
+        Paginable<Contract> results = contractBO.getPaginable(start, limit,
+            condition);
+        for (Contract contract : results.getList()) {
+            contract.setUser(userBO.getRemoteUser(contract.getUserId()));
+        }
+        return results;
     }
 
     @Override
     public Contract getContract(String contractCode) {
-
-        return contractBO.getContract(contractCode);
+        Contract contract = contractBO.getContract(contractCode);
+        contract.setUser(userBO.getRemoteUser(contract.getUserId()));
+        return contract;
     }
-
 }

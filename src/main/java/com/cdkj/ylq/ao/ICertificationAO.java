@@ -70,7 +70,7 @@ public interface ICertificationAO {
     public void doMxCarrierReportCallback(MxCarrierNofification notification);
 
     // 数聚魔盒运营商任务提交通知
-    public void doTdCarrierTaskSubmitCallback(String userId);
+    public void doTdCarrierTaskSubmitCallback(String userId, String taskId);
 
     // 数聚魔盒运营商任务完成通知
     public void doTdCarrierTaskCompleteCallback(boolean isSuccess,

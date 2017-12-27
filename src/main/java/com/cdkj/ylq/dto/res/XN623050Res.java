@@ -16,7 +16,6 @@ import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoTongDunPreLoan;
 import com.cdkj.ylq.domain.InfoZMCredit;
-import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.User;
 
 /** 
@@ -84,7 +83,7 @@ public class XN623050Res {
     private String infoCarrierFlag;
 
     // 运营商报告
-    private MxCarrierNofification infoCarrier;
+    private String infoCarrier;
 
     // 通讯录标识
     private String infoAddressBookFlag;
@@ -117,11 +116,11 @@ public class XN623050Res {
         this.infoTongDunPreLoan = infoTongDunPreLoan;
     }
 
-    public MxCarrierNofification getInfoCarrier() {
+    public String getInfoCarrier() {
         return infoCarrier;
     }
 
-    public void setInfoCarrier(MxCarrierNofification infoCarrier) {
+    public void setInfoCarrier(String infoCarrier) {
         this.infoCarrier = infoCarrier;
     }
 

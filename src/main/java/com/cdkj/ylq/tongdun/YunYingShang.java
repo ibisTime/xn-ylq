@@ -24,6 +24,7 @@ import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.dto.res.XN623050Res;
+import com.cdkj.ylq.exception.BizException;
 
 /**
  * 数聚魔盒
@@ -75,7 +76,7 @@ public class YunYingShang {
             if (!params.isEmpty()) {
                 postBody.deleteCharAt(postBody.length() - 1);
             }
-            System.out.println(postBody.toString());
+            // System.out.println(postBody.toString());
             conn = (HttpsURLConnection) url.openConnection();
             // 设置https
             conn.setSSLSocketFactory(ssf);
@@ -118,11 +119,12 @@ public class YunYingShang {
                     log.error("task_id错误 \n" + yysResponse.getMessage());//
                 } else {
                     data = gunzip(yysResponse.getData());
-                    log.info("数据打印：" + data);
+                    // log.info("数据打印：" + data);
                 }
             }
         } catch (Exception e) {
-            log.error("YunYingShang find error:" + e);
+            throw new BizException("xn000000", "数据魔盒运营商报告查询异常，原因："
+                    + e.getMessage());
         }
         return data;
     }

@@ -33,13 +33,14 @@ public class ContractDAOImpl extends AMybatisTemplate implements IContractDAO {
 
     @Override
     public List<Contract> selectList(Contract condition) {
-        return super.selectList("select_contract", condition, Contract.class);
+        return super.selectList("select_contract_list", condition,
+            Contract.class);
     }
 
     @Override
     public List<Contract> selectList(Contract condition, int start, int count) {
-        return super.selectList("select_contract", start, count, condition,
-            Contract.class);
+        return super.selectList("select_contract_list", start, count,
+            condition, Contract.class);
     }
 
     @Override

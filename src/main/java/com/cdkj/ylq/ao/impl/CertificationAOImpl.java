@@ -438,27 +438,47 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
-    public void doTdCarrierTaskSubmitCallback(String userId) {
+    public void doTdCarrierTaskSubmitCallback(String userId, String taskId) {
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_CARRIER);
         if (certification != null) {
-            certificationBO.refreshFlag(certification,
-                ECertificationStatus.CERTING);
+            certification.setFlag(ECertificationStatus.CERTING.getCode());
+            certification.setResult(taskId);
+            certificationBO.refreshCertification(certification);
         }
+        // 测试使用
+        // Integer config = sysConfigBO
+        // .getIntegerValue(SysConstants.CARRIER_VALID_DAYS);
+        // String report = "{\"test\":\"test\"}";
+        // if (certification != null) {
+        // certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+        // certification.setResult(report);
+        // certification.setCerDatetime(new Date());
+        // certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+        // DateUtil.getTodayStart(), config));
+        // certification.setRef(report);
+        // certificationBO.refreshCertification(certification);
+        // }
+        // Apply apply = applyBO.getCurrentApply(userId);
+        // if (apply != null
+        // && EApplyStatus.TO_CERTI.getCode().equals(apply.getStatus())) {
+        // applyBO.toDoApprove(apply);
+        // }
     }
 
     @Override
+    @Transactional
     public void doTdCarrierTaskCompleteCallback(boolean isSuccess,
             String userId, String taskId) {
+        Certification certification = certificationBO
+            .getCarrierCertificationByTaskId(taskId);
         if (isSuccess) {
-            Certification certification = certificationBO.getCertification(
-                userId, ECertiKey.INFO_CARRIER);
             Integer config = sysConfigBO
                 .getIntegerValue(SysConstants.CARRIER_VALID_DAYS);
             String report = yunYingShang.query(taskId, userId);
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(JsonUtil.Object2Json(report));
+                certification.setResult(report);
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                     DateUtil.getTodayStart(), config));
@@ -472,8 +492,6 @@ public class CertificationAOImpl implements ICertificationAO {
                 applyBO.toDoApprove(apply);
             }
         } else {
-            Certification certification = certificationBO.getCertification(
-                userId, ECertiKey.INFO_CARRIER);
             if (certification != null) {
                 certificationBO.refreshFlag(certification,
                     ECertificationStatus.TO_CERTI);
@@ -833,8 +851,7 @@ public class CertificationAOImpl implements ICertificationAO {
                     certification.getFlag())
                         || ECertificationStatus.INVALID.getCode().equals(
                             certification.getFlag())) {
-                    res.setInfoCarrier(JsonUtil.json2Bean(
-                        certification.getResult(), MxCarrierNofification.class));
+                    res.setInfoCarrier(certification.getResult());
                 }
             }
 

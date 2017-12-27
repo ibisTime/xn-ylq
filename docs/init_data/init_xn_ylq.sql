@@ -33,6 +33,11 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdPartnerCode','jiuzhou','admin','2017-10-16 15:55:37','合作方标识','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdPartnerKey','24ea744f66884640aa29b6a8823d34d4','admin','2017-10-16 15:55:37','合作方密钥','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','tdPartnerApp','jiuzhou_and','admin','2017-10-16 15:55:37','应用名','CD-YLQ000014','CD-YLQ000014');
+
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','sjQueryUrl','https://api.shujumohe.com/octopus/report.task.query/v2','admin','2017-10-16 15:55:37','数聚磨合查询URL','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','sjPartnerCode','jiuzhoubao_mohe','admin','2017-10-16 15:55:37','数聚磨合合作方标识','CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','sjPartnerKey','c23945efd22c4b2bb70a58abf9422246','admin','2017-10-16 15:55:37','数聚磨合合作方密钥','CD-YLQ000014','CD-YLQ000014');
+
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','jtdUrl','http://admincit.lianzi360.com','admin','2017-10-16 15:55:37','主机名称','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','jtdOrg','huoke','admin','2017-10-16 15:55:37','企业客户账号名','CD-YLQ000014','CD-YLQ000014');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('2','jtdSecret','043acd7552dba895a624ce838bff264c','admin','2017-10-16 15:55:37','客户秘钥','CD-YLQ000014','CD-YLQ000014');
