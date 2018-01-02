@@ -227,8 +227,9 @@ public class BorrowAOImpl implements IBorrowAO {
             if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                     || EBorrowStatus.OVERDUE.getCode().equals(
                         borrow.getStatus())) {
-                borrow.setRemainDays(DateUtil.daysBetween(new Date(),
-                    borrow.getHkDatetime()));
+                borrow.setRemainDays(DateUtil.daysBetween(
+                    DateUtil.getTodayStart(),
+                    DateUtil.getTomorrowStart(borrow.getHkDatetime())));
             }
         }
         return results;
@@ -276,8 +277,10 @@ public class BorrowAOImpl implements IBorrowAO {
                     borrow.setRenewalEndDate(endDate);
                     borrow.setRenewalAmount(totalAmount);
                 }
-                borrow.setRemainDays(DateUtil.daysBetween(new Date(),
-                    borrow.getHkDatetime()));
+
+                borrow.setRemainDays(DateUtil.daysBetween(
+                    DateUtil.getTodayStart(),
+                    DateUtil.getTomorrowStart(borrow.getHkDatetime())));
             }
 
         }

@@ -156,7 +156,8 @@ public class ApplyAOImpl implements IApplyAO {
         } else {
             sxAmount = 0L;
             status = EApplyStatus.APPROVE_NO.getCode();
-            content = "很抱歉，您的借款申请未通过平台审核，失败原因为：系统审核，请保证填写的资料为本人真实资料,如需再次申请，请7天后再登陆APP提交审核。";
+            content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote
+                    + "，请保证填写的资料为本人真实资料,如需再次申请，请7天后再登陆APP提交审核。";
         }
         applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
         smsOutBO.sentContent(apply.getApplyUser(), content);

@@ -210,7 +210,7 @@
 		from
 		/*日期*/(SELECT NOW() as today) as A0,
 		/*注册人数*/(SELECT COUNT(*) as reg_num from dev_ylq_std_user.tstd_user where
-		TO_DAYS(create_datetime) = TO_DAYS(NOW())) as A1,
+		TO_DAYS(create_datetime) = TO_DAYS(NOW()) AND kind='C') as A1,
 		/*认证人数*/(SELECT COUNT(*) as certi_num from dev_ylq_xn_ylq.t_certification where
 		TO_DAYS(cer_datetime) = TO_DAYS(NOW()) and certi_key = 'INFO_CARRIER')
 		as A2,

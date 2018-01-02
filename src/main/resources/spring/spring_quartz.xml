@@ -104,8 +104,8 @@
 	
 	<bean id="doInsertStatisticDailyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
        <property name="jobDetail" ref="doInsertStatisticDaily"/>  
-      <!-- <property name="cronExpression" value="0 0 0 * * ?"/> 每天0点执行 -->
-       <property name="cronExpression" value="0 */10 * * * ?"/><!-- 每10分钟执行 -->
+       <property name="cronExpression" value="0 0 0 * * ?"/> <!-- 每天0点执行 -->
+       <!-- <property name="cronExpression" value="0 */10 * * * ?"/> --><!-- 每10分钟执行 -->
 	</bean>
 	<bean id="doInsertStatisticDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="statisticAOImpl"/>  
