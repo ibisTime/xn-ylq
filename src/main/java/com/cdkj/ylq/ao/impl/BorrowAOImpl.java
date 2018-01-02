@@ -327,8 +327,8 @@ public class BorrowAOImpl implements IBorrowAO {
                 borrow.setRenewalEndDate(endDate);
                 borrow.setRenewalAmount(totalAmount);
             }
-            borrow.setRemainDays(DateUtil.daysBetween(new Date(),
-                borrow.getHkDatetime()));
+            borrow.setRemainDays(DateUtil.daysBetween(DateUtil.getTodayStart(),
+                DateUtil.getTomorrowStart(borrow.getHkDatetime())));
         }
         return borrow;
     }
