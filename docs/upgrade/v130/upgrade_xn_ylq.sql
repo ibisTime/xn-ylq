@@ -1,4 +1,4 @@
-
+delete from tsys_config where ckey='sendSmsCount';
 
 CREATE TABLE `t_statistic` (
   `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
