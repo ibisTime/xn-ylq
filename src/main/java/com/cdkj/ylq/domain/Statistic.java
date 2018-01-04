@@ -131,6 +131,13 @@ public class Statistic extends ABaseDO {
     // 当前逾期费用
     private Long yqfyTotalAmount;
 
+    // ------------
+    // 用户数据库
+    private String userDB;
+
+    // 业务数据库
+    private String ylqDB;
+
     public Long getId() {
         return id;
     }
@@ -441,6 +448,22 @@ public class Statistic extends ABaseDO {
 
     public void setYqfyTotalAmount(Long yqfyTotalAmount) {
         this.yqfyTotalAmount = yqfyTotalAmount;
+    }
+
+    public String getUserDB() {
+        return userDB;
+    }
+
+    public void setUserDB(String userDB) {
+        this.userDB = userDB;
+    }
+
+    public String getYlqDB() {
+        return ylqDB;
+    }
+
+    public void setYlqDB(String ylqDB) {
+        this.ylqDB = ylqDB;
     }
 
 }

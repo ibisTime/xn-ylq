@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.IStatisticBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
+import com.cdkj.ylq.common.PropertiesUtil;
 import com.cdkj.ylq.dao.IStatisticDAO;
 import com.cdkj.ylq.domain.Statistic;
 
@@ -24,7 +25,10 @@ public class StatisticBOImpl extends PaginableBOImpl<Statistic> implements
 
     @Override
     public void doInsertStatisticDaily() {
-        statisticDAO.doInsertStatisticDaily(null);
+        Statistic condition = new Statistic();
+        condition.setUserDB(PropertiesUtil.Config.USER_DB);
+        condition.setYlqDB(PropertiesUtil.Config.YLQ_DB);
+        statisticDAO.doInsertStatisticDaily(condition);
     }
 
 }

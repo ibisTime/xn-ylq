@@ -35,5 +35,8 @@ public class PropertiesUtil {
 
         public static String PAY_BACK_URL = props.getProperty("PAY_BACK_URL");
 
+        public static String USER_DB = props.getProperty("USER_DB");
+
+        public static String YLQ_DB = props.getProperty("YLQ_DB");
     }
 }
