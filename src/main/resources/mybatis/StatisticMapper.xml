@@ -481,11 +481,11 @@
 		/*实际还款总单量*/(SELECT COUNT(*) as sjhk_num FROM ${ylqDB}.t_borrow where
 		TO_DAYS(real_hk_datetime) = TO_DAYS(NOW())) as A12,
 		/*宝付代扣还款单量*/(SELECT COUNT(*) as bfhk_num FROM ${ylqDB}.t_borrow
-		where TO_DAYS(real_hk_datetime) = TO_DAYS(NOW()) and pay_type='5' and
+		where TO_DAYS(real_hk_datetime) = TO_DAYS(NOW()) and pay_type in ('5','6','7') and
 		status='4' )as A13,
 		/*宝付代扣还款金额*/(SELECT COALESCE(SUM(real_hk_amount),0) as bfhk_amount FROM
 		${ylqDB}.t_borrow where TO_DAYS(real_hk_datetime) =
-		TO_DAYS(NOW()) and pay_type='5' and status='4' )as A14,
+		TO_DAYS(NOW()) and pay_type in ('5','6','7') and status='4' )as A14,
 		/*支付宝还款单量*/(SELECT COUNT(*) as zfbhk_num FROM ${ylqDB}.t_borrow
 		where TO_DAYS(real_hk_datetime) = TO_DAYS(NOW()) and pay_type='3' and
 		status='4' )as A15,

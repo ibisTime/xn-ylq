@@ -43,5 +43,7 @@ CREATE TABLE `t_statistic` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+update `tsys_dict` set `dvalue`='宝付代扣(自动)' where `parent_key`='pay_type' and `dkey`='5';
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','pay_type','6','宝付代扣(客户)','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`,`system_code`) VALUES ('1','pay_type','7','宝付代扣(平台)','admin',now(),NULL,'CD-YLQ000014','CD-YLQ000014');
 
