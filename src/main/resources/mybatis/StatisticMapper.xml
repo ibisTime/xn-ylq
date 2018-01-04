@@ -516,19 +516,17 @@
 		/*逾期还款金额*/(SELECT COALESCE(SUM(total_amount),0) as yqhk_amount FROM
 		${ylqDB}.t_borrow where status='5' )as A25,
 		/*宝付代扣逾期还款单量*/(SELECT COUNT(*) as bfyq_num FROM
-		${ylqDB}.t_borrow where status='5' and pay_type='5' and
+		${ylqDB}.t_borrow where status='4' and pay_type in ('5','6','7') and
 		yq_days>0)as A26,
 		/*宝付代扣逾期还款金额*/(SELECT COALESCE(SUM(total_amount),0) as bfyq_total_amount FROM
-		${ylqDB}.t_borrow where status='5' and pay_type='5' and
+		${ylqDB}.t_borrow where status='4' and pay_type in ('5','6','7') and
 		yq_days>0)as A27,
-		/*支付宝逾期还款单量*/(SELECT COUNT(*) as zfbyq_num FROM ${ylqDB}.t_borrow where status='5'
-		and pay_type='5' and yq_days>0)as A28,
+		/*支付宝逾期还款单量*/(SELECT COUNT(*) as zfbyq_num FROM ${ylqDB}.t_borrow where status='4'
+		and pay_type='3' and yq_days>0)as A28,
 		/*支付宝逾期还款金额*/(SELECT COALESCE(SUM(total_amount),0) as zfbyq_total_amount FROM
-		${ylqDB}.t_borrow where status='5' and pay_type='5' and
-		yq_days>0)as A29,
+		${ylqDB}.t_borrow where status='4' and pay_type='3' and yq_days>0)as A29,
 
-		/*当前应收单量*/(SELECT COUNT(*) as ys_num FROM ${ylqDB}.t_borrow where status
-		in('5','6'))as A30,
+		/*当前应收单量*/(SELECT COUNT(*) as ys_num FROM ${ylqDB}.t_borrow where status in('5','6'))as A30,
 		/*当前应收金额*/(SELECT COALESCE(SUM(total_amount),0) as ys_total_amount FROM
 		${ylqDB}.t_borrow where status in('5','6'))as A31,
 
@@ -539,16 +537,13 @@
 		ysfy_total_amount FROM ${ylqDB}.t_borrow where status
 		in('5','6')) as A33,
 
-		/*当前逾期单量*/(SELECT COUNT(*) as yq_count FROM ${ylqDB}.t_borrow where status='5'
-		)as A34,
+		/*当前逾期单量*/(SELECT COUNT(*) as yq_count FROM ${ylqDB}.t_borrow where status='5')as A34,
 		/*当前逾期金额*/(SELECT (COALESCE(SUM(amount),0) + COALESCE(SUM(yqlx_amount),0)) as
 		yq_total_amount FROM ${ylqDB}.t_borrow where status='5' )as A35,
 		/*当前逾期本金*/(SELECT COALESCE(SUM(amount),0) as yqbj_total_amount FROM
 		${ylqDB}.t_borrow where status='5' )as A36,
 		/*当前逾期费用*/(SELECT COALESCE(SUM(yqlx_amount),0) as yqfy_total_amount FROM
-		${ylqDB}.t_borrow where status='5' )as A37
-
-		)
+		${ylqDB}.t_borrow where status='5' )as A37)
 	]]>
 	</insert>
 </mapper>
