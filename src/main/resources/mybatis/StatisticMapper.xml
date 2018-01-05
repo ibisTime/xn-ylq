@@ -472,9 +472,9 @@
 		/*放款金额*/(SELECT COALESCE(SUM(amount),0) as fk_amount FROM ${ylqDB}.t_borrow
 		where TO_DAYS(fk_datetime) = TO_DAYS(NOW())) as A8,
 		/*订单金额*/(SELECT COALESCE(SUM(amount),0) as order_amount FROM ${ylqDB}.t_borrow
-		where TO_DAYS(sign_datetime) <= TO_DAYS(NOW())) as A9,
+		where TO_DAYS(sign_datetime) = TO_DAYS(NOW())) as A9,
 		/*当日应还款单量*/(SELECT COUNT(*) as yhk_num FROM ${ylqDB}.t_borrow
-		where TO_DAYS(hk_datetime) = TO_DAYS(NOW()) and status in ('3','5')) as A10,
+		where TO_DAYS(hk_datetime) <= TO_DAYS(NOW()) and status in ('3','5')) as A10,
 		/*当日应还款金额*/(SELECT COALESCE(SUM(amount),0) as yhk_amount FROM
 		${ylqDB}.t_borrow where TO_DAYS(hk_datetime) <= TO_DAYS(NOW()) and status in
 		('3','5')) as A11,
@@ -517,14 +517,15 @@
 		${ylqDB}.t_borrow where status='5' )as A25,
 		/*宝付代扣逾期还款单量*/(SELECT COUNT(*) as bfyq_num FROM
 		${ylqDB}.t_borrow where status='4' and pay_type in ('5','6','7') and
-		yq_days>0)as A26,
+		yq_days>0 and TO_DAYS(real_hk_datetime) = TO_DAYS(NOW()))as A26,
 		/*宝付代扣逾期还款金额*/(SELECT COALESCE(SUM(total_amount),0) as bfyq_total_amount FROM
 		${ylqDB}.t_borrow where status='4' and pay_type in ('5','6','7') and
-		yq_days>0)as A27,
+		yq_days>0 and TO_DAYS(real_hk_datetime) = TO_DAYS(NOW()))as A27,
 		/*支付宝逾期还款单量*/(SELECT COUNT(*) as zfbyq_num FROM ${ylqDB}.t_borrow where status='4'
-		and pay_type='3' and yq_days>0)as A28,
+		and pay_type='3' and yq_days>0 and TO_DAYS(real_hk_datetime) = TO_DAYS(NOW()))as A28,
 		/*支付宝逾期还款金额*/(SELECT COALESCE(SUM(total_amount),0) as zfbyq_total_amount FROM
-		${ylqDB}.t_borrow where status='4' and pay_type='3' and yq_days>0)as A29,
+		${ylqDB}.t_borrow where status='4' and pay_type='3' and yq_days>0 and 
+		TO_DAYS(real_hk_datetime) = TO_DAYS(NOW()))as A29,
 
 		/*当前应收单量*/(SELECT COUNT(*) as ys_num FROM ${ylqDB}.t_borrow where status in('5','6'))as A30,
 		/*当前应收金额*/(SELECT COALESCE(SUM(total_amount),0) as ys_total_amount FROM
