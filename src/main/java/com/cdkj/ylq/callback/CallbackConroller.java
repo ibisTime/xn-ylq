@@ -217,21 +217,24 @@ public class CallbackConroller {
             return;
         }
         logger.info(body + "\n----------");
+
         body = URLDecoder.decode(body, "utf-8");
         String[] str1 = body.split("&");
         String notify_data = null;
         String notify_event = null;
         String notify_type = null;
         for (int i = 0; i < str1.length; i++) {
-            if (str1[i].subSequence(0, 11).equals("notify_data")) {
-                notify_data = (String) str1[i]
-                    .subSequence(12, str1[i].length());
-            } else if (str1[i].subSequence(0, 12).equals("notify_event")) {
-                notify_event = (String) str1[i].subSequence(13,
-                    str1[i].length());
-            } else if (str1[i].subSequence(0, 11).equals("notify_type")) {
-                notify_type = (String) str1[i]
-                    .subSequence(12, str1[i].length());
+            if (str1[i].length() >= 11) {
+                if (str1[i].subSequence(0, 11).equals("notify_data")) {
+                    notify_data = (String) str1[i].subSequence(12,
+                        str1[i].length());
+                } else if (str1[i].subSequence(0, 12).equals("notify_event")) {
+                    notify_event = (String) str1[i].subSequence(13,
+                        str1[i].length());
+                } else if (str1[i].subSequence(0, 11).equals("notify_type")) {
+                    notify_type = (String) str1[i].subSequence(12,
+                        str1[i].length());
+                }
             }
         }
         System.out.println(notify_data + "\n" + notify_event + "\n"
