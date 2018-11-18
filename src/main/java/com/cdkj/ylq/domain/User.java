@@ -8,6 +8,8 @@
  */
 package com.cdkj.ylq.domain;
 
+import java.util.Date;
+
 import com.cdkj.ylq.dao.base.ABaseDO;
 
 /** 
@@ -24,14 +26,14 @@ public class User extends ABaseDO {
     // userId
     private String userId;
 
-    // openId
-    private String openId;
-
-    // kind
-    private String kind;
-
     // 登陆名
     private String loginName;
+
+    // 手机号
+    private String mobile;
+
+    // 邮箱
+    private String email;
 
     // 昵称
     private String nickname;
@@ -39,11 +41,17 @@ public class User extends ABaseDO {
     // 头像
     private String photo;
 
-    // 手机号
-    private String mobile;
+    // 登陆密码
+    private String loginPwd;
 
-    // 是否实名认证
-    private String identityFlag;
+    // 登陆密码强度
+    private String loginPwdStrength;
+
+    // 推荐人类型
+    private String refereeType;
+
+    // 推荐人
+    private String userReferee;
 
     // 证件类型
     private String idKind;
@@ -54,11 +62,14 @@ public class User extends ABaseDO {
     // 真实姓名
     private String realName;
 
-    // 推荐人
-    private String userReferee;
+    // 交易密码
+    private String tradePwd;
 
-    // 分成比例
-    private Double divRate;
+    // 交易密码强度
+    private String tradePwdStrength;
+
+    // 状态
+    private String status;
 
     // 省
     private String province;
@@ -72,11 +83,38 @@ public class User extends ABaseDO {
     // 具体地址
     private String address;
 
+    // 经度
+    private String longitude;
+
+    // 纬度
+    private String latitude;
+
+    // 注册时间
+    private Date createDatetime;
+
+    // 注册ip
+    private String createIp;
+
+    // 注册端
+    private String createClient;
+
+    // 更新人
+    private String updater;
+
+    // 更新时间
+    private Date updateDatetime;
+
+    // 备注
+    private String remark;
+
+    // 是否黑名单
+    private String isBlackList;
+
+    // 是否白名单
+    private String isWhiteList;
+
     // 公司编号
     private String companyCode;
-
-    // 系统编号
-    private String systemCode;
 
     // 是否被拉入黑名单
     private String blacklistFlag;
@@ -92,6 +130,98 @@ public class User extends ABaseDO {
 
     // 续期次数
     private Integer renewalCount;
+
+    // ******************************
+
+    private User refereeUser;
+
+    public User getRefereeUser() {
+        return refereeUser;
+    }
+
+    public void setRefereeUser(User refereeUser) {
+        this.refereeUser = refereeUser;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getLoginPwd() {
+        return loginPwd;
+    }
+
+    public void setLoginPwd(String loginPwd) {
+        this.loginPwd = loginPwd;
+    }
+
+    public String getLoginPwdStrength() {
+        return loginPwdStrength;
+    }
+
+    public void setLoginPwdStrength(String loginPwdStrength) {
+        this.loginPwdStrength = loginPwdStrength;
+    }
+
+    public String getRefereeType() {
+        return refereeType;
+    }
+
+    public void setRefereeType(String refereeType) {
+        this.refereeType = refereeType;
+    }
+
+    public String getUserReferee() {
+        return userReferee;
+    }
+
+    public void setUserReferee(String userReferee) {
+        this.userReferee = userReferee;
+    }
 
     public String getIdKind() {
         return idKind;
@@ -117,108 +247,28 @@ public class User extends ABaseDO {
         this.realName = realName;
     }
 
-    public String getBlacklistFlag() {
-        return blacklistFlag;
+    public String getTradePwd() {
+        return tradePwd;
     }
 
-    public void setBlacklistFlag(String blacklistFlag) {
-        this.blacklistFlag = blacklistFlag;
+    public void setTradePwd(String tradePwd) {
+        this.tradePwd = tradePwd;
     }
 
-    public String getCompanyCode() {
-        return companyCode;
+    public String getTradePwdStrength() {
+        return tradePwdStrength;
     }
 
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
+    public void setTradePwdStrength(String tradePwdStrength) {
+        this.tradePwdStrength = tradePwdStrength;
     }
 
-    public String getSystemCode() {
-        return systemCode;
+    public String getStatus() {
+        return status;
     }
 
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
-    }
-
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
-    public Double getDivRate() {
-        return divRate;
-    }
-
-    public void setDivRate(Double divRate) {
-        this.divRate = divRate;
-    }
-
-    public String getUserReferee() {
-        return userReferee;
-    }
-
-    public void setUserReferee(String userReferee) {
-        this.userReferee = userReferee;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getLoginName() {
-        return loginName;
-    }
-
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getIdentityFlag() {
-        return identityFlag;
-    }
-
-    public void setIdentityFlag(String identityFlag) {
-        this.identityFlag = identityFlag;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getProvince() {
@@ -241,12 +291,112 @@ public class User extends ABaseDO {
         return area;
     }
 
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public Date getCreateDatetime() {
+        return createDatetime;
+    }
+
+    public void setCreateDatetime(Date createDatetime) {
+        this.createDatetime = createDatetime;
+    }
+
+    public String getCreateIp() {
+        return createIp;
+    }
+
+    public void setCreateIp(String createIp) {
+        this.createIp = createIp;
+    }
+
+    public String getCreateClient() {
+        return createClient;
+    }
+
+    public void setCreateClient(String createClient) {
+        this.createClient = createClient;
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater;
+    }
+
+    public Date getUpdateDatetime() {
+        return updateDatetime;
+    }
+
+    public void setUpdateDatetime(Date updateDatetime) {
+        this.updateDatetime = updateDatetime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getIsBlackList() {
+        return isBlackList;
+    }
+
+    public void setIsBlackList(String isBlackList) {
+        this.isBlackList = isBlackList;
+    }
+
+    public String getIsWhiteList() {
+        return isWhiteList;
+    }
+
+    public void setIsWhiteList(String isWhiteList) {
+        this.isWhiteList = isWhiteList;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
+    public String getBlacklistFlag() {
+        return blacklistFlag;
+    }
+
+    public void setBlacklistFlag(String blacklistFlag) {
+        this.blacklistFlag = blacklistFlag;
     }
 
     public String getBankcardFlag() {
@@ -279,10 +429,6 @@ public class User extends ABaseDO {
 
     public void setRenewalCount(Integer renewalCount) {
         this.renewalCount = renewalCount;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
     }
 
 }

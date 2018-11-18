@@ -17,6 +17,14 @@
 	    
 	    <typeAlias alias="sysDict" type="com.cdkj.ylq.domain.SYSDict" />
 	    <typeAlias alias="sysConfig" type="com.cdkj.ylq.domain.SYSConfig" />
+	    
+	    <typeAlias alias="sysMenu" type="com.cdkj.ylq.domain.SYSMenu" />
+	    <typeAlias alias="sysRole" type="com.cdkj.ylq.domain.SYSRole" />
+ 	    <typeAlias alias="sysMenuRole" type="com.cdkj.ylq.domain.SYSMenuRole" />
+ 	    
+ 	    <typeAlias alias="user" type="com.cdkj.ylq.domain.User" />
+ 	    <typeAlias alias="userExt" type="com.cdkj.ylq.domain.UserExt" />
+ 	    <typeAlias alias="cNavigate" type="com.cdkj.ylq.domain.CNavigate" />
 	</typeAliases>	
 </configuration>
 

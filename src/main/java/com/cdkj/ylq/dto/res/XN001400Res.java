@@ -79,6 +79,12 @@ public class XN001400Res {
     // 具体地址
     private String address;
 
+    // 经度
+    private String longitude;
+
+    // 纬度
+    private String latitude;
+
     public String getProvince() {
         return province;
     }
@@ -285,5 +291,21 @@ public class XN001400Res {
 
     public void setSystemCode(String systemCode) {
         this.systemCode = systemCode;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 }

@@ -127,16 +127,15 @@ public class CertificationAOImpl implements ICertificationAO {
     public XN798013Res doZhimaVerify(String userId, String idKind, String idNo,
             String realName, String returnUrl, String localCheck, String remark) {
         User user = userBO.getRemoteUser(userId);
-        return certiBO.doZhimaVerify(user.getSystemCode(),
-            user.getCompanyCode(), userId, idKind, idNo, realName, returnUrl,
-            localCheck, remark);
+        return certiBO.doZhimaVerify(null, user.getCompanyCode(), userId,
+            idKind, idNo, realName, returnUrl, localCheck, remark);
     }
 
     @Override
     public XN798014Res doZhimaQuery(String userId, String bizNo) {
         User user = userBO.getRemoteUser(userId);
-        XN798014Res res = certiBO.doZhimaQuery(user.getSystemCode(),
-            user.getCompanyCode(), bizNo);
+        XN798014Res res = certiBO.doZhimaQuery(null, user.getCompanyCode(),
+            bizNo);
         if (res.isSuccess()) {
             InfoIdentify infoIdentify = new InfoIdentify();
             infoIdentify.setRealName(res.getRealName());
@@ -308,9 +307,9 @@ public class CertificationAOImpl implements ICertificationAO {
             throw new BizException("xn623000", "请先提交基本信息");
         }
         InfoIdentify infoIdentify = certiInfo.getInfoIdentify();
-        InfoZMCredit infoZMCredit = certiBO.doZhimaCreditGet(
-            user.getSystemCode(), user.getCompanyCode(),
-            infoIdentify.getRealName(), infoIdentify.getIdNo());
+        InfoZMCredit infoZMCredit = certiBO.doZhimaCreditGet(null,
+            user.getCompanyCode(), infoIdentify.getRealName(),
+            infoIdentify.getIdNo());
         if (infoZMCredit.isAuthorized()) {
             Certification certification = certificationBO.getCertification(
                 userId, ECertiKey.INFO_ZMCREDIT);

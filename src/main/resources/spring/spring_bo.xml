@@ -69,4 +69,23 @@
 		<property name="paginableDAO" ref="sysConfigDAOImpl"/>
 	</bean>	
 	
+	<bean id="userBO" class="com.cdkj.ylq.bo.impl.UserBOImpl">
+		<property name="paginableDAO" ref="userDAOImpl" />
+	</bean>
+	
+	<bean id="sysMenuBO" class="com.cdkj.ylq.bo.impl.SYSMenuBOImpl">
+		<property name="paginableDAO" ref="sysMenuDAOImpl"/>
+	</bean>
+	
+	<bean id="sysRoleBO" class="com.cdkj.ylq.bo.impl.SYSRoleBOImpl">
+		<property name="paginableDAO" ref="sysRoleDAOImpl"/>
+	</bean>
+	<bean id="sysMenuRoleBO" class="com.cdkj.ylq.bo.impl.SYSMenuRoleBOImpl">
+		<property name="paginableDAO" ref="sysMenuRoleDAOImpl"/>
+	</bean>
+
+	<bean id="cNavigateBO" class="com.cdkj.ylq.bo.impl.CNavigateBOImpl">
+		<property name="paginableDAO" ref="cNavigateDAOImpl"/>
+	</bean>
+	
 </beans>
