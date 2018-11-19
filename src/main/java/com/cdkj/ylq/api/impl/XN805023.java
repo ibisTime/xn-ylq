@@ -30,7 +30,7 @@ public class XN805023 extends AProcessor {
         data.setLevel(req.getLevel());
         data.setUpdater(req.getUpdater());
         data.setRemark(req.getRemark());
-        data.setSystemCode(req.getSystemCode());
+        data.setCompanyCode(req.getCompanyCode());
         return new PKCodeRes(sysRoleAO.addSYSRole(data));
     }
 
@@ -38,7 +38,7 @@ public class XN805023 extends AProcessor {
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN805023Req.class);
         StringValidater.validateBlank(req.getName(), req.getLevel(),
-            req.getUpdater(), req.getSystemCode());
+            req.getUpdater(), req.getCompanyCode());
     }
 
 }

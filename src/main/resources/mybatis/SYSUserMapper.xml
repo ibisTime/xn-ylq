@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ogc.standard.dao.ISYSUserDAO">
+	<resultMap id="sysuser_DB_Result" type="sysuser">
+		<result column="user_id" property="userId" />
+		<result column="role_code" property="roleCode" />
+		<result column="company_code" property="companyCode" />
+		<result column="real_name" property="realName" />	
+		<result column="photo" property="photo" />	
+		<result column="mobile" property="mobile" />	
+		<result column="login_name" property="loginName" />		
+		<result column="login_pwd" property="loginPwd" />
+		<result column="login_pwd_strength" property="loginPwdStrength" />	
+		<result column="is_jt" property="isJt" />
+		<result column="is_fk" property="isFk" />
+		<result column="is_dl" property="isDl" />
+		<result column="create_datetime" property="createDatetime" />
+		<result column="status" property="status" />
+		<result column="updater" property="updater" />
+		<result column="update_datetime" property="updateDatetime" />
+		<result column="remark" property="remark" />
+	</resultMap>
+	
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">			
+			<if test="userId != null and userId != '' ">
+				AND t.user_id = #{userId}
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
+			</if>
+			<if test="loginName != null and loginName != '' ">
+				AND t.login_name = #{loginName}
+			</if>					
+			<if test="createDatetimeStart != null and createDatetimeStart != '' ">
+				<![CDATA[AND t.create_datetime >= #{createDatetimeStart}]]>
+			</if>
+			<if test="createDatetimeEnd != null and createDatetimeEnd != '' ">
+				<![CDATA[AND t.create_datetime <= #{createDatetimeEnd}]]>
+			</if>
+			<if test="remark != null and reamrk != '' ">
+				AND t.remark = #{remark}
+			</if>	
+			<if test="loginPwd != null and loginPwd != '' ">
+				AND t.login_pwd = #{loginPwd}
+			</if>
+			<if test="updater != null and updater != '' ">
+				AND t.updater = #{updater}
+			</if>
+			<if test="mobile != null and mobile != '' ">
+				AND t.mobile = #{mobile}
+			</if>
+			<if test="kind != null and kind != '' ">
+				AND t.kind = #{kind}
+			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
+			<if test="isJt != null and isJt != '' ">
+				AND t.is_jt = #{isJt}
+			</if>
+			<if test="isFk != null and isFk != '' ">
+				AND t.is_fk = #{isFk}
+			</if>
+			<if test="isDl != null and isDl != '' ">
+				AND t.is_dl = #{isDl}
+			</if>		
+			<if test="roleCode != null and roleCode != '' ">
+				AND t.role_code = #{roleCode}
+			</if>
+			<if test="mobileForQuery != null and mobileForQuery != '' ">
+				AND (t.mobile like "%"#{mobileForQuery}"%" or t.login_name like "%"#{mobileForQuery}"%")
+			</if>
+			<if test="realNameForQuery != null and realNameForQuery != '' ">
+				AND t.real_name like "%"#{realNameForQuery}"%" 
+			</if>		
+		</trim>
+	</sql>
+	
+	<select id="select_sysuser" parameterType="sysuser" resultMap="sysuser_DB_Result">
+		SELECT
+		t.user_id
+		,t.role_code
+		,t.company_code
+		,t.real_name
+		,t.photo
+		,t.mobile
+		,t.login_name		
+		,t.login_pwd
+		,t.login_pwd_strength
+		,t.is_jt
+		,t.is_fk
+		,t.is_dl
+		,t.create_datetime
+		,t.status
+		,t.updater
+		,t.update_datetime
+		,t.remark
+		
+		FROM
+		tsys_user t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+	
+	<select id="select_sysuser_count" parameterType="sysuser" resultType="java.lang.Long">
+		SELECT count(1) FROM tsys_user t 
+		<include refid="where_condition"/>
+	</select>
+	
+	
+	<insert id="insert_sysuser" parameterType="sysuser">		
+		INSERT INTO
+		tsys_user(
+		user_id
+		,kind
+		,real_name
+		,photo
+		,mobile
+		
+		,role_code
+		,login_name		
+		,login_pwd
+		,login_pwd_strength
+		,is_jt
+		
+		,is_fk
+		,is_dl
+		,create_datetime
+		,status
+		,updater
+		
+		,update_datetime
+		,remark
+		)
+		VALUES(
+		#{userId}
+		,#{kind}
+		,#{realName}
+		,#{photo}
+		,#{mobile}
+		
+		,#{roleCode}
+		,#{loginName}
+		,#{loginPwd}
+		,#{loginPwdStrength}
+		,#{isJt}
+		
+		,#{isFk}
+		,#{isDl}	
+		,#{createDatetime}
+	    ,#{status}
+	    ,#{updater}
+	    
+	    ,#{updateDatetime}
+		,#{remark}
+		)
+	</insert>
+
+	<update id="update_sysuser" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		real_name=#{realName}
+		,photo=#{photo}
+		,mobile=#{mobile}
+		,login_name	=#{loginName}	
+		,login_pwd=#{loginPwd}
+		,login_pwd_strength=#{loginPwdStrength}
+		,create_datetime=#{createDatetime}
+		,status=#{status}
+		,updater=#{updater}
+		,update_datetime=#{updateDatetime}
+		,remark=#{remark}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="update_location" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		address=#{address}
+		,area=#{area}
+		,city=#{city}
+		,province=#{province}	
+		,latitude=#{latitude}
+		,longitude=#{longitude}
+		,updater=#{updater}
+		,update_datetime=#{updateDatetime}
+		,remark=#{remark}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="update_photo" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		 photo = #{photo}
+		WHERE
+		user_id = #{userId}	
+	</update>
+	
+	<update id="update_login_pwd" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		 login_pwd = #{loginPwd}
+		WHERE
+		user_id = #{userId}	
+	</update>
+	
+		
+	<update id="update_sysuser_loginName" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		login_name = #{loginName}
+		WHERE
+		user_id = #{userId}	
+	</update>
+	
+	<update id="update_mobile" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		mobile = #{mobile}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="update_status" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		status=#{status}
+		,updater=#{updater}
+		,update_datetime=#{updateDatetime}
+		,remark = #{remark}
+		WHERE user_id = #{userId}
+	</update>
+		
+	<update id="update_role" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		 role_code = #{roleCode}
+		,updater = #{updater}
+		<if test="remark != null and remark != '' ">
+			,remark = #{remark}
+		</if>
+		WHERE
+		user_id = #{userId}	
+	</update>	
+	
+	<update id="update_approveSYSUser" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		status=#{status}
+		,updater=#{updater}
+		,update_datetime=#{updateDatetime}
+		,remark = #{remark}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="update_company" parameterType="sysuser">
+		UPDATE tsys_user
+		SET
+		company_code=#{companyCode}
+		WHERE user_id = #{userId}
+	</update>
+	
+</mapper>

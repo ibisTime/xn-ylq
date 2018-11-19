@@ -243,6 +243,29 @@ public class DateUtil {
         return (int) (times / 60 / 60 / 1000 / 24);
     }
 
+    public static Date getCurrentMonthFirstDay() {
+        Calendar currentDate = new GregorianCalendar();
+        currentDate.set(Calendar.DATE, 1);
+        currentDate.set(Calendar.HOUR_OF_DAY, 0);
+        currentDate.set(Calendar.MINUTE, 0);
+        currentDate.set(Calendar.SECOND, 0);
+        return (Date) currentDate.getTime().clone();
+    }
+
+    public static Date getCurrentMonthLastDay() {
+        Date date = new Date();
+        Calendar currentDate = Calendar.getInstance();
+        currentDate.setTime(date);
+        do {
+            currentDate.add(Calendar.DATE, 1);
+        } while (currentDate.get(Calendar.DATE) != 1);
+        currentDate.add(Calendar.DATE, -1);
+        currentDate.set(Calendar.HOUR_OF_DAY, 23);
+        currentDate.set(Calendar.MINUTE, 59);
+        currentDate.set(Calendar.SECOND, 59);
+        return currentDate.getTime();
+    }
+
     public static void main(String[] args) {
         System.out.println(getRelativeDateOfDays(getTodayStart(), 7));
     }

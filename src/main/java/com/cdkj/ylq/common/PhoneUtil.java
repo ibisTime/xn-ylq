@@ -38,6 +38,25 @@ public class PhoneUtil {
     }
 
     /** 
+     * 判断是否手机号格式 
+     * @param  mobile 
+     * @return 验证通过返回true 
+     */
+    public static boolean isMobile(String mobile) {
+        boolean result = true;
+        if (StringUtils.isBlank(mobile)) {
+            result = false;
+        } else {
+            Pattern p = Pattern.compile("^1[34578]\\d{9}$"); // 验证手机号
+            Matcher m = p.matcher(mobile);
+            if (!m.matches()) {
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    /** 
      * 手机号验证 
      * @param  mobile 
      * @return 验证通过返回true 

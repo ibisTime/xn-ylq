@@ -17,7 +17,7 @@
 	    
 	    <typeAlias alias="sysDict" type="com.cdkj.ylq.domain.SYSDict" />
 	    <typeAlias alias="sysConfig" type="com.cdkj.ylq.domain.SYSConfig" />
-	    
+	    <typeAlias alias="sysUser" type="com.cdkj.ylq.domain.SYSUser" />
 	    <typeAlias alias="sysMenu" type="com.cdkj.ylq.domain.SYSMenu" />
 	    <typeAlias alias="sysRole" type="com.cdkj.ylq.domain.SYSRole" />
  	    <typeAlias alias="sysMenuRole" type="com.cdkj.ylq.domain.SYSMenuRole" />
@@ -25,6 +25,15 @@
  	    <typeAlias alias="user" type="com.cdkj.ylq.domain.User" />
  	    <typeAlias alias="userExt" type="com.cdkj.ylq.domain.UserExt" />
  	    <typeAlias alias="cNavigate" type="com.cdkj.ylq.domain.CNavigate" />
+ 	    
+ 	    <typeAlias alias="account" type="com.cdkj.ylq.domain.Account" />
+ 	    <typeAlias alias="bankcard" type="com.cdkj.ylq.domain.Bankcard" />
+ 	    <typeAlias alias="channelBank" type="com.cdkj.ylq.domain.ChannelBank" />
+ 	    <typeAlias alias="charge" type="com.cdkj.ylq.domain.Charge" />
+ 	    <typeAlias alias="company" type="com.cdkj.ylq.domain.Company" />
+ 	    <typeAlias alias="jour" type="com.cdkj.ylq.domain.Jour" />
+ 	    <typeAlias alias="sysUser" type="com.cdkj.ylq.domain.SYSUser" />
+ 	    <typeAlias alias="withdraw" type="com.cdkj.ylq.domain.Withdraw" />
 	</typeAliases>	
 </configuration>
 

@@ -28,13 +28,13 @@ public class XN805026 extends AProcessor {
         data.setRoleCode(req.getRoleCode());
         data.setParentCode(req.getParentCode());
         data.setType(req.getType());
-        data.setSystemCode(req.getSystemCode());
+        data.setCompanyCode(req.getCompanyCode());
         return sysMenuRoleAO.querySYSMenuList(data);
     }
 
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN805026Req.class);
-        StringValidater.validateBlank(req.getRoleCode(), req.getSystemCode());
+        StringValidater.validateBlank(req.getRoleCode(), req.getCompanyCode());
     }
 }

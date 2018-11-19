@@ -11,6 +11,7 @@ import com.cdkj.ylq.dto.req.XN804081Req;
 import com.cdkj.ylq.dto.req.XN804082Req;
 import com.cdkj.ylq.dto.res.BooleanRes;
 import com.cdkj.ylq.dto.res.PKCodeRes;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.http.BizConnecter;
 import com.cdkj.ylq.http.JsonUtils;
 
@@ -55,56 +56,54 @@ public class SmsOutBOImpl implements ISmsOutBO {
     }
 
     @Override
-    public void sendCaptcha(String mobile, String bizType, String companyCode,
-            String systemCode) {
+    public void sendCaptcha(String mobile, String bizType, String companyCode) {
         try {
             XN804081Req req = new XN804081Req();
             req.setMobile(mobile);
             req.setBizType(bizType);
             req.setCompanyCode(companyCode);
-            req.setSystemCode(systemCode);
+            req.setSystemCode(ESystemCode.YLQ.getCode());
             BizConnecter.getBizData("804081", JsonUtils.object2Json(req),
                 PKCodeRes.class);
         } catch (Exception e) {
-            logger.error("调用短信发送服务异常");
+            logger.error("调用验证码发送服务异常");
         }
     }
 
     @Override
-    public void checkCaptcha(String mobile, String captcha, String bizType,
-            String systemCode) {
+    public void checkCaptcha(String mobile, String captcha, String bizType) {
         XN804082Req req = new XN804082Req();
         req.setMobile(mobile);
         req.setCaptcha(captcha);
         req.setBizType(bizType);
-        req.setSystemCode(systemCode);
+        req.setSystemCode(ESystemCode.YLQ.getCode());
         BizConnecter.getBizData("804082", JsonUtils.object2Json(req),
             BooleanRes.class);
     }
 
     @Override
     public void checkCaptcha(String mobile, String captcha, String bizType,
-            String companyCode, String systemCode) {
+            String companyCode) {
         XN804082Req req = new XN804082Req();
         req.setMobile(mobile);
         req.setCaptcha(captcha);
         req.setBizType(bizType);
         req.setCompanyCode(companyCode);
-        req.setSystemCode(systemCode);
+        req.setSystemCode(ESystemCode.YLQ.getCode());
         BizConnecter.getBizData("804082", JsonUtils.object2Json(req),
             BooleanRes.class);
     }
 
     @Override
     public void sendSmsOut(String mobile, String content, String bizType,
-            String companyCode, String systemCode) {
+            String companyCode) {
         try {
             XN804080Req req = new XN804080Req();
             req.setMobile(mobile);
             req.setContent(content);
             req.setType("M");
             req.setCompanyCode(companyCode);
-            req.setSystemCode(systemCode);
+            req.setSystemCode(ESystemCode.YLQ.getCode());
             BizConnecter.getBizData("804080", JsonUtils.object2Json(req),
                 PKCodeRes.class);
         } catch (Exception e) {

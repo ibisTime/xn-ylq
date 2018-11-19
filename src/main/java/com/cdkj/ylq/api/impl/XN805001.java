@@ -28,14 +28,13 @@ public class XN805001 extends AProcessor {
         condition.setNameForQuery(req.getName());
         condition.setType(req.getType());
         condition.setParentCode(req.getParentCode());
-        // condition.setUpdater(req.getUpdater());
-        condition.setSystemCode(req.getSystemCode());
+        condition.setCompanyCode(req.getCompanyCode());
         return sysMenuAO.querySYSMenuList(condition);
     }
 
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN805001Req.class);
-        StringValidater.validateBlank(req.getSystemCode());
+        StringValidater.validateBlank(req.getCompanyCode());
     }
 }

@@ -8,6 +8,8 @@
  */
 package com.cdkj.ylq.core;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.cdkj.ylq.exception.BizException;
@@ -32,6 +34,16 @@ public class StringValidater {
                 validateEmoji(param);
             }
         }
+    }
+
+    public static BigDecimal toBigDecimal(String string) {
+        BigDecimal num = null;
+        try {
+            num = new BigDecimal(string);
+        } catch (Exception e) {
+            throw new BizException("xn702000", "数字型(bigDecimal)入参，请按要求填写数字");
+        }
+        return num;
     }
 
     // 判别是否包含Emoji表情

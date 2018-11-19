@@ -8,7 +8,6 @@
  */
 package com.cdkj.ylq.api.impl;
 
-import com.cdkj.ylq.ao.ICouponConditionAO;
 import com.cdkj.ylq.ao.IUserAO;
 import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
@@ -29,9 +28,6 @@ public class XN623800 extends AProcessor {
 
     private IUserAO userAO = SpringContextHolder.getBean(IUserAO.class);
 
-    private ICouponConditionAO couponConditionAO = SpringContextHolder
-        .getBean(ICouponConditionAO.class);
-
     private XN805041Req req = null;
 
     /** 
@@ -41,9 +37,8 @@ public class XN623800 extends AProcessor {
     public Object doBusiness() throws BizException {
         XN805041Res res = userAO.doRegister(req.getMobile(), req.getLoginPwd(),
             req.getUserReferee(), req.getUserRefereeKind(),
-            req.getSmsCaptcha(), req.getKind(), req.getIsRegHx(),
-            req.getProvince(), req.getCity(), req.getArea(), req.getAddress(),
-            req.getCompanyCode(), req.getSystemCode());
+            req.getSmsCaptcha(), req.getProvince(), req.getCity(),
+            req.getArea(), req.getAddress(), req.getCompanyCode());
         return res;
     }
 
@@ -54,8 +49,7 @@ public class XN623800 extends AProcessor {
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN805041Req.class);
         StringValidater.validateBlank(req.getMobile(), req.getLoginPwd(),
-            req.getSmsCaptcha(), req.getKind(), req.getCompanyCode(),
-            req.getSystemCode());
+            req.getSmsCaptcha(), req.getCompanyCode());
         PhoneUtil.checkMobile(req.getMobile());// 判断格式
     }
 

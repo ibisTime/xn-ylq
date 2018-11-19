@@ -10,14 +10,8 @@ public class XN805063Req {
     // 新登录密码(必填)
     private String newLoginPwd;
 
-    // 类别(必填)
-    private String kind;
-
     // 公司编号(必填)
     private String companyCode;
-
-    // 系统编号(必填)
-    private String systemCode;
 
     public String getMobile() {
         return mobile;
@@ -43,14 +37,6 @@ public class XN805063Req {
         this.newLoginPwd = newLoginPwd;
     }
 
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
-
     public String getCompanyCode() {
         return companyCode;
     }
@@ -59,11 +45,4 @@ public class XN805063Req {
         this.companyCode = companyCode;
     }
 
-    public String getSystemCode() {
-        return systemCode;
-    }
-
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
-    }
 }

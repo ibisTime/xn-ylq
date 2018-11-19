@@ -73,6 +73,10 @@
 		<property name="paginableDAO" ref="userDAOImpl" />
 	</bean>
 	
+	<bean id="sysUserBO" class="com.cdkj.ylq.bo.impl.SYSUserBOImpl">
+		<property name="paginableDAO" ref="sysUserDAOImpl"/>
+	</bean>
+	
 	<bean id="sysMenuBO" class="com.cdkj.ylq.bo.impl.SYSMenuBOImpl">
 		<property name="paginableDAO" ref="sysMenuDAOImpl"/>
 	</bean>
@@ -88,4 +92,31 @@
 		<property name="paginableDAO" ref="cNavigateDAOImpl"/>
 	</bean>
 	
+	<bean id="accountBO" class="com.cdkj.ylq.bo.impl.AccountBOImpl">
+		<property name="paginableDAO" ref="accountDAOImpl"/>
+	</bean>
+	
+	<bean id="bankcardBO" class="com.cdkj.ylq.bo.impl.BankcardBOImpl">
+		<property name="paginableDAO" ref="bankcardDAOImpl"/>
+	</bean>
+	
+	<bean id="channelBankBO" class="com.cdkj.ylq.bo.impl.ChannelBankBOImpl">
+		<property name="paginableDAO" ref="channelBankDAOImpl"/>
+	</bean>
+	
+	<bean id="chargeBO" class="com.cdkj.ylq.bo.impl.ChargeBOImpl">
+		<property name="paginableDAO" ref="chargeDAOImpl"/>
+	</bean>
+	
+	<bean id="companyBO" class="com.cdkj.ylq.bo.impl.CompanyBOImpl">
+		<property name="paginableDAO" ref="companyDAOImpl"/>
+	</bean>
+	
+	<bean id="jourBO" class="com.cdkj.ylq.bo.impl.JourBOImpl">
+		<property name="paginableDAO" ref="jourDAOImpl"/>
+	</bean>
+	
+	<bean id="withdrawBO" class="com.cdkj.ylq.bo.impl.WithdrawBOImpl">
+		<property name="paginableDAO" ref="withdrawDAOImpl"/>
+	</bean>
 </beans>

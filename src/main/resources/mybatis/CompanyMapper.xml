@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ogc.standard.dao.ICompanyDAO">
+	<resultMap id="company_DB_Result" type="company">
+		<result column="code" property="code" />
+		<result column="user_id" property="userId" />
+		<result column="name" property="name" />
+		<result column="charger" property="charger" />
+		<result column="charge_mobile" property="chargeMobile" />
+		
+		<result column="province" property="province" />
+		<result column="city" property="city" />
+		<result column="area" property="area" />
+		<result column="address" property="address" />
+		<result column="description" property="description" />
+		
+		<result column="bussiness_license" property="bussinessLicense" />
+		<result column="organization_code" property="organizationCode" />
+		<result column="certificate_template" property="certificateTemplate" />
+		<result column="contract_template" property="contractTemplate" />
+		<result column="create_datetime" property="createDatetime" />
+		
+		<result column="updater" property="updater" />
+		<result column="update_datetime" property="updateDatetime" />
+		<result column="remark" property="remark" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+			<if test="userId != null and userId != '' ">
+				AND t.user_id = #{userId}
+			</if>
+			<if test="nameForQuery != null and nameForQuery != '' ">
+				AND t.name like '%'#{nameForQuery}'%'
+			</if>
+			<if test="province != null and province != '' ">
+				AND t.province = #{province}
+			</if>
+			<if test="city != null and city != '' ">
+				AND t.city = #{city}
+			</if>
+			<if test="area != null and area != '' ">
+				AND t.area = #{area}
+			</if>
+			<if test="userId != null and userId != '' ">
+				AND t.user_id = #{userId}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_company" parameterType="company" resultMap="company_DB_Result">
+		SELECT
+		t.code
+		,t.user_id
+		,t.name
+		,t.charger
+		,t.charge_mobile
+		
+		,t.province
+		,t.city
+		,t.area
+		,t.address
+		,t.description
+		
+		,t.bussiness_license
+		,t.organization_code
+		,t.certificate_template
+		,t.contract_template
+		,t.create_datetime
+		
+		,t.updater
+		,t.update_datetime
+		,t.remark
+		FROM
+		tsys_company t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_company_count" parameterType="company"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM tsys_company t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_company" parameterType="company">
+		INSERT INTO
+		tsys_company(
+		code
+		,user_id
+		,name
+		,charger
+		,charge_mobile
+		
+		,province
+		,city
+		,area
+		,address
+		,description
+		
+		,bussiness_license
+		,organization_code
+		,certificate_template
+		,contract_template
+		,create_datetime
+		
+		,updater
+		,update_datetime
+		,remark
+		)
+		VALUES(
+		#{code}
+		,#{userId}
+		,#{name}
+		,#{charger}
+		,#{chargeMobile}
+		
+		,#{province}
+		,#{city}
+		,#{area}
+		,#{address}
+		,#{description}
+		
+		,#{bussinessLicense}
+		,#{organizationCode}
+		,#{certificateTemplate}
+		,#{contractTemplate}
+		,#{createDatetime}
+		
+		,#{updater}
+		,#{updateDatetime}
+		,#{remark}
+		)
+	</insert>
+
+	<update id="update_company" parameterType="company">
+		UPDATE tsys_company
+		SET
+		name = #{name}
+		,charger = #{charger}
+		,charge_mobile = #{chargeMobile}
+		,province = #{province}
+		,city = #{city}
+		
+		,area = #{area}
+		,address = #{address}
+		,description = #{description}
+		,bussiness_license = #{bussinessLicense}
+		,organization_code = #{organizationCode}
+		
+		,certificate_template = #{certificateTemplate}
+		,contract_template = #{contractTemplate}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_company_info" parameterType="company">
+		UPDATE tsys_company
+		SET
+		certificate_template = #{certificateTemplate}
+		,contract_template = #{contractTemplate}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+</mapper>

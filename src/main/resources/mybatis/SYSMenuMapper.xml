@@ -13,7 +13,7 @@
 		<result column="update_datetime" property="updateDatetime" />		
 		<result column="remark" property="remark" />
 		<result column="parent_code" property="parentCode" />
-		<result column="system_code" property="systemCode" />
+		<result column="company_code" property="companyCode" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">			
@@ -38,8 +38,8 @@
 			<if test="updater != null and updater != '' ">
 				AND t.updater = #{updater}
 			</if>
-			<if test="systemCode != null and systemCode != '' ">
-				AND t.system_code = #{systemCode}
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
 			</if>
 		</trim>
 	</sql>
@@ -54,7 +54,7 @@
 		,update_datetime
 		,remark	
 		,parent_code
-		,system_code
+		,company_code
 		FROM
 		tsys_menu t
 		<include refid="where_condition"/>
@@ -77,7 +77,7 @@
 		,update_datetime
 		,remark	
 		,parent_code
-		,system_code
+		,cmopany_code
 		)
 		VALUES(
 		#{code}
@@ -90,7 +90,7 @@
 		,#{updateDatetime}
 		,#{remark}
 		,#{parentCode}
-		,#{systemCode}
+		,#{companyCode}
 		)
 	</insert>
 

@@ -6,7 +6,6 @@ import com.cdkj.ylq.bo.base.IPaginableBO;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN805042Req;
 import com.cdkj.ylq.dto.req.XN805043Req;
-import com.cdkj.ylq.dto.res.XN805041Res;
 import com.cdkj.ylq.enums.EUserKind;
 import com.cdkj.ylq.enums.EUserStatus;
 
@@ -26,12 +25,6 @@ public interface IUserBO extends IPaginableBO<User> {
     public void doIdentify(String userId, String idKind, String idNo,
             String realName);
 
-    // 前端用户注册
-    public XN805041Res doRegister(String mobile, String loginPwd,
-            String userReferee, String userRefereeKind, String smsCaptcha,
-            String kind, String isRegHx, String province, String city,
-            String area, String address, String companyCode, String systemCode);
-
     // 将用户拉入黑名单
     public void addBlacklist(String userId, String type, String updater,
             String remark);
@@ -41,15 +34,13 @@ public interface IUserBO extends IPaginableBO<User> {
             String companyCode, String systemCode);
 
     // 根据手机号和类型判断手机号是否存在
-    public void isMobileExist(String mobile, String companyCode,
-            String systemCode);
+    public void isMobileExist(String mobile, String companyCode);
 
     // 判断登录名是否存在
     public void isLoginNameExist(String loginName, String kind,
-            String companyCode, String systemCode);
+            String companyCode);
 
-    public String getUserId(String mobile, String kind, String companyCode,
-            String systemCode);
+    public String getUserId(String mobile, String companyCode);
 
     // 查询openId
     public void doCheckOpenId(String unionId, String h5OpenId,
@@ -57,8 +48,8 @@ public interface IUserBO extends IPaginableBO<User> {
 
     // 前端用户注册
     public String doRegister(String mobile, String loginPwd,
-            String userReferee, String kind, String province, String city,
-            String area, String address, String companyCode, String systemCode);
+            String userReferee, String province, String city, String area,
+            String address, String companyCode);
 
     public String doRegister(String unionId, String h5OpenId, String appOpenId,
             String mobile, String kind, String loginPwd, String nickname,
@@ -147,5 +138,11 @@ public interface IUserBO extends IPaginableBO<User> {
 
     public int refreshDivRate(String userId, Double divRate);
 
+    public User getUserUnCheck(String userId);
+
     public Long totalUser(User condition);
+
+    public void refereshBlack(User data);
+
+    public void refereshWhite(User data);
 }

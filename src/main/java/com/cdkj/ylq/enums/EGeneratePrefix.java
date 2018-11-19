@@ -15,7 +15,10 @@ public enum EGeneratePrefix {
             "GS", "公司"), UZ("UZ", "用户组"), DH("DH", "导航"), SC("SC", "公司素材"), YX(
             "YX", "合作意向"), PW("PW", "密码记录"), XX("XX", "消息"), ZZ("ZZ", "资质"), GZ(
             "GZ", "公司资质"), CM("CM", "公司菜单"), CB("CB", "公司BANNER"), AD("AD",
-            "用户地址"), KQ("KQ", "卡券"), YQ("YQ", "邀请码");
+            "用户地址"), KQ("KQ", "卡券"), YQ("YQ", "邀请码"), Account("A", "账户"), AJour(
+            "AJ", "账户流水"), Charge("C", "充值"), GS("GS", "公司"),
+
+    Interact("I", "点赞"), BANK_CARD("BC", "银行卡");
 
     public static Map<String, EGeneratePrefix> getMap() {
         Map<String, EGeneratePrefix> map = new HashMap<String, EGeneratePrefix>();

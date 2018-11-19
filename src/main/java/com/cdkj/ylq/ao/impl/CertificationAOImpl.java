@@ -126,14 +126,14 @@ public class CertificationAOImpl implements ICertificationAO {
     @Override
     public XN798013Res doZhimaVerify(String userId, String idKind, String idNo,
             String realName, String returnUrl, String localCheck, String remark) {
-        User user = userBO.getRemoteUser(userId);
+        User user = userBO.getUser(userId);
         return certiBO.doZhimaVerify(null, user.getCompanyCode(), userId,
             idKind, idNo, realName, returnUrl, localCheck, remark);
     }
 
     @Override
     public XN798014Res doZhimaQuery(String userId, String bizNo) {
-        User user = userBO.getRemoteUser(userId);
+        User user = userBO.getUser(userId);
         XN798014Res res = certiBO.doZhimaQuery(null, user.getCompanyCode(),
             bizNo);
         if (res.isSuccess()) {

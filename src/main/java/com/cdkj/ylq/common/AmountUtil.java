@@ -11,6 +11,12 @@ public class AmountUtil {
         return a.multiply(b).longValue();
     }
 
+    public static BigDecimal mul(BigDecimal amount, double rate) {
+        BigDecimal a = amount;
+        BigDecimal b = new BigDecimal(Double.toString(rate));
+        return a.multiply(b);
+    }
+
     /**
      * 人民币进分
      * @param amount
@@ -50,6 +56,11 @@ public class AmountUtil {
         double divAmount = div(amount, 1000L);
         double result = Math.ceil(divAmount);
         return mul(result, 1000L);
+    }
+
+    public static BigDecimal div(BigDecimal amount, Long number) {
+        BigDecimal b = new BigDecimal(Double.toString(number));
+        return amount.divide(b, 2, BigDecimal.ROUND_DOWN);
     }
 
     public static Long mul(Double amount, Long number) {

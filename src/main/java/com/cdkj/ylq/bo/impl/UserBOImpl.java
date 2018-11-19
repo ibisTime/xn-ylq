@@ -23,13 +23,12 @@ import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN001001Req;
 import com.cdkj.ylq.dto.req.XN001102Req;
 import com.cdkj.ylq.dto.req.XN001400Req;
-import com.cdkj.ylq.dto.req.XN805041Req;
 import com.cdkj.ylq.dto.req.XN805042Req;
 import com.cdkj.ylq.dto.req.XN805043Req;
 import com.cdkj.ylq.dto.req.XN805190Req;
 import com.cdkj.ylq.dto.res.XN001102Res;
 import com.cdkj.ylq.dto.res.XN001400Res;
-import com.cdkj.ylq.dto.res.XN805041Res;
+import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ESysUser;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.enums.EUserKind;
@@ -126,32 +125,9 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
     @Override
     public String getSystemUser(String systemCode) {
         if (ESystemCode.YLQ.getCode().equals(systemCode)) {
-            return ESysUser.SYS_USER_YLQ.getCode();
+            return ESysUser.SYS_USER.getCode();
         }
         return null;
-    }
-
-    @Override
-    public XN805041Res doRegister(String mobile, String loginPwd,
-            String userReferee, String userRefereeKind, String smsCaptcha,
-            String kind, String isRegHx, String province, String city,
-            String area, String address, String companyCode, String systemCode) {
-        XN805041Req req = new XN805041Req();
-        req.setMobile(mobile);
-        req.setLoginPwd(loginPwd);
-        req.setUserReferee(userReferee);
-        req.setUserRefereeKind(userRefereeKind);
-        req.setSmsCaptcha(smsCaptcha);
-        req.setKind(kind);
-        req.setIsRegHx(isRegHx);
-        req.setProvince(province);
-        req.setCity(city);
-        req.setArea(area);
-        req.setAddress(address);
-        req.setCompanyCode(companyCode);
-        req.setSystemCode(systemCode);
-        return BizConnecter.getBizData("805041", JsonUtils.object2Json(req),
-            XN805041Res.class);
     }
 
     @Override
@@ -185,8 +161,7 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
      * @see com.std.user.bo.IUserBO#isMobileExist(java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
-    public void isMobileExist(String mobile, String companyCode,
-            String systemCode) {
+    public void isMobileExist(String mobile, String companyCode) {
         if (StringUtils.isNotBlank(mobile)) {
             // 判断格式
             PhoneUtil.checkMobile(mobile);
@@ -223,10 +198,9 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
     // }
 
     @Override
-    public String getUserId(String mobile, String kind, String companyCode,
-            String systemCode) {
+    public String getUserId(String mobile, String companyCode) {
         String userId = null;
-        if (StringUtils.isNotBlank(mobile) && StringUtils.isNotBlank(kind)) {
+        if (StringUtils.isNotBlank(mobile)) {
             User condition = new User();
             condition.setMobile(mobile);
             condition.setCompanyCode(companyCode);
@@ -242,8 +216,8 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
 
     @Override
     public String doRegister(String mobile, String loginPwd,
-            String userReferee, String kind, String province, String city,
-            String area, String address, String companyCode, String systemCode) {
+            String userReferee, String province, String city, String area,
+            String address, String companyCode) {
         String userId = OrderNoGenerater.generateM("U");
         User user = new User();
         user.setUserId(userId);
@@ -535,7 +509,7 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
 
     @Override
     public void isLoginNameExist(String loginName, String kind,
-            String companyCode, String systemCode) {
+            String companyCode) {
         if (StringUtils.isNotBlank(loginName)) {
             // 判断格式
             User condition = new User();
@@ -789,6 +763,18 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
         return userDAO.selectTotalCount(condition);
     }
 
+    @Override
+    public User getUserUnCheck(String userId) {
+        User data = null;
+        if (StringUtils.isNotBlank(userId)) {
+            User condition = new User();
+            condition.setUserId(userId);
+            data = userDAO.select(condition);
+        }
+
+        return data;
+    }
+
     /** 
      * @see com.std.user.bo.IUserBO#doCheckOpenId(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
      */
@@ -801,6 +787,26 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
         if (count > 0) {
             throw new BizException("xn702002", "微信编号已存在");
         }
+    }
+
+    @Override
+    public void refereshBlack(User data) {
+        if (EBoolean.YES.getCode().equals(data.getIsBlackList())) {
+            data.setIsBlackList(EBoolean.NO.getCode());
+        } else {
+            data.setIsBlackList(EBoolean.YES.getCode());
+        }
+        userDAO.updateBlackList(data);
+    }
+
+    @Override
+    public void refereshWhite(User data) {
+        if (EBoolean.YES.getCode().equals(data.getIsWhiteList())) {
+            data.setIsWhiteList(EBoolean.NO.getCode());
+        } else {
+            data.setIsWhiteList(EBoolean.YES.getCode());
+        }
+        userDAO.updateWhiteList(data);
     }
 
 }

@@ -35,8 +35,8 @@ public interface IUserAO {
     // 注册前端用户
     public XN805041Res doRegister(String mobile, String loginPwd,
             String userReferee, String userRefereeKind, String smsCaptcha,
-            String kind, String isRegHx, String province, String city,
-            String area, String address, String companyCode, String systemCode);
+            String province, String city, String area, String address,
+            String companyCode);
 
     // 代注册
     public String doAddUser(XN805042Req req);
@@ -45,8 +45,7 @@ public interface IUserAO {
     public String doApplyRegUser(XN805043Req req);
 
     // 用户登录
-    public String doLogin(String loginName, String loginPwd, String kind,
-            String companyCode, String systemCode);
+    public String doLogin(String loginName, String loginPwd, String companyCode);
 
     // 验证码登录注册
     public String doCaptchaLoginReg(String mobile, String kind,
@@ -69,12 +68,14 @@ public interface IUserAO {
 
     // 重置登录密码
     public void doResetLoginPwd(String mobile, String smsCaptcha,
-            String newLoginPwd, String kind, String companyCode,
-            String systemCode);
+            String newLoginPwd, String companyCode);
 
     // 修改登录密码
     public void doModifyLoginPwd(String userId, String oldLoginPwd,
             String newLoginPwd);
+
+    // 修改昵称
+    public void doModifyNickname(String userId, String nickname);
 
     // 管理员重置用户密码
     public void doResetLoginPwdByOss(String userId, String loginPwd,
@@ -165,4 +166,8 @@ public interface IUserAO {
 
     // 校验支付密码
     public void doCheckTradePwd(String userId, String tradePwd);
+
+    public void blacklist(String userId);
+
+    public void whitelist(String userId);
 }

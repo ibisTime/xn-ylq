@@ -602,7 +602,7 @@ public class BorrowAOImpl implements IBorrowAO {
         User user = userBO.getRemoteUser(borrow.getApplyUser());
         String payGroup = borrowBO.addPayGroup(borrow.getCode());
         return accountBO.doWeiXinPayRemote(user.getUserId(),
-            ESysUser.SYS_USER_YLQ.getCode(), payGroup, borrow.getCode(),
+            ESysUser.SYS_USER.getCode(), payGroup, borrow.getCode(),
             EBizType.YLQ_REPAY, EBizType.YLQ_REPAY.getValue() + "-微信",
             rmbAmount);
     }
@@ -612,7 +612,7 @@ public class BorrowAOImpl implements IBorrowAO {
         User user = userBO.getRemoteUser(borrow.getApplyUser());
         String payGroup = borrowBO.addPayGroup(borrow.getCode());
         return accountBO.doAlipayRemote(user.getUserId(),
-            ESysUser.SYS_USER_YLQ.getCode(), payGroup, borrow.getCode(),
+            ESysUser.SYS_USER.getCode(), payGroup, borrow.getCode(),
             EBizType.YLQ_REPAY, EBizType.YLQ_REPAY.getValue() + "-支付宝",
             rmbAmount);
     }
@@ -735,7 +735,7 @@ public class BorrowAOImpl implements IBorrowAO {
         Long rmbAmount = renewal.getTotalAmount();
         User user = userBO.getRemoteUser(renewal.getApplyUser());
         return accountBO.doWeiXinPayRemote(user.getUserId(),
-            ESysUser.SYS_USER_YLQ.getCode(), renewal.getPayGroup(),
+            ESysUser.SYS_USER.getCode(), renewal.getPayGroup(),
             renewal.getBorrowCode(), EBizType.YLQ_RENEWAL,
             EBizType.YLQ_RENEWAL.getValue() + "-微信", rmbAmount);
     }
@@ -744,7 +744,7 @@ public class BorrowAOImpl implements IBorrowAO {
         Long rmbAmount = renewal.getTotalAmount();
         User user = userBO.getRemoteUser(renewal.getApplyUser());
         return accountBO.doAlipayRemote(user.getUserId(),
-            ESysUser.SYS_USER_YLQ.getCode(), renewal.getPayGroup(),
+            ESysUser.SYS_USER.getCode(), renewal.getPayGroup(),
             renewal.getBorrowCode(), EBizType.YLQ_RENEWAL,
             EBizType.YLQ_RENEWAL.getValue() + "-支付宝", rmbAmount);
     }

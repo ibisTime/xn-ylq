@@ -19,9 +19,9 @@ import com.cdkj.ylq.exception.BizException;
  * @history:
  */
 public enum ECurrency {
-    CNY("CNY", "人民币"), YC_CB("CB", "橙券");
+    CNY("CNY", "人民币");
 
-    public static Map<String, ECurrency> getResultMap() {
+    public static Map<String, ECurrency> getCurrencyMap() {
         Map<String, ECurrency> map = new HashMap<String, ECurrency>();
         for (ECurrency currency : ECurrency.values()) {
             map.put(currency.getCode(), currency);
@@ -30,7 +30,7 @@ public enum ECurrency {
     }
 
     public static ECurrency getCurrency(String code) {
-        Map<String, ECurrency> map = getResultMap();
+        Map<String, ECurrency> map = getCurrencyMap();
         ECurrency result = map.get(code);
         if (result == null) {
             throw new BizException("XN0000", code + "对应的currency不存在");

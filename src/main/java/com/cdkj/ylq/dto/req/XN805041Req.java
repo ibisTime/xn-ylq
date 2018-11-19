@@ -16,9 +16,6 @@ public class XN805041Req {
     // 手机验证码(必填)
     private String smsCaptcha;
 
-    // 类别(必填)
-    private String kind;
-
     // 省(选填)
     private String province;
 
@@ -31,14 +28,8 @@ public class XN805041Req {
     // 详细地址(选填)
     private String address;
 
-    // 是否注册环信(必填)
-    private String isRegHx;
-
     // 公司编号(必填)
     private String companyCode;
-
-    // 系统编号(必填)
-    private String systemCode;
 
     public String getMobile() {
         return mobile;
@@ -80,14 +71,6 @@ public class XN805041Req {
         this.smsCaptcha = smsCaptcha;
     }
 
-    public String getKind() {
-        return kind;
-    }
-
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
-
     public String getProvince() {
         return province;
     }
@@ -120,14 +103,6 @@ public class XN805041Req {
         this.address = address;
     }
 
-    public String getIsRegHx() {
-        return isRegHx;
-    }
-
-    public void setIsRegHx(String isRegHx) {
-        this.isRegHx = isRegHx;
-    }
-
     public String getCompanyCode() {
         return companyCode;
     }
@@ -136,11 +111,4 @@ public class XN805041Req {
         this.companyCode = companyCode;
     }
 
-    public String getSystemCode() {
-        return systemCode;
-    }
-
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
-    }
 }

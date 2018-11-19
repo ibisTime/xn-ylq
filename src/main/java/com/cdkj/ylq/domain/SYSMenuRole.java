@@ -35,7 +35,7 @@ public class SYSMenuRole extends ABaseDO {
     private String remark;
 
     // 系统编号
-    private String systemCode;
+    private String companyCode;
 
     // ***********db properties***********
 
@@ -48,12 +48,12 @@ public class SYSMenuRole extends ABaseDO {
     // 菜单类型(菜单/按钮)
     private String type;
 
-    public String getSystemCode() {
-        return systemCode;
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public Long getId() {

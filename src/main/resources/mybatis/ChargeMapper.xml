@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ogc.standard.dao.IChargeDAO">
+	<resultMap id="charge_DB_Result" type="charge">
+	
+		<result column="code" property="code" />
+		<result column="account_number" property="accountNumber" />
+		<result column="account_type" property="accountType" />
+		<result column="amount" property="amount" />
+		<result column="currency" property="currency" />
+		
+		<result column="biz_type" property="bizType" />
+		<result column="biz_note" property="bizNote" />
+		<result column="biz_no" property="bizNo" />
+		<result column="pay_card_info" property="payCardInfo" />
+		<result column="pay_card_no" property="payCardNo" />
+		
+		<result column="status" property="status" />
+		<result column="apply_user" property="applyUser" />
+		<result column="apply_user_type" property="applyUserType" />
+		<result column="apply_note" property="applyNote" />
+		<result column="apply_datetime" property="applyDatetime" />
+		<result column="pay_group" property="payGroup" />
+		<result column="pay_user" property="payUser" />
+		
+		<result column="pay_note" property="payNote" />
+		<result column="pay_datetime" property="payDatetime" />
+		<result column="channel_type" property="channelType" />
+		<result column="channel_order" property="channelOrder" />
+		
+	</resultMap>
+
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+			<if test="codeForQuery != null and codeForQuery != '' ">
+				AND t.code like "%"#{codeForQuery}"%"
+			</if>
+			<if test="accountNumber != null and accountNumber != '' ">
+				AND t.account_number = #{accountNumber}
+			</if>
+			<if test="accountType != null and accountType != '' ">
+				AND t.account_type = #{accountType}
+			</if>
+			<if test="currency != null and currency != '' ">
+				AND t.currency = #{currency}
+			</if>
+			<if test="currencyList != null and currencyList != '' ">
+                AND t.currency in
+                <foreach item="item" index="index" collection="currencyList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+			<if test="bizType != null and bizType != '' ">
+				AND t.biz_type = #{bizType}
+			</if>
+			<if test="bizNo != null and bizNo != '' ">
+				AND t.biz_no = #{bizNo}
+			</if>
+			<if test="payCardNo != null and payCardNo != '' ">
+				AND t.pay_card_no = #{payCardNo}
+			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
+			<if test="applyUser != null and applyUser != '' ">
+				AND t.apply_user = #{applyUser}
+			</if>
+			<if test="applyUserType != null and applyUserType != '' ">
+				AND t.apply_user_type = #{applyUserType}
+			</if>
+			<if test="applyDatetimeStart != null and applyDatetimeStart != '' ">
+				<![CDATA[AND t.apply_datetime >= #{applyDatetimeStart}]]>
+			</if>
+			<if test="applyDatetimeEnd != null and applyDatetimeEnd != '' ">
+				<![CDATA[AND t.apply_datetime <= #{applyDatetimeEnd}]]>
+			</if>
+			<if test="payGroup != null and payGroup != '' ">
+				AND t.pay_group = #{payGroup}
+			</if>
+			<if test="payUser != null and payUser != '' ">
+				AND t.pay_user = #{payUser}
+			</if>
+			<if test="payDatetimeStart != null and payDatetimeStart != '' ">
+				<![CDATA[AND t.pay_datetime >= #{payDatetimeStart}]]>
+			</if>
+			<if test="payDatetimeEnd != null and payDatetimeEnd != '' ">
+				<![CDATA[AND t.pay_datetime <= #{payDatetimeEnd}]]>
+			</if>
+			<if test="channelType != null and channelType != '' ">
+				AND t.channel_type = #{channelType}
+			</if>
+			<if test="channelOrder != null and channelOrder != '' ">
+				AND t.channel_order = #{channelOrder}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_charge" parameterType="charge" resultMap="charge_DB_Result">
+		SELECT
+		
+		t.code
+		,t.account_number
+		,t.account_type
+		,t.amount
+		,t.currency
+		
+		,t.biz_type
+		,t.biz_note
+		,t.biz_no
+		,t.pay_card_info
+		,t.pay_card_no
+		
+		,t.status
+		,t.apply_user
+		,t.apply_user_type
+		,t.apply_note
+		,t.apply_datetime
+		,t.pay_group
+		,t.pay_user
+		
+		,t.pay_note
+		,t.pay_datetime
+		,t.channel_type
+		,t.channel_order
+		
+		FROM
+		tstd_charge t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_charge_count" parameterType="charge" resultType="java.lang.Long">
+		SELECT count(1) FROM tstd_charge t
+		<include refid="where_condition" />
+	</select>
+	
+	<insert id="insert_charge" parameterType="charge" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO tstd_charge(
+		
+		code
+		,account_number
+		,account_type
+		,amount
+		,currency
+		
+		,biz_type
+		,biz_note
+		,biz_no
+		,pay_card_info
+		,pay_card_no
+		
+		,status
+		,apply_user
+		,apply_user_type
+		,apply_note
+		,apply_datetime
+		,pay_group
+		,pay_note
+		
+		,pay_datetime
+		,channel_type
+		,channel_order
+		
+		)
+		VALUES(
+		
+		#{code}
+		,#{accountNumber}
+		,#{accountType}
+		,#{amount}
+		,#{currency}
+		
+		,#{bizType}
+		,#{bizNote}
+		,#{bizNo}
+		,#{payCardInfo}
+		,#{payCardNo}
+		
+		,#{status}
+		,#{applyUser}
+		,#{applyUserType}
+		,#{applyNote}
+		,#{applyDatetime}
+		,#{payGroup}
+		,#{payNote}
+		
+		,#{payDatetime}
+		,#{channelType}
+		,#{channelOrder}
+		
+		)
+	</insert>
+
+	<update id="pay_order" parameterType="charge">
+		UPDATE tstd_charge SET
+		status = #{status}
+		,pay_user = #{payUser}
+		,pay_note = #{payNote}
+		,pay_datetime=#{payDatetime}
+		WHERE code = #{code}
+	</update>
+
+	
+</mapper>

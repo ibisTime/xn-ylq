@@ -23,14 +23,14 @@ public class XN805027Req {
     private String remark;
 
     // 系统编号(必填)
-    private String systemCode;
+    private String companyCode;
 
-    public String getSystemCode() {
-        return systemCode;
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public String getRoleCode() {

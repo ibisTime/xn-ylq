@@ -38,7 +38,6 @@ CREATE TABLE `tstd_user` (
 DROP TABLE IF EXISTS `tsys_user`;
 CREATE TABLE `tsys_user` (
   `user_id` varchar(32) NOT NULL,
-  `kind` varchar(4) DEFAULT NULL COMMENT '类型',
   `role_code` varchar(32) DEFAULT NULL COMMENT '角色编号',
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   `real_name` varchar(255) DEFAULT NULL COMMENT '真实姓名',
@@ -47,8 +46,9 @@ CREATE TABLE `tsys_user` (
   `login_name` varchar(64) DEFAULT NULL COMMENT '登录名',
   `login_pwd` varchar(32) DEFAULT NULL COMMENT '登录密码',
   `login_pwd_strength` char(1) DEFAULT NULL COMMENT '登录密码强度',
-  `trade_pwd` varchar(32) DEFAULT NULL COMMENT '安全密码',
-  `trade_pwd_strength` char(1) DEFAULT NULL COMMENT '安全密码强度',
+  `is_jt` varchar(32) DEFAULT NULL COMMENT '是否借条模块',
+  `is_fk` varchar(32) DEFAULT NULL COMMENT '是否风控',
+  `is_dl` varchar(32) DEFAULT NULL COMMENT '是否导流',
   `create_datetime` datetime DEFAULT NULL COMMENT '注册时间',
   `status` varchar(4) DEFAULT NULL COMMENT '状态（1待审核2合伙中3已解除合伙4已注销）',
   `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
@@ -529,4 +529,3 @@ CREATE TABLE `tjd_stage_rule` (
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分期规则';
 
-DROP TABLE IF EXISTS `tjd_stage_rule`;

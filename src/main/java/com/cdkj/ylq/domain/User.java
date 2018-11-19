@@ -135,6 +135,46 @@ public class User extends ABaseDO {
 
     private User refereeUser;
 
+    private Date createDatetimeStart;
+
+    private Date createDatetimeEnd;
+
+    private String loginNameForQuery;
+
+    private String mobileForQuery;
+
+    public String getMobileForQuery() {
+        return mobileForQuery;
+    }
+
+    public void setMobileForQuery(String mobileForQuery) {
+        this.mobileForQuery = mobileForQuery;
+    }
+
+    public String getLoginNameForQuery() {
+        return loginNameForQuery;
+    }
+
+    public void setLoginNameForQuery(String loginNameForQuery) {
+        this.loginNameForQuery = loginNameForQuery;
+    }
+
+    public Date getCreateDatetimeStart() {
+        return createDatetimeStart;
+    }
+
+    public void setCreateDatetimeStart(Date createDatetimeStart) {
+        this.createDatetimeStart = createDatetimeStart;
+    }
+
+    public Date getCreateDatetimeEnd() {
+        return createDatetimeEnd;
+    }
+
+    public void setCreateDatetimeEnd(Date createDatetimeEnd) {
+        this.createDatetimeEnd = createDatetimeEnd;
+    }
+
     public User getRefereeUser() {
         return refereeUser;
     }

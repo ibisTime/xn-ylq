@@ -27,14 +27,13 @@ public class XN805021 extends AProcessor {
         SYSRole condition = new SYSRole();
         condition.setName(req.getName());
         condition.setLevel(req.getLevel());
-        // condition.setUpdater(req.getUpdater());
-        condition.setSystemCode(req.getSystemCode());
+        condition.setCompanyCode(req.getCompanyCode());
         return sysRoleAO.querySYSRoleList(condition);
     }
 
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN805021Req.class);
-        StringValidater.validateBlank(req.getSystemCode());
+        StringValidater.validateBlank(req.getCompanyCode());
     }
 }

@@ -5,15 +5,12 @@ public class XN805041Res {
 
     private String userReferee;
 
-    private Long amount;
-
     public XN805041Res() {
     }
 
-    public XN805041Res(String userId, String userReferee, Long amount) {
+    public XN805041Res(String userId, String userReferee) {
         this.userId = userId;
         this.userReferee = userReferee;
-        this.amount = amount;
     }
 
     public String getUserId() {
@@ -32,11 +29,4 @@ public class XN805041Res {
         this.userReferee = userReferee;
     }
 
-    public Long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Long amount) {
-        this.amount = amount;
-    }
 }
