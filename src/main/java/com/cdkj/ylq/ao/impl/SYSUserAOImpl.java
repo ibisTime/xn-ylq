@@ -29,7 +29,6 @@ import com.cdkj.ylq.dto.req.XN630050Req;
 import com.cdkj.ylq.dto.req.XN630061Req;
 import com.cdkj.ylq.dto.res.XN629901Res;
 import com.cdkj.ylq.enums.EAccountType;
-import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.enums.ESYSUserKind;
 import com.cdkj.ylq.enums.ESYSUserStatus;
 import com.cdkj.ylq.enums.ESystemCode;
@@ -70,9 +69,6 @@ public class SYSUserAOImpl implements ISYSUserAO {
     public String addSYSUser(XN630050Req req) {
         sysUserBO.isMobileExist(req.getMobile());
         String userId = sysUserBO.doSaveSYSuser(req);
-        companyBO.saveCompany(userId);
-        accountBO.distributeAccount(userId, EAccountType.BUSINESS,
-            ECurrency.CNY.getCode());
         return userId;
     }
 

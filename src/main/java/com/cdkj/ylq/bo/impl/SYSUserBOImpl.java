@@ -63,9 +63,6 @@ public class SYSUserBOImpl extends PaginableBOImpl<SYSUser> implements
         data.setLoginPwd(req.getLoginPwd());
         data.setLoginPwdStrength(PwdUtil.calculateSecurityLevel(req
             .getLoginPwd()));
-        data.setIsJt(req.getIsJt());
-        data.setIsFk(req.getIsFk());
-        data.setIsDl(req.getIsDl());
         data.setCreateDatetime(new Date());
         data.setStatus(ESYSUserStatus.NORMAL.getCode());
         data.setRemark(req.getRemark());

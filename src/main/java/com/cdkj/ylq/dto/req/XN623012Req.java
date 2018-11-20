@@ -20,6 +20,17 @@ public class XN623012Req extends APageReq {
     // 用户编号（必填）
     private String userId;
 
+    // 公司编号
+    private String comapnyCode;
+
+    public String getComapnyCode() {
+        return comapnyCode;
+    }
+
+    public void setComapnyCode(String comapnyCode) {
+        this.comapnyCode = comapnyCode;
+    }
+
     public String getUserId() {
         return userId;
     }

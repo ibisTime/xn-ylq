@@ -1,5 +1,6 @@
 package com.cdkj.ylq.ao.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -122,8 +123,8 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Override
     @Transactional
-    public void doApprove(String code, String approveResult, Long sxAmount,
-            String approver, String approveNote) {
+    public void doApprove(String code, String approveResult,
+            BigDecimal sxAmount, String approver, String approveNote) {
         Apply apply = applyBO.getApply(code);
         if (!EApplyStatus.TO_APPROVE.getCode().equals(apply.getStatus())) {
             throw new BizException("xn623021", "该申请记录不处于待审核状态");
@@ -133,7 +134,7 @@ public class ApplyAOImpl implements IApplyAO {
         if (EBoolean.YES.getCode().equals(approveResult)) {
             status = EApplyStatus.APPROVE_YES.getCode();
             Product product = productBO.getProduct(apply.getProductCode());
-            if (sxAmount > product.getAmount()) {
+            if (sxAmount.compareTo(product.getAmount()) > 0) {
                 throw new BizException("xn623021", "授信金融不能大于申请产品的金额");
             }
             // 落地授信信息
@@ -154,12 +155,13 @@ public class ApplyAOImpl implements IApplyAO {
             }
             content = "恭喜您，您的借款申请已经通过审核，请登录APP进行自助借款操作。";
         } else {
-            sxAmount = 0L;
+            sxAmount = BigDecimal.ZERO;
             status = EApplyStatus.APPROVE_NO.getCode();
             content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote
                     + "，请保证填写的资料为本人真实资料,如需再次申请，请7天后再登陆APP提交审核。";
         }
-        applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
+        applyBO.doApprove(apply, status, sxAmount.longValue(), approver,
+            approveNote);
         smsOutBO.sentContent(apply.getApplyUser(), content);
     }
 

@@ -1,5 +1,6 @@
 package com.cdkj.ylq.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.cdkj.ylq.dao.base.ABaseDO;
@@ -27,40 +28,40 @@ public class Product extends ABaseDO {
     private String level;
 
     // 借款金额
-    private Long amount;
+    private BigDecimal amount;
 
     // 借款时长
     private Integer duration;
 
     // 7天内逾期利率
-    private Double yqRate1;
+    private BigDecimal yqRate1;
 
     // 7天外逾期利率
-    private Double yqRate2;
+    private BigDecimal yqRate2;
 
     // 利息利率
-    private Double lxRate;
+    private BigDecimal lxRate;
 
     // 快速信审费
-    private Long xsAmount;
+    private BigDecimal xsAmount;
 
     // 账户管理费
-    private Long glAmount;
+    private BigDecimal glAmount;
 
     // 服务费
-    private Long fwAmount;
+    private BigDecimal fwAmount;
 
     // 状态
     private String status;
 
     // UI位置
-    private String uiLocation;
+    private String location;
 
     // UI顺序
-    private Integer uiOrder;
+    private Integer orderNo;
 
     // UI颜色
-    private String uiColor;
+    private String color;
 
     // 最后更新人
     private String updater;
@@ -71,10 +72,13 @@ public class Product extends ABaseDO {
     // 备注
     private String remark;
 
+    // 公司编号
+    private String companyCode;
+
     // ******** 辅助字段 *************
 
     // 利息
-    private Long lxAmount;
+    private BigDecimal lxAmount;
 
     // 当前申请状态
     private String userProductStatus;
@@ -142,11 +146,11 @@ public class Product extends ABaseDO {
         this.level = level;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -158,27 +162,27 @@ public class Product extends ABaseDO {
         this.duration = duration;
     }
 
-    public Double getYqRate1() {
+    public BigDecimal getYqRate1() {
         return yqRate1;
     }
 
-    public void setYqRate1(Double yqRate1) {
+    public void setYqRate1(BigDecimal yqRate1) {
         this.yqRate1 = yqRate1;
     }
 
-    public Double getYqRate2() {
+    public BigDecimal getYqRate2() {
         return yqRate2;
     }
 
-    public void setYqRate2(Double yqRate2) {
+    public void setYqRate2(BigDecimal yqRate2) {
         this.yqRate2 = yqRate2;
     }
 
-    public Double getLxRate() {
+    public BigDecimal getLxRate() {
         return lxRate;
     }
 
-    public void setLxRate(Double lxRate) {
+    public void setLxRate(BigDecimal lxRate) {
         this.lxRate = lxRate;
     }
 
@@ -190,28 +194,36 @@ public class Product extends ABaseDO {
         this.status = status;
     }
 
-    public String getUiLocation() {
-        return uiLocation;
+    public String getLocation() {
+        return location;
     }
 
-    public void setUiLocation(String uiLocation) {
-        this.uiLocation = uiLocation;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public Integer getUiOrder() {
-        return uiOrder;
+    public Integer getOrderNo() {
+        return orderNo;
     }
 
-    public void setUiOrder(Integer uiOrder) {
-        this.uiOrder = uiOrder;
+    public void setOrderNo(Integer orderNo) {
+        this.orderNo = orderNo;
     }
 
-    public String getUiColor() {
-        return uiColor;
+    public String getColor() {
+        return color;
     }
 
-    public void setUiColor(String uiColor) {
-        this.uiColor = uiColor;
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public String getUpdater() {
@@ -254,35 +266,35 @@ public class Product extends ABaseDO {
         this.isLocked = isLocked;
     }
 
-    public Long getLxAmount() {
+    public BigDecimal getLxAmount() {
         return lxAmount;
     }
 
-    public void setLxAmount(Long lxAmount) {
+    public void setLxAmount(BigDecimal lxAmount) {
         this.lxAmount = lxAmount;
     }
 
-    public Long getXsAmount() {
+    public BigDecimal getXsAmount() {
         return xsAmount;
     }
 
-    public void setXsAmount(Long xsAmount) {
+    public void setXsAmount(BigDecimal xsAmount) {
         this.xsAmount = xsAmount;
     }
 
-    public Long getGlAmount() {
+    public BigDecimal getGlAmount() {
         return glAmount;
     }
 
-    public void setGlAmount(Long glAmount) {
+    public void setGlAmount(BigDecimal glAmount) {
         this.glAmount = glAmount;
     }
 
-    public Long getFwAmount() {
+    public BigDecimal getFwAmount() {
         return fwAmount;
     }
 
-    public void setFwAmount(Long fwAmount) {
+    public void setFwAmount(BigDecimal fwAmount) {
         this.fwAmount = fwAmount;
     }
 

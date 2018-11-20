@@ -18,7 +18,8 @@ public enum EGeneratePrefix {
             "用户地址"), KQ("KQ", "卡券"), YQ("YQ", "邀请码"), Account("A", "账户"), AJour(
             "AJ", "账户流水"), Charge("C", "充值"), GS("GS", "公司"),
 
-    Interact("I", "点赞"), BANK_CARD("BC", "银行卡");
+    Interact("I", "点赞"), BANK_CARD("BC", "银行卡"), WAY("W", "渠道"), BUSINESS(
+            "JDS", "借贷商"), NOTICER("NO", "通知人");
 
     public static Map<String, EGeneratePrefix> getMap() {
         Map<String, EGeneratePrefix> map = new HashMap<String, EGeneratePrefix>();

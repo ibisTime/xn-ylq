@@ -82,7 +82,7 @@ public class ContractAOImpl implements IContractAO {
         }
         InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
             InfoAmount.class);
-        if (infoAmount.getSxAmount() == 0) {
+        if (infoAmount.getSxAmount().longValue() == 0) {
             throw new BizException("623070", "您还没有额度，请先选择产品进行申请");
         }
         if (StringUtils.isBlank(certification.getRef())) {
@@ -99,7 +99,7 @@ public class ContractAOImpl implements IContractAO {
         // 产品
         Product product = productBO.getProduct(certification.getRef());
         // 借款总额
-        Long borrowAmount = infoAmount.getSxAmount();
+        Long borrowAmount = infoAmount.getSxAmount().longValue();
         // 生成预览合同
         String contact = contractBO.preview(user, bankcard, product,
             borrowAmount);

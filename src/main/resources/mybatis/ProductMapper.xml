@@ -16,12 +16,13 @@
 		<result column="gl_amount" property="glAmount" />
 		<result column="fw_amount" property="fwAmount" />
 		<result column="status" property="status" />
-		<result column="ui_location" property="uiLocation" />
-		<result column="ui_order" property="uiOrder" />
-		<result column="ui_color" property="uiColor" />
+		<result column="location" property="location" />
+		<result column="order_no" property="orderNo" />
+		<result column="color" property="color" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
+		<result column="company_code" property="companyCode" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -37,13 +38,16 @@
 			<if test="status != null and status != '' ">
 				AND t.status = #{status}
 			</if>
-			<if test="uiLocation != null and uiLocation != '' ">
-				AND t.ui_location = #{uiLocation}
+			<if test="location != null and location != '' ">
+				AND t.location = #{location}
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
 			</if>
 			
 		</trim>
 	</sql>
-	<select id="select_product" parameterType="product" resultMap="product_DB_Result">
+	<select id="selectjd_product" parameterType="product" resultMap="product_DB_Result">
 		SELECT
 		t.code
 		,t.name
@@ -58,14 +62,15 @@
 		,t.gl_amount
 		,t.fw_amount
 		,t.status
-		,t.ui_location
-		,t.ui_order
-		,t.ui_color
+		,t.location
+		,t.order_no
+		,t.color
 		,t.updater
 		,t.update_datetime
 		,t.remark
+		,t.company_code
 		FROM
-		t_product t
+		tjd_product t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -74,15 +79,15 @@
 		</trim>
 	</select>
 
-	<select id="select_product_count" parameterType="product"
+	<select id="selectjd_product_count" parameterType="product"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM t_product t
+		SELECT count(1) FROM tjd_product t
 		<include refid="where_condition" />
 	</select>
 
-	<insert id="insert_product" parameterType="product">
+	<insert id="insertjd_product" parameterType="product">
 		INSERT INTO
-		t_product(
+		tjd_product(
 		code
 		,name
 		,slogan
@@ -96,12 +101,13 @@
 		,gl_amount
 		,fw_amount
 		,status
-		,ui_location
-		,ui_order
-		,ui_color
+		,location
+		,order_no
+		,color
 		,updater
 		,update_datetime
 		,remark
+		,company_code
 		)
 		VALUES(
 		#{code}
@@ -117,17 +123,18 @@
 		,#{glAmount}
 		,#{fwAmount}
 		,#{status}
-		,#{uiLocation}
-		,#{uiOrder}
-		,#{uiColor}
+		,#{location}
+		,#{orderNo}
+		,#{color}
 		,#{updater}
 		,#{updateDatetime}
 		,#{remark}
+		,#{companyCode}
 		)
 	</insert>
 
 	<update id="update_product" parameterType="product">
-		UPDATE t_product
+		UPDATE tjd_product
 		SET
 		name = #{name}
 		,slogan = #{slogan}
@@ -147,7 +154,7 @@
 	</update>
 	
 	<update id="update_putOn" parameterType="product">
-		UPDATE t_product
+		UPDATE tjd_product
 		SET
 		status = #{status}
 		,ui_location = #{uiLocation}
@@ -160,7 +167,7 @@
 	</update>
 	
 	<update id="update_putOff" parameterType="product">
-		UPDATE t_product
+		UPDATE tjd_product
 		SET
 		status = #{status}
 		,updater = #{updater}

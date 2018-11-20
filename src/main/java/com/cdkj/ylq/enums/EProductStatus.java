@@ -14,8 +14,7 @@ package com.cdkj.ylq.enums;
  * @history:
  */
 public enum EProductStatus {
-    NEW("0", "待上架"), PUT_ON("1", "上架中"), PUT_OFF("2", "已下架");
-
+    ON("1", "开启"), OFF("0", "关闭");
     EProductStatus(String code, String value) {
         this.code = code;
         this.value = value;

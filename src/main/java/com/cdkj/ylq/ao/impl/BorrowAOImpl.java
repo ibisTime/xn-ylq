@@ -125,7 +125,7 @@ public class BorrowAOImpl implements IBorrowAO {
         }
         InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
             InfoAmount.class);
-        if (infoAmount.getSxAmount() == 0) {
+        if (infoAmount.getSxAmount().longValue() == 0) {
             throw new BizException("623070", "您还没有额度，请先选择产品进行申请");
         }
         if (StringUtils.isBlank(certification.getRef())) {
@@ -153,23 +153,25 @@ public class BorrowAOImpl implements IBorrowAO {
                 userCoupon.getStatus())) {
                 throw new BizException("623070", "优惠券已不可使用");
             }
-            if (infoAmount.getSxAmount() < userCoupon.getStartAmount()) {
+            if (infoAmount.getSxAmount().longValue() < userCoupon
+                .getStartAmount()) {
                 throw new BizException("623070", "不可使用该优惠券");
             }
             yhAmount = userCoupon.getAmount();
             userCouponBO.use(userCoupon, code);
         }
         // 借款总额
-        Long borrowAmount = infoAmount.getSxAmount();
+        Long borrowAmount = infoAmount.getSxAmount().longValue();
         // 利息
-        Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
-            product.getLxRate())) * product.getDuration();
+        // Long lxAmount = AmountUtil.eraseLiUp(AmountUtil.mul(borrowAmount,
+        // product.getLxRate())) * product.getDuration();
+        Long lxAmount = 0L;
         // 快速信审费
-        Long xsAmount = product.getXsAmount();
+        Long xsAmount = product.getXsAmount().longValue();
         // 账户管理费
-        Long glAmount = product.getGlAmount();
+        Long glAmount = product.getGlAmount().longValue();
         // 服务费
-        Long fwAmount = product.getFwAmount();
+        Long fwAmount = product.getFwAmount().longValue();
         // 应还金额
         Long totalAmount = borrowAmount;
 
@@ -182,15 +184,15 @@ public class BorrowAOImpl implements IBorrowAO {
         borrow.setLevel(product.getLevel());
         borrow.setDuration(product.getDuration());
 
-        borrow.setLxRate(product.getLxRate());
+        borrow.setLxRate(product.getLxRate().doubleValue());
         borrow.setLxAmount(lxAmount);
         borrow.setXsAmount(xsAmount);
         borrow.setGlAmount(glAmount);
         borrow.setFwAmount(fwAmount);
 
         borrow.setYhAmount(yhAmount);
-        borrow.setRate1(product.getYqRate1());
-        borrow.setRate2(product.getYqRate2());
+        borrow.setRate1(product.getYqRate1().doubleValue());
+        borrow.setRate2(product.getYqRate2().doubleValue());
         borrow.setYqlxAmount(0L);
         borrow.setYqDays(0);
 

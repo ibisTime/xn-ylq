@@ -62,11 +62,11 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     }
 
     @Override
-    public Map<String, String> getConfigsMap(String systemCode) {
+    public Map<String, String> getConfigsMap(String type) {
         Map<String, String> map = new HashMap<String, String>();
-        if (StringUtils.isNotBlank(systemCode)) {
+        if (StringUtils.isNotBlank(type)) {
             SYSConfig condition = new SYSConfig();
-            condition.setSystemCode(systemCode);
+            condition.setType(type);
             List<SYSConfig> list = sysConfigDAO.selectList(condition);
             if (CollectionUtils.isNotEmpty(list)) {
                 for (SYSConfig sysConfig : list) {

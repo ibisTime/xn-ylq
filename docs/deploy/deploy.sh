@@ -1,9 +1,9 @@
 
 #!/usr/bin/expect
 
-set tomcat_path "/mnt/www/ylq/tomcat_ylq_biz"
+set tomcat_path "/mnt/www/ylq/tomcat_xn_ylq"
 set war_name "xn-ylq"
-set host_ip "121.43.101.148"
+set host_ip "120.26.6.213"
 set host_pwd "cdkj123456Q"
 
 spawn ssh root@${host_ip}

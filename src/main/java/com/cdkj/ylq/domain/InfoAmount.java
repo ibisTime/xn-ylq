@@ -8,6 +8,7 @@
  */
 package com.cdkj.ylq.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /** 
@@ -18,7 +19,7 @@ import java.util.Date;
 public class InfoAmount {
 
     // 授信额度
-    private Long sxAmount;
+    private BigDecimal sxAmount;
 
     // 标识
     private String flag;
@@ -64,11 +65,11 @@ public class InfoAmount {
         this.validDatetime = validDatetime;
     }
 
-    public Long getSxAmount() {
+    public BigDecimal getSxAmount() {
         return sxAmount;
     }
 
-    public void setSxAmount(Long sxAmount) {
+    public void setSxAmount(BigDecimal sxAmount) {
         this.sxAmount = sxAmount;
     }
 }

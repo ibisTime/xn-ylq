@@ -35,7 +35,7 @@ public class XN623023 extends AProcessor {
     @Override
     public Object doBusiness() throws BizException {
         applyAO.doApprove(req.getCode(), req.getApproveResult(),
-            StringValidater.toLong(req.getSxAmount()), req.getApprover(),
+            StringValidater.toBigDecimal(req.getSxAmount()), req.getApprover(),
             req.getApproveNote());
         return new BooleanRes(true);
     }

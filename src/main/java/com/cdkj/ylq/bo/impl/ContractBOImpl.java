@@ -8,6 +8,7 @@
  */
 package com.cdkj.ylq.bo.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -79,8 +80,8 @@ public class ContractBOImpl extends PaginableBOImpl<Contract> implements
                 .generateM(EGeneratePrefix.BORROW.getCode());
             String signDate = DateUtil.getToday(DateUtil.DATA_TIME_PATTERN_6);
             String amount = CalculationUtil.diviUp(borrowAmount);
-            String lxAmount = CalculationUtil.diviUp(AmountUtil.mul(
-                borrowAmount, product.getLxRate()) * product.getDuration());
+            String lxAmount = CalculationUtil.diviUp(product.getLxRate()
+                .longValue() * product.getDuration() * borrowAmount);
             Double fwRate = sysConfigBO.getDoubleValue(SysConstants.FW_RATE);
             String fwAmount = CalculationUtil.diviUp(AmountUtil.mul(
                 borrowAmount, fwRate));
@@ -97,8 +98,8 @@ public class ContractBOImpl extends PaginableBOImpl<Contract> implements
             argsMap.put("partyBBankcard", bankcard.getBankcardNumber());// 银行卡号
             argsMap.put("borrowAmount", amount);// 借款本金
             argsMap.put("borrowDays", String.valueOf(product.getDuration()));// 借款期限
-            argsMap
-                .put("borrowRate", String.valueOf(product.getLxRate() * 100));// 利率
+            argsMap.put("borrowRate", String.valueOf(product.getLxRate()
+                .multiply(new BigDecimal(100))));// 利率
             argsMap.put("lxAmount", lxAmount);// 利息
             argsMap.put("fwAmount", fwAmount);// 服务费
             argsMap.put("repayDate", repayDate);// 还款日期

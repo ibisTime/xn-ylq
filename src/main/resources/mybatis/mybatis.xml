@@ -21,6 +21,9 @@
 	    <typeAlias alias="sysMenu" type="com.cdkj.ylq.domain.SYSMenu" />
 	    <typeAlias alias="sysRole" type="com.cdkj.ylq.domain.SYSRole" />
  	    <typeAlias alias="sysMenuRole" type="com.cdkj.ylq.domain.SYSMenuRole" />
+ 	    <typeAlias alias="way" type="com.cdkj.ylq.domain.Way" />
+ 	     <typeAlias alias="noticer" type="com.cdkj.ylq.domain.Noticer" />
+ 	    <typeAlias alias="businessMan" type="com.cdkj.ylq.domain.BusinessMan" />
  	    
  	    <typeAlias alias="user" type="com.cdkj.ylq.domain.User" />
  	    <typeAlias alias="userExt" type="com.cdkj.ylq.domain.UserExt" />

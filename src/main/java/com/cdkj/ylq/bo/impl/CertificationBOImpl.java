@@ -1,5 +1,6 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -104,7 +105,7 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
             ECertiKey.INFO_AMOUNT);
         InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
             InfoAmount.class);
-        infoAmount.setSxAmount(0L);
+        infoAmount.setSxAmount(BigDecimal.ZERO);
         certification.setResult(JsonUtil.Object2Json(infoAmount));
         certification.setFlag(ECertificationStatus.INVALID.getCode());
         this.refreshCertification(certification);
@@ -116,7 +117,8 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
             ECertiKey.INFO_AMOUNT);
         InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
             InfoAmount.class);
-        infoAmount.setSxAmount(infoAmount.getSxAmount() + amount);
+        infoAmount.setSxAmount(infoAmount.getSxAmount().add(
+            BigDecimal.valueOf(amount)));
         certification.setResult(JsonUtil.Object2Json(infoAmount));
         this.refreshCertification(certification);
     }

@@ -27,7 +27,10 @@ public class XN623010Req extends APageReq {
     private String status;
 
     // UI位置（选填）
-    private String uiLocation;
+    private String location;
+
+    // 公司编号
+    private String companyCode;
 
     public String getName() {
         return name;
@@ -53,12 +56,20 @@ public class XN623010Req extends APageReq {
         this.status = status;
     }
 
-    public String getUiLocation() {
-        return uiLocation;
+    public String getLocation() {
+        return location;
     }
 
-    public void setUiLocation(String uiLocation) {
-        this.uiLocation = uiLocation;
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
 }

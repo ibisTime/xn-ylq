@@ -15,6 +15,14 @@
 	
 	<bean id="productBO" class="com.cdkj.ylq.bo.impl.ProductBOImpl">
 		<property name="paginableDAO" ref="productDAOImpl"/>
+	</bean>
+		
+	<bean id="businessManBO" class="com.cdkj.ylq.bo.impl.BusinessManBOImpl">
+		<property name="paginableDAO" ref="businessManDAOImpl"/>
+	</bean>	
+	
+	<bean id="wayBO" class="com.cdkj.ylq.bo.impl.WayBOImpl">
+		<property name="paginableDAO" ref="wayDAOImpl"/>
 	</bean>	
 	
 	<bean id="applyBO" class="com.cdkj.ylq.bo.impl.ApplyBOImpl">
@@ -118,5 +126,9 @@
 	
 	<bean id="withdrawBO" class="com.cdkj.ylq.bo.impl.WithdrawBOImpl">
 		<property name="paginableDAO" ref="withdrawDAOImpl"/>
+	</bean>
+	
+	<bean id="noticerBO" class="com.cdkj.ylq.bo.impl.NoticerBOImpl">
+		<property name="paginableDAO" ref="noticerDAOImpl"/>
 	</bean>
 </beans>

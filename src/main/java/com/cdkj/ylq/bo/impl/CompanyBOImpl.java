@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.ICompanyBO;
 import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
@@ -31,6 +32,9 @@ public class CompanyBOImpl extends PaginableBOImpl<Company> implements
 
     @Autowired
     private ISYSUserBO sysUserBO;
+
+    @Autowired
+    private IBusinessManBO businessManBO;
 
     @Override
     @Transactional
@@ -102,7 +106,7 @@ public class CompanyBOImpl extends PaginableBOImpl<Company> implements
             companyDAO.insert(data);
 
             // 更新用户公司
-            sysUserBO.refreshCompany(userId, code);
+            businessManBO.refereshCompany(userId, code);
         }
         return code;
     }

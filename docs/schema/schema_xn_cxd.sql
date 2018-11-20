@@ -529,3 +529,39 @@ CREATE TABLE `tjd_stage_rule` (
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分期规则';
 
+DROP TABLE IF EXISTS `tsys_way`;
+CREATE TABLE `tsys_way` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `name` varchar(64) DEFAULT NULL COMMENT '名字',
+  `url` varchar(64) DEFAULT NULL COMMENT '链接',
+  `point_count` bigint(20) DEFAULT NULL COMMENT '渠道点击数',
+  `user_count` bigint(20) DEFAULT NULL COMMENT '注册用户数',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='渠道';
+
+DROP TABLE IF EXISTS `tjd_business_man`;
+CREATE TABLE `tjd_business_man` (
+  `user_id` varchar(32) NOT NULL COMMENT '用户编号',
+  `role_code` varchar(32) DEFAULT NULL COMMENT '角色编号',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  `real_name` varchar(64) DEFAULT NULL COMMENT '真实姓名',
+  `photo` varchar(255) DEFAULT NULL COMMENT '头像',
+  `mobile` varchar(64) DEFAULT NULL COMMENT '手机号',
+  `login_name` varchar(64) DEFAULT NULL COMMENT '登录名',
+  `login_pwd` varchar(64) DEFAULT NULL COMMENT '登陆密码',
+  `login_pwd_strength` varchar(64) DEFAULT NULL COMMENT '登陆密码强度',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态',
+  `is_jt` varchar(4) DEFAULT NULL COMMENT '是否借条',
+  `is_fk` varchar(4) DEFAULT NULL COMMENT '是否风控',
+  `is_dl` varchar(4) DEFAULT NULL COMMENT '是否导流',
+  `update` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='借款商';

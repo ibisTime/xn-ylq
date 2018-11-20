@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.IBusinessManDAO">
+	<resultMap id="businessMan_DB_Result" type="businessMan">
+		<result column="user_id" property="userId" />
+		<result column="role_code" property="roleCode" />
+		<result column="company_code" property="companyCode" />
+		<result column="real_name" property="realName" />
+		<result column="photo" property="photo" />
+		<result column="mobile" property="mobile" />
+		<result column="login_name" property="loginName" />
+		<result column="login_pwd" property="loginPwd" />
+		<result column="login_pwd_strength" property="loginPwdStrength" />
+		<result column="create_datetime" property="createDatetime" />
+		<result column="status" property="status" />
+		<result column="is_jt" property="isJt" />
+		<result column="is_fk" property="isFk" />
+		<result column="is_dl" property="isDl" />
+		<result column="updater" property="updater" />
+		<result column="update_datetime" property="updateDatetime" />
+		<result column="remark" property="remark" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
+			</if>
+			<if test="loginName != null and loginName != '' ">
+				AND t.login_name = #{loginName}
+			</if>					
+			<if test="createDatetimeStart != null and createDatetimeStart != '' ">
+				<![CDATA[AND t.create_datetime >= #{createDatetimeStart}]]>
+			</if>
+			<if test="createDatetimeEnd != null and createDatetimeEnd != '' ">
+				<![CDATA[AND t.create_datetime <= #{createDatetimeEnd}]]>
+			</if>
+			<if test="remark != null and reamrk != '' ">
+				AND t.remark = #{remark}
+			</if>	
+			<if test="loginPwd != null and loginPwd != '' ">
+				AND t.login_pwd = #{loginPwd}
+			</if>
+			<if test="updater != null and updater != '' ">
+				AND t.updater = #{updater}
+			</if>
+			<if test="mobile != null and mobile != '' ">
+				AND t.mobile = #{mobile}
+			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
+			<if test="roleCode != null and roleCode != '' ">
+				AND t.role_code = #{roleCode}
+			</if>
+			<if test="mobileForQuery != null and mobileForQuery != '' ">
+				AND (t.mobile like "%"#{mobileForQuery}"%" or t.login_name like "%"#{mobileForQuery}"%")
+			</if>
+			<if test="realNameForQuery != null and realNameForQuery != '' ">
+				AND t.real_name like "%"#{realNameForQuery}"%" 
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
+			</if>
+			<if test="isJt != null and isJt != '' ">
+				AND t.is_jt = #{isJt}
+			</if>
+			<if test="isFk != null and isFk != '' ">
+				AND t.is_fk = #{isFk}
+			</if>
+			<if test="isDl != null and isDl != '' ">
+				AND t.is_dl = #{isDl}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_businessMan" parameterType="businessMan" resultMap="businessMan_DB_Result">
+		SELECT
+		t.user_id
+		,t.role_code
+		,t.company_code
+		,t.real_name
+		,t.photo
+		,t.mobile
+		,t.login_name
+		,t.login_pwd
+		,t.login_pwd_strength
+		,t.create_datetime
+		,t.status
+		,t.is_jt
+		,t.is_fk
+		,t.is_dl
+		,t.updater
+		,t.update_datetime
+		,t.remark
+		FROM
+		tjd_business_man t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_businessMan_count" parameterType="businessMan"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM tjd_business_man t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_businessMan" parameterType="businessMan">
+		INSERT INTO
+		tjd_business_man(
+		user_id
+		,role_code
+		,company_code
+		,real_name
+		,photo
+		,mobile
+		,login_name
+		,login_pwd
+		,login_pwd_strength
+		,create_datetime
+		,status
+		,is_jt
+		,is_fk
+		,is_dl
+		,updater
+		,update_datetime
+		,remark
+		)
+		VALUES(
+		#{userId}
+		,#{roleCode}
+		,#{companyCode}
+		,#{realName}
+		,#{photo}
+		,#{mobile}
+		,#{loginName}
+		,#{loginPwd}
+		,#{loginPwdStrength}
+		,#{createDatetime}
+		,#{status}
+		,#{isJt}
+		,#{isFk}
+		,#{isDl}
+		,#{updater}
+		,#{updateDatetime}
+		,#{remark}
+		)
+	</insert>
+
+	<update id="update_businessMan" parameterType="businessMan">
+		UPDATE tjd_business_man
+		SET
+		role_code = #{roleCode}
+		,company_code = #{companyCode}
+		,real_name = #{realName}
+		,photo = #{photo}
+		,mobile = #{mobile}
+		,login_name = #{loginName}
+		,login_pwd = #{loginPwd}
+		,login_pwd_strength = #{loginPwdStrength}
+		,create_datetime = #{createDatetime}
+		,status = #{status}
+		,is_jt = #{isJt}
+		,is_fk = #{isFk}
+		,is_dl = #{isDl}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		,company_code = #{companyCode}
+		WHERE code = #{code}
+	</update>
+
+	<update id="update_photo" parameterType="sysuser">
+		UPDATE tjd_business_man
+		SET
+		 photo = #{photo}
+		WHERE
+		user_id = #{userId}	
+	</update>
+	
+	<update id="update_login_pwd" parameterType="sysuser">
+		UPDATE tjd_business_man
+		SET
+		 login_pwd = #{loginPwd}
+		WHERE
+		user_id = #{userId}	
+	</update>
+	
+	<update id="update_mobile" parameterType="sysuser">
+		UPDATE tjd_business_man
+		SET
+		mobile = #{mobile}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="update_status" parameterType="sysuser">
+		UPDATE tjd_business_man
+		SET
+		status=#{status}
+		,updater=#{updater}
+		,update_datetime=#{updateDatetime}
+		,remark = #{remark}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="update_company" parameterType="sysuser">
+		UPDATE tjd_business_man
+		SET
+		company_code=#{companyCode}
+		WHERE user_id = #{userId}
+	</update>
+		
+	<update id="update_role" parameterType="sysuser">
+		UPDATE tjd_business_man
+		SET
+		 role_code = #{roleCode}
+		,updater = #{updater}
+		<if test="remark != null and remark != '' ">
+			,remark = #{remark}
+		</if>
+		WHERE
+		user_id = #{userId}	
+	</update>	
+
+</mapper>

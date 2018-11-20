@@ -47,12 +47,6 @@ public class SYSUser extends ABaseDO {
     // 登录密码强度
     private String loginPwdStrength;
 
-    private String isJt;
-
-    private String isFk;
-
-    private String isDl;
-
     // 创建时间
     private Date createDatetime;
 
@@ -102,30 +96,6 @@ public class SYSUser extends ABaseDO {
 
     // 古树最小市值
     private BigDecimal minPrice;
-
-    public String getIsJt() {
-        return isJt;
-    }
-
-    public void setIsJt(String isJt) {
-        this.isJt = isJt;
-    }
-
-    public String getIsFk() {
-        return isFk;
-    }
-
-    public void setIsFk(String isFk) {
-        this.isFk = isFk;
-    }
-
-    public String getIsDl() {
-        return isDl;
-    }
-
-    public void setIsDl(String isDl) {
-        this.isDl = isDl;
-    }
 
     public String getUserId() {
         return userId;

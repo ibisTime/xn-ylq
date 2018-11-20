@@ -3,6 +3,7 @@ package com.cdkj.ylq.ao.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -579,7 +580,7 @@ public class CertificationAOImpl implements ICertificationAO {
 
         if (apply != null && product != null) {
             params.put("loan_amount",
-                CalculationUtil.diviUp(product.getAmount())); // 申请借款金额
+                CalculationUtil.diviUp(product.getAmount().longValue())); // 申请借款金额
             params.put("loan_term", product.getDuration()); // 申请借款期限
             params.put("loan_term_unit", "DAY"); // 期限单位
             params.put("loan_date", DateUtil.dateToStr(
@@ -978,7 +979,7 @@ public class CertificationAOImpl implements ICertificationAO {
         creditAmount.setCertiKey(ECertiKey.INFO_AMOUNT.getCode());
         creditAmount.setFlag(ECertificationStatus.TO_CERTI.getCode());
         InfoAmount infoAmount = new InfoAmount();
-        infoAmount.setSxAmount(0L);
+        infoAmount.setSxAmount(BigDecimal.ZERO);
         creditAmount.setResult(JsonUtil.Object2Json(infoAmount));
         certificationBO.saveCertification(creditAmount);
         certifications.add(creditAmount);

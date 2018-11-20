@@ -54,6 +54,17 @@ public class XN623000Req {
     // 备注（选填）
     private String remark;
 
+    // 公司编号
+    private String companyCode;
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
     public String getName() {
         return name;
     }

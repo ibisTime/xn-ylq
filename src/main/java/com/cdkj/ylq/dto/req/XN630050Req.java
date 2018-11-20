@@ -36,42 +36,6 @@ public class XN630050Req {
     // （选填）备注
     private String remark;
 
-    // 是否借条模块
-    @NotBlank
-    private String isJt;
-
-    // 是否风控
-    @NotBlank
-    private String isFk;
-
-    // 是否导流
-    @NotBlank
-    private String isDl;
-
-    public String getIsJt() {
-        return isJt;
-    }
-
-    public void setIsJt(String isJt) {
-        this.isJt = isJt;
-    }
-
-    public String getIsFk() {
-        return isFk;
-    }
-
-    public void setIsFk(String isFk) {
-        this.isFk = isFk;
-    }
-
-    public String getIsDl() {
-        return isDl;
-    }
-
-    public void setIsDl(String isDl) {
-        this.isDl = isDl;
-    }
-
     public String getLoginPwd() {
         return loginPwd;
     }

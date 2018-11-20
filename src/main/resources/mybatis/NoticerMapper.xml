@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.INoticerDAO">
+	<resultMap id="noticer_DB_Result" type="noticer">
+		<result column="code" property="code" />
+		<result column="name" property="name" />
+		<result column="mobile" property="mobile" />
+		<result column="type" property="type" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="create_datetime" property="createDatetime" />
+		<result column="updater" property="updater" />
+		<result column="update_datetime" property="updateDatetime" />
+		<result column="remark" property="remark" />
+		<result column="company_code" property="companyCode" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+			<if test="type != null and type != '' ">
+				AND t.type = #{type}
+			</if>
+			<if test="name != null and name != '' ">
+				AND t.name like "%"#{name}"%"
+			</if>
+			<if test="mobile != null and mobile != '' ">
+				AND t.mobile like "%"#{mobile}"%"
+			</if>
+		</trim>
+	</sql>
+	<select id="select_noticer" parameterType="noticer" resultMap="noticer_DB_Result">
+		SELECT
+		t.code
+		,t.name
+		,t.mobile
+		,t.type
+		,t.start_time
+		,t.end_time
+		,t.create_datetime
+		,t.updater
+		,t.update_datetime
+		,t.remark
+		,t.company_code
+		FROM
+		tsys_noticer t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_noticer_count" parameterType="noticer"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM tsys_noticer t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_noticer" parameterType="noticer">
+		INSERT INTO
+		tsys_noticer(
+		code
+		,name
+		,mobile
+		,type
+		,start_time
+		,end_time
+		,create_datetime
+		,updater
+		,update_datetime
+		,remark
+		,company_code
+		)
+		VALUES(
+		#{code}
+		,#{name}
+		,#{mobile}
+		,#{type}
+		,#{startTime}
+		,#{endTime}
+		,#{createDatetime}
+		,#{updater}
+		,#{updateDatetime}
+		,#{remark}
+		,#{companyCode}
+		)
+	</insert>
+
+	<update id="update_noticer" parameterType="noticer">
+		UPDATE tsys_noticer
+		SET
+		name = #{name}
+		,mobile = #{mobile}
+		,type = #{type}
+		,start_time = #{startTime}
+		,end_time = #{endTime}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+
+
+</mapper>

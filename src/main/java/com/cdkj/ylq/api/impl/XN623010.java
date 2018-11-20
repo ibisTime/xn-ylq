@@ -42,7 +42,8 @@ public class XN623010 extends AProcessor {
         condition.setName(req.getName());
         condition.setLevel(req.getLevel());
         condition.setStatus(req.getStatus());
-        condition.setUiLocation(req.getUiLocation());
+        condition.setLocation(req.getLocation());
+        condition.setCompanyCode(req.getCompanyCode());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = IProductAO.DEFAULT_ORDER_COLUMN;
@@ -59,7 +60,8 @@ public class XN623010 extends AProcessor {
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN623010Req.class);
-        StringValidater.validateBlank(req.getStart(), req.getLimit());
+        StringValidater.validateBlank(req.getStart(), req.getLimit(),
+            req.getCompanyCode());
     }
 
 }
