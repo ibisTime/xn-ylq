@@ -9,9 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.cdkj.ylq.bo.IBorrowBO;
+import com.cdkj.ylq.bo.IBorrowOrderBO;
 import com.cdkj.ylq.bo.IOverdueBO;
-import com.cdkj.ylq.bo.IRenewalBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.common.MD5Util;
@@ -47,10 +46,7 @@ import com.cdkj.ylq.http.JsonUtils;
 public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
 
     @Autowired
-    private IBorrowBO borrowBO;
-
-    @Autowired
-    private IRenewalBO renewalBO;
+    private IBorrowOrderBO borrowOrderBO;
 
     @Autowired
     private IOverdueBO overdueBO;
@@ -86,10 +82,8 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
             user.setCity(res.getCity());
             user.setArea(res.getArea());
             user.setAddress(res.getAddress());
-
-            user.setBorrowCount(borrowBO.getTotalBorrowCount(userId));
+            user.setBorrowCount(borrowOrderBO.getTotalBorrowCount(userId));
             user.setOverdueCode(overdueBO.getOverdueCode(userId));
-            user.setRenewalCount(renewalBO.getTotalRenewalCount(userId));
 
         }
         return user;

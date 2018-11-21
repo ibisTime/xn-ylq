@@ -5,6 +5,7 @@ import java.util.List;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.dto.req.XN630100Req;
+import com.cdkj.ylq.dto.res.XN630101Res;
 
 //CHECK ��鲢��ע�� 
 public interface IBusinessManAO {
@@ -19,7 +20,7 @@ public interface IBusinessManAO {
 
     public BusinessMan getBusinessMan(String userId);
 
-    public String doLogin(String loginName, String loginPwd);
+    public XN630101Res doLogin(String loginName, String loginPwd);
 
     public void editMobile(String userId, String newMobile, String smsCaptcha,
             String remark);

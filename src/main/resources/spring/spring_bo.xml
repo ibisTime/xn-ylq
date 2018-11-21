@@ -45,17 +45,14 @@
 		<property name="paginableDAO" ref="userCouponDAOImpl"/>
 	</bean>	
 	
-	<bean id="borrowBO" class="com.cdkj.ylq.bo.impl.BorrowBOImpl">
-		<property name="paginableDAO" ref="borrowDAOImpl"/>
+	<bean id="borrowOrderBO" class="com.cdkj.ylq.bo.impl.BorrowOrderBOImpl">
+		<property name="paginableDAO" ref="borrowOrderDAOImpl"/>
 	</bean>	
 	
 	<bean id="repayApplyBO" class="com.cdkj.ylq.bo.impl.RepayApplyBOImpl">
 		<property name="paginableDAO" ref="repayApplyDAOImpl"/>
 	</bean>	
 	
-	<bean id="renewalBO" class="com.cdkj.ylq.bo.impl.RenewalBOImpl">
-		<property name="paginableDAO" ref="renewalDAOImpl"/>
-	</bean>	
 	
 	<bean id="overdueBO" class="com.cdkj.ylq.bo.impl.OverdueBOImpl">
 		<property name="paginableDAO" ref="overdueDAOImpl"/>

@@ -74,12 +74,13 @@ CREATE TABLE `tsys_channel_bank` (
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `tsys_cnavigate`;
-CREATE TABLE `tsys_cnavigate` (
+CREATE TABLE `tstd_cnavigate` (
   `code` varchar(32) NOT NULL COMMENT '编号',
   `name` varchar(255) DEFAULT NULL COMMENT '名称',
   `type` varchar(32) DEFAULT NULL COMMENT '类型',
   `url` varchar(255) DEFAULT NULL COMMENT '访问Url',
   `pic` varchar(255) DEFAULT NULL COMMENT '图片',
+  `belong` varchar(32) DEFAULT NULL COMMENT '属于',
   `status` varchar(4) DEFAULT NULL COMMENT '状态(1 显示 0 不显示)',
   `location` varchar(32) DEFAULT NULL COMMENT '位置',
   `order_no` int(11) DEFAULT NULL COMMENT '相对位置编号',
@@ -560,7 +561,7 @@ CREATE TABLE `tjd_business_man` (
   `is_jt` varchar(4) DEFAULT NULL COMMENT '是否借条',
   `is_fk` varchar(4) DEFAULT NULL COMMENT '是否风控',
   `is_dl` varchar(4) DEFAULT NULL COMMENT '是否导流',
-  `update` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`user_id`)

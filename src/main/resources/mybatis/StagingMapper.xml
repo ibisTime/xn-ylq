@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.IStagingDAO">
+	<resultMap id="staging_DB_Result" type="staging">
+		<result column="code" property="code" />
+		<result column="apply_user" property="applyUser" />
+		<result column="order_code" property="orderCode" />
+		<result column="pay_amount" property="payAmount" />
+		<result column="last_pay_date" property="lastPayDate" />
+		<result column="pay_datetime" property="payDatetime" />
+		<result column="pay_type" property="payType" />
+		<result column="pay_code" property="payCode" />
+		<result column="pay_group" property="payGroup" />
+		<result column="status" property="status" />
+		<result column="count" property="count" />
+		<result column="batch" property="batch" />
+		<result column="company_code" property="companyCode" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+			<if test="lastPayDate != null and lastPayDate != '' ">
+				AND t.last_pay_date = #{lastPayDate}
+			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
+			<if test="applyUser != null and applyUser != '' ">
+				AND t.apply_user = #{applyUser}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_staging" parameterType="staging" resultMap="staging_DB_Result">
+		SELECT
+		t.code
+		,t.apply_user
+		,t.order_code
+		,t.pay_amount
+		,t.last_pay_date
+		,t.pay_datetime
+		,t.pay_type
+		,t.pay_code
+		,t.pay_group
+		,t.status
+		,t.count
+		,t.batch
+		,t.company_code
+		FROM
+		tjd_staging t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_staging_count" parameterType="staging"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM tjd_staging t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_staging" parameterType="staging">
+		INSERT INTO
+		tjd_staging(
+		code
+		,apply_user
+		,order_code
+		,pay_amount
+		,last_pay_date
+		,pay_datetime
+		,pay_type
+		,pay_code
+		,pay_group
+		,status
+		,count
+		,batch
+		,company_code
+		)
+		VALUES(
+		#{code}
+		,#{applyUser}
+		,#{orderCode}
+		,#{payAmount}
+		,#{lastPayDate}
+		,#{payDatetime}
+		,#{payType}
+		,#{payCode}
+		,#{payGroup}
+		,#{status}
+		,#{count}
+		,#{batch}
+		,#{companyCode}
+		)
+	</insert>
+
+	<update id="update_staging" parameterType="staging">
+		UPDATE tjd_staging
+		SET
+		apply_user = #{applyUser}
+		,order_code = #{orderCode}
+		,pay_amount = #{payAmount}
+		,last_pay_date = #{lastPayDate}
+		,pay_datetime = #{payDatetime}
+		,pay_type = #{payType}
+		,pay_code = #{payCode}
+		,pay_group = #{payGroup}
+		,status = #{status}
+		,count = #{count}
+		,batch = #{batch}
+		,company_code = #{companyCode}
+		WHERE code = #{code}
+	</update>
+
+
+</mapper>

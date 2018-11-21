@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.cdkj.ylq.ao.IProductAO;
 import com.cdkj.ylq.bo.IApplyBO;
-import com.cdkj.ylq.bo.IBorrowBO;
+import com.cdkj.ylq.bo.IBorrowOrderBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IUserBO;
@@ -20,7 +20,7 @@ import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Apply;
-import com.cdkj.ylq.domain.Borrow;
+import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.Product;
@@ -52,7 +52,7 @@ public class ProductAOImpl implements IProductAO {
     private ICertificationBO certificationBO;
 
     @Autowired
-    private IBorrowBO borrowBO;
+    private IBorrowOrderBO borrowOrderBO;
 
     @Override
     public String addProduct(XN623000Req req) {
@@ -137,10 +137,11 @@ public class ProductAOImpl implements IProductAO {
                 }
             }
         } else {
-            EProductLevel curProductLevel = borrowBO.getUserBorrowLevel(userId);
+            EProductLevel curProductLevel = borrowOrderBO
+                .getUserBorrowLevel(userId);
             Apply apply = applyBO.getCurrentApply(userId);
             if (apply != null) {
-                Borrow borrow = borrowBO.getCurrentBorrow(userId);
+                BorrowOrder borrow = borrowOrderBO.getCurrentBorrow(userId);
                 for (Product product : products) {
                     if (apply.getProductCode().equals(product.getCode())) {
                         product.setUserProductStatus(apply.getStatus());
@@ -235,7 +236,7 @@ public class ProductAOImpl implements IProductAO {
             throw new BizException("623013", "您还没有额度，请先选择产品进行申请");
         }
         // 是否已经有借款
-        Borrow borrow = borrowBO.getCurrentBorrow(userId);
+        BorrowOrder borrow = borrowOrderBO.getCurrentBorrow(userId);
         if (borrow != null) {
             throw new BizException("623013", "当前已有借款");
         }

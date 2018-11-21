@@ -48,7 +48,7 @@
 		,t.valid_datetime
 		,t.ref
 		FROM
-		t_certification t
+		tjd_certification t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -59,7 +59,7 @@
 
 	<select id="select_certification_count" parameterType="certification"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM t_certification t
+		SELECT count(1) FROM tjd_certification t
 		<include refid="where_condition" />
 	</select>
 

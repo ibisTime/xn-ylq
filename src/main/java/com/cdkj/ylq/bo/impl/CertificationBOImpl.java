@@ -112,13 +112,12 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
     }
 
     @Override
-    public void refreshSxAmount(String userId, Long amount) {
+    public void refreshSxAmount(String userId, BigDecimal amount) {
         Certification certification = this.getCertification(userId,
             ECertiKey.INFO_AMOUNT);
         InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
             InfoAmount.class);
-        infoAmount.setSxAmount(infoAmount.getSxAmount().add(
-            BigDecimal.valueOf(amount)));
+        infoAmount.setSxAmount(infoAmount.getSxAmount().add(amount));
         certification.setResult(JsonUtil.Object2Json(infoAmount));
         this.refreshCertification(certification);
     }

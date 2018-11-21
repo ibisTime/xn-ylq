@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.cdkj.ylq.ao.IContractAO;
 import com.cdkj.ylq.bo.IAccountBO;
-import com.cdkj.ylq.bo.IBorrowBO;
+import com.cdkj.ylq.bo.IBorrowOrderBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IContractBO;
 import com.cdkj.ylq.bo.IProductBO;
@@ -48,7 +48,7 @@ public class ContractAOImpl implements IContractAO {
     private ISYSConfigBO sysConfigBO;
 
     @Autowired
-    private IBorrowBO borrowBO;
+    private IBorrowOrderBO borrowOrderBO;
 
     @Autowired
     private ICertificationBO certificationBO;
@@ -93,7 +93,7 @@ public class ContractAOImpl implements IContractAO {
             throw new BizException("623070", "您的额度已失效，请选择产品重新申请");
         }
         // 是否已经有借款
-        if (borrowBO.getCurrentBorrow(userId) != null) {
+        if (borrowOrderBO.getCurrentBorrow(userId) != null) {
             throw new BizException("623070", "当前已有借款");
         }
         // 产品

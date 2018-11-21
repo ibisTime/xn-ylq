@@ -1,5 +1,7 @@
 package com.cdkj.ylq.domain;
 
+import java.math.BigDecimal;
+
 import com.cdkj.ylq.dao.base.ABaseDO;
 
 /**
@@ -25,7 +27,7 @@ public class Overdue extends ABaseDO {
     private Integer days;
 
     // 逾期金额
-    private Long amount;
+    private BigDecimal amount;
 
     // 逾期后处理
     private String result;
@@ -62,11 +64,11 @@ public class Overdue extends ABaseDO {
         this.days = days;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

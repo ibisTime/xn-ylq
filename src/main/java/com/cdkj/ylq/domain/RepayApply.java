@@ -1,5 +1,6 @@
 package com.cdkj.ylq.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.cdkj.ylq.dao.base.ABaseDO;
@@ -24,7 +25,7 @@ public class RepayApply extends ABaseDO {
     private String type;
 
     // 打款金额
-    private Long amount;
+    private BigDecimal amount;
 
     // 申请人
     private String applyUser;
@@ -59,7 +60,7 @@ public class RepayApply extends ABaseDO {
 
     private User user;
 
-    private Borrow borrow;
+    private BorrowOrder borrow;
 
     private Renewal renewal;
 
@@ -95,11 +96,11 @@ public class RepayApply extends ABaseDO {
         this.type = type;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -167,11 +168,11 @@ public class RepayApply extends ABaseDO {
         this.codeForQuery = codeForQuery;
     }
 
-    public Borrow getBorrow() {
+    public BorrowOrder getBorrow() {
         return borrow;
     }
 
-    public void setBorrow(Borrow borrow) {
+    public void setBorrow(BorrowOrder borrow) {
         this.borrow = borrow;
     }
 

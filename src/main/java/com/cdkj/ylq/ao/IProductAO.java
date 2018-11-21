@@ -7,7 +7,7 @@ import com.cdkj.ylq.dto.req.XN623001Req;
 
 public interface IProductAO {
 
-    static final String DEFAULT_ORDER_COLUMN = "ui_order";
+    static final String DEFAULT_ORDER_COLUMN = "order_no";
 
     public String addProduct(XN623000Req req);
 

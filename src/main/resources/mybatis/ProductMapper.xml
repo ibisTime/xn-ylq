@@ -47,7 +47,7 @@
 			
 		</trim>
 	</sql>
-	<select id="selectjd_product" parameterType="product" resultMap="product_DB_Result">
+	<select id="select_product" parameterType="product" resultMap="product_DB_Result">
 		SELECT
 		t.code
 		,t.name
@@ -79,13 +79,13 @@
 		</trim>
 	</select>
 
-	<select id="selectjd_product_count" parameterType="product"
+	<select id="select_product_count" parameterType="product"
 		resultType="java.lang.Long">
 		SELECT count(1) FROM tjd_product t
 		<include refid="where_condition" />
 	</select>
 
-	<insert id="insertjd_product" parameterType="product">
+	<insert id="insert_product" parameterType="product">
 		INSERT INTO
 		tjd_product(
 		code
@@ -157,9 +157,9 @@
 		UPDATE tjd_product
 		SET
 		status = #{status}
-		,ui_location = #{uiLocation}
-		,ui_order = #{uiOrder}
-		,ui_color = #{uiColor}
+		,location = #{location}
+		,order_no = #{orderNo}
+		,color = #{color}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}

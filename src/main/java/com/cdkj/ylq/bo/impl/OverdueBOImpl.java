@@ -1,5 +1,6 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +22,7 @@ public class OverdueBOImpl extends PaginableBOImpl<Overdue> implements
 
     @Override
     public void saveOverdue(String userId, String borrowCode, Integer days,
-            Long amount, String result) {
+            BigDecimal amount, String result) {
         Overdue data = new Overdue();
         data.setUserId(userId);
         data.setBorrowCode(borrowCode);

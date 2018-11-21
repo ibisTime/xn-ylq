@@ -20,13 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IAccountAO;
 import com.cdkj.ylq.bo.IAccountBO;
-import com.cdkj.ylq.bo.IBorrowBO;
+import com.cdkj.ylq.bo.IBorrowOrderBO;
 import com.cdkj.ylq.bo.IJourBO;
 import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Account;
-import com.cdkj.ylq.domain.Borrow;
+import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.SYSUser;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.EJourDirection;
@@ -45,7 +45,7 @@ public class AccountAOImpl implements IAccountAO {
     private IAccountBO accountBO;
 
     @Autowired
-    private IBorrowBO borrowBO;
+    private IBorrowOrderBO borrowOrderBO;
 
     @Autowired
     private IUserBO userBO;
@@ -143,13 +143,13 @@ public class AccountAOImpl implements IAccountAO {
     public void editBankcard(String userId, String code, String realName,
             String bankcardNumber, String bankCode, String bankName,
             String status) {
-        Borrow condition = new Borrow();
+        BorrowOrder condition = new BorrowOrder();
         List<String> statusList = new ArrayList<String>();
         statusList.add(EBorrowStatus.LOANING.getCode());
         statusList.add(EBorrowStatus.OVERDUE.getCode());
         condition.setApplyUser(userId);
         condition.setStatusList(statusList);
-        List<Borrow> borrows = borrowBO.queryBorrowList(condition);
+        List<BorrowOrder> borrows = borrowOrderBO.queryBorrowList(condition);
         if (borrows.size() > 0) {
             throw new BizException("xn623850", "您当前有正在进行的借款，暂时无法修改银行卡！");
         }

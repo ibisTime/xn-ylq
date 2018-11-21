@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IBusinessManAO;
 import com.cdkj.ylq.bo.IAccountBO;
@@ -15,6 +16,7 @@ import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.MD5Util;
 import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.dto.req.XN630100Req;
+import com.cdkj.ylq.dto.res.XN630101Res;
 import com.cdkj.ylq.enums.EAccountType;
 import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.exception.BizException;
@@ -55,6 +57,7 @@ public class BusinessManAOImpl implements IBusinessManAO {
     }
 
     @Override
+    @Transactional
     public String addBusinessMan(XN630100Req req) {
         // 手机检验
         businessManBO.isMobileExist(req.getMobile());
@@ -65,11 +68,13 @@ public class BusinessManAOImpl implements IBusinessManAO {
         // 分配账户
         accountBO.distributeAccount(userId, EAccountType.BUSINESS,
             ECurrency.CNY.getCode());
+        // TODO
+        // 分配菜单
         return userId;
     }
 
     @Override
-    public String doLogin(String loginName, String loginPwd) {
+    public XN630101Res doLogin(String loginName, String loginPwd) {
         BusinessMan condition = new BusinessMan();
         condition.setLoginName(loginName);
         if (businessManBO.getTotalCount(condition) < 1) {
@@ -82,7 +87,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
             throw new BizException("xn0000", "密码不正确");
         }
 
-        return dataList.get(0).getUserId();
+        String userId = dataList.get(0).getUserId();
+        String companyCode = dataList.get(0).getCompanyCode();
+        return new XN630101Res(userId, companyCode);
     }
 
     @Override

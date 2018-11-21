@@ -10,11 +10,11 @@ package com.cdkj.ylq.api.impl;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.cdkj.ylq.ao.IBorrowAO;
+import com.cdkj.ylq.ao.IBorrowOrderAO;
 import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.StringValidater;
-import com.cdkj.ylq.domain.Borrow;
+import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.dto.req.XN623087Req;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.ParaException;
@@ -28,7 +28,7 @@ import com.cdkj.ylq.spring.SpringContextHolder;
  */
 public class XN623087 extends AProcessor {
 
-    private IBorrowAO borrowAO = SpringContextHolder.getBean(IBorrowAO.class);
+    private IBorrowOrderAO borrowAO = SpringContextHolder.getBean(IBorrowOrderAO.class);
 
     private XN623087Req req = null;
 
@@ -37,13 +37,13 @@ public class XN623087 extends AProcessor {
      */
     @Override
     public Object doBusiness() throws BizException {
-        Borrow condition = new Borrow();
+        BorrowOrder condition = new BorrowOrder();
         condition.setApplyUser(req.getApplyUser());
         condition.setStatus(req.getStatus());
         condition.setStatusList(req.getStatusList());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
-            orderColumn = IBorrowAO.DEFAULT_ORDER_COLUMN;
+            orderColumn = IBorrowOrderAO.DEFAULT_ORDER_COLUMN;
         }
         condition.setOrder(orderColumn, req.getOrderDir());
         int start = StringValidater.toInteger(req.getStart());

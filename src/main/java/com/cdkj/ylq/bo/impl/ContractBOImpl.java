@@ -30,7 +30,7 @@ import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IContractDAO;
 import com.cdkj.ylq.domain.Bankcard;
-import com.cdkj.ylq.domain.Borrow;
+import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Contract;
 import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.User;
@@ -132,7 +132,7 @@ public class ContractBOImpl extends PaginableBOImpl<Contract> implements
     }
 
     @Override
-    public String generate(User user, Bankcard bankcard, Borrow borrow) {
+    public String generate(User user, Bankcard bankcard, BorrowOrder borrow) {
         String contact = null;
         // 拿到合同模板
         String contracttemplate = sysConfigBO
@@ -141,10 +141,11 @@ public class ContractBOImpl extends PaginableBOImpl<Contract> implements
             String contractCode = OrderNoGenerater
                 .generateM(EGeneratePrefix.BORROW.getCode());
             String signDate = DateUtil.getToday(DateUtil.DATA_TIME_PATTERN_6);
-            Long borrowAmount = borrow.getAmount();
+            Long borrowAmount = borrow.getAmount().longValue();
             String amount = CalculationUtil.diviUp(borrowAmount);
-            String lxAmount = CalculationUtil.diviUp(AmountUtil.mul(
-                borrowAmount, borrow.getLxRate()) * borrow.getDuration());
+            // String lxAmount = CalculationUtil.diviUp(AmountUtil.mul(
+            // borrowAmount, borrow.getLxRate())
+            // * borrow.getDuration().doubleValue());
             Double fwRate = sysConfigBO.getDoubleValue(SysConstants.FW_RATE);
             String fwAmount = CalculationUtil.diviUp(AmountUtil.mul(
                 borrowAmount, fwRate));
@@ -161,8 +162,9 @@ public class ContractBOImpl extends PaginableBOImpl<Contract> implements
             argsMap.put("partyBBankcard", bankcard.getBankcardNumber());// 银行卡号
             argsMap.put("borrowAmount", amount);// 借款本金
             argsMap.put("borrowDays", String.valueOf(borrow.getDuration()));// 借款期限
-            argsMap.put("borrowRate", String.valueOf(borrow.getLxRate() * 100));// 利率
-            argsMap.put("lxAmount", lxAmount);// 利息
+            argsMap.put("borrowRate",
+                String.valueOf(borrow.getLxRate().longValue() * 100));// 利率
+            argsMap.put("lxAmount", Long.valueOf(100).toString());// 利息
             argsMap.put("fwAmount", fwAmount);// 服务费
             argsMap.put("repayDate", repayDate);// 还款日期
             argsMap.put("repayAmount", amount);// 还款本金

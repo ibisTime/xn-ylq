@@ -19,13 +19,13 @@ public class XN623071Req {
     private String code;
 
     // 打款是否成功（必填）
-    private String result;
+    private String approveResult;
 
     // 最后更新人（必填）
-    private String updater;
+    private String approver;
 
     // 备注（选填）
-    private String remark;
+    private String approveNote;
 
     public String getCode() {
         return code;
@@ -35,28 +35,28 @@ public class XN623071Req {
         this.code = code;
     }
 
-    public String getResult() {
-        return result;
+    public String getApproveResult() {
+        return approveResult;
     }
 
-    public void setResult(String result) {
-        this.result = result;
+    public void setApproveResult(String approveResult) {
+        this.approveResult = approveResult;
     }
 
-    public String getUpdater() {
-        return updater;
+    public String getApprover() {
+        return approver;
     }
 
-    public void setUpdater(String updater) {
-        this.updater = updater;
+    public void setApprover(String approver) {
+        this.approver = approver;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getApproveNote() {
+        return approveNote;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setApproveNote(String approveNote) {
+        this.approveNote = approveNote;
     }
 
 }

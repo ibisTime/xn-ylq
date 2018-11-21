@@ -1,5 +1,6 @@
 package com.cdkj.ylq.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.cdkj.ylq.dao.base.ABaseDO;
@@ -27,7 +28,7 @@ public class UserCoupon extends ABaseDO {
     private String type;
 
     // 优惠券金额
-    private Long amount;
+    private BigDecimal amount;
 
     // 起用金额
     private Long startAmount;
@@ -97,11 +98,11 @@ public class UserCoupon extends ABaseDO {
         this.type = type;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

@@ -8,6 +8,10 @@
  */
 package com.cdkj.ylq.dto.req;
 
+import java.util.List;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 /** 
  * @author: haiqingzheng 
  * @since: 2017年8月16日 下午5:03:02 
@@ -16,36 +20,15 @@ package com.cdkj.ylq.dto.req;
 public class XN623074Req {
 
     // 借款编号（必填）
-    private String code;
+    @NotEmpty
+    private List<String> codeList;
 
-    // 最后更新人（必填）
-    private String updater;
-
-    // 备注（选填）
-    private String remark;
-
-    public String getCode() {
-        return code;
+    public List<String> getCodeList() {
+        return codeList;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getUpdater() {
-        return updater;
-    }
-
-    public void setUpdater(String updater) {
-        this.updater = updater;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setCodeList(List<String> codeList) {
+        this.codeList = codeList;
     }
 
 }

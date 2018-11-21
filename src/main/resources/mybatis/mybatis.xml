@@ -8,7 +8,7 @@
 	    <typeAlias alias="coupon" type="com.cdkj.ylq.domain.Coupon" />
 	    <typeAlias alias="couponCondition" type="com.cdkj.ylq.domain.CouponCondition" />
 	    <typeAlias alias="userCoupon" type="com.cdkj.ylq.domain.UserCoupon" />
-	    <typeAlias alias="borrow" type="com.cdkj.ylq.domain.Borrow" />
+	    <typeAlias alias="borrowOrder" type="com.cdkj.ylq.domain.BorrowOrder" />
 	    <typeAlias alias="repayApply" type="com.cdkj.ylq.domain.RepayApply" />
 	    <typeAlias alias="renewal" type="com.cdkj.ylq.domain.Renewal" />
 	    <typeAlias alias="overdue" type="com.cdkj.ylq.domain.Overdue" />
@@ -25,6 +25,7 @@
  	    <typeAlias alias="noticer" type="com.cdkj.ylq.domain.Noticer" />
  	    <typeAlias alias="businessMan" type="com.cdkj.ylq.domain.BusinessMan" />
  	    <typeAlias alias="stagingRule" type="com.cdkj.ylq.domain.StagingRule" />
+ 	    <typeAlias alias="staging" type="com.cdkj.ylq.domain.Staging" />
  	    
  	    <typeAlias alias="user" type="com.cdkj.ylq.domain.User" />
  	    <typeAlias alias="userExt" type="com.cdkj.ylq.domain.UserExt" />

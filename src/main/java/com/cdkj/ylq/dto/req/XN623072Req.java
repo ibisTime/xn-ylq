@@ -8,6 +8,11 @@
  */
 package com.cdkj.ylq.dto.req;
 
+import java.util.List;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 /** 
  * @author: haiqingzheng 
  * @since: 2017年8月16日 下午5:03:02 
@@ -15,26 +20,47 @@ package com.cdkj.ylq.dto.req;
  */
 public class XN623072Req {
 
-    // 借款编号（必填）
-    private String code;
+    @NotEmpty
+    private List<String> codeList;
 
-    // 支付方式（必填）
-    private String payType;
+    @NotBlank
+    private String result;
 
-    public String getCode() {
-        return code;
+    @NotBlank
+    private String updater;
+
+    private String remark;
+
+    public List<String> getCodeList() {
+        return codeList;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCodeList(List<String> codeList) {
+        this.codeList = codeList;
     }
 
-    public String getPayType() {
-        return payType;
+    public String getUpdater() {
+        return updater;
     }
 
-    public void setPayType(String payType) {
-        this.payType = payType;
+    public void setUpdater(String updater) {
+        this.updater = updater;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
 }

@@ -16,7 +16,6 @@
 		<result column="remark" property="remark" />
 		<result column="content_type" property="contentType" />
 		<result column="company_code" property="companyCode" />
-		<result column="system_code" property="systemCode" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -60,9 +59,6 @@
 					</if>
 				 </otherwise>
 			</choose>
-			<if test="systemCode != null and systemCode != '' ">
-				AND t.system_code = #{systemCode}
-			</if>
 		</trim>
 	</sql>
 	<select id="select_cNavigate" parameterType="cNavigate" resultMap="cNavigate_DB_Result">
@@ -80,7 +76,6 @@
 		,t.remark
 		,t.content_type
 		,t.company_code
-		,t.system_code
 		FROM
 		tstd_cnavigate t 
 		<include refid="where_condition" />
@@ -109,7 +104,6 @@
 		,remark
 		,content_type
 		,company_code
-		,system_code
 		)
 		VALUES(
 		#{code}
@@ -125,7 +119,6 @@
 		,#{remark}
 		,#{contentType}
 		,#{companyCode}
-		,#{systemCode}
 		)
 	</insert>
 
@@ -150,7 +143,6 @@
 		,parent_code = #{parentCode}
 		,remark = #{remark}
 		,content_type = #{contentType}
-		,company_code = #{companyCode}
 		WHERE code = #{code}
 	</update>
 </mapper>

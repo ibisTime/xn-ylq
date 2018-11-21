@@ -43,6 +43,7 @@ public class XN623012 extends AProcessor {
         Product condition = new Product();
         condition.setStatus(EProductStatus.ON.getCode());
         condition.setLocation(EProductLocation.NORMAL.getCode());
+        condition.setCompanyCode(req.getComapnyCode());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = IProductAO.DEFAULT_ORDER_COLUMN;

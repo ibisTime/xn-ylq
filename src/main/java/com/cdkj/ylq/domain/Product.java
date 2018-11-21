@@ -90,7 +90,7 @@ public class Product extends ABaseDO {
     private String borrowCode;
 
     // 借款详情 - 放款后返回
-    private Borrow borrowInfo;
+    private BorrowOrder borrowInfo;
 
     // 是否锁定
     private String isLocked;
@@ -298,11 +298,11 @@ public class Product extends ABaseDO {
         this.fwAmount = fwAmount;
     }
 
-    public Borrow getBorrowInfo() {
+    public BorrowOrder getBorrowInfo() {
         return borrowInfo;
     }
 
-    public void setBorrowInfo(Borrow borrowInfo) {
+    public void setBorrowInfo(BorrowOrder borrowInfo) {
         this.borrowInfo = borrowInfo;
     }
 

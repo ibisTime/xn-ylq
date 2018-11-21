@@ -13,7 +13,6 @@ import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.ObjValidater;
 import com.cdkj.ylq.dto.req.XN630101Req;
-import com.cdkj.ylq.dto.res.PKUserRes;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.ParaException;
 import com.cdkj.ylq.spring.SpringContextHolder;
@@ -34,8 +33,7 @@ public class XN630101 extends AProcessor {
     @Override
     public Object doBusiness() throws BizException {
 
-        return new PKUserRes(businessManAO.doLogin(req.getLoginName(),
-            req.getLoginPwd()));
+        return businessManAO.doLogin(req.getLoginName(), req.getLoginPwd());
     }
 
     @Override

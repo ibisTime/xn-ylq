@@ -8,41 +8,41 @@
  */
 package com.cdkj.ylq.api.impl;
 
-import com.cdkj.ylq.ao.IBorrowAO;
+import com.cdkj.ylq.ao.IBorrowOrderAO;
 import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
-import com.cdkj.ylq.core.StringValidater;
+import com.cdkj.ylq.core.ObjValidater;
 import com.cdkj.ylq.dto.req.XN623072Req;
+import com.cdkj.ylq.dto.res.BooleanRes;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.ParaException;
 import com.cdkj.ylq.spring.SpringContextHolder;
 
 /** 
- * 还款
+ * 批量回录
  * @author: haiqingzheng 
  * @since: 2017年8月16日 下午4:31:31 
  * @history:
  */
 public class XN623072 extends AProcessor {
 
-    private IBorrowAO borrowAO = SpringContextHolder.getBean(IBorrowAO.class);
+    private IBorrowOrderAO borrowOrderAO = SpringContextHolder
+        .getBean(IBorrowOrderAO.class);
 
     private XN623072Req req = null;
 
-    /** 
-     * @see com.cdkj.ylq.api.IProcessor#doBusiness()
-     */
     @Override
     public Object doBusiness() throws BizException {
-        return borrowAO.repay(req.getCode(), req.getPayType());
+        for (String code : req.getCodeList()) {
+            borrowOrderAO.doLoanOffline(code, req.getResult(), req.getResult(),
+                req.getRemark());
+        }
+        return new BooleanRes(true);
     }
 
-    /** 
-     * @see com.cdkj.ylq.api.IProcessor#doCheck(java.lang.String)
-     */
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN623072Req.class);
-        StringValidater.validateBlank(req.getCode(), req.getPayType());
+        ObjValidater.validateReq(req);
     }
 }

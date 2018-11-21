@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.IBorrowOrderDAO">
+	<resultMap id="borrow_DB_Result" type="borrowOrder">
+		<result column="code" property="code" />
+		<result column="type" property="type" />
+		<result column="apply_user" property="applyUser" />
+		<result column="sign_datetime" property="signDatetime" />
+		<result column="amount" property="amount" />
+		<result column="level" property="level" />
+		<result column="duration" property="duration" />
+		<result column="fk_datetime" property="fkDatetime" />
+		<result column="jx_datetime" property="jxDatetime" />
+		<result column="hk_datetime" property="hkDatetime" />
+		<result column="lx_rate" property="lxRate" />
+		<result column="lx_amount" property="lxAmount" />
+		<result column="xs_amount" property="xsAmount" />
+		<result column="gl_amount" property="glAmount" />
+		<result column="fw_amount" property="fwAmount" />
+		<result column="yh_amount" property="yhAmount" />
+		<result column="rate1" property="rate1" />
+		<result column="rate2" property="rate2" />
+		<result column="yqlx_amount" property="yqlxAmount" />
+		<result column="yq_days" property="yqDays" />
+		<result column="total_amount" property="totalAmount" />
+		<result column="real_hk_datetime" property="realHkDatetime" />
+		<result column="real_hk_amount" property="realHkAmount" />
+		<result column="pay_code" property="payCode" />
+		<result column="pay_group" property="payGroup" />
+		<result column="pay_type" property="payType" />
+		<result column="loan_type" property="loanType" />
+		<result column="stage_rule_code" property="stageRuleCode" />
+		<result column="status" property="status" />
+		<result column="is_archive" property="isArchive" />
+		<result column="is_coupon" property="isCoupon" />
+		<result column="approver" property="approver" />
+		<result column="approve_datetime" property="approveDatetime" />
+		<result column="approve_note" property="approveNote" />
+		<result column="updater" property="updater" />
+		<result column="update_datetime" property="updateDatetime" />
+		<result column="remark" property="remark" />
+		<result column="company_code" property="companyCode" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+			<if test="codeForQuery != null and codeForQuery != '' ">
+				AND t.code like "%"#{codeForQuery}"%"
+			</if>
+			<if test="type != null and type != '' ">
+				AND t.type = #{type}
+			</if>
+			<if test="payGroup != null and payGroup != '' ">
+				AND t.pay_group = #{payGroup}
+			</if>
+			<if test="applyUser != null and applyUser != '' ">
+				AND t.apply_user = #{applyUser}
+			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
+			<if test="loanType != null and loanType != '' ">
+				AND t.loan_type = #{loanType}
+			</if>
+			<if test="level != null and level != '' ">
+				AND t.level = #{level}
+			</if>
+			<if test="isArchive != null and isArchive != '' ">
+				AND t.is_archive = #{isArchive}
+			</if>
+			<if test="isCoupon != null and isCoupon != '' ">
+				AND t.is_coupon = #{isCoupon}
+			</if>
+			<if test="hkDatetime != null and hkDatetime != '' ">
+				AND t.hk_datetime = #{hkDatetime}
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
+			</if>
+			<if test="curDatetime != null and curDatetime != '' ">
+				<![CDATA[AND t.hk_datetime <= #{curDatetime}]]>
+			</if>
+			<if test="statusList != null and statusList != '' ">
+				AND t.status in 
+                <foreach item="item" index="index" collection="statusList" open="(" separator="," close=")">
+	            	#{item}
+                </foreach> 
+			</if>
+			<if test="yqDaysStart != null and yqDaysStart != '' ">
+				<![CDATA[AND t.yq_days >= #{yqDaysStart}]]>
+			</if>
+			<if test="yqDaysEnd != null and yqDaysEnd != '' ">
+				<![CDATA[AND t.yq_days <= #{yqDaysEnd}]]>
+			</if>
+			<choose>
+				 <when test="isOverdue == 0">
+				  	AND t.yq_days = 0
+				 </when>
+				 <when test="isOverdue == 1">
+				  	AND t.yq_days > 0
+				 </when>
+			</choose>
+			
+		</trim>
+	</sql>
+	<select id="select_borrow" parameterType="borrowOrder" resultMap="borrow_DB_Result">
+		SELECT
+		t.code
+		,t.type
+		,t.apply_user
+		,t.sign_datetime
+		,t.amount
+		,t.level
+		,t.duration
+		,t.fk_datetime
+		,t.jx_datetime
+		,t.hk_datetime
+		,t.lx_rate
+		,t.lx_amount
+		,t.xs_amount
+		,t.gl_amount
+		,t.fw_amount
+		,t.yh_amount
+		,t.rate1
+		,t.rate2
+		,t.yqlx_amount
+		,t.yq_days
+		,t.total_amount
+		,t.real_hk_datetime
+		,t.real_hk_amount
+		,t.pay_code
+		,t.pay_group
+		,t.pay_type
+		,t.loan_type
+		,t.stage_rule_code
+		,t.status
+		,t.is_archive
+		,t.is_coupon
+		,t.approver
+		,t.approve_datetime
+		,t.approve_note
+		,t.updater
+		,t.update_datetime
+		,t.remark
+		,t.company_code
+		FROM
+		tjd_borrow_order t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_borrow_count" parameterType="borrowOrder"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM tjd_borrow_order t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_borrow" parameterType="borrowOrder">
+		INSERT INTO
+		tjd_borrow_order(
+		code
+		,type
+		,apply_user
+		,sign_datetime
+		,amount
+		,level
+		,duration
+		,fk_datetime
+		,jx_datetime
+		,hk_datetime
+		,lx_rate
+		,lx_amount
+		,xs_amount
+		,gl_amount
+		,fw_amount
+		,yh_amount
+		,rate1
+		,rate2
+		,total_amount
+		,status
+		,updater
+		,update_datetime
+		,remark
+		,company_code
+		)
+		VALUES(
+		#{code}
+		,#{type}
+		,#{applyUser}
+		,#{signDatetime}
+		,#{amount}
+		,#{level}
+		,#{duration}
+		,#{fkDatetime}
+		,#{jxDatetime}
+		,#{hkDatetime}
+		,#{lxRate}
+		,#{lxAmount}
+		,#{xsAmount}
+		,#{glAmount}
+		,#{fwAmount}
+		,#{yhAmount}
+		,#{rate1}
+		,#{rate2}
+		,#{totalAmount}
+		,#{status}
+		,#{updater}
+		,#{updateDatetime}
+		,#{remark}
+		,#{companyCode}
+		)
+	</insert>
+
+	<update id="update_approve" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		status = #{status}
+		,approver=#{qpprover}
+		,approve_datetime=#{approveDatetime}
+		,approve_note=#{approveNote}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_loanSuccess" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		fk_datetime = #{fkDatetime}
+		,jx_datetime = #{jxDatetime}
+		,hk_datetime = #{hkDatetime}
+		,loan_type = #{loanType}
+		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_loanFailure" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	
+	<update id="update_resubmitLoan" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		status = #{status}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_payGroup" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		pay_group = #{payGroup}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_repaySuccess" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		real_hk_datetime = #{realHkDatetime}
+		,real_hk_amount = #{realHkAmount}
+		,pay_code = #{payCode}
+		,pay_type = #{payType}
+		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_repayOffline" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		real_hk_datetime = #{realHkDatetime}
+		,real_hk_amount = #{realHkAmount}
+		,pay_type = #{payType}
+		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	
+	
+	<update id="update_confirmBad" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+
+    <update id="update_overdue" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		status = #{status}
+		,yq_days = #{yqDays}
+		,yqlx_amount = #{yqlxAmount}
+		,total_amount = #{totalAmount}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_archive" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		is_archive = #{isArchive}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+    <update id="update_remark" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		remark = #{remark}
+		WHERE code = #{code}
+	</update>
+
+</mapper>

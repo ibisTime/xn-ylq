@@ -23,8 +23,8 @@
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
-			<if test="code != null and code != '' ">
-				AND t.code = #{code}
+			<if test="userId != null and userId != '' ">
+				AND t.user_id = #{userId}
 			</if>
 			<if test="companyCode != null and companyCode != '' ">
 				AND t.company_code = #{companyCode}
@@ -173,7 +173,7 @@
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
 		,company_code = #{companyCode}
-		WHERE code = #{code}
+		WHERE user_id = #{userId}
 	</update>
 
 	<update id="update_photo" parameterType="sysuser">

@@ -12,7 +12,7 @@ import java.util.List;
 
 import com.cdkj.ylq.bo.base.IPaginableBO;
 import com.cdkj.ylq.domain.Bankcard;
-import com.cdkj.ylq.domain.Borrow;
+import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Contract;
 import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.User;
@@ -25,7 +25,7 @@ import com.cdkj.ylq.domain.User;
 public interface IContractBO extends IPaginableBO<Contract> {
 
     // 生成借款合同
-    public String generate(User user, Bankcard bankcard, Borrow borrow);
+    public String generate(User user, Bankcard bankcard, BorrowOrder borrow);
 
     // 预览借款合同
     public String preview(User user, Bankcard bankcard, Product product,

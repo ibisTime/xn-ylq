@@ -10,7 +10,7 @@ package com.cdkj.ylq.api.impl;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.cdkj.ylq.ao.IBorrowAO;
+import com.cdkj.ylq.ao.IBorrowOrderAO;
 import com.cdkj.ylq.ao.IRepayApplyAO;
 import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
@@ -48,7 +48,7 @@ public class XN623088 extends AProcessor {
         condition.setStatus(req.getStatus());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
-            orderColumn = IBorrowAO.DEFAULT_ORDER_COLUMN;
+            orderColumn = IBorrowOrderAO.DEFAULT_ORDER_COLUMN;
         }
         condition.setOrder(orderColumn, req.getOrderDir());
         int start = StringValidater.toInteger(req.getStart());

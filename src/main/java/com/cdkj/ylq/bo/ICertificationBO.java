@@ -1,5 +1,6 @@
 package com.cdkj.ylq.bo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.cdkj.ylq.bo.base.IPaginableBO;
@@ -35,7 +36,7 @@ public interface ICertificationBO extends IPaginableBO<Certification> {
     public void resetSxAmount(String userId);
 
     // 额度加减
-    public void refreshSxAmount(String userId, Long amount);
+    public void refreshSxAmount(String userId, BigDecimal amount);
 
     // 是否完成必要认证
     public boolean isCompleteCerti(String userId);
