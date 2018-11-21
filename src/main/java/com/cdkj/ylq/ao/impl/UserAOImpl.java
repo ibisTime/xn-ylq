@@ -16,7 +16,6 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +60,6 @@ public class UserAOImpl implements IUserAO {
     @Autowired
     private ICertificationAO certificationAO;
 
-    private static Logger logger = Logger.getLogger(UserAOImpl.class);
-
     @Autowired
     protected ISYSConfigBO sysConfigBO;
 
@@ -83,7 +80,7 @@ public class UserAOImpl implements IUserAO {
     public XN805041Res doRegister(String mobile, String loginPwd,
             String userReferee, String userRefereeKind, String smsCaptcha,
             String province, String city, String area, String address,
-            String companyCode) {
+            String companyCode, String createClient) {
         // 1、参数校验
         // 验证手机号是否存在
         userBO.isMobileExist(mobile, companyCode);
@@ -93,7 +90,7 @@ public class UserAOImpl implements IUserAO {
         // smsOutBO.checkCaptcha(mobile, smsCaptcha, "805041", companyCode);
         // 2、注册用户
         String userId = userBO.doRegister(mobile, loginPwd, userRefereeId,
-            province, city, area, address, companyCode);
+            province, city, area, address, companyCode, createClient);
 
         // 分配认证信息
         certificationAO.initialCertification(userId);
@@ -122,45 +119,6 @@ public class UserAOImpl implements IUserAO {
     public String doAddUser(XN805042Req req) {
         String userId = null;
         userId = doAddUserYLQ(req);
-        return userId;
-    }
-
-    private String doAddUserCaigo(XN805042Req req) {
-        String userId = null;
-        if (EUserKind.Customer.getCode().equals(req.getKind())) {
-            // 验证手机号
-            userBO.isMobileExist(req.getMobile(), req.getCompanyCode());
-            // 判断登录密码是否为空
-            if (StringUtils.isBlank(req.getLoginPwd())) {
-                req.setLoginPwd(RandomUtil.generate6());
-            }
-            userId = userBO.doAddUser(req);
-
-            // 发送短信
-            smsOutBO.sendSmsOut(req.getMobile(),
-                "尊敬的" + PhoneUtil.hideMobile(req.getMobile())
-                        + "用户，您已成功注册。初始化登录密码为" + req.getLoginPwd()
-                        + "，请及时登录网站更改密码。", "805042", req.getCompanyCode());
-        } else if (EUserKind.Merchant.getCode().equals(req.getKind())) {
-            // 验证手机号
-            userBO.isMobileExist(req.getMobile(), req.getCompanyCode());
-            // 判断登录密码是否为空
-            if (StringUtils.isBlank(req.getLoginPwd())) {
-                req.setLoginPwd(RandomUtil.generate6());
-            }
-            userId = userBO.doAddUser(req);
-
-            // 发送短信
-            smsOutBO.sendSmsOut(req.getMobile(),
-                "尊敬的" + PhoneUtil.hideMobile(req.getMobile())
-                        + "用户，您已成功注册。初始化登录密码为" + req.getLoginPwd()
-                        + "，请及时登录网站更改密码。", "805042", req.getCompanyCode());
-        } else if (EUserKind.Plat.getCode().equals(req.getKind())) {
-            // 验证登录名
-            userBO.isLoginNameExist(req.getLoginName(), req.getKind(),
-                req.getCompanyCode());
-            userId = userBO.doAddUser(req);
-        }
         return userId;
     }
 
@@ -617,7 +575,7 @@ public class UserAOImpl implements IUserAO {
     @Override
     public void doTwoIdentify(String userId, String idKind, String idNo,
             String realName) {
-        User user = userBO.getUser(userId);
+        // User user = userBO.getUser(userId);
         // dentifyBO.doTwoIdentify(user.getSystemCode(), user.getCompanyCode(),
         // userId, realName, idKind, idNo);
         // 更新用户表

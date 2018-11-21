@@ -79,6 +79,11 @@
 		,#{companyCode}
 		)
 	</insert>
+	
+	<delete id="delete_way" parameterType="way">
+		DELETE FROM tsys_way
+		WHERE code=#{code}
+	</delete>
 
 	<update id="update_way" parameterType="way">
 		UPDATE tsys_way

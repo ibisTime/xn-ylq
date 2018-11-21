@@ -36,7 +36,7 @@ public interface IUserAO {
     public XN805041Res doRegister(String mobile, String loginPwd,
             String userReferee, String userRefereeKind, String smsCaptcha,
             String province, String city, String area, String address,
-            String companyCode);
+            String companyCode, String createClient);
 
     // 代注册
     public String doAddUser(XN805042Req req);

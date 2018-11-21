@@ -28,8 +28,18 @@ public class XN805041Req {
     // 详细地址(选填)
     private String address;
 
+    private String createClient;
+
     // 公司编号(必填)
     private String companyCode;
+
+    public String getCreateClient() {
+        return createClient;
+    }
+
+    public void setCreateClient(String createClient) {
+        this.createClient = createClient;
+    }
 
     public String getMobile() {
         return mobile;

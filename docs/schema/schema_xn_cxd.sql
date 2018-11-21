@@ -515,7 +515,7 @@ CREATE TABLE `tjd_staging` (
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分期记录';
 
-DROP TABLE IF EXISTS `tjd_stage_rule`;
+DROP TABLE IF EXISTS `tjd_staging_rule`;
 CREATE TABLE `tjd_stage_rule` (
   `code` varchar(32) NOT NULL COMMENT '编号',
   `count` int(11) DEFAULT NULL COMMENT '分期期数',

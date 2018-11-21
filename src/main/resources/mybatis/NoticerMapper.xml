@@ -103,6 +103,11 @@
 		,remark = #{remark}
 		WHERE code = #{code}
 	</update>
+	
+	<delete id="delete_noticer" parameterType="noticer">
+		DELETE FROM tsys_noticer
+		WHERE code=#{code}
+	</delete>
 
 
 </mapper>

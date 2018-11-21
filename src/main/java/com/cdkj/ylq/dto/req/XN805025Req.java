@@ -14,9 +14,6 @@ public class XN805025Req {
     // 角色名称(必填)
     private String name;
 
-    // 角色等级(必填)
-    private String level;
-
     // 更新人(必填)
     private String updater;
 
@@ -37,14 +34,6 @@ public class XN805025Req {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
     }
 
     public String getUpdater() {

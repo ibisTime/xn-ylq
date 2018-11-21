@@ -217,7 +217,7 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
     @Override
     public String doRegister(String mobile, String loginPwd,
             String userReferee, String province, String city, String area,
-            String address, String companyCode) {
+            String address, String companyCode, String createClient) {
         String userId = OrderNoGenerater.generateM("U");
         User user = new User();
         user.setUserId(userId);
@@ -235,7 +235,7 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
         user.setAddress(address);
         Date date = new Date();
         user.setCreateDatetime(date);
-
+        user.setCreateClient(createClient);
         user.setCompanyCode(companyCode);
         userDAO.insert(user);
         return userId;

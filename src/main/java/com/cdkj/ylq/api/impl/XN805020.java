@@ -29,7 +29,6 @@ public class XN805020 extends AProcessor {
     public Object doBusiness() throws BizException {
         SYSRole condition = new SYSRole();
         condition.setName(req.getName());
-        condition.setLevel(req.getLevel());
         condition.setUpdater(req.getUpdater());
         condition.setCompanyCode(req.getCompanyCode());
         String column = req.getOrderColumn();

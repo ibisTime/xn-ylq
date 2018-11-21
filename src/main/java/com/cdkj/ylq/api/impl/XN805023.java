@@ -27,7 +27,6 @@ public class XN805023 extends AProcessor {
     public Object doBusiness() throws BizException {
         SYSRole data = new SYSRole();
         data.setName(req.getName());
-        data.setLevel(req.getLevel());
         data.setUpdater(req.getUpdater());
         data.setRemark(req.getRemark());
         data.setCompanyCode(req.getCompanyCode());
@@ -37,8 +36,8 @@ public class XN805023 extends AProcessor {
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN805023Req.class);
-        StringValidater.validateBlank(req.getName(), req.getLevel(),
-            req.getUpdater(), req.getCompanyCode());
+        StringValidater.validateBlank(req.getName(), req.getUpdater(),
+            req.getCompanyCode());
     }
 
 }

@@ -26,7 +26,8 @@ public class XN805041 extends AProcessor {
         return userAO.doRegister(req.getMobile(), req.getLoginPwd(),
             req.getUserReferee(), req.getUserRefereeKind(),
             req.getSmsCaptcha(), req.getProvince(), req.getCity(),
-            req.getArea(), req.getAddress(), req.getCompanyCode());
+            req.getArea(), req.getAddress(), req.getCompanyCode(),
+            req.getCreateClient());
     }
 
     @Override

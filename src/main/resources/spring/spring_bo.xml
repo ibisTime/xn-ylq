@@ -131,4 +131,8 @@
 	<bean id="noticerBO" class="com.cdkj.ylq.bo.impl.NoticerBOImpl">
 		<property name="paginableDAO" ref="noticerDAOImpl"/>
 	</bean>
+	
+	<bean id="stagingRuleBO" class="com.cdkj.ylq.bo.impl.StagingRuleBOImpl">
+		<property name="paginableDAO" ref="stagingRuleDAOImpl"/>
+	</bean>
 </beans>
