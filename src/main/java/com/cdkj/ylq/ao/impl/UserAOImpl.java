@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.ao.IUserAO;
+import com.cdkj.ylq.bo.ICompanyBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IUserBO;
@@ -66,6 +67,9 @@ public class UserAOImpl implements IUserAO {
     @Autowired
     private ISmsOutBO smsOutBO;
 
+    @Autowired
+    private ICompanyBO companyBO;
+
     /** 
      * @see com.std.user.ao.IUserAO#doCheckMobile(java.lang.String, java.lang.String, java.lang.String)
      */
@@ -84,14 +88,17 @@ public class UserAOImpl implements IUserAO {
         // 1、参数校验
         // 验证手机号是否存在
         userBO.isMobileExist(mobile, companyCode);
+        // 公司验证
+        companyBO.getCompany(companyCode);
         // 验证推荐人是否存在,并将手机号转化为用户编号
         String userRefereeId = userBO.getUserId(userReferee, companyCode);
         // 验证短信验证码
-        // smsOutBO.checkCaptcha(mobile, smsCaptcha, "805041", companyCode);
+        smsOutBO.checkCaptcha(mobile, smsCaptcha, "805041", companyCode);
         // 2、注册用户
         String userId = userBO.doRegister(mobile, loginPwd, userRefereeId,
             province, city, area, address, companyCode, createClient);
-
+        // 优惠券
+        // TODO
         // 分配认证信息
         certificationAO.initialCertification(userId);
 

@@ -18,6 +18,8 @@ public enum ECertiKey {
 
     , INFO_IDENTIFY_PIC("INFO_IDENTIFY_PIC", "身份证照片")
 
+    , INFO_ZHIFUBAO("INFO_ZHIFUBAO", "支付宝信息")
+
     , INFO_IDENTIFY_FACE("INFO_IDENTIFY_FACE", "人脸识别")
 
     , INFO_BASIC("INFO_BASIC", "基本信息")

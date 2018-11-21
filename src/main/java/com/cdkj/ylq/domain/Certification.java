@@ -38,6 +38,8 @@ public class Certification extends ABaseDO {
     // 关联申请单
     private String ref;
 
+    private String companyCode;
+
     // *** 查询字段 ****
 
     // 当前时间
@@ -113,6 +115,14 @@ public class Certification extends ABaseDO {
 
     public void setRef(String ref) {
         this.ref = ref;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
 }

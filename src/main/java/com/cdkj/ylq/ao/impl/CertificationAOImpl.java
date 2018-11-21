@@ -50,6 +50,7 @@ import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoTongDunPreLoan;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.InfoZfb;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.domain.Product;
@@ -108,11 +109,14 @@ public class CertificationAOImpl implements ICertificationAO {
 
     @Override
     public void submitIdentifyPic(String userId, String identifyPic,
-            String identifyPicReverse, String identifyPicHand) {
+            String identifyPicReverse, String identifyPicHand, String realName,
+            String idNo) {
         InfoIdentifyPic data = new InfoIdentifyPic();
         data.setIdentifyPic(identifyPic);
         data.setIdentifyPicReverse(identifyPicReverse);
         data.setIdentifyPicHand(identifyPicHand);
+        data.setRealName(realName);
+        data.setIdNo(idNo);
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_IDENTIFY_PIC);
         if (certification != null) {
@@ -884,12 +888,14 @@ public class CertificationAOImpl implements ICertificationAO {
     @Override
     public List<Certification> initialCertification(String userId) {
         List<Certification> certifications = new ArrayList<Certification>();
-
+        User user = userBO.getUser(userId);
+        String companyCode = user.getCompanyCode();
         // 实名认证信息
         Certification identify = new Certification();
         identify.setUserId(userId);
         identify.setCertiKey(ECertiKey.INFO_IDENTIFY.getCode());
         identify.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        identify.setCompanyCode(companyCode);
         certificationBO.saveCertification(identify);
         certifications.add(identify);
 
@@ -898,6 +904,7 @@ public class CertificationAOImpl implements ICertificationAO {
         identifyPic.setUserId(userId);
         identifyPic.setCertiKey(ECertiKey.INFO_IDENTIFY_PIC.getCode());
         identifyPic.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        identifyPic.setCompanyCode(companyCode);
         certificationBO.saveCertification(identifyPic);
         certifications.add(identifyPic);
 
@@ -906,6 +913,7 @@ public class CertificationAOImpl implements ICertificationAO {
         identifyFace.setUserId(userId);
         identifyFace.setCertiKey(ECertiKey.INFO_IDENTIFY_FACE.getCode());
         identifyFace.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        identifyFace.setCompanyCode(companyCode);
         certificationBO.saveCertification(identifyFace);
         certifications.add(identifyFace);
 
@@ -914,6 +922,7 @@ public class CertificationAOImpl implements ICertificationAO {
         certification1.setUserId(userId);
         certification1.setCertiKey(ECertiKey.INFO_BASIC.getCode());
         certification1.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        certification1.setCompanyCode(companyCode);
         certificationBO.saveCertification(certification1);
         certifications.add(certification1);
 
@@ -922,6 +931,7 @@ public class CertificationAOImpl implements ICertificationAO {
         certification2.setUserId(userId);
         certification2.setCertiKey(ECertiKey.INFO_OCCUPATION.getCode());
         certification2.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        certification2.setCompanyCode(companyCode);
         certificationBO.saveCertification(certification2);
         certifications.add(certification2);
 
@@ -930,6 +940,7 @@ public class CertificationAOImpl implements ICertificationAO {
         certification3.setUserId(userId);
         certification3.setCertiKey(ECertiKey.INFO_CONTACT.getCode());
         certification3.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        certification3.setCompanyCode(companyCode);
         certificationBO.saveCertification(certification3);
         certifications.add(certification3);
 
@@ -938,6 +949,7 @@ public class CertificationAOImpl implements ICertificationAO {
         antifraud.setUserId(userId);
         antifraud.setCertiKey(ECertiKey.INFO_ANTIFRAUD.getCode());
         antifraud.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        antifraud.setCompanyCode(companyCode);
         certificationBO.saveCertification(antifraud);
         certifications.add(antifraud);
 
@@ -946,6 +958,7 @@ public class CertificationAOImpl implements ICertificationAO {
         zmCredit.setUserId(userId);
         zmCredit.setCertiKey(ECertiKey.INFO_ZMCREDIT.getCode());
         zmCredit.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        zmCredit.setCompanyCode(companyCode);
         certificationBO.saveCertification(zmCredit);
         certifications.add(zmCredit);
 
@@ -954,6 +967,7 @@ public class CertificationAOImpl implements ICertificationAO {
         carrier.setUserId(userId);
         carrier.setCertiKey(ECertiKey.INFO_CARRIER.getCode());
         carrier.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        carrier.setCompanyCode(companyCode);
         certificationBO.saveCertification(carrier);
         certifications.add(carrier);
 
@@ -962,6 +976,7 @@ public class CertificationAOImpl implements ICertificationAO {
         addressBook.setUserId(userId);
         addressBook.setCertiKey(ECertiKey.INFO_ADDRESS_BOOK.getCode());
         addressBook.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        addressBook.setCompanyCode(companyCode);
         certificationBO.saveCertification(addressBook);
         certifications.add(addressBook);
 
@@ -970,6 +985,7 @@ public class CertificationAOImpl implements ICertificationAO {
         tongdunPreloan.setUserId(userId);
         tongdunPreloan.setCertiKey(ECertiKey.INFO_TONGDUN_PRELOAN.getCode());
         tongdunPreloan.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        tongdunPreloan.setCompanyCode(companyCode);
         certificationBO.saveCertification(tongdunPreloan);
         certifications.add(tongdunPreloan);
 
@@ -978,6 +994,7 @@ public class CertificationAOImpl implements ICertificationAO {
         creditAmount.setUserId(userId);
         creditAmount.setCertiKey(ECertiKey.INFO_AMOUNT.getCode());
         creditAmount.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        creditAmount.setCompanyCode(companyCode);
         InfoAmount infoAmount = new InfoAmount();
         infoAmount.setSxAmount(BigDecimal.ZERO);
         creditAmount.setResult(JsonUtil.Object2Json(infoAmount));
@@ -1130,6 +1147,42 @@ public class CertificationAOImpl implements ICertificationAO {
         }
 
         return responseData;
+    }
+
+    @Override
+    public void setCreditScore(String userId, BigDecimal creditScore) {
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_AMOUNT);
+        InfoAmount infoAmount = new InfoAmount();
+        infoAmount.setSxAmount(creditScore);
+        Integer config = sysConfigBO
+            .getIntegerValue(SysConstants.AMOUNT_VALID_DAYS);
+        if (certification != null) {
+            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(infoAmount));
+            certification.setCerDatetime(new Date());
+            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                DateUtil.getTodayStart(), config));
+            certificationBO.refreshCertification(certification);
+        }
+    }
+
+    @Override
+    public void submitZfb(String userId, String accountNumber, String password) {
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_ZHIFUBAO);
+        InfoZfb infoZfb = new InfoZfb();
+        infoZfb.setAccountNumber(accountNumber);
+        infoZfb.setPassword(password);
+        if (null != certification) {
+            certification.setCertiKey(ECertiKey.INFO_ZHIFUBAO.getCode());
+            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+            certification.setResult(JsonUtil.Object2Json(infoZfb));
+            certification.setCerDatetime(new Date());
+            certification.setRef("");
+            certificationBO.refreshCertification(certification);
+        }
+
     }
 
 }

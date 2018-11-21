@@ -24,6 +24,28 @@ public class InfoIdentifyPic {
     // 手持身份证
     private String identifyPicHand;
 
+    // 真名
+    private String realName;
+
+    // 身份证号
+    private String idNo;
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(String idNo) {
+        this.idNo = idNo;
+    }
+
     public String getIdentifyPic() {
         return identifyPic;
     }

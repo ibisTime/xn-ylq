@@ -7,16 +7,18 @@
 		<result column="type" property="type" />
 		<result column="apply_user" property="applyUser" />
 		<result column="apply_datetime" property="applyDatetime" />
-		<result column="product_code" property="productCode" />
+		<result column="apply_note" property="applyNote" />
 		<result column="status" property="status" />
-		<result column="sx_amount" property="sxAmount" />
+		<result column="credit_score" property="creditScore" />
 		<result column="approver" property="approver" />
 		<result column="approve_note" property="approveNote" />
 		<result column="approve_datetime" property="approveDatetime" />
+		<result column="cur_node" property="curNode" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
-		<result column="jdt_report" property="jdtReport" />
+		<result column="report" property="report" />
+		<result column="company_code" property="companyCode" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -26,8 +28,8 @@
 			<if test="type != null and type != '' ">
 				AND t.type = #{type}
 			</if>
-			<if test="productCode != null and productCode != '' ">
-				AND t.product_code = #{productCode}
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
 			</if>
 			<if test="status != null and status != '' ">
 				AND t.status = #{status}
@@ -49,7 +51,7 @@
 		,t.type
 		,t.apply_user
 		,t.apply_datetime
-		,t.product_code
+		,t.apply_note
 		,t.status
 		,t.sx_amount
 		,t.approver
@@ -60,7 +62,7 @@
 		,t.remark
 		,t.jdt_report
 		FROM
-		t_apply t
+		tjd_apply t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -71,7 +73,7 @@
 
 	<select id="select_apply_count" parameterType="apply"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM t_apply t
+		SELECT count(1) FROM tjd_apply t
 		<include refid="where_condition" />
 	</select>
 

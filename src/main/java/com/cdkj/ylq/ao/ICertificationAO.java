@@ -1,5 +1,6 @@
 package com.cdkj.ylq.ao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.cdkj.ylq.bo.base.Paginable;
@@ -23,7 +24,11 @@ public interface ICertificationAO {
 
     // 提交身份证照片
     public void submitIdentifyPic(String userId, String identifyPic,
-            String identifyPicReverse, String identifyPicHand);
+            String identifyPicReverse, String identifyPicHand, String realName,
+            String idNo);
+
+    // 支付宝账号密码
+    public void submitZfb(String userId, String accountNumber, String password);
 
     // 芝麻认证第一步，返回bizNo
     public XN798013Res doZhimaVerify(String userId, String idKind, String idNo,
@@ -104,5 +109,7 @@ public interface ICertificationAO {
     public void doCheckValidDaily();
 
     public List<Certification> initialCertification(String userId);
+
+    public void setCreditScore(String userId, BigDecimal creditScore);
 
 }

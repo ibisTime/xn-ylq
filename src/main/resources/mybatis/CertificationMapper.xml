@@ -11,6 +11,7 @@
 		<result column="cer_datetime" property="cerDatetime" />
 		<result column="valid_datetime" property="validDatetime" />
 		<result column="ref" property="ref" />
+		<result column="company_code" property="companyCode" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -28,6 +29,9 @@
 			</if>
 			<if test="result != null and result != '' ">
 				AND t.result = #{result}
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
 			</if>
 			<if test="ref != null and ref != '' ">
 				AND t.ref = #{ref}
@@ -47,6 +51,7 @@
 		,t.cer_datetime
 		,t.valid_datetime
 		,t.ref
+		,t.company_code
 		FROM
 		tjd_certification t
 		<include refid="where_condition" />
@@ -73,6 +78,7 @@
 		,cer_datetime
 		,valid_datetime
 		,ref
+		,company_code
 		)
 		VALUES(
 		#{userId}
@@ -82,6 +88,7 @@
 		,#{cerDatetime}
 		,#{validDatetime}
 		,#{ref}
+		,#{companyCode}
 		)
 	</insert>
 
