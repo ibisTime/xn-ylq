@@ -75,10 +75,6 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
     public void doApprove(BorrowOrder borrow, String status, String approver,
             String approveNote) {
         Date now = new Date();
-        borrow.setStatus(status);
-        borrow.setApprover(approver);
-        borrow.setApproveDatetime(now);
-        borrow.setApproveNote(approveNote);
         borrow.setUpdater(approver);
         borrow.setUpdateDatetime(now);
         borrow.setRemark("已完成审核");

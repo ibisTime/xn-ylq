@@ -57,7 +57,7 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Override
     public XN623020Res submitApply(String applyUser, String productCode) {
-        User user = userBO.getRemoteUser(applyUser);
+        User user = userBO.getUser(applyUser);
         if (EBoolean.YES.getCode().equals(user.getBlacklistFlag())) {
             throw new BizException("xn000000", "由于您逾期未还款，已被平台拉入黑名单，请联系平台进行处理！");
         }

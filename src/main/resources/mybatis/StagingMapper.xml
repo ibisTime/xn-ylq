@@ -112,7 +112,21 @@
 		,status = #{status}
 		,count = #{count}
 		,batch = #{batch}
-		,company_code = #{companyCode}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_repay" parameterType="staging">
+		UPDATE tjd_staging
+		SET
+		apply_user = #{applyUser}
+		,order_code = #{orderCode}
+		,pay_amount = #{payAmount}
+		,last_pay_date = #{lastPayDate}
+		,pay_datetime = #{payDatetime}
+		,pay_type = #{payType}
+		,pay_code = #{payCode}
+		,pay_group = #{payGroup}
+		,status = #{status}
 		WHERE code = #{code}
 	</update>
 

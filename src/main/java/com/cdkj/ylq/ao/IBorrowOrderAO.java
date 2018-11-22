@@ -24,11 +24,17 @@ public interface IBorrowOrderAO {
     public void resubmitLoan(String code);
 
     // 客户端：我要还款
-    public Object repay(String code, String payType);
+    public Object repay(String code);
 
     // 客户端：还款成功回调
     public void repaySuccess(String payGroup, String payType, String payCode,
             BigDecimal amount);
+
+    // 正常分期
+    public void nomalStaging(String ruleCode, String orderCode);
+
+    // 逾期分期
+    public void yqStaging(String ruleCode, String orderCode);
 
     // 管理端：催收（发送短信至紧急联系人和运营商联系人中排名前N的手机）
     public void cuishou(String code);

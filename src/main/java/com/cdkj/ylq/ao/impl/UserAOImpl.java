@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.ao.IUserAO;
+import com.cdkj.ylq.bo.IBankcardBO;
 import com.cdkj.ylq.bo.ICompanyBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
@@ -32,6 +33,7 @@ import com.cdkj.ylq.common.MD5Util;
 import com.cdkj.ylq.common.PhoneUtil;
 import com.cdkj.ylq.common.RandomUtil;
 import com.cdkj.ylq.core.StringValidater;
+import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN805042Req;
 import com.cdkj.ylq.dto.req.XN805043Req;
@@ -70,6 +72,9 @@ public class UserAOImpl implements IUserAO {
     @Autowired
     private ICompanyBO companyBO;
 
+    @Autowired
+    private IBankcardBO bankcardBO;
+
     /** 
      * @see com.std.user.ao.IUserAO#doCheckMobile(java.lang.String, java.lang.String, java.lang.String)
      */
@@ -92,8 +97,8 @@ public class UserAOImpl implements IUserAO {
         companyBO.getCompany(companyCode);
         // 验证推荐人是否存在,并将手机号转化为用户编号
         String userRefereeId = userBO.getUserId(userReferee, companyCode);
-        // 验证短信验证码
-        smsOutBO.checkCaptcha(mobile, smsCaptcha, "805041", companyCode);
+        // // 验证短信验证码
+        // smsOutBO.checkCaptcha(mobile, smsCaptcha, "805041", companyCode);
         // 2、注册用户
         String userId = userBO.doRegister(mobile, loginPwd, userRefereeId,
             province, city, area, address, companyCode, createClient);
@@ -689,6 +694,9 @@ public class UserAOImpl implements IUserAO {
         Paginable<User> page = userBO.getPaginable(start, limit, condition);
         List<User> list = page.getList();
         for (User user : list) {
+            // 信用分返回
+            user.setCreditScore(certificationAO.getMyCreditAmount(
+                user.getUserId()).getSxAmount());
             // 推荐人转义
             User userReferee = userBO.getUser(user.getUserReferee());
             if (userReferee != null) {
@@ -760,6 +768,19 @@ public class UserAOImpl implements IUserAO {
             user.setRefereeUser(refereeUser);
 
         }
+        // 信用分返回
+        user.setCreditScore(certificationAO.getMyCreditAmount(user.getUserId())
+            .getSxAmount());
+        // 银行卡信息
+        Bankcard condition = new Bankcard();
+        List<Bankcard> cards = bankcardBO.queryBankcardList(condition);
+        if (cards.isEmpty()) {
+            user.setBankcardFlag(EBoolean.NO.getCode());
+        } else {
+            user.setBankcardFlag(EBoolean.YES.getCode());
+        }
+        condition.setUserId(userId);
+
         return user;
     }
 

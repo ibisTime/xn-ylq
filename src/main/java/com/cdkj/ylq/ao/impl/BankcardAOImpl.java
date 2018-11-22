@@ -38,13 +38,13 @@ public class BankcardAOImpl implements IBankcardAO {
     @Override
     public String addBankcard(XN802020Req req) {
         // 验证短信验证码
-        if (StringUtils.isNotBlank(req.getSmsCaptcha())) {
-            smsOutBO.checkCaptcha(req.getBindMobile(), req.getSmsCaptcha(),
-                "802020", null);
-        }
+        // if (StringUtils.isNotBlank(req.getSmsCaptcha())) {
+        // smsOutBO.checkCaptcha(req.getBindMobile(), req.getSmsCaptcha(),
+        // "802020", null);
+        // }
 
         Bankcard data = new Bankcard();
-        data.setSystemCode(req.getSystemCode());
+        data.setSystemCode(req.getCompanyCode());
         data.setBankcardNumber(req.getBankcardNumber());
         data.setBankCode(req.getBankCode());
         data.setBankName(req.getBankName());

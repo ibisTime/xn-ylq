@@ -1,5 +1,7 @@
 package com.cdkj.ylq.dto.req;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * 绑定银行卡
  * @author: lei 
@@ -8,36 +10,46 @@ package com.cdkj.ylq.dto.req;
  */
 public class XN802020Req {
     // 系统编号（必填）
-    private String systemCode;
+    @NotBlank
+    private String companyCode;
 
     // 银行编号
     private String bankCode;
 
     // 卡号（必填）
+    @NotBlank
     private String bankcardNumber;
 
     // 银行名称（必填）
+    @NotBlank
     private String bankName;
 
     // 支行名称（必填）
+    @NotBlank
     private String subbranch;
 
-    // 绑定手机号（必填）
+    // 绑定手机号（必填
+    @NotBlank
     private String bindMobile;
 
     // 验证码（必填）
+    @NotBlank
     private String smsCaptcha;
 
     // 用户编号（必填）
+    @NotBlank
     private String userId;
 
     // 用户姓名（必填）
+    @NotBlank
     private String realName;
 
     // 类型（必填）
+    @NotBlank
     private String type;
 
     // 币种（必填）
+    @NotBlank
     private String currency;
 
     // 备注（选填）
@@ -51,12 +63,12 @@ public class XN802020Req {
         this.bankCode = bankCode;
     }
 
-    public String getSystemCode() {
-        return systemCode;
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public String getBankName() {

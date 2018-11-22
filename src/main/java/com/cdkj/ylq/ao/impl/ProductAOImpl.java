@@ -15,11 +15,9 @@ import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
-import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.core.StringValidater;
-import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
@@ -27,7 +25,6 @@ import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.dto.req.XN623000Req;
 import com.cdkj.ylq.dto.req.XN623001Req;
 import com.cdkj.ylq.enums.EBoolean;
-import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EProductLevel;
@@ -126,67 +123,67 @@ public class ProductAOImpl implements IProductAO {
             condition);
         List<Product> products = results.getList();
         // 未登录，只显示最低等级
-        if (StringUtils.isBlank(userId)) {
-            for (Product product : products) {
-                if (EProductLevel.ONE.getCode().equals(product.getLevel())) {
-                    product.setIsLocked(EBoolean.NO.getCode());
-                    product.setUserProductStatus(EUserProductStatus.TO_APPLY
-                        .getCode());
-                } else {
-                    product.setIsLocked(EBoolean.YES.getCode());
-                }
-            }
-        } else {
-            EProductLevel curProductLevel = borrowOrderBO
-                .getUserBorrowLevel(userId);
-            Apply apply = applyBO.getCurrentApply(userId);
-            if (apply != null) {
-                BorrowOrder borrow = borrowOrderBO.getCurrentBorrow(userId);
-                for (Product product : products) {
-                    if (apply.getProductCode().equals(product.getCode())) {
-                        product.setUserProductStatus(apply.getStatus());
-                        product.setApproveNote(apply.getApproveNote());
-                        if (borrow != null) {
-                            product.setBorrowCode(borrow.getCode());
-                            product.setBorrowInfo(borrow);
-                            if (EBorrowStatus.LOANING.getCode().equals(
-                                borrow.getStatus())) {
-                                product.setHkDays(DateUtil.daysBetweenDate(
-                                    new Date(), borrow.getHkDatetime()));
-                            } else if (EBorrowStatus.OVERDUE.getCode().equals(
-                                borrow.getStatus())) {
-                                product.setHkDays(DateUtil.daysBetweenDate(
-                                    borrow.getHkDatetime(), new Date()));
-                            }
-                        }
-                        product.setIsLocked(EBoolean.NO.getCode());
-                    } else {
-                        if (Integer.valueOf(curProductLevel.getCode()) >= Integer
-                            .valueOf((product.getLevel()))) {
-                            product
-                                .setUserProductStatus(EUserProductStatus.TO_APPLY
-                                    .getCode());
-                            product.setIsLocked(EBoolean.NO.getCode());
-                        } else {
-                            product.setIsLocked(EBoolean.YES.getCode());
-                        }
-                    }
-                }
+        // if (StringUtils.isBlank(userId)) {
+        for (Product product : products) {
+            if (EProductLevel.ONE.getCode().equals(product.getLevel())) {
+                product.setIsLocked(EBoolean.NO.getCode());
+                product.setUserProductStatus(EUserProductStatus.TO_APPLY
+                    .getCode());
             } else {
-                for (Product product : products) {
-                    if (Integer.valueOf(curProductLevel.getCode()) >= Integer
-                        .valueOf((product.getLevel()))) {
-                        product
-                            .setUserProductStatus(EUserProductStatus.TO_APPLY
-                                .getCode());
-                        product.setIsLocked(EBoolean.NO.getCode());
-                    } else {
-                        product.setIsLocked(EBoolean.YES.getCode());
-                    }
-                }
+                product.setIsLocked(EBoolean.YES.getCode());
             }
-
         }
+        // } else {
+        // EProductLevel curProductLevel = borrowOrderBO
+        // .getUserBorrowLevel(userId);
+        // Apply apply = applyBO.getCurrentApply(userId);
+        // if (apply != null) {
+        // BorrowOrder borrow = borrowOrderBO.getCurrentBorrow(userId);
+        // for (Product product : products) {
+        // if (apply.getProductCode().equals(product.getCode())) {
+        // product.setUserProductStatus(apply.getStatus());
+        // product.setApproveNote(apply.getApproveNote());
+        // if (borrow != null) {
+        // product.setBorrowCode(borrow.getCode());
+        // product.setBorrowInfo(borrow);
+        // if (EBorrowStatus.LOANING.getCode().equals(
+        // borrow.getStatus())) {
+        // product.setHkDays(DateUtil.daysBetweenDate(
+        // new Date(), borrow.getHkDatetime()));
+        // } else if (EBorrowStatus.OVERDUE.getCode().equals(
+        // borrow.getStatus())) {
+        // product.setHkDays(DateUtil.daysBetweenDate(
+        // borrow.getHkDatetime(), new Date()));
+        // }
+        // }
+        // product.setIsLocked(EBoolean.NO.getCode());
+        // } else {
+        // if (Integer.valueOf(curProductLevel.getCode()) >= Integer
+        // .valueOf((product.getLevel()))) {
+        // product
+        // .setUserProductStatus(EUserProductStatus.TO_APPLY
+        // .getCode());
+        // product.setIsLocked(EBoolean.NO.getCode());
+        // } else {
+        // product.setIsLocked(EBoolean.YES.getCode());
+        // }
+        // }
+        // }
+        // } else {
+        // for (Product product : products) {
+        // if (Integer.valueOf(curProductLevel.getCode()) >= Integer
+        // .valueOf((product.getLevel()))) {
+        // product
+        // .setUserProductStatus(EUserProductStatus.TO_APPLY
+        // .getCode());
+        // product.setIsLocked(EBoolean.NO.getCode());
+        // } else {
+        // product.setIsLocked(EBoolean.YES.getCode());
+        // }
+        // }
+        // }
+        //
+        // }
 
         return results;
     }

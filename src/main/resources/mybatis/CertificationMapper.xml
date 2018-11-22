@@ -70,7 +70,7 @@
 
 	<insert id="insert_certification" parameterType="certification">
 		INSERT INTO
-		t_certification(
+		tjd_certification(
 		user_id
 		,certi_key
 		,flag
@@ -93,7 +93,7 @@
 	</insert>
 
 	<update id="update_certification" parameterType="certification">
-		UPDATE t_certification
+		UPDATE tjd_certification
 		SET
 		flag = #{flag}
 		,result = #{result}
@@ -104,7 +104,7 @@
 	</update>
 	
 	<update id="update_flag" parameterType="certification">
-		UPDATE t_certification
+		UPDATE tjd_certification
 		SET
 		flag = #{flag}
 		WHERE id = #{id}

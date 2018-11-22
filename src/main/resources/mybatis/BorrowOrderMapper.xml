@@ -30,13 +30,11 @@
 		<result column="pay_group" property="payGroup" />
 		<result column="pay_type" property="payType" />
 		<result column="loan_type" property="loanType" />
+		<result column="stage_count" property="stageCount" />
 		<result column="stage_rule_code" property="stageRuleCode" />
 		<result column="status" property="status" />
 		<result column="is_archive" property="isArchive" />
 		<result column="is_coupon" property="isCoupon" />
-		<result column="approver" property="approver" />
-		<result column="approve_datetime" property="approveDatetime" />
-		<result column="approve_note" property="approveNote" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
@@ -135,13 +133,11 @@
 		,t.pay_group
 		,t.pay_type
 		,t.loan_type
+		,t.stage_count
 		,t.stage_rule_code
 		,t.status
 		,t.is_archive
 		,t.is_coupon
-		,t.approver
-		,t.approve_datetime
-		,t.approve_note
 		,t.updater
 		,t.update_datetime
 		,t.remark
@@ -185,6 +181,7 @@
 		,rate2
 		,total_amount
 		,status
+		,stage_count
 		,updater
 		,update_datetime
 		,remark
@@ -211,6 +208,7 @@
 		,#{rate2}
 		,#{totalAmount}
 		,#{status}
+		,#{stageCount}
 		,#{updater}
 		,#{updateDatetime}
 		,#{remark}
@@ -222,9 +220,6 @@
 		UPDATE tjd_borrow_order
 		SET
 		status = #{status}
-		,approver=#{qpprover}
-		,approve_datetime=#{approveDatetime}
-		,approve_note=#{approveNote}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
@@ -336,6 +331,18 @@
 		UPDATE tjd_borrow_order
 		SET
 		remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_stage" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		total_amount=#{totalAmount}
+		,stage_count = #{stageCount}
+		,stage_rule_code=#{stageRuleCode}
+		,updater=#{updater}
+		,update_datetime=#{updateDatetime}
+		,remark=#{remark}
 		WHERE code = #{code}
 	</update>
 

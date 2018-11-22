@@ -63,8 +63,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         }
         if (ERepayApplyType.REPAY.getCode().equals(repayApply.getType())) {
             doApproveRepay(repayApply, approveResult, approver, approveNote);
-        } else if (ERepayApplyType.RENEWAL.getCode().equals(
-            repayApply.getType())) {
+        } else if (ERepayApplyType.STAGE.getCode().equals(repayApply.getType())) {
         }
     }
 

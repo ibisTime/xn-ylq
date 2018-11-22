@@ -8,6 +8,7 @@
  */
 package com.cdkj.ylq.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.cdkj.ylq.dao.base.ABaseDO;
@@ -142,6 +143,16 @@ public class User extends ABaseDO {
     private String loginNameForQuery;
 
     private String mobileForQuery;
+
+    private BigDecimal creditScore;
+
+    public BigDecimal getCreditScore() {
+        return creditScore;
+    }
+
+    public void setCreditScore(BigDecimal creditScore) {
+        this.creditScore = creditScore;
+    }
 
     public String getMobileForQuery() {
         return mobileForQuery;

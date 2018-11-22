@@ -25,6 +25,10 @@
 			<if test="code != null and code != '' ">
 				AND t.code = #{code}
 			</if>
+			
+			<if test="curNode != null and curNode != '' ">
+				AND t.cur_node = #{curNode}
+			</if>
 			<if test="type != null and type != '' ">
 				AND t.type = #{type}
 			</if>
@@ -79,7 +83,7 @@
 
 	<insert id="insert_apply" parameterType="apply">
 		INSERT INTO
-		t_apply(
+		tjd_apply(
 		code
 		,type
 		,apply_user
@@ -114,7 +118,7 @@
 	</insert>
 
 	<update id="update_approve" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
 		,sx_amount = #{sxAmount}
@@ -128,14 +132,14 @@
 	</update>
 	
 	<update id="update_toDoApprove" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
 		WHERE code = #{code}
 	</update>
 	
 	<update id="update_cancel" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
 		,updater = #{updater}
@@ -145,14 +149,14 @@
 	</update>
 	
 	<update id="update_status" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
 		WHERE code = #{code}
 	</update>
 	
 	<update id="update_resubmit" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
 		,type = #{type}
@@ -160,6 +164,13 @@
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
 		WHERE code = #{code}
+	</update>
+	
+	<update id="update_node" parameterType="apply">
+		UPDATE tjd_apply
+		SET
+		cur_node=#{curNode}
+		WHERE code=#{code}
 	</update>
 
 

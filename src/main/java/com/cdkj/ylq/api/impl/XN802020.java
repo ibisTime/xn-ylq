@@ -3,7 +3,7 @@ package com.cdkj.ylq.api.impl;
 import com.cdkj.ylq.ao.IBankcardAO;
 import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
-import com.cdkj.ylq.core.StringValidater;
+import com.cdkj.ylq.core.ObjValidater;
 import com.cdkj.ylq.dto.req.XN802020Req;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.ParaException;
@@ -29,9 +29,7 @@ public class XN802020 extends AProcessor {
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN802020Req.class);
-        StringValidater.validateBlank(req.getSystemCode(),
-            req.getBankcardNumber(), req.getBankCode(), req.getBankName(),
-            req.getUserId(), req.getRealName(), req.getType());
+        ObjValidater.validateReq(req);
 
     }
 }

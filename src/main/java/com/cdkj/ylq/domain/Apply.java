@@ -33,6 +33,9 @@ public class Apply extends ABaseDO {
     // 状态
     private String status;
 
+    // 当前节点
+    private String curNode;
+
     // 授信额度
     private Long sxAmount;
 
@@ -56,6 +59,9 @@ public class Apply extends ABaseDO {
 
     // 借贷通报告
     private String jdtReport;
+
+    // 公司编号
+    private String companyCode;
 
     // *** 辅助字段 ****
 
@@ -127,6 +133,14 @@ public class Apply extends ABaseDO {
         return approveNote;
     }
 
+    public String getCurNode() {
+        return curNode;
+    }
+
+    public void setCurNode(String curNode) {
+        this.curNode = curNode;
+    }
+
     public void setApproveNote(String approveNote) {
         this.approveNote = approveNote;
     }
@@ -177,6 +191,14 @@ public class Apply extends ABaseDO {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public Product getProduct() {
