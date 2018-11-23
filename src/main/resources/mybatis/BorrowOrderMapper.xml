@@ -177,11 +177,14 @@
 		,gl_amount
 		,fw_amount
 		,yh_amount
+		,yq_days
 		,rate1
 		,rate2
 		,total_amount
 		,status
 		,stage_count
+		,is_archive
+		,is_coupon
 		,updater
 		,update_datetime
 		,remark
@@ -204,11 +207,13 @@
 		,#{glAmount}
 		,#{fwAmount}
 		,#{yhAmount}
+		,#{yqDays}
 		,#{rate1}
 		,#{rate2}
 		,#{totalAmount}
 		,#{status}
 		,#{stageCount}
+		,#{isArchive}
 		,#{updater}
 		,#{updateDatetime}
 		,#{remark}
@@ -331,6 +336,13 @@
 		UPDATE tjd_borrow_order
 		SET
 		remark = #{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_coupon" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		is_coupon = #{isCoupon}
 		WHERE code = #{code}
 	</update>
 	

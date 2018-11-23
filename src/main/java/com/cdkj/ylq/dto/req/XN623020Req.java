@@ -19,7 +19,7 @@ public class XN623020Req {
     private String applyUser;
 
     // 产品编号（必填）
-    private String productCode;
+    private String companyCode;
 
     // 备注（选填）
     private String remark;
@@ -32,12 +32,12 @@ public class XN623020Req {
         this.applyUser = applyUser;
     }
 
-    public String getProductCode() {
-        return productCode;
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public String getRemark() {

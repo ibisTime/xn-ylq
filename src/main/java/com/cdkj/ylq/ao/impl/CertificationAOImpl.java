@@ -8,16 +8,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.zip.GZIPInputStream;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +32,8 @@ import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.SysConstants;
-import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Apply;
-import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
@@ -53,7 +47,6 @@ import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.InfoZfb;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
-import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
@@ -69,8 +62,6 @@ import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EIDKind;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.http.HttpUtil;
-import com.cdkj.ylq.tongdun.PreloanQueryResponse;
-import com.cdkj.ylq.tongdun.PreloanSubmitResponse;
 import com.cdkj.ylq.tongdun.RiskServicePreloan;
 import com.cdkj.ylq.tongdun.YunYingShang;
 
@@ -111,6 +102,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public void submitIdentifyPic(String userId, String identifyPic,
             String identifyPicReverse, String identifyPicHand, String realName,
             String idNo) {
+
         InfoIdentifyPic data = new InfoIdentifyPic();
         data.setIdentifyPic(identifyPic);
         data.setIdentifyPicReverse(identifyPicReverse);
@@ -125,6 +117,13 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
+        }
+        if (certificationBO.isCompleteCerti(userId)) {
+            Apply apply = applyBO.getInCertApply(userId);
+            if (apply != null) {
+                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                applyBO.refreshStatus(apply);
+            }
         }
     }
 
@@ -162,7 +161,7 @@ public class CertificationAOImpl implements ICertificationAO {
 
     @Override
     public void submitIdentifyInfo(String userId) {
-        userBO.getRemoteUser(userId);
+        userBO.getUser(userId);
         XN623050Res certiInfo = getCertiInfo(userId);
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyPicFlag())) {
             throw new BizException("xn623000", "请先在上传身份证");
@@ -198,6 +197,13 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         }
+        if (certificationBO.isCompleteCerti(req.getUserId())) {
+            Apply apply = applyBO.getInCertApply(req.getUserId());
+            if (apply != null) {
+                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                applyBO.refreshStatus(apply);
+            }
+        }
     }
 
     @Override
@@ -212,6 +218,13 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         }
+        if (certificationBO.isCompleteCerti(req.getUserId())) {
+            Apply apply = applyBO.getInCertApply(req.getUserId());
+            if (apply != null) {
+                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                applyBO.refreshStatus(apply);
+            }
+        }
     }
 
     @Override
@@ -225,6 +238,13 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setCerDatetime(new Date());
             certification.setRef("");
             certificationBO.refreshCertification(certification);
+        }
+        if (certificationBO.isCompleteCerti(req.getUserId())) {
+            Apply apply = applyBO.getInCertApply(req.getUserId());
+            if (apply != null) {
+                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                applyBO.refreshStatus(apply);
+            }
         }
     }
 
@@ -536,12 +556,13 @@ public class CertificationAOImpl implements ICertificationAO {
         }
         if (ECertificationStatus.TO_CERTI.getCode().equals(
             certification.getFlag())) {
-            InfoTongDunPreLoan infoTongDunPreLoan = doTongDunPreLoanSubmitAndQuery(
-                userId, certification);
-            if (infoTongDunPreLoan != null) {
-                res.setPersonInfo(infoTongDunPreLoan.getPersonInfo());
-                res.setTdData(infoTongDunPreLoan.getTdData());
-            }
+            // InfoTongDunPreLoan infoTongDunPreLoan =
+            // doTongDunPreLoanSubmitAndQuery(
+            // userId, certification);
+            // if (infoTongDunPreLoan != null) {
+            // res.setPersonInfo(infoTongDunPreLoan.getPersonInfo());
+            // res.setTdData(infoTongDunPreLoan.getTdData());
+            // }
         } else {
             res = JsonUtil.json2Bean(certification.getResult(),
                 XN623054Res.class);
@@ -561,141 +582,147 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
             certificationBO.saveCertification(certification);
         }
-        doTongDunPreLoanSubmitAndQuery(userId, certification);
+        // doTongDunPreLoanSubmitAndQuery(userId, certification);
     }
 
-    private InfoTongDunPreLoan doTongDunPreLoanSubmitAndQuery(String userId,
-            Certification certification) {
-
-        InfoTongDunPreLoan infoTongDunPreLoan = null;
-
-        Map<String, Object> params = new HashMap<String, Object>();
-        // 个人信息
-        User user = userBO.getRemoteUser(userId);
-        // 银行卡信息
-        Bankcard bankcard = accountBO.getBankcard(userId);
-        // 申请信息
-        Apply apply = applyBO.getCurrentApply(userId);
-        if (apply == null) {
-            throw new BizException("xn623054", "该用户暂时没有贷前申请");
-        }
-        // 申请产品信信息
-        Product product = productBO.getProduct(apply.getProductCode());
-
-        if (apply != null && product != null) {
-            params.put("loan_amount",
-                CalculationUtil.diviUp(product.getAmount().longValue())); // 申请借款金额
-            params.put("loan_term", product.getDuration()); // 申请借款期限
-            params.put("loan_term_unit", "DAY"); // 期限单位
-            params.put("loan_date", DateUtil.dateToStr(
-                apply.getApplyDatetime(), DateUtil.FRONT_DATE_FORMAT_STRING)); // 申请借款日期
-            params.put("purpose", "消费"); // 借款用途
-        }
-        if (bankcard != null) {
-            params.put("card_number", bankcard.getBankcardNumber()); // 银行卡
-        }
-        if (user != null) {
-            params.put("mobile", user.getMobile()); // 手机号
-            params.put("name", user.getRealName()); // 姓名
-            params.put("id_number", user.getIdNo()); // 身份证号
-            params.put("apply_province", user.getProvince()); // 进件省份
-            params.put("apply_city", user.getCity()); // 进件城市
-            if (StringUtils.isBlank(user.getRealName())) {
-                params.put("is_id_checked", "false"); // 是否通过实名认证
-            } else {
-                params.put("is_id_checked", "true"); // 是否通过实名认证
-            }
-        }
-
-        XN623050Res xn623050Res = getCertiInfo(userId);
-        if (!xn623050Res.getInfoBasicFlag().equals(
-            ECertificationStatus.TO_CERTI.getCode())) {
-            params.put("diploma", riskServicePreloan.getDiploma(xn623050Res
-                .getInfoBasic().getEducation())); // 学历
-            params.put("marriage", riskServicePreloan.getMarriage(xn623050Res
-                .getInfoBasic().getMarriage())); // 婚姻
-            params.put("home_address", xn623050Res.getInfoBasic()
-                .getProvinceCity() + xn623050Res.getInfoBasic().getAddress()); // 家庭地址
-            params.put("qq", xn623050Res.getInfoBasic().getQq()); // qq
-            params.put("email", xn623050Res.getInfoBasic().getEmail()); // 电子邮箱
-        }
-        if (!xn623050Res.getInfoOccupationFlag().equals(
-            ECertificationStatus.TO_CERTI.getCode())) {
-            params.put("career", ""); // 职业
-            params.put("annual_income", riskServicePreloan
-                .getAnnualIncome(xn623050Res.getInfoOccupation().getIncome())); // 年收入
-            params.put("company_name", xn623050Res.getInfoOccupation()
-                .getCompany()); // 工作单位
-            params.put("company_address", xn623050Res.getInfoOccupation()
-                .getProvinceCity()
-                    + xn623050Res.getInfoOccupation().getAddress()); // 单位地址
-            params
-                .put("work_phone", xn623050Res.getInfoOccupation().getPhone()); // 单位座机
-        }
-        if (!xn623050Res.getInfoContactFlag().equals(
-            ECertificationStatus.TO_CERTI.getCode())) {
-            InfoContact infoContact = xn623050Res.getInfoContact();
-            String contact1_relation = "";
-            if ("0".equals(infoContact.getFamilyRelation())) {
-                contact1_relation = "father";
-            } else if ("1".equals(infoContact.getFamilyRelation())) {
-                contact1_relation = "spouse";
-            } else if ("2".equals(infoContact.getFamilyRelation())) {
-                contact1_relation = "other_relative";
-            }
-            String contact2_relation = "";
-            if ("0".equals(infoContact.getSocietyRelation())) {
-                contact1_relation = "others";
-            } else if ("1".equals(infoContact.getSocietyRelation())) {
-                contact1_relation = "coworker";
-            } else if ("2".equals(infoContact.getSocietyRelation())) {
-                contact1_relation = "friend";
-            }
-            params.put("contact1_relation", contact1_relation); // 第一联系人社会关系
-            params.put("concatc1_name", infoContact.getFamilyName()); // 第一联系人姓名
-            params.put("contact1_mobile", infoContact.getFamilyMobile()); // 第一联系人手机号
-            params.put("contact2_relation", contact2_relation);
-            params.put("contact2_name", infoContact.getSocietyName());
-            params.put("contact2_mobile", infoContact.getSocietyMobile());
-        }
-
-        PreloanSubmitResponse riskPreloanResponse = riskServicePreloan
-            .apply(params);
-        System.out.println(riskPreloanResponse.toString());
-        if (riskPreloanResponse.getSuccess()) {
-            // 等待一定时间后，可调用query接口查询结果。
-            // 时间建议：5s后可调用
-            try {
-                Thread.sleep(5 * 1000);
-            } catch (Exception e) {
-                //
-            }
-            // query接口获取结果
-            PreloanQueryResponse response = riskServicePreloan
-                .query(riskPreloanResponse.getReport_id());
-            infoTongDunPreLoan = new InfoTongDunPreLoan();
-            infoTongDunPreLoan.setTdData(JSONObject.fromObject(response)
-                .toString());
-            infoTongDunPreLoan.setPersonInfo(JSONObject.fromObject(params)
-                .toString());
-            // 其他处理 。。。
-            Integer config = sysConfigBO
-                .getIntegerValue(SysConstants.TONGDUN_PRELOAN_VALID_DAYS);
-            if (certification != null) {
-                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(JsonUtil
-                    .Object2Json(infoTongDunPreLoan));
-                certification.setCerDatetime(new Date());
-                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(), config));
-                certification.setRef("");
-                certificationBO.refreshCertification(certification);
-            }
-        } else {
-            throw new BizException("xn623000", "同盾贷前审核信息提交发送错误，请过一段时间重新尝试！");
-        }
-        return infoTongDunPreLoan;
-    }
+    //
+    // private InfoTongDunPreLoan doTongDunPreLoanSubmitAndQuery(String userId,
+    // Certification certification) {
+    // //
+    // // InfoTongDunPreLoan infoTongDunPreLoan = null;
+    // //
+    // // Map<String, Object> params = new HashMap<String, Object>();
+    // // // 个人信息
+    // // User user = userBO.getRemoteUser(userId);
+    // // // 银行卡信息
+    // // Bankcard bankcard = accountBO.getBankcard(userId);
+    // // // 申请信息
+    // // Apply apply = applyBO.getCurrentApply(userId);
+    // // if (apply == null) {
+    // // throw new BizException("xn623054", "该用户暂时没有贷前申请");
+    // // }
+    // // // 申请产品信信息
+    // // Product product = productBO.getProduct(apply.getProductCode());
+    // //
+    // // if (apply != null && product != null) {
+    // // params.put("loan_amount",
+    // // CalculationUtil.diviUp(product.getAmount().longValue())); // 申请借款金额
+    // // params.put("loan_term", product.getDuration()); // 申请借款期限
+    // // params.put("loan_term_unit", "DAY"); // 期限单位
+    // // params.put("loan_date", DateUtil.dateToStr(
+    // // apply.getApplyDatetime(), DateUtil.FRONT_DATE_FORMAT_STRING)); //
+    // // 申请借款日期
+    // // params.put("purpose", "消费"); // 借款用途
+    // // }
+    // // if (bankcard != null) {
+    // // params.put("card_number", bankcard.getBankcardNumber()); // 银行卡
+    // // }
+    // // if (user != null) {
+    // // params.put("mobile", user.getMobile()); // 手机号
+    // // params.put("name", user.getRealName()); // 姓名
+    // // params.put("id_number", user.getIdNo()); // 身份证号
+    // // params.put("apply_province", user.getProvince()); // 进件省份
+    // // params.put("apply_city", user.getCity()); // 进件城市
+    // // if (StringUtils.isBlank(user.getRealName())) {
+    // // params.put("is_id_checked", "false"); // 是否通过实名认证
+    // // } else {
+    // // params.put("is_id_checked", "true"); // 是否通过实名认证
+    // // }
+    // // }
+    // //
+    // // XN623050Res xn623050Res = getCertiInfo(userId);
+    // // if (!xn623050Res.getInfoBasicFlag().equals(
+    // // ECertificationStatus.TO_CERTI.getCode())) {
+    // // params.put("diploma", riskServicePreloan.getDiploma(xn623050Res
+    // // .getInfoBasic().getEducation())); // 学历
+    // // params.put("marriage", riskServicePreloan.getMarriage(xn623050Res
+    // // .getInfoBasic().getMarriage())); // 婚姻
+    // // params.put("home_address", xn623050Res.getInfoBasic()
+    // // .getProvinceCity() + xn623050Res.getInfoBasic().getAddress()); //
+    // // 家庭地址
+    // // params.put("qq", xn623050Res.getInfoBasic().getQq()); // qq
+    // // params.put("email", xn623050Res.getInfoBasic().getEmail()); // 电子邮箱
+    // // }
+    // // if (!xn623050Res.getInfoOccupationFlag().equals(
+    // // ECertificationStatus.TO_CERTI.getCode())) {
+    // // params.put("career", ""); // 职业
+    // // params.put("annual_income", riskServicePreloan
+    // // .getAnnualIncome(xn623050Res.getInfoOccupation().getIncome())); //
+    // // 年收入
+    // // params.put("company_name", xn623050Res.getInfoOccupation()
+    // // .getCompany()); // 工作单位
+    // // params.put("company_address", xn623050Res.getInfoOccupation()
+    // // .getProvinceCity()
+    // // + xn623050Res.getInfoOccupation().getAddress()); // 单位地址
+    // // params
+    // // .put("work_phone", xn623050Res.getInfoOccupation().getPhone()); //
+    // // 单位座机
+    // // }
+    // // if (!xn623050Res.getInfoContactFlag().equals(
+    // // ECertificationStatus.TO_CERTI.getCode())) {
+    // // InfoContact infoContact = xn623050Res.getInfoContact();
+    // // String contact1_relation = "";
+    // // if ("0".equals(infoContact.getFamilyRelation())) {
+    // // contact1_relation = "father";
+    // // } else if ("1".equals(infoContact.getFamilyRelation())) {
+    // // contact1_relation = "spouse";
+    // // } else if ("2".equals(infoContact.getFamilyRelation())) {
+    // // contact1_relation = "other_relative";
+    // // }
+    // // String contact2_relation = "";
+    // // if ("0".equals(infoContact.getSocietyRelation())) {
+    // // contact1_relation = "others";
+    // // } else if ("1".equals(infoContact.getSocietyRelation())) {
+    // // contact1_relation = "coworker";
+    // // } else if ("2".equals(infoContact.getSocietyRelation())) {
+    // // contact1_relation = "friend";
+    // // }
+    // // params.put("contact1_relation", contact1_relation); // 第一联系人社会关系
+    // // params.put("concatc1_name", infoContact.getFamilyName()); // 第一联系人姓名
+    // // params.put("contact1_mobile", infoContact.getFamilyMobile()); //
+    // // 第一联系人手机号
+    // // params.put("contact2_relation", contact2_relation);
+    // // params.put("contact2_name", infoContact.getSocietyName());
+    // // params.put("contact2_mobile", infoContact.getSocietyMobile());
+    // // }
+    // //
+    // // PreloanSubmitResponse riskPreloanResponse = riskServicePreloan
+    // // .apply(params);
+    // // System.out.println(riskPreloanResponse.toString());
+    // // if (riskPreloanResponse.getSuccess()) {
+    // // // 等待一定时间后，可调用query接口查询结果。
+    // // // 时间建议：5s后可调用
+    // // try {
+    // // Thread.sleep(5 * 1000);
+    // // } catch (Exception e) {
+    // // //
+    // // }
+    // // // query接口获取结果
+    // // PreloanQueryResponse response = riskServicePreloan
+    // // .query(riskPreloanResponse.getReport_id());
+    // // infoTongDunPreLoan = new InfoTongDunPreLoan();
+    // // infoTongDunPreLoan.setTdData(JSONObject.fromObject(response)
+    // // .toString());
+    // // infoTongDunPreLoan.setPersonInfo(JSONObject.fromObject(params)
+    // // .toString());
+    // // // 其他处理 。。。
+    // // Integer config = sysConfigBO
+    // // .getIntegerValue(SysConstants.TONGDUN_PRELOAN_VALID_DAYS);
+    // // if (certification != null) {
+    // // certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+    // // certification.setResult(JsonUtil
+    // // .Object2Json(infoTongDunPreLoan));
+    // // certification.setCerDatetime(new Date());
+    // // certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+    // // DateUtil.getTodayStart(), config));
+    // // certification.setRef("");
+    // // certificationBO.refreshCertification(certification);
+    // // }
+    // // } else {
+    // // throw new BizException("xn623000", "同盾贷前审核信息提交发送错误，请过一段时间重新尝试！");
+    // // }
+    // return infoTongDunPreLoan;
+    // }
 
     @Override
     public Paginable<Certification> queryCertificationPage(int start,
@@ -720,7 +747,7 @@ public class CertificationAOImpl implements ICertificationAO {
         // 组装认证结果信息
         XN623050Res res = transferCertiInfo(certifications);
         res.setUserId(userId);
-        res.setUserInfo(userBO.getRemoteUser(userId));
+        res.setUserInfo(userBO.getUser(userId));
         return res;
     }
 
@@ -1012,7 +1039,7 @@ public class CertificationAOImpl implements ICertificationAO {
         data.setProvinceCity(req.getProvinceCity());
         data.setAddress(req.getAddress());
         data.setLiveTime(req.getLiveTime());
-        data.setQq(req.getQq());
+        data.setWechat(req.getWechat());
         data.setEmail(req.getEmail());
         return data;
     }
@@ -1182,7 +1209,13 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         }
-
+        if (certificationBO.isCompleteCerti(userId)) {
+            Apply apply = applyBO.getInCertApply(userId);
+            if (apply != null) {
+                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                applyBO.refreshStatus(apply);
+            }
+        }
     }
 
 }

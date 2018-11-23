@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.IAccountBO;
+import com.cdkj.ylq.bo.IBankcardBO;
 import com.cdkj.ylq.bo.IJourBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
@@ -28,7 +29,6 @@ import com.cdkj.ylq.dto.req.XN002500Req;
 import com.cdkj.ylq.dto.req.XN002501Req;
 import com.cdkj.ylq.dto.req.XN002510Req;
 import com.cdkj.ylq.dto.req.XN802012Req;
-import com.cdkj.ylq.dto.req.XN802016Req;
 import com.cdkj.ylq.dto.req.XN802165Req;
 import com.cdkj.ylq.dto.req.XN802166Req;
 import com.cdkj.ylq.dto.req.XN802167Req;
@@ -64,6 +64,9 @@ public class AccountBOImpl extends PaginableBOImpl<Account> implements
 
     @Autowired
     private IJourBO jourBO;
+
+    @Autowired
+    private IBankcardBO bankcardBO;
 
     @Autowired
     private ISYSConfigBO sysConfigBO;
@@ -506,15 +509,9 @@ public class AccountBOImpl extends PaginableBOImpl<Account> implements
     @Override
     public Bankcard getBankcard(String userId) {
         Bankcard bankcard = null;
-        XN802016Req req = new XN802016Req();
-        req.setUserId(userId);
-        req.setSystemCode(ESystemCode.YLQ.getCode());
-        String jsonStr = BizConnecter.getBizData("802016",
-            JsonUtils.object2Json(req));
-        Gson gson = new Gson();
-        List<Bankcard> list = gson.fromJson(jsonStr,
-            new TypeToken<List<Bankcard>>() {
-            }.getType());
+        Bankcard condition = new Bankcard();
+        condition.setUserId(userId);
+        List<Bankcard> list = bankcardBO.queryBankcardList(condition);
         if (CollectionUtils.isNotEmpty(list)) {
             bankcard = list.get(0);
         }

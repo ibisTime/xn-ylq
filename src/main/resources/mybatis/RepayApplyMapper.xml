@@ -57,7 +57,7 @@
 		,t.approve_datetime
 		,t.status
 		FROM
-		t_repay_apply t
+		tjd_repay_apply t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -68,13 +68,13 @@
 
 	<select id="select_repayApply_count" parameterType="repayApply"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM t_repay_apply t
+		SELECT count(1) FROM tjd_repay_apply t
 		<include refid="where_condition" />
 	</select>
 
 	<insert id="insert_repayApply" parameterType="repayApply">
 		INSERT INTO
-		t_repay_apply(
+		tjd_repay_apply(
 		code
 		,ref_no
 		,type
@@ -97,7 +97,7 @@
 	</insert>
 
 	<update id="update_approve" parameterType="repayApply">
-		UPDATE t_repay_apply
+		UPDATE tjd_repay_apply
 		SET
 		status = #{status}
 		,approver = #{approver}

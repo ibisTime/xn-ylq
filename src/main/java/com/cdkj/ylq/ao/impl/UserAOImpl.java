@@ -24,9 +24,11 @@ import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.ao.IUserAO;
 import com.cdkj.ylq.bo.IBankcardBO;
 import com.cdkj.ylq.bo.ICompanyBO;
+import com.cdkj.ylq.bo.ICouponBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IUserBO;
+import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.MD5Util;
@@ -34,6 +36,7 @@ import com.cdkj.ylq.common.PhoneUtil;
 import com.cdkj.ylq.common.RandomUtil;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Bankcard;
+import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN805042Req;
 import com.cdkj.ylq.dto.req.XN805043Req;
@@ -42,6 +45,8 @@ import com.cdkj.ylq.dto.req.XN805095Req;
 import com.cdkj.ylq.dto.res.XN001400Res;
 import com.cdkj.ylq.dto.res.XN805041Res;
 import com.cdkj.ylq.enums.EBoolean;
+import com.cdkj.ylq.enums.ECouponStatus;
+import com.cdkj.ylq.enums.ECouponType;
 import com.cdkj.ylq.enums.EIDKind;
 import com.cdkj.ylq.enums.EUser;
 import com.cdkj.ylq.enums.EUserKind;
@@ -75,6 +80,12 @@ public class UserAOImpl implements IUserAO {
     @Autowired
     private IBankcardBO bankcardBO;
 
+    @Autowired
+    private IUserCouponBO userCouponBO;
+
+    @Autowired
+    private ICouponBO couponBO;
+
     /** 
      * @see com.std.user.ao.IUserAO#doCheckMobile(java.lang.String, java.lang.String, java.lang.String)
      */
@@ -93,17 +104,36 @@ public class UserAOImpl implements IUserAO {
         // 1、参数校验
         // 验证手机号是否存在
         userBO.isMobileExist(mobile, companyCode);
+
         // 公司验证
         companyBO.getCompany(companyCode);
         // 验证推荐人是否存在,并将手机号转化为用户编号
         String userRefereeId = userBO.getUserId(userReferee, companyCode);
-        // // 验证短信验证码
-        // smsOutBO.checkCaptcha(mobile, smsCaptcha, "805041", companyCode);
+        // 优惠券
+        List<User> users = userBO.getNoCouponList(userRefereeId, companyCode);
+        Coupon rule = couponBO.getCoupon(ECouponType.RECOMMENT, companyCode);
+
+        String isCoupon = EBoolean.NO.getCode();
+
+        if (rule.getCondition() - users.size() == 1
+                && ECouponStatus.OPEN.getCode().equals(rule.getStatus())) {
+            isCoupon = EBoolean.YES.getCode();
+            // 发优惠券
+            userCouponBO.saveUserCoupon(userRefereeId, rule, "程序自动发放",
+                "推荐注册人数达到" + rule.getCondition().toString() + "系统自动发放优惠券",
+                rule.getCompanyCode());
+            // 更新被推荐用户优惠券状态
+            for (User user : users) {
+                userBO.refreshIsCoupon(user);
+            }
+        }
+
+        // 验证短信验证码
+        smsOutBO.checkCaptcha(mobile, smsCaptcha, "805041", companyCode);
         // 2、注册用户
         String userId = userBO.doRegister(mobile, loginPwd, userRefereeId,
-            province, city, area, address, companyCode, createClient);
-        // 优惠券
-        // TODO
+            province, city, area, address, companyCode, createClient, isCoupon);
+
         // 分配认证信息
         certificationAO.initialCertification(userId);
 

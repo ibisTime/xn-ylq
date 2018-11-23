@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IBorrowOrderAO;
-import com.cdkj.ylq.ao.ICouponConditionAO;
 import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowOrderBO;
@@ -46,7 +45,6 @@ import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.UserCoupon;
 import com.cdkj.ylq.dto.res.BooleanRes;
 import com.cdkj.ylq.dto.res.XN623091Res;
-import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.ECertiKey;
@@ -105,9 +103,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
     private IOverdueBO overdueBO;
 
     @Autowired
-    private ICouponConditionAO couponConditionAO;
-
-    @Autowired
     private IContractBO contractBO;
 
     @Override
@@ -150,8 +145,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 userCoupon.getStatus())) {
                 throw new BizException("623070", "优惠券已不可使用");
             }
-            if (infoAmount.getSxAmount().longValue() < userCoupon
-                .getStartAmount()) {
+            if (infoAmount.getSxAmount().compareTo(userCoupon.getStartAmount()) < 0) {
                 throw new BizException("623070", "不可使用该优惠券");
             }
             yhAmount = userCoupon.getAmount();
@@ -193,11 +187,13 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setYhAmount(yhAmount);
         borrow.setRate1(product.getYqRate1());
         borrow.setRate2(product.getYqRate2());
-
+        borrow.setYqDays(0);
         borrow.setTotalAmount(totalAmount);
         borrow.setStatus(EBorrowStatus.TO_APPROVE.getCode());
         borrow.setUpdater(userId);
         borrow.setStageCount(0);
+        borrow.setIsArchive(EBoolean.NO.getCode());
+        borrow.setIsCoupon(EBoolean.NO.getCode());
         borrow.setUpdateDatetime(now);
         borrow.setRemark("新申请借款");
         borrow.setCompanyCode(user.getCompanyCode());
@@ -220,7 +216,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             limit, condition);
         List<BorrowOrder> borrowList = results.getList();
         for (BorrowOrder borrow : borrowList) {
-            borrow.setUser(userBO.getRemoteUser(borrow.getApplyUser()));
+            borrow.setUser(userBO.getUser(borrow.getApplyUser()));
             borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
             if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                     || EBorrowStatus.OVERDUE.getCode().equals(
@@ -255,7 +251,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
     public BorrowOrder getBorrow(String code) {
         BorrowOrder borrow = borrowOrderBO.getBorrow(code);
         borrow.setUser(userBO.getUser(borrow.getApplyUser()));
-        // borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
+        borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
         if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
                 || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())) {
             borrow.setRemainDays(DateUtil.daysBetween(DateUtil.getTodayStart(),
@@ -315,11 +311,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         String smsContent = null;
         if (EBoolean.YES.getCode().equals(result)) {
             borrowOrderBO.loanSuccess(borrow, updater, remark);
-            // 更新申请单状态
-            // applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-            // EApplyStatus.LOANING);
             // 生成电子合同
-            User user = userBO.getRemoteUser(borrow.getApplyUser());
+            User user = userBO.getUser(borrow.getApplyUser());
             Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
             // contractBO.generate(user, bankcard, borrow);
             // 首次借款成功推荐人发放优惠券
@@ -328,7 +321,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             condition.setStatus(EBorrowStatus.REPAY.getCode());
             if (borrowOrderBO.getTotalCount(condition) == 1) {
                 if (StringUtils.isNotBlank(user.getUserReferee())) {
-                    couponConditionAO.recommendSuccess(user.getUserReferee());
+                    // couponConditionAO.recommendSuccess(user.getUserReferee());
                 }
             }
             // 短信通知
@@ -337,9 +330,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                     + "借款已经成功放款，合同编号为" + borrow.getCode() + "，详情查看请登录APP。";
         } else {
             borrowOrderBO.loanFailure(borrow, updater, remark);
-            // 更新申请单状态
-            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-                EApplyStatus.LOAN_NO);
             smsContent = "很抱歉，您的"
                     + CalculationUtil.diviUp(borrow.getAmount().longValue())
                     + "借款(合同编号:" + borrow.getCode() + ")放款失败，原因为：" + remark
@@ -418,13 +408,10 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             }
             // 更新订单支付金额
             borrowOrderBO.repaySuccess(borrow, amount, payCode, payType);
-            // 更新申请单状态
-            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-                EApplyStatus.REPAY);
             // 额度重置为0
             certificationBO.resetSxAmount(borrow.getApplyUser());
             // 借还成功发放优惠券
-            couponConditionAO.repaySuccess(borrow.getApplyUser());
+            // couponConditionAO.repaySuccess(borrow.getApplyUser());
             // 发送短信
             smsOutBO
                 .sentContent(
@@ -446,7 +433,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             throw new BizException("xn6230000", "订单不处于逾期状态，不允许催收");
         }
         String userId = borrow.getApplyUser();
-        User user = userBO.getRemoteUser(userId);
+        User user = userBO.getUser(userId);
 
         StringBuffer sb = new StringBuffer(user.getIdNo());
         String contentTemplate = sysConfigBO
@@ -503,9 +490,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 borrow.getYqDays(), borrow.getYqlxAmount(),
                 EOverdueDeal.BAD.getCode());
         }
-        // 更新申请单状态
-        applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-            EApplyStatus.BAD);
         // 额度重置为0
         certificationBO.resetSxAmount(borrow.getApplyUser());
         // 将用户拉入黑名单
@@ -564,10 +548,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setUpdateDatetime(new Date());
         borrow.setRemark("已逾期");
         borrowOrderBO.overdue(borrow);
-
-        // 更新申请单状态
-        applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-            EApplyStatus.OVERDUE);
 
     }
 

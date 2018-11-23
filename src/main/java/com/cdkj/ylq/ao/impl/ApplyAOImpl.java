@@ -23,11 +23,9 @@ import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
-import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.res.XN623020Res;
 import com.cdkj.ylq.enums.EApplyStatus;
-import com.cdkj.ylq.enums.EApplyType;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
@@ -56,9 +54,10 @@ public class ApplyAOImpl implements IApplyAO {
     private ISYSConfigBO sysConfigBO;
 
     @Override
-    public XN623020Res submitApply(String applyUser, String productCode) {
+    public XN623020Res submitApply(String applyUser, String companyCode,
+            String remark) {
         User user = userBO.getUser(applyUser);
-        if (EBoolean.YES.getCode().equals(user.getBlacklistFlag())) {
+        if (EBoolean.YES.getCode().equals(user.getIsBlackList())) {
             throw new BizException("xn000000", "由于您逾期未还款，已被平台拉入黑名单，请联系平台进行处理！");
         }
         XN623020Res res = new XN623020Res();
@@ -69,16 +68,12 @@ public class ApplyAOImpl implements IApplyAO {
 
         Apply apply = applyBO.getCurrentApply(applyUser);
         if (apply != null) {
-            if (!apply.getProductCode().equals(productCode)) {
-                throw new BizException("xn623020", "您已经有一个申请");
-            }
             if (EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())) {
                 if (DateUtil.daysBetween(apply.getApplyDatetime(), new Date()) < 7) {
                     throw new BizException("xn623020",
                         "您在一周内已经有一个申请被驳回，请在一周后重新尝试。");
                 }
                 apply.setStatus(status);
-                apply.setType(EApplyType.JZB.getCode());
                 apply.setUpdater(applyUser);
                 apply.setUpdateDatetime(new Date());
                 apply.setRemark("重新提交申请");
@@ -93,14 +88,13 @@ public class ApplyAOImpl implements IApplyAO {
             String code = OrderNoGenerater.generateM(EGeneratePrefix.APPLY
                 .getCode());
             data.setCode(code);
-            data.setType(EApplyType.JZB.getCode());
             data.setApplyUser(applyUser);
             data.setApplyDatetime(new Date());
-            data.setProductCode(productCode);
             data.setStatus(status);
             data.setUpdater(applyUser);
             data.setUpdateDatetime(new Date());
             data.setRemark("新申请");
+            data.setCompanyCode(companyCode);
             applyBO.saveApply(data);
             res.setCode(code);
             res.setStatus(status);
@@ -133,10 +127,6 @@ public class ApplyAOImpl implements IApplyAO {
         String content = null;
         if (EBoolean.YES.getCode().equals(approveResult)) {
             status = EApplyStatus.APPROVE_YES.getCode();
-            Product product = productBO.getProduct(apply.getProductCode());
-            if (sxAmount.compareTo(product.getAmount()) > 0) {
-                throw new BizException("xn623021", "授信金融不能大于申请产品的金额");
-            }
             // 落地授信信息
             InfoAmount infoAmount = new InfoAmount();
             infoAmount.setSxAmount(sxAmount);
@@ -150,7 +140,7 @@ public class ApplyAOImpl implements IApplyAO {
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                     DateUtil.getTodayStart(), config));
-                certification.setRef(apply.getProductCode());
+                certification.setRef(apply.getCode());
                 certificationBO.refreshCertification(certification);
             }
             content = "恭喜您，您的借款申请已经通过审核，请登录APP进行自助借款操作。";
@@ -160,8 +150,7 @@ public class ApplyAOImpl implements IApplyAO {
             content = "很抱歉，您的借款申请未通过平台审核，失败原因为：" + approveNote
                     + "，请保证填写的资料为本人真实资料,如需再次申请，请7天后再登陆APP提交审核。";
         }
-        applyBO.doApprove(apply, status, sxAmount.longValue(), approver,
-            approveNote);
+        applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
         smsOutBO.sentContent(apply.getApplyUser(), content);
     }
 
@@ -171,8 +160,7 @@ public class ApplyAOImpl implements IApplyAO {
             .getPaginable(start, limit, condition);
         List<Apply> applyList = results.getList();
         for (Apply apply : applyList) {
-            apply.setUser(userBO.getRemoteUser(apply.getApplyUser()));
-            apply.setProduct(productBO.getProduct(apply.getProductCode()));
+            apply.setUser(userBO.getUser(apply.getApplyUser()));
         }
         return results;
     }
@@ -180,8 +168,7 @@ public class ApplyAOImpl implements IApplyAO {
     @Override
     public Apply getApply(String code) {
         Apply apply = applyBO.getApply(code);
-        apply.setUser(userBO.getRemoteUser(apply.getApplyUser()));
-        apply.setProduct(productBO.getProduct(apply.getProductCode()));
+        apply.setUser(userBO.getUser(apply.getApplyUser()));
         return apply;
     }
 

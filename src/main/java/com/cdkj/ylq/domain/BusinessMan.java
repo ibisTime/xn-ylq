@@ -79,6 +79,17 @@ public class BusinessMan extends ABaseDO {
     // 名字模糊查询
     private String realNameForQuery;
 
+    // 账户
+    private Account account;
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
     public Date getCreateDatetimeStart() {
         return createDatetimeStart;
     }

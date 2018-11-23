@@ -57,14 +57,16 @@
 		,t.apply_datetime
 		,t.apply_note
 		,t.status
-		,t.sx_amount
+		,t.credit_score
 		,t.approver
 		,t.approve_note
 		,t.approve_datetime
+		,t.cur_node
 		,t.updater
 		,t.update_datetime
 		,t.remark
-		,t.jdt_report
+		,t.report
+		,t.company_code
 		FROM
 		tjd_apply t
 		<include refid="where_condition" />
@@ -90,14 +92,16 @@
 		,apply_datetime
 		,product_code
 		,status
-		,sx_amount
+		,credit_score
 		,approver
 		,approve_note
 		,approve_datetime
+		,cur_node
 		,updater
 		,update_datetime
 		,remark
-		,jdt_report
+		,report
+		,company_code
 		)
 		VALUES(
 		#{code}
@@ -106,14 +110,16 @@
 		,#{applyDatetime}
 		,#{productCode}
 		,#{status}
-		,#{sxAmount}
+		,#{creditScore}
 		,#{approver}
 		,#{approveNote}
 		,#{approveDatetime}
+		,#{curNode}
 		,#{updater}
 		,#{updateDatetime}
 		,#{remark}
-		,#{jdtReport}
+		,#{report}
+		,#{companyCode}
 		)
 	</insert>
 
@@ -121,7 +127,7 @@
 		UPDATE tjd_apply
 		SET
 		status = #{status}
-		,sx_amount = #{sxAmount}
+		,credit_score = #{creditScore}
 		,approver = #{approver}
 		,approve_note = #{approveNote}
 		,approve_datetime = #{approveDatetime}

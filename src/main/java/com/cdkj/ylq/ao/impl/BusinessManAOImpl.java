@@ -43,17 +43,31 @@ public class BusinessManAOImpl implements IBusinessManAO {
     @Override
     public Paginable<BusinessMan> queryBusinessManPage(int start, int limit,
             BusinessMan condition) {
-        return businessManBO.getPaginable(start, limit, condition);
+        Paginable<BusinessMan> page = businessManBO.getPaginable(start, limit,
+            condition);
+        for (BusinessMan man : page.getList()) {
+            man.setAccount(accountBO.getAccountByUser(man.getUserId(),
+                ECurrency.CNY.getCode()));
+        }
+        return page;
     }
 
     @Override
     public List<BusinessMan> queryBusinessManList(BusinessMan condition) {
-        return businessManBO.queryBusinessManList(condition);
+        List<BusinessMan> list = businessManBO.queryBusinessManList(condition);
+        for (BusinessMan businessMan : list) {
+            businessMan.setAccount(accountBO.getAccountByUser(
+                businessMan.getUserId(), ECurrency.CNY.getCode()));
+        }
+        return list;
     }
 
     @Override
     public BusinessMan getBusinessMan(String userId) {
-        return businessManBO.getBusinessMan(userId);
+        BusinessMan man = businessManBO.getBusinessMan(userId);
+        man.setAccount(accountBO.getAccountByUser(man.getUserId(),
+            ECurrency.CNY.getCode()));
+        return man;
     }
 
     @Override

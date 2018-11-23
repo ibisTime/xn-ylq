@@ -15,6 +15,7 @@ import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IBorrowOrderDAO;
 import com.cdkj.ylq.domain.BorrowOrder;
+import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.ELoanType;
@@ -75,6 +76,7 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
     public void doApprove(BorrowOrder borrow, String status, String approver,
             String approveNote) {
         Date now = new Date();
+        borrow.setStatus(status);
         borrow.setUpdater(approver);
         borrow.setUpdateDatetime(now);
         borrow.setRemark("已完成审核");
@@ -284,6 +286,21 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
             count = borrowOrderDAO.updateRemark(data);
         }
         return count;
+    }
+
+    @Override
+    public void refreshIsCoupon(BorrowOrder borrow) {
+        borrow.setIsCoupon(EBoolean.YES.getCode());
+        borrowOrderDAO.updateCoupon(borrow);
+    }
+
+    @Override
+    public List<BorrowOrder> getCouponOrders(String userId) {
+        BorrowOrder condition = new BorrowOrder();
+        condition.setApplyUser(userId);
+        condition.setStatus(EBorrowStatus.REPAY.getCode());
+        List<BorrowOrder> lists = borrowOrderDAO.selectList(condition);
+        return lists;
     }
 
 }

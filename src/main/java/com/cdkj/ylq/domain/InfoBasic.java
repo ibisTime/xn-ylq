@@ -33,7 +33,7 @@ public class InfoBasic {
     private String liveTime;
 
     // QQ
-    private String qq;
+    private String wechat;
 
     // 邮箱
     private String email;
@@ -86,12 +86,12 @@ public class InfoBasic {
         this.liveTime = liveTime;
     }
 
-    public String getQq() {
-        return qq;
+    public String getWechat() {
+        return wechat;
     }
 
-    public void setQq(String qq) {
-        this.qq = qq;
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
     }
 
     public String getEmail() {

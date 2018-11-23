@@ -37,7 +37,7 @@ public class XN623040Req {
     private String liveTime;
 
     // QQ（必填）
-    private String qq;
+    private String wechat;
 
     // 邮箱（必填）
     private String email;
@@ -98,12 +98,12 @@ public class XN623040Req {
         this.liveTime = liveTime;
     }
 
-    public String getQq() {
-        return qq;
+    public String getWechat() {
+        return wechat;
     }
 
-    public void setQq(String qq) {
-        this.qq = qq;
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
     }
 
     public String getEmail() {

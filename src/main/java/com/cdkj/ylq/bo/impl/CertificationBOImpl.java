@@ -126,18 +126,22 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
     public boolean isCompleteCerti(String userId) {
         boolean flag = false;
         Certification identify = getCertification(userId,
-            ECertiKey.INFO_IDENTIFY);
-        Certification antifraud = getCertification(userId,
-            ECertiKey.INFO_ANTIFRAUD);
-        Certification zmcredit = getCertification(userId,
-            ECertiKey.INFO_ZMCREDIT);
+            ECertiKey.INFO_IDENTIFY_PIC);
+        Certification zhifubao = getCertification(userId,
+            ECertiKey.INFO_ZHIFUBAO);
+        Certification basic = getCertification(userId, ECertiKey.INFO_BASIC);
         Certification carrier = getCertification(userId, ECertiKey.INFO_CARRIER);
-        if (identify != null && antifraud != null && zmcredit != null
-                && carrier != null) {
+        Certification occupation = getCertification(userId,
+            ECertiKey.INFO_OCCUPATION);
+        Certification contact = getCertification(userId, ECertiKey.INFO_CONTACT);
+        if (identify != null && zhifubao != null && basic != null
+                && carrier != null && contact != null && occupation != null) {
             if (EBoolean.YES.getCode().equals(identify.getFlag())
-                    && EBoolean.YES.getCode().equals(antifraud.getFlag())
-                    && EBoolean.YES.getCode().equals(zmcredit.getFlag())
-                    && EBoolean.YES.getCode().equals(carrier.getFlag())) {
+                    && EBoolean.YES.getCode().equals(zhifubao.getFlag())
+                    && EBoolean.YES.getCode().equals(basic.getFlag())
+                    // && EBoolean.YES.getCode().equals(carrier.getFlag())
+                    && EBoolean.YES.getCode().equals(occupation.getFlag())
+                    && EBoolean.YES.getCode().equals(contact.getFlag())) {
                 flag = true;
             }
         }

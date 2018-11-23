@@ -211,7 +211,8 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
     @Override
     public String doRegister(String mobile, String loginPwd,
             String userReferee, String province, String city, String area,
-            String address, String companyCode, String createClient) {
+            String address, String companyCode, String createClient,
+            String isCoupon) {
         String userId = OrderNoGenerater.generateM("U");
         User user = new User();
         user.setUserId(userId);
@@ -230,6 +231,9 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
         Date date = new Date();
         user.setCreateDatetime(date);
         user.setCreateClient(createClient);
+        user.setIsBlackList(EBoolean.NO.getCode());
+        user.setIsWhiteList(EBoolean.NO.getCode());
+        user.setIsCoupon(isCoupon);
         user.setCompanyCode(companyCode);
         userDAO.insert(user);
         return userId;
@@ -803,4 +807,18 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
         userDAO.updateWhiteList(data);
     }
 
+    @Override
+    public void refreshIsCoupon(User data) {
+        data.setIsCoupon(EBoolean.YES.getCode());
+        userDAO.updateIsCoupon(data);
+    }
+
+    @Override
+    public List<User> getNoCouponList(String referee, String companyCode) {
+        User condition = new User();
+        condition.setUserReferee(referee);
+        condition.setIsCoupon(EBoolean.NO.getCode());
+        List<User> dataList = userDAO.selectList(condition);
+        return dataList;
+    }
 }

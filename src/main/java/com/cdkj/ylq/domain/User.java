@@ -114,6 +114,9 @@ public class User extends ABaseDO {
     // 是否白名单
     private String isWhiteList;
 
+    // 是否计入优惠券
+    private String isCoupon;
+
     // 公司编号
     private String companyCode;
 
@@ -208,6 +211,14 @@ public class User extends ABaseDO {
 
     public void setLoginName(String loginName) {
         this.loginName = loginName;
+    }
+
+    public String getIsCoupon() {
+        return isCoupon;
+    }
+
+    public void setIsCoupon(String isCoupon) {
+        this.isCoupon = isCoupon;
     }
 
     public String getMobile() {

@@ -476,7 +476,7 @@ DROP TABLE IF EXISTS `tjd_repay_apply`;
 CREATE TABLE `tjd_repay_apply` (
   `code` varchar(32) NOT NULL COMMENT '编号',
   `type` varchar(4) DEFAULT NULL COMMENT '类型',
-  `order_code` varchar(32) DEFAULT NULL COMMENT '借款订单号',
+  `ref_no` varchar(32) DEFAULT NULL COMMENT '关联订单号',
   `amount` decimal(64,0) DEFAULT NULL COMMENT '还款金额',
   `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
   `apply_datetime` datetime DEFAULT NULL COMMENT '申请时间',

@@ -12,10 +12,11 @@
 		<result column="valid_days" property="validDays" />
 		<result column="invalid_datetime" property="invalidDatetime" />
 		<result column="status" property="status" />
-		<result column="borrow_code" property="borrowCode" />
+		<result column="order_code" property="borrowCode" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
+		<result column="company_code" property="companyCode" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -27,6 +28,9 @@
 			</if>
 			<if test="type != null and type != '' ">
 				AND t.type = #{type}
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
 			</if>
 			<choose>
 				 <when test="status == '12'">
@@ -40,7 +44,7 @@
 				 </otherwise>
 			</choose>
 			<if test="borrowCode != null and borrowCode != '' ">
-				AND t.borrow_code = #{borrowCode}
+				AND t.order_code = #{borrowCode}
 			</if>
 			<if test="productAmount != null and productAmount != '' ">
 				<![CDATA[AND t.start_amount <= #{productAmount}]]>
@@ -61,12 +65,13 @@
 		,t.valid_days
 		,t.invalid_datetime
 		,t.status
-		,t.borrow_code
+		,t.order_code
 		,t.updater
 		,t.update_datetime
 		,t.remark
+		,t.company_code
 		FROM
-		t_user_coupon t
+		tjd_coupon t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -77,13 +82,13 @@
 
 	<select id="select_userCoupon_count" parameterType="userCoupon"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM t_user_coupon t
+		SELECT count(1) FROM tjd_coupon t
 		<include refid="where_condition" />
 	</select>
 
 	<insert id="insert_userCoupon" parameterType="userCoupon">
 		INSERT INTO
-		t_user_coupon(
+		tjd_coupon(
 		user_id
 		,get_datetime
 		,type
@@ -95,6 +100,7 @@
 		,updater
 		,update_datetime
 		,remark
+		,company_code
 		)
 		VALUES(
 		#{userId}
@@ -108,27 +114,28 @@
 		,#{updater}
 		,#{updateDatetime}
 		,#{remark}
+		,#{companyCode}
 		)
 	</insert>
 
 	<update id="update_use" parameterType="userCoupon">
-		UPDATE t_user_coupon
+		UPDATE tjd_coupon
 		SET
 		status = #{status}
-		,borrow_code = #{borrowCode}
+		,order_code = #{borrowCode}
 		WHERE id = #{id}
 	</update>
 	
 	<update id="update_useCancel" parameterType="userCoupon">
-		UPDATE t_user_coupon
+		UPDATE tjd_coupon
 		SET
 		status = #{status}
-		,borrow_code = NULL
-		WHERE borrow_code = #{borrowCode}
+		,order_code = NULL
+		WHERE order_code = #{borrowCode}
 	</update>
 	
 	<update id="update_recycle" parameterType="userCoupon">
-		UPDATE t_user_coupon
+		UPDATE tjd_coupon
 		SET
 		status = #{status}
 		,updater = #{updater}
@@ -138,7 +145,7 @@
 	</update>
 
     <update id="update_invalid" parameterType="userCoupon">
-		UPDATE t_user_coupon
+		UPDATE tjd_coupon
 		SET
 		status = #{status}
 		WHERE id = #{id}
