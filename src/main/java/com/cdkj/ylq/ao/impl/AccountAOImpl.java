@@ -8,15 +8,12 @@
  */
 package com.cdkj.ylq.ao.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IAccountAO;
 import com.cdkj.ylq.bo.IAccountBO;
@@ -29,8 +26,6 @@ import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.SYSUser;
 import com.cdkj.ylq.enums.EBorrowStatus;
-import com.cdkj.ylq.enums.EJourDirection;
-import com.cdkj.ylq.enums.ESystemAccount;
 import com.cdkj.ylq.exception.BizException;
 
 /** 
@@ -78,32 +73,9 @@ public class AccountAOImpl implements IAccountAO {
     }
 
     @Override
-    @Transactional
     public List<Account> getAccountByUserId(String userId, String currency) {
-        List<Account> list = accountBO.queryAccountList(userId, currency);
 
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (Account account : list) {
-                // 历史总发放/回收额(积分/碳泡泡)
-                if (ESystemAccount.SYS_ACOUNT_JF_POOL.getCode().equals(
-                    account.getAccountNumber())
-                        || ESystemAccount.SYS_ACOUNT_TPP_POOL.getCode().equals(
-                            account.getAccountNumber())) {
-
-                    BigDecimal historyInAmount = jourBO
-                        .getHistoryAmount(account.getAccountNumber(),
-                            EJourDirection.IN.getCode());
-                    BigDecimal historyOutAmount = jourBO.getHistoryAmount(
-                        account.getAccountNumber(),
-                        EJourDirection.OUT.getCode());
-
-                    account.setHistoryInAmount(historyInAmount);
-                    account.setHistoryOutAmount(historyOutAmount);
-                }
-            }
-        }
-
-        return list;
+        return accountBO.queryAccountList(userId, currency);
     }
 
     private void initAccount(Account account) {

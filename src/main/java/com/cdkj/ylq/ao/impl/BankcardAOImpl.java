@@ -14,7 +14,6 @@ import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.dto.req.XN802020Req;
 import com.cdkj.ylq.dto.req.XN802022Req;
-import com.cdkj.ylq.dto.req.XN802023Req;
 import com.cdkj.ylq.exception.BizException;
 
 /**
@@ -88,37 +87,6 @@ public class BankcardAOImpl implements IBankcardAO {
         } else {
             data.setRealName(req.getRealName());
         }
-        data.setBankcardNumber(req.getBankcardNumber());
-        data.setBankCode(req.getBankCode());
-        data.setBankName(req.getBankName());
-        data.setSubbranch(req.getSubbranch());
-        data.setBindMobile(req.getBindMobile());
-        data.setStatus(req.getStatus());
-        data.setRemark(req.getRemark());
-        bankcardBO.refreshBankcard(data);
-    }
-
-    @Override
-    public void editBankcard(XN802023Req req) {
-        Bankcard bankcard = bankcardBO.getBankcard(req.getCode());
-        userBO.checkTradePwd(bankcard.getUserId(), req.getTradePwd());
-        if (!bankcard.getBankcardNumber().equals(req.getBankcardNumber())) { // 有修改就去判断是否唯一
-            List<Bankcard> list = bankcardBO.queryBankcardList(
-                bankcard.getUserId(), bankcard.getSystemCode());
-            for (Bankcard card : list) {
-                if (req.getBankcardNumber().equals(card.getBankcardNumber())) {
-                    throw new BizException("xn0000", "银行卡号已存在");
-                }
-            }
-        }
-        Bankcard data = new Bankcard();
-        // 户名有传就修改，不传不修改
-        if (StringUtils.isBlank(req.getRealName())) {
-            data.setRealName(bankcard.getRealName());
-        } else {
-            data.setRealName(req.getRealName());
-        }
-        data.setCode(req.getCode());
         data.setBankcardNumber(req.getBankcardNumber());
         data.setBankCode(req.getBankCode());
         data.setBankName(req.getBankName());

@@ -18,7 +18,6 @@ import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowOrderBO;
 import com.cdkj.ylq.bo.ICertificationBO;
-import com.cdkj.ylq.bo.IContractBO;
 import com.cdkj.ylq.bo.IOverdueBO;
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.IRepayApplyBO;
@@ -101,9 +100,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
 
     @Autowired
     private IOverdueBO overdueBO;
-
-    @Autowired
-    private IContractBO contractBO;
 
     @Override
     @Transactional

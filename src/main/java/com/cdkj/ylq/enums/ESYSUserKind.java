@@ -12,8 +12,7 @@ import com.cdkj.ylq.exception.BizException;
  * @history:
  */
 public enum ESYSUserKind {
-    PLAT("P", "平台方用户"), OWNER("O", "产权方用户"), MAINTAIN("M", "养护方用户"), BUSINESS(
-            "B", "商家");
+    PLAT("P", "平台方用户");
 
     public static Map<String, ESYSUserKind> getAccountTypeResultMap() {
         Map<String, ESYSUserKind> map = new HashMap<String, ESYSUserKind>();

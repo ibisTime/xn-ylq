@@ -11,7 +11,7 @@ import com.cdkj.ylq.exception.BizException;
  * @history:
  */
 public enum EAccountType {
-    PLAT("P", "平台账号"), BUSINESS("B", "商家账号");
+    PLAT("P", "平台账号"), BUSINESS("B", "客户账号");
 
     public static Map<String, EAccountType> getAccountTypeResultMap() {
         Map<String, EAccountType> map = new HashMap<String, EAccountType>();

@@ -323,7 +323,7 @@ public class CertificationAOImpl implements ICertificationAO {
 
     @Override
     public InfoZMCredit doZhimaCreditScoreGet(String userId) {
-        User user = userBO.getRemoteUser(userId);
+        User user = userBO.getUser(userId);
         XN623050Res certiInfo = getCertiInfo(userId);
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
             throw new BizException("xn623000", "请先进行身份认证");

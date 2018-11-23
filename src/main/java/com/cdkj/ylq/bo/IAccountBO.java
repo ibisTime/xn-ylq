@@ -15,14 +15,9 @@ import com.cdkj.ylq.bo.base.IPaginableBO;
 import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.domain.BaofooPay;
-import com.cdkj.ylq.dto.res.XN002500Res;
-import com.cdkj.ylq.dto.res.XN002501Res;
-import com.cdkj.ylq.dto.res.XN002510Res;
 import com.cdkj.ylq.enums.EAccountStatus;
 import com.cdkj.ylq.enums.EAccountType;
-import com.cdkj.ylq.enums.EBizType;
 import com.cdkj.ylq.enums.EChannelType;
-import com.cdkj.ylq.enums.ECurrency;
 
 /** 
  * @author: miyb 
@@ -30,31 +25,6 @@ import com.cdkj.ylq.enums.ECurrency;
  * @history:
  */
 public interface IAccountBO extends IPaginableBO<Account> {
-
-    // 根据用户编号和币种获取账户
-    public Account getRemoteAccount(String userId, ECurrency currency);
-
-    // 根据用户编号进行账户资金划转
-    public void doTransferAmountRemote(String fromUserId, String toUserId,
-            ECurrency currency, Long amount, EBizType bizType,
-            String fromBizNote, String toBizNote, String refNo);
-
-    public void doTransferAmountRemote(String fromUserId,
-            ECurrency fromCurrency, String toUserId, ECurrency toCurrency,
-            Long amount, EBizType bizType, String fromBizNote,
-            String toBizNote, String refNo);
-
-    public XN002500Res doWeiXinPayRemote(String applyUser, String toUser,
-            String payGroup, String refNo, EBizType bizType, String bizNote,
-            Long amount);
-
-    public XN002501Res doWeiXinH5PayRemote(String applyUser, String openId,
-            String toUser, String payGroup, String refNo, EBizType bizType,
-            String bizNote, Long amount);
-
-    public XN002510Res doAlipayRemote(String applyUser, String toUser,
-            String payGroup, String refNo, EBizType bizType, String bizNote,
-            Long amount);
 
     // 银行卡查询
     public Bankcard getBankcard(String userId);

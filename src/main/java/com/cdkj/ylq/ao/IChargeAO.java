@@ -20,10 +20,6 @@ public interface IChargeAO {
     public void payOrder(String code, String payUser, String payResult,
             String payNote);
 
-    // 手动增发
-    public void addSysAccount(BigDecimal amount, String currency,
-            String bizNote, String updater);
-
     public Paginable<Charge> queryChargePage(int start, int limit,
             Charge condition);
 

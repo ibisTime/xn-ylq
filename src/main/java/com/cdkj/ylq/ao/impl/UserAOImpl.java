@@ -34,7 +34,7 @@ import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.MD5Util;
 import com.cdkj.ylq.common.PhoneUtil;
 import com.cdkj.ylq.common.RandomUtil;
-import com.cdkj.ylq.core.StringValidater;
+import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.User;
@@ -48,8 +48,6 @@ import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECouponStatus;
 import com.cdkj.ylq.enums.ECouponType;
 import com.cdkj.ylq.enums.EIDKind;
-import com.cdkj.ylq.enums.EUser;
-import com.cdkj.ylq.enums.EUserKind;
 import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.exception.BizException;
 import com.google.gson.Gson;
@@ -160,40 +158,6 @@ public class UserAOImpl implements IUserAO {
     @Transactional
     public String doAddUser(XN805042Req req) {
         String userId = null;
-        userId = doAddUserYLQ(req);
-        return userId;
-    }
-
-    private String doAddUserYLQ(XN805042Req req) {
-        String userId = null;
-        if (EUserKind.Customer.getCode().equals(req.getKind())) {
-            // 验证手机号
-            userBO.isMobileExist(req.getMobile(), req.getCompanyCode());
-            // 判断登录密码是否为空
-            if (StringUtils.isBlank(req.getLoginPwd())) {
-                req.setLoginPwd(RandomUtil.generate6());
-            }
-            userId = userBO.doAddUser(req);
-
-            // 发送短信
-            smsOutBO
-                .sendSmsOut(
-                    req.getMobile(),
-                    "尊敬的"
-                            + PhoneUtil.hideMobile(req.getMobile())
-                            + "用户，您已成功注册。初始化登录密码为"
-                            + req.getLoginPwd()
-                            + "，请及时登录网站更改密码。APP下载地址：http://m.yiliangqian.com/share/share-qrcord.html",
-                    "805042", req.getCompanyCode());
-        } else if (EUserKind.Plat.getCode().equals(req.getKind())) {
-            // 验证登录名
-            userBO.isLoginNameExist(req.getLoginName(), req.getKind(),
-                req.getCompanyCode());
-
-            userId = userBO.doAddUser(req);
-        } else {
-            throw new BizException("xn805042", "用户类型" + req.getKind() + "未能识别");
-        }
         return userId;
     }
 
@@ -201,46 +165,6 @@ public class UserAOImpl implements IUserAO {
     @Transactional
     public String doApplyRegUser(XN805043Req req) {
         String userId = null;
-        userId = doApplyRegUserCaigo(req);
-        return userId;
-    }
-
-    private String doApplyRegUserCaigo(XN805043Req req) {
-        String userId = null;
-        if (EUserKind.Customer.getCode().equals(req.getKind())) {
-            // 验证手机号
-            userBO.isMobileExist(req.getMobile(), req.getCompanyCode());
-            // 判断登录密码是否为空
-            if (StringUtils.isBlank(req.getLoginPwd())) {
-                req.setLoginPwd(RandomUtil.generate6());
-            }
-            userId = userBO.doApplyRegUser(req, null);
-
-            // 发送短信
-            smsOutBO.sendSmsOut(req.getMobile(),
-                "尊敬的" + PhoneUtil.hideMobile(req.getMobile())
-                        + "用户，您已成功注册。初始化登录密码为" + req.getLoginPwd()
-                        + "，请及时登录网站更改密码。", "805043", req.getCompanyCode());
-        } else if (EUserKind.Merchant.getCode().equals(req.getKind())) {
-            // 验证手机号
-            userBO.isMobileExist(req.getMobile(), req.getCompanyCode());
-            // 判断登录密码是否为空
-            if (StringUtils.isBlank(req.getLoginPwd())) {
-                req.setLoginPwd(RandomUtil.generate6());
-            }
-            userId = userBO.doApplyRegUser(req, null);
-
-            // 发送短信
-            smsOutBO.sendSmsOut(req.getMobile(),
-                "尊敬的" + PhoneUtil.hideMobile(req.getMobile())
-                        + "用户，您已成功注册。初始化登录密码为" + req.getLoginPwd()
-                        + "，请及时登录网站更改密码。", "805043", req.getCompanyCode());
-        } else if (EUserKind.Plat.getCode().equals(req.getKind())) {
-            // 验证登录名
-            userBO.isLoginNameExist(req.getLoginName(), req.getKind(),
-                req.getCompanyCode());
-            userId = userBO.doApplyRegUser(req, null);
-        }
         return userId;
     }
 
@@ -535,7 +459,7 @@ public class UserAOImpl implements IUserAO {
             throw new BizException("li01004", "用户不存在");
         }
         // admin 不注销
-        if (EUser.ADMIN.getCode().equals(user.getLoginName())) {
+        if (SysConstants.ADMIN.equals(user.getLoginName())) {
             throw new BizException("li01004", "管理员无法注销");
         }
         String mobile = user.getMobile();
@@ -574,23 +498,6 @@ public class UserAOImpl implements IUserAO {
         // throw new BizException("li01004", "用户和角色系统不对应");
         // }
         userBO.refreshRole(userId, roleCode, updater, remark);
-    }
-
-    @Override
-    public void doApproveUser(String userId, String approver,
-            String approveResult, String divRate, String remark) {
-        User user = userBO.getUser(userId);
-        Double divRateD = null;
-        if (!EUserStatus.TO_APPROVE.getCode().equals(user.getStatus())
-                && !EUserStatus.APPROVE_NO.getCode().equals(user.getStatus())) {
-            throw new BizException("xn000000", "用户不处于待审核状态");
-        }
-        String userStatus = EUserStatus.APPROVE_NO.getCode();
-        if (EBoolean.YES.getCode().equals(approveResult)) {
-            userStatus = EUserStatus.NORMAL.getCode();
-            divRateD = StringValidater.toDouble(divRate);
-        }
-        userBO.approveUser(userId, approver, userStatus, divRateD, remark);
     }
 
     @Override

@@ -107,4 +107,7 @@ public class SysConstants {
 
     public static String QINIU_DOMAIN = "qiniu_domain";
 
+    // 管理员
+    public static String ADMIN = "admin";
+
 }

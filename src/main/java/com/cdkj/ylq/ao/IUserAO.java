@@ -127,10 +127,6 @@ public interface IUserAO {
     // 修改用户等级
     public void doUpLevel(String userId, String level);
 
-    // 审核注册用户
-    public void doApproveUser(String userId, String approver,
-            String approveResult, String divRate, String remark);
-
     // 修改用户信息
     public void doModifyUser(XN805095Req req);
 

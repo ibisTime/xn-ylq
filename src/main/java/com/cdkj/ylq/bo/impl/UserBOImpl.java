@@ -20,18 +20,10 @@ import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IUserDAO;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN001001Req;
-import com.cdkj.ylq.dto.req.XN001102Req;
-import com.cdkj.ylq.dto.req.XN001400Req;
-import com.cdkj.ylq.dto.req.XN805042Req;
-import com.cdkj.ylq.dto.req.XN805043Req;
 import com.cdkj.ylq.dto.req.XN805190Req;
-import com.cdkj.ylq.dto.res.XN001102Res;
-import com.cdkj.ylq.dto.res.XN001400Res;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ESysUser;
 import com.cdkj.ylq.enums.ESystemCode;
-import com.cdkj.ylq.enums.EUserKind;
-import com.cdkj.ylq.enums.EUserPwd;
 import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.http.BizConnecter;
@@ -55,41 +47,6 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
     private IUserDAO userDAO;
 
     @Override
-    public User getRemoteUser(String userId) {
-        User user = null;
-        if (StringUtils.isNotBlank(userId)) {
-            XN001400Req req = new XN001400Req();
-            req.setTokenId(userId);
-            req.setUserId(userId);
-            XN001400Res res = BizConnecter.getBizData("001400",
-                JsonUtils.object2Json(req), XN001400Res.class);
-            if (res == null) {
-                throw new BizException("XN000000", "编号为" + userId + "的用户不存在");
-            }
-            user = new User();
-            user.setUserId(res.getUserId());
-            user.setLoginName(res.getLoginName());
-            user.setNickname(res.getNickname());
-            user.setPhoto(res.getPhoto());
-            user.setMobile(res.getMobile());
-            user.setIdKind(res.getIdKind());
-            user.setRealName(res.getRealName());
-            user.setIdNo(res.getIdNo());
-            user.setUserReferee(res.getUserReferee());
-            user.setCompanyCode(res.getCompanyCode());
-            user.setBlacklistFlag(res.getBlacklistFlag());
-            user.setProvince(res.getProvince());
-            user.setCity(res.getCity());
-            user.setArea(res.getArea());
-            user.setAddress(res.getAddress());
-            user.setBorrowCount(borrowOrderBO.getTotalBorrowCount(userId));
-            user.setOverdueCode(overdueBO.getOverdueCode(userId));
-
-        }
-        return user;
-    }
-
-    @Override
     public void doIdentify(String userId, String idKind, String idNo,
             String realName) {
         XN805190Req req = new XN805190Req();
@@ -99,21 +56,6 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
         req.setRealName(realName);
         BizConnecter.getBizData("805190", JsonUtils.object2Json(req),
             Object.class);
-    }
-
-    @Override
-    public String isUserExist(String mobile, EUserKind kind, String systemCode) {
-        String userId = null;
-        XN001102Req req = new XN001102Req();
-        req.setMobile(mobile);
-        req.setKind(kind.getCode());
-        req.setSystemCode(systemCode);
-        XN001102Res res = BizConnecter.getBizData("001102",
-            JsonUtils.object2Json(req), XN001102Res.class);
-        if (res != null) {
-            userId = res.getUserId();
-        }
-        return userId;
     }
 
     @Override
@@ -260,87 +202,6 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
 
         user.setCreateDatetime(new Date());
         user.setCompanyCode(companyCode);
-        userDAO.insert(user);
-        return userId;
-    }
-
-    @Override
-    public String doAddUser(XN805042Req req) {
-        String userId = OrderNoGenerater.generateM("U");
-        User user = new User();
-        user.setUserId(userId);
-        user.setLoginName(req.getLoginName());
-        user.setMobile(req.getMobile());
-        user.setNickname(userId.substring(userId.length() - 8, userId.length()));
-
-        if (StringUtils.isBlank(req.getLoginPwd())) {
-            req.setLoginPwd(EUserPwd.InitPwd.getCode());
-        }
-        user.setLoginPwd(MD5Util.md5(req.getLoginPwd()));
-        user.setLoginPwdStrength(PwdUtil.calculateSecurityLevel(req
-            .getLoginPwd()));
-
-        user.setUserReferee(req.getUserReferee());
-
-        user.setIdKind(req.getIdKind());
-        user.setIdNo(req.getIdNo());
-        user.setRealName(req.getRealName());
-
-        if (StringUtils.isBlank(req.getDivRate())) {
-            req.setDivRate("0");
-        }
-        user.setStatus(EUserStatus.NORMAL.getCode());
-
-        user.setProvince(req.getProvince());
-        user.setCity(req.getCity());
-        user.setArea(req.getArea());
-        user.setLatitude(req.getLatitude());
-        user.setLongitude(req.getLongitude());
-
-        Date date = new Date();
-        user.setCreateDatetime(date);
-        user.setUpdater(req.getUpdater());
-        user.setUpdateDatetime(date);
-        user.setRemark(req.getRemark());
-
-        user.setCompanyCode(req.getCompanyCode());
-        userDAO.insert(user);
-        return userId;
-    }
-
-    @Override
-    public String doApplyRegUser(XN805043Req req, String roleCode) {
-        String userId = OrderNoGenerater.generateM("U");
-        User user = new User();
-        user.setUserId(userId);
-        user.setLoginName(req.getLoginName());
-        user.setMobile(req.getMobile());
-        user.setNickname(userId.substring(userId.length() - 8, userId.length()));
-
-        user.setLoginPwd(MD5Util.md5(req.getLoginPwd()));
-        user.setLoginPwdStrength(PwdUtil.calculateSecurityLevel(req
-            .getLoginPwd()));
-        user.setUserReferee(req.getUserReferee());
-
-        user.setIdKind(req.getIdKind());
-        user.setIdNo(req.getIdNo());
-        user.setRealName(req.getRealName());
-
-        user.setStatus(EUserStatus.TO_APPROVE.getCode());
-
-        user.setProvince(req.getProvince());
-        user.setCity(req.getCity());
-        user.setArea(req.getArea());
-        user.setLatitude(req.getLatitude());
-        user.setLongitude(req.getLongitude());
-
-        Date date = new Date();
-        user.setCreateDatetime(date);
-        user.setUpdater(req.getUpdater());
-        user.setUpdateDatetime(date);
-        user.setRemark(req.getRemark());
-
-        user.setCompanyCode(req.getCompanyCode());
         userDAO.insert(user);
         return userId;
     }
@@ -821,4 +682,5 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
         List<User> dataList = userDAO.selectList(condition);
         return dataList;
     }
+
 }

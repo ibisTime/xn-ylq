@@ -30,7 +30,6 @@ import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EProductLevel;
 import com.cdkj.ylq.enums.EProductLocation;
 import com.cdkj.ylq.enums.EProductStatus;
-import com.cdkj.ylq.enums.EUserProductStatus;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
@@ -127,8 +126,6 @@ public class ProductAOImpl implements IProductAO {
         for (Product product : products) {
             if (EProductLevel.ONE.getCode().equals(product.getLevel())) {
                 product.setIsLocked(EBoolean.NO.getCode());
-                product.setUserProductStatus(EUserProductStatus.TO_APPLY
-                    .getCode());
             } else {
                 product.setIsLocked(EBoolean.YES.getCode());
             }

@@ -10,33 +10,34 @@ import com.cdkj.ylq.exception.BizException;
  * @since: 2016年11月11日 上午10:09:32 
  * @history:
  */
-public enum EJourBizTypePlat {
+public enum EJourBizTypeBoss {
     // 人民币账户
+    CHARGE("CHARGE", "充值"),
 
-    REPORT("REPORT", "报告收入"),
+    API("API", "征信接口支出"),
 
-    WITHDRAW_FEE("WITHDRAW_FEE", "取现手续费"),
+    WITHDRAW_UNFROZEN("WITHDRAW_UNFROZEN", "取现冻结"),
 
-    API("API", "征信接口支出");
+    WITHDRAW("WITHDRAW", "取现");
 
-    public static EJourBizTypePlat getBizType(String code) {
-        Map<String, EJourBizTypePlat> map = getBizTypeMap();
-        EJourBizTypePlat result = map.get(code);
+    public static EJourBizTypeBoss getBizType(String code) {
+        Map<String, EJourBizTypeBoss> map = getBizTypeMap();
+        EJourBizTypeBoss result = map.get(code);
         if (result == null) {
             throw new BizException("XN0000", code + "对应的jourBizType不存在");
         }
         return result;
     }
 
-    public static Map<String, EJourBizTypePlat> getBizTypeMap() {
-        Map<String, EJourBizTypePlat> map = new HashMap<String, EJourBizTypePlat>();
-        for (EJourBizTypePlat bizType : EJourBizTypePlat.values()) {
+    public static Map<String, EJourBizTypeBoss> getBizTypeMap() {
+        Map<String, EJourBizTypeBoss> map = new HashMap<String, EJourBizTypeBoss>();
+        for (EJourBizTypeBoss bizType : EJourBizTypeBoss.values()) {
             map.put(bizType.getCode(), bizType);
         }
         return map;
     }
 
-    EJourBizTypePlat(String code, String value) {
+    EJourBizTypeBoss(String code, String value) {
         this.code = code;
         this.value = value;
     }

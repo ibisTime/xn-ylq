@@ -7,7 +7,6 @@ import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.dto.req.XN630100Req;
 import com.cdkj.ylq.dto.res.XN630101Res;
 
-//CHECK ��鲢��ע�� 
 public interface IBusinessManAO {
     static final String DEFAULT_ORDER_COLUMN = "code";
 

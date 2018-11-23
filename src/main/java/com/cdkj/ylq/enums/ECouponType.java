@@ -1,7 +1,7 @@
 package com.cdkj.ylq.enums;
 
 public enum ECouponType {
-    RECOMMENT("0", "获客优惠券"), BORROW("1", "借还优惠券");
+    RECOMMENT("0", "获客优惠券"), BORROW("1", "借还优惠券"), GIFT("2", "直送优惠券");
 
     ECouponType(String code, String value) {
         this.code = code;

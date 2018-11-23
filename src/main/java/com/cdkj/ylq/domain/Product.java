@@ -80,9 +80,6 @@ public class Product extends ABaseDO {
     // 利息
     private BigDecimal lxAmount;
 
-    // 当前申请状态
-    private String userProductStatus;
-
     // 审核说明 - 审核不通过时返回
     private String approveNote;
 
@@ -248,14 +245,6 @@ public class Product extends ABaseDO {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getUserProductStatus() {
-        return userProductStatus;
-    }
-
-    public void setUserProductStatus(String userProductStatus) {
-        this.userProductStatus = userProductStatus;
     }
 
     public String getIsLocked() {

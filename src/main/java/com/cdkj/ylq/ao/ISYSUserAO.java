@@ -6,7 +6,6 @@ import java.util.List;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.SYSUser;
 import com.cdkj.ylq.dto.req.XN630050Req;
-import com.cdkj.ylq.dto.req.XN630061Req;
 import com.cdkj.ylq.dto.res.XN629901Res;
 
 /**
@@ -58,13 +57,6 @@ public interface ISYSUserAO {
 
     // 详细查询
     public SYSUser getSYSUser(String userId);
-
-    // 提交资料信息
-    public void commitCompany(XN630061Req req);
-
-    // 审核用户（平台）
-    public void approveSYSUser(String userId, String approveResult,
-            String updater, String remark);
 
     // 统计新增用户数
     public XN629901Res getTotalCreateCount(String userId, String type,

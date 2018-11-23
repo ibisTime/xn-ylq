@@ -4,9 +4,6 @@ import java.util.List;
 
 import com.cdkj.ylq.bo.base.IPaginableBO;
 import com.cdkj.ylq.domain.User;
-import com.cdkj.ylq.dto.req.XN805042Req;
-import com.cdkj.ylq.dto.req.XN805043Req;
-import com.cdkj.ylq.enums.EUserKind;
 import com.cdkj.ylq.enums.EUserStatus;
 
 /**
@@ -15,10 +12,6 @@ import com.cdkj.ylq.enums.EUserStatus;
  * @history:
  */
 public interface IUserBO extends IPaginableBO<User> {
-
-    public User getRemoteUser(String userId);
-
-    public String isUserExist(String mobile, EUserKind kind, String systemCode);
 
     public String getSystemUser(String systemCode);
 
@@ -59,10 +52,6 @@ public interface IUserBO extends IPaginableBO<User> {
 
     public void refreshWxInfo(String userId, String type, String unionId,
             String openId, String nickname, String photo, String gender);
-
-    public String doAddUser(XN805042Req req);
-
-    public String doApplyRegUser(XN805043Req req, String roleCode);
 
     public String saveUser(String mobile, String kind, String companyCode,
             String systemCode);
