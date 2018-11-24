@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,8 @@ import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Jour;
-import com.cdkj.ylq.domain.SYSUser;
-import com.cdkj.ylq.enums.EAccountType;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EJourStatus;
-import com.cdkj.ylq.enums.EUser;
 import com.cdkj.ylq.exception.BizException;
 
 /** 
@@ -86,14 +82,6 @@ public class JourAOImpl implements IJourAO {
 
         Paginable<Jour> page = jourBO.getPaginable(start, limit, condition);
 
-        if (null != page && CollectionUtils.isNotEmpty(page.getList())) {
-            for (Jour jour : page.getList()) {
-
-                initJour(jour);
-
-            }
-        }
-
         return page;
     }
 
@@ -119,33 +107,7 @@ public class JourAOImpl implements IJourAO {
     public Jour getJour(String code) {
         Jour jour = jourBO.getJour(code);
 
-        initJour(jour);
-
         return jour;
-    }
-
-    private void initJour(Jour jour) {
-        // 户名
-        String realName = null;
-        if (EAccountType.PLAT.getCode().equals(jour.getAccountType())) {
-
-            // 系统用户
-            realName = EUser.ADMIN.getValue();
-        } else {
-
-            // 其他用户
-            SYSUser sysUser = sysUserBO.getSYSUserUnCheck(jour.getUserId());
-            if (null != sysUser) {
-                realName = sysUser.getMobile();
-                if (StringUtils.isNotBlank(sysUser.getRealName())) {
-                    realName = sysUser.getRealName().concat("-")
-                        .concat(realName);
-                }
-            }
-
-        }
-
-        jour.setRealName(realName);
     }
 
     @Override

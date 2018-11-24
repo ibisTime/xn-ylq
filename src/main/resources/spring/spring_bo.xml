@@ -37,9 +37,6 @@
 		<property name="paginableDAO" ref="couponDAOImpl"/>
 	</bean>	
 	
-	<bean id="couponConditionBO" class="com.cdkj.ylq.bo.impl.CouponConditionBOImpl">
-		<property name="paginableDAO" ref="couponConditionDAOImpl"/>
-	</bean>	
 	
 	<bean id="userCouponBO" class="com.cdkj.ylq.bo.impl.UserCouponBOImpl">
 		<property name="paginableDAO" ref="userCouponDAOImpl"/>
@@ -58,9 +55,6 @@
 		<property name="paginableDAO" ref="overdueDAOImpl"/>
 	</bean>	
 	
-	<bean id="contractBO" class="com.cdkj.ylq.bo.impl.ContractBOImpl">
-		<property name="paginableDAO" ref="contractDAOImpl"/>
-	</bean>
 	
 	<bean id="statisticBO" class="com.cdkj.ylq.bo.impl.StatisticBOImpl">
 		<property name="paginableDAO" ref="statisticDAOImpl"/>

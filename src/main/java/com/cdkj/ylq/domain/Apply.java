@@ -1,5 +1,6 @@
 package com.cdkj.ylq.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -27,14 +28,14 @@ public class Apply extends ABaseDO {
     // 申请时间
     private Date applyDatetime;
 
-    // 产品编号
-    private String productCode;
+    // 申请说明
+    private String applyNote;
 
     // 状态
     private String status;
 
     // 授信额度
-    private Long sxAmount;
+    private BigDecimal creditScore;
 
     // 审核人
     private String approver;
@@ -44,6 +45,9 @@ public class Apply extends ABaseDO {
 
     // 审核时间
     private Date approveDatetime;
+
+    // 当前节点
+    private String curNode;
 
     // 最后更新人
     private String updater;
@@ -55,7 +59,10 @@ public class Apply extends ABaseDO {
     private String remark;
 
     // 借贷通报告
-    private String jdtReport;
+    private String report;
+
+    // 公司编号
+    private String companyCode;
 
     // *** 辅助字段 ****
 
@@ -91,28 +98,12 @@ public class Apply extends ABaseDO {
         this.applyDatetime = applyDatetime;
     }
 
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Long getSxAmount() {
-        return sxAmount;
-    }
-
-    public void setSxAmount(Long sxAmount) {
-        this.sxAmount = sxAmount;
     }
 
     public String getApprover() {
@@ -125,6 +116,14 @@ public class Apply extends ABaseDO {
 
     public String getApproveNote() {
         return approveNote;
+    }
+
+    public String getCurNode() {
+        return curNode;
+    }
+
+    public void setCurNode(String curNode) {
+        this.curNode = curNode;
     }
 
     public void setApproveNote(String approveNote) {
@@ -179,6 +178,14 @@ public class Apply extends ABaseDO {
         this.user = user;
     }
 
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
     public Product getProduct() {
         return product;
     }
@@ -195,12 +202,28 @@ public class Apply extends ABaseDO {
         this.type = type;
     }
 
-    public String getJdtReport() {
-        return jdtReport;
+    public String getApplyNote() {
+        return applyNote;
     }
 
-    public void setJdtReport(String jdtReport) {
-        this.jdtReport = jdtReport;
+    public void setApplyNote(String applyNote) {
+        this.applyNote = applyNote;
+    }
+
+    public BigDecimal getCreditScore() {
+        return creditScore;
+    }
+
+    public void setCreditScore(BigDecimal creditScore) {
+        this.creditScore = creditScore;
+    }
+
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
     }
 
 }

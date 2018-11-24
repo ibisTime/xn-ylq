@@ -31,7 +31,7 @@ public class Coupon extends ABaseDO {
     private Integer validDays;
 
     // 起用金额
-    private Long startAmount;
+    private BigDecimal startAmount;
 
     // 状态
     private String status;
@@ -44,6 +44,17 @@ public class Coupon extends ABaseDO {
 
     // 备注
     private String remark;
+
+    // 公司编号
+    private String companyCode;
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
 
     public String getCode() {
         return code;
@@ -85,11 +96,11 @@ public class Coupon extends ABaseDO {
         this.validDays = validDays;
     }
 
-    public Long getStartAmount() {
+    public BigDecimal getStartAmount() {
         return startAmount;
     }
 
-    public void setStartAmount(Long startAmount) {
+    public void setStartAmount(BigDecimal startAmount) {
         this.startAmount = startAmount;
     }
 

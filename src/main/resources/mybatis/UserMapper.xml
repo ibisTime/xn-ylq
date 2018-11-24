@@ -36,6 +36,7 @@
 		<result column="remark" property="remark" />
 		<result column="is_blacklist" property="isBlackList" />
 		<result column="is_whitelist" property="isWhiteList" />
+		<result column="is_coupon" property="isCoupon" />
 		<result column="company_code" property="companyCode" />
 	</resultMap>
 	<sql id="where_condition">
@@ -91,6 +92,15 @@
 			<if test="companyCode != null and companyCode != '' ">
 				AND t.company_code = #{companyCode}
 			</if>
+			<if test="isBlackList != null and isBlackList != '' ">
+				AND t.is_blacklist = #{isBlackList}
+			</if>
+			<if test="isWhiteList != null and isWhiteList != '' ">
+				AND t.is_whitelist = #{isWhiteList}
+			</if>
+			<if test="isCoupon != null and isCoupon != '' ">
+				AND t.is_coupon = #{isCoupon}
+			</if>
 		</trim>
 	</sql>
 	<select id="select_user" parameterType="user" resultMap="user_DB_Result">
@@ -128,6 +138,7 @@
 		,t.remark
 		,t.is_blacklist
 		,t.is_whitelist
+		,t.is_coupon
 		,t.company_code
 		FROM
 		tstd_user t
@@ -181,6 +192,7 @@
 		,remark
 		,is_blacklist
 		,is_whitelist
+		,is_coupon
 		,company_code
 		)
 		VALUES(
@@ -219,6 +231,7 @@
 		,#{remark}
 		,#{isBlackList}
 		,#{isWhiteList}
+		,#{isCoupon}
 		,#{companyCode}
 		)
 	</insert>
@@ -367,6 +380,13 @@
 		user_id = #{userId}		
 	</update>
 	
+	<update id="update_isCoupon" parameterType="user">
+		UPDATE tstd_user
+		SET
+		is_counpon = #{isCoupon}
+		WHERE
+		user_id = #{userId}		
+	</update>
 	
 	<update id="approve_user" parameterType="user">
 		UPDATE tstd_user

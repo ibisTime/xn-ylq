@@ -183,4 +183,9 @@ public class UserDAOImpl extends AMybatisTemplate implements IUserDAO {
     public int updateWhiteList(User data) {
         return super.update(NAMESPACE.concat("update_whitelist"), data);
     }
+
+    @Override
+    public int updateIsCoupon(User data) {
+        return super.update(NAMESPACE.concat("update_isCoupon"), data);
+    }
 }

@@ -3,7 +3,6 @@ package com.cdkj.ylq.bo.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,14 +15,9 @@ import com.cdkj.ylq.common.PhoneUtil;
 import com.cdkj.ylq.common.PwdUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.ISYSUserDAO;
-import com.cdkj.ylq.domain.Company;
 import com.cdkj.ylq.domain.SYSUser;
 import com.cdkj.ylq.dto.req.XN630050Req;
-import com.cdkj.ylq.dto.req.XN630063Req;
-import com.cdkj.ylq.enums.EBoolean;
-import com.cdkj.ylq.enums.ERoleCode;
-import com.cdkj.ylq.enums.ESYSUserKind;
-import com.cdkj.ylq.enums.ESYSUserStatus;
+import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.EBizErrorCode;
 
@@ -40,12 +34,6 @@ public class SYSUserBOImpl extends PaginableBOImpl<SYSUser> implements
     @Override
     public List<SYSUser> queryUserList(SYSUser data) {
         List<SYSUser> list = sysUserDAO.selectList(data);
-
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (SYSUser sysUser : list) {
-                initUser(sysUser);
-            }
-        }
 
         return list;
     }
@@ -64,61 +52,8 @@ public class SYSUserBOImpl extends PaginableBOImpl<SYSUser> implements
         data.setLoginPwdStrength(PwdUtil.calculateSecurityLevel(req
             .getLoginPwd()));
         data.setCreateDatetime(new Date());
-        data.setStatus(ESYSUserStatus.NORMAL.getCode());
+        data.setStatus(EUserStatus.NORMAL.getCode());
         data.setRemark(req.getRemark());
-        sysUserDAO.insert(data);
-        return userId;
-    }
-
-    @Override
-    public String doSaveSYSuser(XN630063Req req, String loginPwd) {
-        SYSUser data = new SYSUser();
-        String userId = OrderNoGenerater.generateM("U");
-        data.setUserId(userId);
-        data.setKind(req.getKind());
-        // data.setRealName(req.getRealName());
-        data.setMobile(req.getMobile());
-        data.setLoginName(req.getMobile());
-        if (ESYSUserKind.OWNER.getCode().equals(req.getKind())) {
-            data.setRoleCode(ERoleCode.OWNER.getCode());
-        } else if (ESYSUserKind.MAINTAIN.getCode().equals(req.getKind())) {
-            data.setRoleCode(ERoleCode.MAINTAIN.getCode());
-        } else if (ESYSUserKind.BUSINESS.getCode().equals(req.getKind())) {
-            data.setRoleCode(ERoleCode.BUSINESS.getCode());
-        } else {
-            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "用户类型不支持");
-        }
-        data.setLoginPwd(MD5Util.md5(loginPwd));
-        data.setLoginPwdStrength(PwdUtil.calculateSecurityLevel(loginPwd));
-        data.setCreateDatetime(new Date());
-        data.setStatus(ESYSUserStatus.NORMAL.getCode());
-        data.setRemark(req.getRemark());
-        sysUserDAO.insert(data);
-
-        return userId;
-    }
-
-    @Override
-    public String doSaveSYSUser(String kind, String mobile, String loginPwd) {
-        SYSUser data = new SYSUser();
-        String userId = OrderNoGenerater.generateM("U");
-        data.setUserId(userId);
-        data.setKind(kind);
-        data.setMobile(mobile);
-        data.setLoginName(mobile);
-        if (ESYSUserKind.OWNER.getCode().equals(kind)) {
-            data.setRoleCode(ERoleCode.OWNER.getCode());
-        } else if (ESYSUserKind.MAINTAIN.getCode().equals(kind)) {
-            data.setRoleCode(ERoleCode.MAINTAIN.getCode());
-        } else if (ESYSUserKind.BUSINESS.getCode().equals(kind)) {
-            data.setRoleCode(ERoleCode.BUSINESS.getCode());
-        } else {
-            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "用户类型不支持");
-        }
-        data.setLoginPwd(MD5Util.md5(loginPwd));
-        data.setLoginPwdStrength(PwdUtil.calculateSecurityLevel(loginPwd));
-        data.setCreateDatetime(new Date());
-        data.setStatus(ESYSUserStatus.TO_FILL.getCode());// 待填公司资料
         sysUserDAO.insert(data);
         return userId;
     }
@@ -138,36 +73,10 @@ public class SYSUserBOImpl extends PaginableBOImpl<SYSUser> implements
     }
 
     @Override
-    public void isMobileExist(String kind, String mobile) {
-        if (StringUtils.isNotBlank(mobile)) {
-            // 判断格式
-            PhoneUtil.checkMobile(mobile);
-            SYSUser condition = new SYSUser();
-            condition.setKind(kind);
-            condition.setMobile(mobile);
-            long count = getTotalCount(condition);
-            if (count > 0) {
-                throw new BizException("li01003", "手机号已经存在");
-            }
-        }
-    }
+    public void resetSelfPwd(SYSUser sysUser, String newLoginPwd) {
+        sysUser.setLoginPwd(MD5Util.md5(newLoginPwd));
+        sysUserDAO.updateLoginPwd(sysUser);
 
-    // 登录
-    @Override
-    public SYSUser getUserByLoginName(String loginName, String systemCode) {
-        SYSUser data = null;
-        if (StringUtils.isNotBlank(loginName)) {
-            SYSUser condition = new SYSUser();
-            condition.setLoginName(loginName);
-            List<SYSUser> list = sysUserDAO.selectList(condition);
-            if (list != null && list.size() > 1) {
-                throw new BizException("li01006", "登录名重复");
-            }
-            if (CollectionUtils.isNotEmpty(list)) {
-                data = list.get(0);
-            }
-        }
-        return data;
     }
 
     @Override
@@ -207,14 +116,13 @@ public class SYSUserBOImpl extends PaginableBOImpl<SYSUser> implements
                 throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                     "系统用户不存在");
             }
-            if (ESYSUserStatus.Li_Locked.getCode().equals(data.getStatus())
-                    || ESYSUserStatus.Ren_Locked.getCode().equals(
-                        data.getStatus())) {
+            if (EUserStatus.Li_Locked.getCode().equals(data.getStatus())
+                    || EUserStatus.Ren_Locked.getCode()
+                        .equals(data.getStatus())) {
                 throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                     "用户已被锁定，请联系管理员");
             }
 
-            initUser(data);
         }
         return data;
     }
@@ -252,38 +160,6 @@ public class SYSUserBOImpl extends PaginableBOImpl<SYSUser> implements
         sysUserDAO.updateLoginPwd(sysUser);
     }
 
-    @Override
-    public void resetSelfPwd(SYSUser sysUser, String newLoginPwd) {
-        sysUser.setLoginPwd(MD5Util.md5(newLoginPwd));
-        sysUserDAO.updateLoginPwd(sysUser);
-
-    }
-
-    // 重置登录名
-    @Override
-    public void refreshLoginName(String userId, String loginName) {
-        if (StringUtils.isNotBlank(userId)) {
-            SYSUser data = new SYSUser();
-            data.setUserId(userId);
-            data.setLoginName(loginName);
-            sysUserDAO.updateLoginName(data);
-        }
-    }
-
-    @Override
-    public void isLoginNameExist(String loginName) {
-        if (StringUtils.isNotBlank(loginName)) {
-            // 判断格式
-            SYSUser condition = new SYSUser();
-            condition.setLoginName(loginName);
-
-            long count = getTotalCount(condition);
-            if (count > 0) {
-                throw new BizException("li01003", "登录名已经存在");
-            }
-        }
-    }
-
     //
     @Override
     public void resetBindMobile(SYSUser user, String newMobile) {
@@ -314,22 +190,7 @@ public class SYSUserBOImpl extends PaginableBOImpl<SYSUser> implements
     }
 
     @Override
-    public void approveSYSUser(SYSUser data, String approveResult,
-            String updater, String remark) {
-        String status = ESYSUserStatus.APPROVE_NO.getCode();
-        if (EBoolean.YES.getCode().equals(approveResult)) {
-            status = ESYSUserStatus.NORMAL.getCode();
-        }
-        data.setStatus(status);
-        data.setUpdater(updater);
-
-        data.setUpdateDatetime(new Date());
-        data.setRemark(remark);
-        sysUserDAO.updateApproveSYSUser(data);
-    }
-
-    @Override
-    public void refreshStatus(String userId, ESYSUserStatus status,
+    public void refreshStatus(String userId, EUserStatus status,
             String updater, String remark) {
         if (StringUtils.isNotBlank(userId)) {
             SYSUser data = new SYSUser();
@@ -339,24 +200,6 @@ public class SYSUserBOImpl extends PaginableBOImpl<SYSUser> implements
             data.setUpdateDatetime(new Date());
             data.setRemark(remark);
             sysUserDAO.updateStatus(data); // change to updateStatus
-        }
-    }
-
-    @Override
-    public void refreshCompany(String userId, String companyCode) {
-        if (StringUtils.isNotBlank(userId)) {
-            SYSUser data = new SYSUser();
-            data.setUserId(userId);
-            data.setCompanyCode(companyCode);
-            sysUserDAO.updateCompany(data);
-        }
-    }
-
-    private void initUser(SYSUser data) {
-        if (ESYSUserKind.OWNER.getCode().equals(data.getKind())
-                || ESYSUserKind.MAINTAIN.getCode().equals(data.getKind())) {
-            Company company = companyBO.getCompanyByUserId(data.getUserId());
-            data.setCompany(company);
         }
     }
 

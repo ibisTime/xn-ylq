@@ -21,11 +21,8 @@ import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EChannelType;
 import com.cdkj.ylq.enums.EChargeStatus;
-import com.cdkj.ylq.enums.ECurrency;
-import com.cdkj.ylq.enums.EJourBizTypePlat;
-import com.cdkj.ylq.enums.EJourBizTypeUser;
+import com.cdkj.ylq.enums.EJourBizTypeBoss;
 import com.cdkj.ylq.enums.EPayType;
-import com.cdkj.ylq.enums.ESystemAccount;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.EBizErrorCode;
 
@@ -70,7 +67,7 @@ public class ChargeAOImpl implements IChargeAO {
         Account account = accountBO.getAccount(accountNumber);
         // 生成充值订单
         String code = chargeBO.applyOrderOffline(account,
-            EJourBizTypeUser.CHARGE.getCode(), amount, payCardInfo, payCardNo,
+            EJourBizTypeBoss.CHARGE.getCode(), amount, payCardInfo, payCardNo,
             applyUser, applyUserType, applyNote);
         return code;
     }
@@ -102,51 +99,7 @@ public class ChargeAOImpl implements IChargeAO {
         Account accountUser = accountBO.getAccount(data.getAccountNumber());
         accountBO.changeAmount(accountUser, data.getAmount(),
             EChannelType.Offline, null, data.getCode(),
-            EJourBizTypeUser.CHARGE.getCode(), "线下充值");
-
-        Account account = accountBO.getAccount(data.getAccountNumber());
-        if (ECurrency.CNY.getCode().equals(account.getCurrency())) {
-            // 线下托管账户加钱
-            Account sysAccountOffLine = accountBO
-                .getAccount(ESystemAccount.SYS_ACOUNT_OFFLINE.getCode());
-            accountBO.changeAmount(sysAccountOffLine, data.getAmount(),
-                EChannelType.Offline, null, data.getCode(),
-                EJourBizTypePlat.CHARGE.getCode(), "线下充值");
-        }
-    }
-
-    // 手动增发
-    @Override
-    @Transactional
-    public void addSysAccount(BigDecimal amount, String currency,
-            String bizNote, String updater) {
-        // if (ECurrency.JF.getCode().equals(currency)) {
-        // Account account = accountBO
-        // .getAccount(ESystemAccount.SYS_ACOUNT_JF_POOL.getCode());
-        // if (amount.add(account.getAmount()).compareTo(BigDecimal.ZERO) == -1)
-        // {
-        // throw new BizException(EBizErrorCode.DEFAULT.getCode(),
-        // "余额不能小于0，请重新输入");
-        // }
-        //
-        // accountBO.changeAmount(account, amount, EChannelType.Offline,
-        // EJourBizTypePlat.HAND_CHARGE.getCode(),
-        // EJourBizTypePlat.HAND_CHARGE.getCode(),
-        // EJourBizTypePlat.HAND_CHARGE.getCode(), bizNote);
-        // } else if (ECurrency.TPP.getCode().equals(currency)) {
-        // Account account = accountBO
-        // .getAccount(ESystemAccount.SYS_ACOUNT_TPP_POOL.getCode());
-        // if (amount.add(account.getAmount()).compareTo(BigDecimal.ZERO) == -1)
-        // {
-        // throw new BizException(EBizErrorCode.DEFAULT.getCode(),
-        // "余额不能小于0，请重新输入");
-        // }
-        //
-        // accountBO.changeAmount(account, amount, EChannelType.Offline,
-        // EJourBizTypePlat.HAND_CHARGE.getCode(),
-        // EJourBizTypePlat.HAND_CHARGE.getCode(),
-        // EJourBizTypePlat.HAND_CHARGE.getCode(), bizNote);
-        // }
+            EJourBizTypeBoss.CHARGE.getCode(), "线下充值");
 
     }
 

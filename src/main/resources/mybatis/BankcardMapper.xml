@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ogc.standard.dao.IBankCardDAO">
+<mapper namespace="com.cdkj.ylq.dao.IBankCardDAO">
 	<resultMap id="bankcard_DB_Result" type="bankcard">
 		<result column="code" property="code" />
 		<result column="bankcard_number" property="bankcardNumber" />
@@ -23,7 +23,7 @@
 		
 		<result column="remark" property="remark" />
 		<result column="last_order" property="lastOrder" />
-		<result column="system_code" property="systemCode" />
+		<result column="company_code" property="companyCode" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -48,8 +48,8 @@
 			<if test="bankName != null and bankName != '' ">
 				AND t.bank_name = #{bankName}
 			</if> 
-			<if test="systemCode != null and systemCode != '' ">
-				AND t.system_code = #{systemCode}
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
 			</if>
 		</trim>
 	</sql>
@@ -75,7 +75,7 @@
 		,t.remark
 		
 		,t.last_order
-		,t.system_code
+		,t.company_code
 		FROM
 		tstd_bankcard t
 		<include refid="where_condition" />
@@ -115,7 +115,7 @@
 		,remark
 		
 		,last_order
-		,system_code
+		,company_code
 		)
 		VALUES(
 		#{code}
@@ -138,7 +138,7 @@
 		,#{remark}
 		
 		,#{lastOrder}
-		,#{systemCode}
+		,#{companyCode}
 		)
 	</insert>
 

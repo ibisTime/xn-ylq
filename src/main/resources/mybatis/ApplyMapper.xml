@@ -25,6 +25,10 @@
 			<if test="code != null and code != '' ">
 				AND t.code = #{code}
 			</if>
+			
+			<if test="curNode != null and curNode != '' ">
+				AND t.cur_node = #{curNode}
+			</if>
 			<if test="type != null and type != '' ">
 				AND t.type = #{type}
 			</if>
@@ -53,14 +57,16 @@
 		,t.apply_datetime
 		,t.apply_note
 		,t.status
-		,t.sx_amount
+		,t.credit_score
 		,t.approver
 		,t.approve_note
 		,t.approve_datetime
+		,t.cur_node
 		,t.updater
 		,t.update_datetime
 		,t.remark
-		,t.jdt_report
+		,t.report
+		,t.company_code
 		FROM
 		tjd_apply t
 		<include refid="where_condition" />
@@ -79,21 +85,23 @@
 
 	<insert id="insert_apply" parameterType="apply">
 		INSERT INTO
-		t_apply(
+		tjd_apply(
 		code
 		,type
 		,apply_user
 		,apply_datetime
 		,product_code
 		,status
-		,sx_amount
+		,credit_score
 		,approver
 		,approve_note
 		,approve_datetime
+		,cur_node
 		,updater
 		,update_datetime
 		,remark
-		,jdt_report
+		,report
+		,company_code
 		)
 		VALUES(
 		#{code}
@@ -102,22 +110,24 @@
 		,#{applyDatetime}
 		,#{productCode}
 		,#{status}
-		,#{sxAmount}
+		,#{creditScore}
 		,#{approver}
 		,#{approveNote}
 		,#{approveDatetime}
+		,#{curNode}
 		,#{updater}
 		,#{updateDatetime}
 		,#{remark}
-		,#{jdtReport}
+		,#{report}
+		,#{companyCode}
 		)
 	</insert>
 
 	<update id="update_approve" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
-		,sx_amount = #{sxAmount}
+		,credit_score = #{creditScore}
 		,approver = #{approver}
 		,approve_note = #{approveNote}
 		,approve_datetime = #{approveDatetime}
@@ -128,14 +138,14 @@
 	</update>
 	
 	<update id="update_toDoApprove" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
 		WHERE code = #{code}
 	</update>
 	
 	<update id="update_cancel" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
 		,updater = #{updater}
@@ -145,14 +155,14 @@
 	</update>
 	
 	<update id="update_status" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
 		WHERE code = #{code}
 	</update>
 	
 	<update id="update_resubmit" parameterType="apply">
-		UPDATE t_apply
+		UPDATE tjd_apply
 		SET
 		status = #{status}
 		,type = #{type}
@@ -160,6 +170,13 @@
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
 		WHERE code = #{code}
+	</update>
+	
+	<update id="update_node" parameterType="apply">
+		UPDATE tjd_apply
+		SET
+		cur_node=#{curNode}
+		WHERE code=#{code}
 	</update>
 
 

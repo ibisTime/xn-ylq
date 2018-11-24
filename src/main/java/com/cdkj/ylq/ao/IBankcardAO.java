@@ -6,7 +6,6 @@ import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.dto.req.XN802020Req;
 import com.cdkj.ylq.dto.req.XN802022Req;
-import com.cdkj.ylq.dto.req.XN802023Req;
 
 /**
  * 
@@ -22,8 +21,6 @@ public interface IBankcardAO {
     public void dropBankcard(String code);
 
     public void editBankcard(XN802022Req req);
-
-    public void editBankcard(XN802023Req req);
 
     public Paginable<Bankcard> queryBankcardPage(int start, int limit,
             Bankcard condition);

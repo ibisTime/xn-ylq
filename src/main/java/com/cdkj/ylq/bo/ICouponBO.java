@@ -10,7 +10,7 @@ public interface ICouponBO extends IPaginableBO<Coupon> {
 
     public Coupon getCoupon(String code);
 
-    public Coupon getCoupon(ECouponType type);
+    public Coupon getCoupon(ECouponType type, String companyCode);
 
     public int refreshStatus(Coupon data, String status, String updater,
             String remark);

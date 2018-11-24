@@ -97,6 +97,9 @@ public class BorrowOrder extends ABaseDO {
     // 放款方式
     private String loanType;
 
+    // 分期次数
+    private Integer stageCount;
+
     // 分期规则编号
     private String stageRuleCode;
 
@@ -108,15 +111,6 @@ public class BorrowOrder extends ABaseDO {
 
     // 是否计入优惠券
     private String isCoupon;
-
-    // 审核人
-    private String approver;
-
-    // 审核说明
-    private String approveNote;
-
-    // 审核时间
-    private Date approveDatetime;
 
     // 最后更新人
     private String updater;
@@ -292,30 +286,6 @@ public class BorrowOrder extends ABaseDO {
         return rate1;
     }
 
-    public String getApprover() {
-        return approver;
-    }
-
-    public void setApprover(String approver) {
-        this.approver = approver;
-    }
-
-    public String getApproveNote() {
-        return approveNote;
-    }
-
-    public void setApproveNote(String approveNote) {
-        this.approveNote = approveNote;
-    }
-
-    public Date getApproveDatetime() {
-        return approveDatetime;
-    }
-
-    public void setApproveDatetime(Date approveDatetime) {
-        this.approveDatetime = approveDatetime;
-    }
-
     public void setRate1(BigDecimal rate1) {
         this.rate1 = rate1;
     }
@@ -334,6 +304,14 @@ public class BorrowOrder extends ABaseDO {
 
     public void setYqlxAmount(BigDecimal yqlxAmount) {
         this.yqlxAmount = yqlxAmount;
+    }
+
+    public Integer getStageCount() {
+        return stageCount;
+    }
+
+    public void setStageCount(Integer stageCount) {
+        this.stageCount = stageCount;
     }
 
     public Integer getYqDays() {

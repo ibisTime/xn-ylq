@@ -25,7 +25,7 @@ public class UserCouponBOImpl extends PaginableBOImpl<UserCoupon> implements
 
     @Override
     public int saveUserCoupon(String userId, Coupon coupon, String updater,
-            String remark) {
+            String remark, String companyCode) {
         int count = 0;
         if (coupon != null && StringUtils.isNotBlank(userId)) {
             UserCoupon userCoupon = new UserCoupon();
@@ -42,6 +42,7 @@ public class UserCouponBOImpl extends PaginableBOImpl<UserCoupon> implements
             userCoupon.setUpdater(updater);
             userCoupon.setUpdateDatetime(now);
             userCoupon.setRemark(remark);
+            userCoupon.setCompanyCode(companyCode);
             count = userCouponDAO.insert(userCoupon);
         }
         return count;

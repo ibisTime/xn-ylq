@@ -46,7 +46,8 @@ public class UserCouponAOImpl implements IUserCouponAO {
         if (ECouponStatus.CLOSE.getCode().equals(coupon.getStatus())) {
             throw new BizException("623130", "该优惠活动处于关闭状态，不能发放");
         }
-        userCouponBO.saveUserCoupon(userId, coupon, updater, "管理端手动发放");
+        userCouponBO.saveUserCoupon(userId, coupon, updater, "管理端手动发放",
+            coupon.getCompanyCode());
     }
 
     @Override
@@ -65,8 +66,7 @@ public class UserCouponAOImpl implements IUserCouponAO {
             condition);
         if (CollectionUtils.isNotEmpty(results.getList())) {
             for (UserCoupon userCoupon : results.getList()) {
-                userCoupon
-                    .setUser(userBO.getRemoteUser(userCoupon.getUserId()));
+                userCoupon.setUser(userBO.getUser(userCoupon.getUserId()));
             }
         }
         return results;
@@ -87,7 +87,7 @@ public class UserCouponAOImpl implements IUserCouponAO {
     @Override
     public UserCoupon getUserCoupon(Long id) {
         UserCoupon userCoupon = userCouponBO.getUserCoupon(id);
-        userCoupon.setUser(userBO.getRemoteUser(userCoupon.getUserId()));
+        userCoupon.setUser(userBO.getUser(userCoupon.getUserId()));
         return userCoupon;
     }
 

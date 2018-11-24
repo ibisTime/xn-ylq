@@ -10,7 +10,8 @@ public interface IApplyAO {
     static final String DEFAULT_ORDER_COLUMN = "code";
 
     // 提交申请
-    public XN623020Res submitApply(String applyUser, String productCode);
+    public XN623020Res submitApply(String applyUser, String companyCode,
+            String remark);
 
     // 取消申请
     public void cancalApply(String applyUser);

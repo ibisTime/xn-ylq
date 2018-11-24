@@ -77,4 +77,6 @@ public interface IUserDAO extends IBaseDAO<User> {
     public int updateBlackList(User data);
 
     public int updateWhiteList(User data);
+
+    public int updateIsCoupon(User data);
 }

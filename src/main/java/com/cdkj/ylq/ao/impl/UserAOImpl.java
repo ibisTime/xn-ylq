@@ -22,16 +22,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.ao.IUserAO;
+import com.cdkj.ylq.bo.IBankcardBO;
 import com.cdkj.ylq.bo.ICompanyBO;
+import com.cdkj.ylq.bo.ICouponBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IUserBO;
+import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.MD5Util;
 import com.cdkj.ylq.common.PhoneUtil;
 import com.cdkj.ylq.common.RandomUtil;
-import com.cdkj.ylq.core.StringValidater;
+import com.cdkj.ylq.common.SysConstants;
+import com.cdkj.ylq.domain.Bankcard;
+import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN805042Req;
 import com.cdkj.ylq.dto.req.XN805043Req;
@@ -40,9 +45,9 @@ import com.cdkj.ylq.dto.req.XN805095Req;
 import com.cdkj.ylq.dto.res.XN001400Res;
 import com.cdkj.ylq.dto.res.XN805041Res;
 import com.cdkj.ylq.enums.EBoolean;
+import com.cdkj.ylq.enums.ECouponStatus;
+import com.cdkj.ylq.enums.ECouponType;
 import com.cdkj.ylq.enums.EIDKind;
-import com.cdkj.ylq.enums.EUser;
-import com.cdkj.ylq.enums.EUserKind;
 import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.exception.BizException;
 import com.google.gson.Gson;
@@ -70,6 +75,15 @@ public class UserAOImpl implements IUserAO {
     @Autowired
     private ICompanyBO companyBO;
 
+    @Autowired
+    private IBankcardBO bankcardBO;
+
+    @Autowired
+    private IUserCouponBO userCouponBO;
+
+    @Autowired
+    private ICouponBO couponBO;
+
     /** 
      * @see com.std.user.ao.IUserAO#doCheckMobile(java.lang.String, java.lang.String, java.lang.String)
      */
@@ -88,17 +102,36 @@ public class UserAOImpl implements IUserAO {
         // 1、参数校验
         // 验证手机号是否存在
         userBO.isMobileExist(mobile, companyCode);
+
         // 公司验证
         companyBO.getCompany(companyCode);
         // 验证推荐人是否存在,并将手机号转化为用户编号
         String userRefereeId = userBO.getUserId(userReferee, companyCode);
+        // 优惠券
+        List<User> users = userBO.getNoCouponList(userRefereeId, companyCode);
+        Coupon rule = couponBO.getCoupon(ECouponType.RECOMMENT, companyCode);
+
+        String isCoupon = EBoolean.NO.getCode();
+
+        if (rule.getCondition() - users.size() == 1
+                && ECouponStatus.OPEN.getCode().equals(rule.getStatus())) {
+            isCoupon = EBoolean.YES.getCode();
+            // 发优惠券
+            userCouponBO.saveUserCoupon(userRefereeId, rule, "程序自动发放",
+                "推荐注册人数达到" + rule.getCondition().toString() + "系统自动发放优惠券",
+                rule.getCompanyCode());
+            // 更新被推荐用户优惠券状态
+            for (User user : users) {
+                userBO.refreshIsCoupon(user);
+            }
+        }
+
         // 验证短信验证码
         smsOutBO.checkCaptcha(mobile, smsCaptcha, "805041", companyCode);
         // 2、注册用户
         String userId = userBO.doRegister(mobile, loginPwd, userRefereeId,
-            province, city, area, address, companyCode, createClient);
-        // 优惠券
-        // TODO
+            province, city, area, address, companyCode, createClient, isCoupon);
+
         // 分配认证信息
         certificationAO.initialCertification(userId);
 
@@ -125,40 +158,6 @@ public class UserAOImpl implements IUserAO {
     @Transactional
     public String doAddUser(XN805042Req req) {
         String userId = null;
-        userId = doAddUserYLQ(req);
-        return userId;
-    }
-
-    private String doAddUserYLQ(XN805042Req req) {
-        String userId = null;
-        if (EUserKind.Customer.getCode().equals(req.getKind())) {
-            // 验证手机号
-            userBO.isMobileExist(req.getMobile(), req.getCompanyCode());
-            // 判断登录密码是否为空
-            if (StringUtils.isBlank(req.getLoginPwd())) {
-                req.setLoginPwd(RandomUtil.generate6());
-            }
-            userId = userBO.doAddUser(req);
-
-            // 发送短信
-            smsOutBO
-                .sendSmsOut(
-                    req.getMobile(),
-                    "尊敬的"
-                            + PhoneUtil.hideMobile(req.getMobile())
-                            + "用户，您已成功注册。初始化登录密码为"
-                            + req.getLoginPwd()
-                            + "，请及时登录网站更改密码。APP下载地址：http://m.yiliangqian.com/share/share-qrcord.html",
-                    "805042", req.getCompanyCode());
-        } else if (EUserKind.Plat.getCode().equals(req.getKind())) {
-            // 验证登录名
-            userBO.isLoginNameExist(req.getLoginName(), req.getKind(),
-                req.getCompanyCode());
-
-            userId = userBO.doAddUser(req);
-        } else {
-            throw new BizException("xn805042", "用户类型" + req.getKind() + "未能识别");
-        }
         return userId;
     }
 
@@ -166,46 +165,6 @@ public class UserAOImpl implements IUserAO {
     @Transactional
     public String doApplyRegUser(XN805043Req req) {
         String userId = null;
-        userId = doApplyRegUserCaigo(req);
-        return userId;
-    }
-
-    private String doApplyRegUserCaigo(XN805043Req req) {
-        String userId = null;
-        if (EUserKind.Customer.getCode().equals(req.getKind())) {
-            // 验证手机号
-            userBO.isMobileExist(req.getMobile(), req.getCompanyCode());
-            // 判断登录密码是否为空
-            if (StringUtils.isBlank(req.getLoginPwd())) {
-                req.setLoginPwd(RandomUtil.generate6());
-            }
-            userId = userBO.doApplyRegUser(req, null);
-
-            // 发送短信
-            smsOutBO.sendSmsOut(req.getMobile(),
-                "尊敬的" + PhoneUtil.hideMobile(req.getMobile())
-                        + "用户，您已成功注册。初始化登录密码为" + req.getLoginPwd()
-                        + "，请及时登录网站更改密码。", "805043", req.getCompanyCode());
-        } else if (EUserKind.Merchant.getCode().equals(req.getKind())) {
-            // 验证手机号
-            userBO.isMobileExist(req.getMobile(), req.getCompanyCode());
-            // 判断登录密码是否为空
-            if (StringUtils.isBlank(req.getLoginPwd())) {
-                req.setLoginPwd(RandomUtil.generate6());
-            }
-            userId = userBO.doApplyRegUser(req, null);
-
-            // 发送短信
-            smsOutBO.sendSmsOut(req.getMobile(),
-                "尊敬的" + PhoneUtil.hideMobile(req.getMobile())
-                        + "用户，您已成功注册。初始化登录密码为" + req.getLoginPwd()
-                        + "，请及时登录网站更改密码。", "805043", req.getCompanyCode());
-        } else if (EUserKind.Plat.getCode().equals(req.getKind())) {
-            // 验证登录名
-            userBO.isLoginNameExist(req.getLoginName(), req.getKind(),
-                req.getCompanyCode());
-            userId = userBO.doApplyRegUser(req, null);
-        }
         return userId;
     }
 
@@ -500,7 +459,7 @@ public class UserAOImpl implements IUserAO {
             throw new BizException("li01004", "用户不存在");
         }
         // admin 不注销
-        if (EUser.ADMIN.getCode().equals(user.getLoginName())) {
+        if (SysConstants.ADMIN.equals(user.getLoginName())) {
             throw new BizException("li01004", "管理员无法注销");
         }
         String mobile = user.getMobile();
@@ -539,23 +498,6 @@ public class UserAOImpl implements IUserAO {
         // throw new BizException("li01004", "用户和角色系统不对应");
         // }
         userBO.refreshRole(userId, roleCode, updater, remark);
-    }
-
-    @Override
-    public void doApproveUser(String userId, String approver,
-            String approveResult, String divRate, String remark) {
-        User user = userBO.getUser(userId);
-        Double divRateD = null;
-        if (!EUserStatus.TO_APPROVE.getCode().equals(user.getStatus())
-                && !EUserStatus.APPROVE_NO.getCode().equals(user.getStatus())) {
-            throw new BizException("xn000000", "用户不处于待审核状态");
-        }
-        String userStatus = EUserStatus.APPROVE_NO.getCode();
-        if (EBoolean.YES.getCode().equals(approveResult)) {
-            userStatus = EUserStatus.NORMAL.getCode();
-            divRateD = StringValidater.toDouble(divRate);
-        }
-        userBO.approveUser(userId, approver, userStatus, divRateD, remark);
     }
 
     @Override
@@ -689,6 +631,9 @@ public class UserAOImpl implements IUserAO {
         Paginable<User> page = userBO.getPaginable(start, limit, condition);
         List<User> list = page.getList();
         for (User user : list) {
+            // 信用分返回
+            user.setCreditScore(certificationAO.getMyCreditAmount(
+                user.getUserId()).getSxAmount());
             // 推荐人转义
             User userReferee = userBO.getUser(user.getUserReferee());
             if (userReferee != null) {
@@ -760,6 +705,19 @@ public class UserAOImpl implements IUserAO {
             user.setRefereeUser(refereeUser);
 
         }
+        // 信用分返回
+        user.setCreditScore(certificationAO.getMyCreditAmount(user.getUserId())
+            .getSxAmount());
+        // 银行卡信息
+        Bankcard condition = new Bankcard();
+        List<Bankcard> cards = bankcardBO.queryBankcardList(condition);
+        if (cards.isEmpty()) {
+            user.setBankcardFlag(EBoolean.NO.getCode());
+        } else {
+            user.setBankcardFlag(EBoolean.YES.getCode());
+        }
+        condition.setUserId(userId);
+
         return user;
     }
 

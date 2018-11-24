@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.cdkj.ylq.ao.IProductAO;
 import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
+import com.cdkj.ylq.core.ObjValidater;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.dto.req.XN623012Req;
@@ -43,7 +44,7 @@ public class XN623012 extends AProcessor {
         Product condition = new Product();
         condition.setStatus(EProductStatus.ON.getCode());
         condition.setLocation(EProductLocation.NORMAL.getCode());
-        condition.setCompanyCode(req.getComapnyCode());
+        condition.setCompanyCode(req.getCompanyCode());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = IProductAO.DEFAULT_ORDER_COLUMN;
@@ -61,8 +62,7 @@ public class XN623012 extends AProcessor {
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN623012Req.class);
-        StringValidater.validateBlank(req.getStart(), req.getLimit(),
-            req.getComapnyCode());
+        ObjValidater.validateReq(req);
     }
 
 }

@@ -28,4 +28,6 @@ public interface IBorrowOrderDAO extends IBaseDAO<BorrowOrder> {
 
     public int updateRemark(BorrowOrder data);
 
+    public int updateCoupon(BorrowOrder data);
+
 }

@@ -54,11 +54,12 @@ public class CouponBOImpl extends PaginableBOImpl<Coupon> implements ICouponBO {
     }
 
     @Override
-    public Coupon getCoupon(ECouponType type) {
+    public Coupon getCoupon(ECouponType type, String companyCode) {
         Coupon data = null;
         if (type != null) {
             Coupon condition = new Coupon();
             condition.setType(type.getCode());
+            condition.setCompanyCode(companyCode);
             data = couponDAO.select(condition);
         }
         return data;

@@ -9,7 +9,7 @@ import com.cdkj.ylq.domain.UserCoupon;
 public interface IUserCouponBO extends IPaginableBO<UserCoupon> {
 
     public int saveUserCoupon(String userId, Coupon coupon, String updater,
-            String remark);
+            String remark, String companyCode);
 
     public int recycle(UserCoupon data, String updater, String remark);
 

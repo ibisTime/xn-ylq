@@ -1,6 +1,5 @@
 package com.cdkj.ylq.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import com.cdkj.ylq.dao.base.ABaseDO;
@@ -20,14 +19,11 @@ public class SYSUser extends ABaseDO {
     // 用户id
     private String userId;
 
-    // 类型（P平台用户R产权用户M养护用户）
+    // 类型（1=平台）
     private String kind;
 
     // 角色编号
     private String roleCode;
-
-    // 公司编号
-    private String companyCode;
 
     // 真实姓名
     private String realName;
@@ -76,27 +72,6 @@ public class SYSUser extends ABaseDO {
     // 名字模糊查询
     private String realNameForQuery;
 
-    // 古树数量
-    private String treeQuantity;
-
-    // 古树市值
-    private String treeValue;
-
-    // 总收入
-    private BigDecimal totalIncome;
-
-    // 所属产权方
-    private String owner;
-
-    // 公司
-    private Company company;
-
-    // 古树最大市值
-    private BigDecimal maxPrice;
-
-    // 古树最小市值
-    private BigDecimal minPrice;
-
     public String getUserId() {
         return userId;
     }
@@ -119,14 +94,6 @@ public class SYSUser extends ABaseDO {
 
     public void setRoleCode(String roleCode) {
         this.roleCode = roleCode;
-    }
-
-    public String getCompanyCode() {
-        return companyCode;
-    }
-
-    public void setCompanyCode(String companyCode) {
-        this.companyCode = companyCode;
     }
 
     public String getRealName() {
@@ -247,62 +214,6 @@ public class SYSUser extends ABaseDO {
 
     public void setRealNameForQuery(String realNameForQuery) {
         this.realNameForQuery = realNameForQuery;
-    }
-
-    public String getTreeQuantity() {
-        return treeQuantity;
-    }
-
-    public void setTreeQuantity(String treeQuantity) {
-        this.treeQuantity = treeQuantity;
-    }
-
-    public String getTreeValue() {
-        return treeValue;
-    }
-
-    public void setTreeValue(String treeValue) {
-        this.treeValue = treeValue;
-    }
-
-    public BigDecimal getTotalIncome() {
-        return totalIncome;
-    }
-
-    public void setTotalIncome(BigDecimal totalIncome) {
-        this.totalIncome = totalIncome;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public BigDecimal getMaxPrice() {
-        return maxPrice;
-    }
-
-    public void setMaxPrice(BigDecimal maxPrice) {
-        this.maxPrice = maxPrice;
-    }
-
-    public BigDecimal getMinPrice() {
-        return minPrice;
-    }
-
-    public void setMinPrice(BigDecimal minPrice) {
-        this.minPrice = minPrice;
     }
 
 }

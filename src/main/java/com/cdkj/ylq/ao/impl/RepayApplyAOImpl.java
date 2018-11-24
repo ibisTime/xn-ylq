@@ -1,25 +1,30 @@
 package com.cdkj.ylq.ao.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cdkj.ylq.ao.ICouponConditionAO;
 import com.cdkj.ylq.ao.IRepayApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowOrderBO;
 import com.cdkj.ylq.bo.ICertificationBO;
+import com.cdkj.ylq.bo.ICouponBO;
 import com.cdkj.ylq.bo.IOverdueBO;
 import com.cdkj.ylq.bo.IRepayApplyBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IUserBO;
+import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.domain.BorrowOrder;
+import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.RepayApply;
-import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBorrowStatus;
+import com.cdkj.ylq.enums.ECouponStatus;
+import com.cdkj.ylq.enums.ECouponType;
 import com.cdkj.ylq.enums.EOverdueDeal;
 import com.cdkj.ylq.enums.ERepayApplyStatus;
 import com.cdkj.ylq.enums.ERepayApplyType;
@@ -38,6 +43,12 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
     private IApplyBO applyBO;
 
     @Autowired
+    private IUserCouponBO userCouponBO;
+
+    @Autowired
+    private ICouponBO couponBO;
+
+    @Autowired
     private ICertificationBO certificationBO;
 
     @Autowired
@@ -45,9 +56,6 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
 
     @Autowired
     private IUserBO userBO;
-
-    @Autowired
-    private ICouponConditionAO couponConditionAO;
 
     @Autowired
     private IOverdueBO overdueBO;
@@ -63,8 +71,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         }
         if (ERepayApplyType.REPAY.getCode().equals(repayApply.getType())) {
             doApproveRepay(repayApply, approveResult, approver, approveNote);
-        } else if (ERepayApplyType.RENEWAL.getCode().equals(
-            repayApply.getType())) {
+        } else if (ERepayApplyType.STAGE.getCode().equals(repayApply.getType())) {
         }
     }
 
@@ -90,13 +97,24 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             // 更新借款订单信息
             borrowOrderBO
                 .repayOffline(borrow, repayApply.getAmount(), approver);
-            // 更新申请单状态
-            applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-                EApplyStatus.REPAY);
             // 额度重置为0
             certificationBO.resetSxAmount(borrow.getApplyUser());
             // 发放优惠券
-            couponConditionAO.repaySuccess(repayApply.getApplyUser());
+            // couponConditionAO.repaySuccess(repayApply.getApplyUser());
+            List<BorrowOrder> orders = borrowOrderBO.getCouponOrders(borrow
+                .getApplyUser());
+            Coupon rule = couponBO.getCoupon(ECouponType.BORROW,
+                borrow.getCompanyCode());
+            if (ECouponStatus.OPEN.getCode().equals(rule.getStatus())
+                    && rule.getCondition() - orders.size() == 1) {
+                userCouponBO.saveUserCoupon(borrow.getApplyUser(), rule,
+                    "程序自动发放", "成功借还" + rule.getCondition().toString()
+                            + "次系统发放优惠券", rule.getCompanyCode());
+                for (BorrowOrder borrowOrder : orders) {
+                    borrowOrderBO.refreshIsCoupon(borrowOrder);
+                }
+                borrowOrderBO.refreshIsCoupon(borrow);
+            }
             // 发送短信
             smsContent = "您的"
                     + CalculationUtil.diviUp(borrow.getAmount().longValue())
@@ -160,7 +178,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         Paginable<RepayApply> results = repayApplyBO.getPaginable(start, limit,
             condition);
         for (RepayApply repayApply : results.getList()) {
-            repayApply.setUser(userBO.getRemoteUser(repayApply.getApplyUser()));
+            repayApply.setUser(userBO.getUser(repayApply.getApplyUser()));
             if (ERepayApplyType.REPAY.getCode().equals(repayApply.getType())) {
                 repayApply.setBorrow(borrowOrderBO.getBorrow(repayApply
                     .getRefNo()));
@@ -172,7 +190,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
     @Override
     public RepayApply getRepayApply(String code) {
         RepayApply repayApply = repayApplyBO.getRepayApply(code);
-        repayApply.setUser(userBO.getRemoteUser(repayApply.getApplyUser()));
+        repayApply.setUser(userBO.getUser(repayApply.getApplyUser()));
         if (ERepayApplyType.REPAY.getCode().equals(repayApply.getType())) {
             repayApply
                 .setBorrow(borrowOrderBO.getBorrow(repayApply.getRefNo()));

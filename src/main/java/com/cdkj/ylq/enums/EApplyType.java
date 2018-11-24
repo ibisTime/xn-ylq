@@ -1,7 +1,7 @@
 package com.cdkj.ylq.enums;
 
 public enum EApplyType {
-    JZB("1", "九州宝"), JDT("2", "借贷通");
+    JZB("1", "九州宝");
 
     EApplyType(String code, String value) {
         this.code = code;

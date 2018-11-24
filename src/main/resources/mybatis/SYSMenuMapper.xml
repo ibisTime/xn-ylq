@@ -58,7 +58,7 @@
 		FROM
 		tsys_menu t
 		<include refid="where_condition"/>
-		order by t.code
+		order by t.order_no
 	</select>
 
 	<select id="select_sysMenu_count" parameterType="sysMenu" resultType="java.lang.Long">
@@ -77,7 +77,7 @@
 		,update_datetime
 		,remark	
 		,parent_code
-		,cmopany_code
+		,company_code
 		)
 		VALUES(
 		#{code}

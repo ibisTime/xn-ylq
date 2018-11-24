@@ -1,5 +1,6 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,11 +44,11 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
     }
 
     @Override
-    public void doApprove(Apply data, String status, Long sxAmount,
+    public void doApprove(Apply data, String status, BigDecimal sxAmount,
             String approver, String remark) {
         Date now = new Date();
         data.setStatus(status);
-        data.setSxAmount(sxAmount);
+        data.setCreditScore(sxAmount);
         data.setApprover(approver);
         data.setApproveDatetime(now);
         data.setApproveNote(remark);
@@ -79,10 +80,6 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
         statusList.add(EApplyStatus.TO_APPROVE.getCode());
         statusList.add(EApplyStatus.APPROVE_YES.getCode());
         statusList.add(EApplyStatus.APPROVE_NO.getCode());
-        statusList.add(EApplyStatus.TO_LOAN.getCode());
-        statusList.add(EApplyStatus.LOAN_NO.getCode());
-        statusList.add(EApplyStatus.LOANING.getCode());
-        statusList.add(EApplyStatus.OVERDUE.getCode());
         condition.setApplyUser(userId);
         condition.setStatusList(statusList);
         return applyDAO.select(condition);
@@ -109,6 +106,21 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
     @Override
     public void resubmit(Apply data) {
         applyDAO.updateResubmit(data);
+    }
+
+    @Override
+    public Apply getInCertApply(String userId) {
+        Apply condition = new Apply();
+        condition.setApplyUser(userId);
+        condition.setStatus(EApplyStatus.TO_CERTI.getCode());
+        Apply apply = applyDAO.select(condition);
+        return apply;
+    }
+
+    @Override
+    public void refreshCurNode(Apply apply, String curNode) {
+        // TODO Auto-generated method stub
+
     }
 
 }

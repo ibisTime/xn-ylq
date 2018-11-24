@@ -66,7 +66,7 @@ public class Bankcard extends ABaseDO {
     private String lastOrder;
 
     // 系统编号
-    private String systemCode;
+    private String companyCode;
 
     public String getBankCode() {
         return bankCode;
@@ -180,12 +180,12 @@ public class Bankcard extends ABaseDO {
         return lastOrder;
     }
 
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
+    public void setSystemCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public String getSystemCode() {
-        return systemCode;
+        return companyCode;
     }
 
     public Long getAmount() {

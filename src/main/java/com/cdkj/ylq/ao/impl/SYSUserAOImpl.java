@@ -21,18 +21,15 @@ import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.MD5Util;
 import com.cdkj.ylq.common.PhoneUtil;
-import com.cdkj.ylq.domain.Company;
+import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.domain.SYSRole;
 import com.cdkj.ylq.domain.SYSUser;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN630050Req;
-import com.cdkj.ylq.dto.req.XN630061Req;
 import com.cdkj.ylq.dto.res.XN629901Res;
 import com.cdkj.ylq.enums.EAccountType;
-import com.cdkj.ylq.enums.ESYSUserKind;
-import com.cdkj.ylq.enums.ESYSUserStatus;
 import com.cdkj.ylq.enums.ESystemCode;
-import com.cdkj.ylq.enums.EUser;
+import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.EBizErrorCode;
 
@@ -72,36 +69,7 @@ public class SYSUserAOImpl implements ISYSUserAO {
         return userId;
     }
 
-    @Override
-    @Transactional
-    public void commitCompany(XN630061Req req) {
-        SYSUser sysUser = sysUserBO.getSYSUser(req.getUserId());
-        if (ESYSUserKind.PLAT.getCode().equals(sysUser.getKind())) {
-            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "当前用户类型不支持");
-        }
-        if (!ESYSUserStatus.TO_FILL.getCode().equals(sysUser.getStatus())
-                && !ESYSUserStatus.APPROVE_NO.getCode().equals(
-                    sysUser.getStatus())) {
-            throw new BizException(EBizErrorCode.DEFAULT.getCode(),
-                "当前用户状态不是待提交资料或审核不通过，不能提交");
-        }
-
-        companyBO.refreshCompany(req);
-        sysUserBO.refreshStatus(req.getUserId(), ESYSUserStatus.TO_APPROVE,
-            req.getUserId(), null);
-    }
-
     // 代申请
-
-    @Override
-    public void approveSYSUser(String userId, String approveResult,
-            String updater, String remark) {
-        SYSUser data = sysUserBO.getSYSUser(userId);
-        if (!ESYSUserStatus.TO_APPROVE.getCode().equals(data.getStatus())) {
-            throw new BizException("xn805050", "用户不是待审核状态");
-        }
-        sysUserBO.approveSYSUser(data, approveResult, updater, remark);
-    }
 
     // 用户登录
     @Override
@@ -119,8 +87,8 @@ public class SYSUserAOImpl implements ISYSUserAO {
         }
         SYSUser user = userList2.get(0);
 
-        if (ESYSUserStatus.Li_Locked.getCode().equals(user.getStatus())
-                || ESYSUserStatus.Ren_Locked.getCode().equals(user.getStatus())) {
+        if (EUserStatus.Li_Locked.getCode().equals(user.getStatus())
+                || EUserStatus.Ren_Locked.getCode().equals(user.getStatus())) {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "当前用户已被锁定，请联系管理员");
         }
@@ -135,18 +103,18 @@ public class SYSUserAOImpl implements ISYSUserAO {
             throw new BizException("li01004", "用户不存在");
         }
         // admin 不注销
-        if (EUser.ADMIN.getCode().equals(user.getLoginName())) {
+        if (SysConstants.ADMIN.equals(user.getLoginName())) {
             throw new BizException("li01004", "管理员无法注销");
         }
         String mobile = user.getMobile();
         String smsContent = "";
-        ESYSUserStatus userStatus = null;
-        if (ESYSUserStatus.NORMAL.getCode().equalsIgnoreCase(user.getStatus())) {
+        EUserStatus userStatus = null;
+        if (EUserStatus.NORMAL.getCode().equalsIgnoreCase(user.getStatus())) {
             smsContent = "您的账号已被管理员封禁";
-            userStatus = ESYSUserStatus.Ren_Locked;
+            userStatus = EUserStatus.Ren_Locked;
         } else {
             smsContent = "您的账号已被管理员解封,请遵守平台相关规则";
-            userStatus = ESYSUserStatus.NORMAL;
+            userStatus = EUserStatus.NORMAL;
         }
         sysUserBO.refreshStatus(userId, userStatus, updater, remark);
         if (PhoneUtil.isMobile(mobile)) {
@@ -235,7 +203,7 @@ public class SYSUserAOImpl implements ISYSUserAO {
         }
 
         // 判断手机号是否存在
-        sysUserBO.isMobileExist(user.getKind(), newMobile);
+        sysUserBO.isMobileExist(newMobile);
 
         // 新手机号验证
         smsOutBO.checkCaptcha(newMobile, smsCaptcha, "630052", null);
@@ -266,18 +234,6 @@ public class SYSUserAOImpl implements ISYSUserAO {
         }
         Paginable<SYSUser> page = sysUserBO.getPaginable(start, limit,
             condition);
-        List<SYSUser> list = page.getList();
-        for (SYSUser sysUser : list) {
-            init(sysUser);
-
-            if (ESYSUserKind.OWNER.getCode().equals(sysUser.getKind())
-                    || ESYSUserKind.MAINTAIN.getCode()
-                        .equals(sysUser.getKind())) {
-                Company company = companyBO.getCompanyByUserId(sysUser
-                    .getUserId());
-                sysUser.setCompany(company);
-            }
-        }
         return page;
     }
 

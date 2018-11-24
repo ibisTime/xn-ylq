@@ -49,4 +49,8 @@ public interface IBorrowOrderBO extends IPaginableBO<BorrowOrder> {
 
     public int refreshRemark(String code, String remark);
 
+    public void refreshIsCoupon(BorrowOrder borrow);
+
+    public List<BorrowOrder> getCouponOrders(String userId);
+
 }
