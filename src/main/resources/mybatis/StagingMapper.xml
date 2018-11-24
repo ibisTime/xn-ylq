@@ -7,6 +7,7 @@
 		<result column="apply_user" property="applyUser" />
 		<result column="order_code" property="orderCode" />
 		<result column="pay_amount" property="payAmount" />
+		<result column="start_pay_date" property="startPayDate" />
 		<result column="last_pay_date" property="lastPayDate" />
 		<result column="pay_datetime" property="payDatetime" />
 		<result column="pay_type" property="payType" />
@@ -39,6 +40,7 @@
 		,t.apply_user
 		,t.order_code
 		,t.pay_amount
+		,t.start_pay_date
 		,t.last_pay_date
 		,t.pay_datetime
 		,t.pay_type
@@ -71,6 +73,7 @@
 		,apply_user
 		,order_code
 		,pay_amount
+		,start_pay_date
 		,last_pay_date
 		,pay_datetime
 		,pay_type
@@ -86,6 +89,7 @@
 		,#{applyUser}
 		,#{orderCode}
 		,#{payAmount}
+		,#{startPayDate}
 		,#{lastPayDate}
 		,#{payDatetime}
 		,#{payType}
@@ -121,7 +125,6 @@
 		apply_user = #{applyUser}
 		,order_code = #{orderCode}
 		,pay_amount = #{payAmount}
-		,last_pay_date = #{lastPayDate}
 		,pay_datetime = #{payDatetime}
 		,pay_type = #{payType}
 		,pay_code = #{payCode}

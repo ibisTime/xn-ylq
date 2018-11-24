@@ -99,6 +99,7 @@ public class CertificationAOImpl implements ICertificationAO {
     private YunYingShang yunYingShang;
 
     @Override
+    @Transactional
     public void submitIdentifyPic(String userId, String identifyPic,
             String identifyPicReverse, String identifyPicHand, String realName,
             String idNo) {
@@ -125,6 +126,7 @@ public class CertificationAOImpl implements ICertificationAO {
                 applyBO.refreshStatus(apply);
             }
         }
+        userBO.refreshRealName(userId, realName);
     }
 
     @Override
@@ -276,9 +278,9 @@ public class CertificationAOImpl implements ICertificationAO {
             String wifiMac, String imei) {
         // User user = userBO.getRemoteUser(userId);
         XN623050Res certiInfo = getCertiInfo(userId);
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
-            throw new BizException("xn623000", "请先进行身份认证");
-        }
+        // if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
+        // throw new BizException("xn623000", "请先进行身份认证");
+        // }
         if (EBoolean.NO.getCode().equals(certiInfo.getInfoBasicFlag())) {
             throw new BizException("xn623000", "请先完善基本信息");
         }
@@ -791,6 +793,7 @@ public class CertificationAOImpl implements ICertificationAO {
         res.setInfoCarrierFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoAddressBookFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoTongDunPreLoanFlag(ECertificationStatus.TO_CERTI.getCode());
+        res.setInfoZfbFlag(ECertificationStatus.TO_CERTI.getCode());
 
         for (Certification certification : certifications) {
             if (ECertiKey.INFO_IDENTIFY_PIC.getCode().equals(
@@ -848,6 +851,16 @@ public class CertificationAOImpl implements ICertificationAO {
                     certification.getFlag())) {
                     res.setInfoContact(JsonUtil.json2Bean(
                         certification.getResult(), InfoContact.class));
+                }
+            }
+
+            if (ECertiKey.INFO_ZHIFUBAO.getCode().equals(
+                certification.getCertiKey())) {
+                res.setInfoZfbFlag(certification.getFlag());
+                if (ECertificationStatus.CERTI_YES.getCode().equals(
+                    certification.getFlag())) {
+                    res.setInfoZfb(JsonUtil.json2Bean(
+                        certification.getResult(), InfoZfb.class));
                 }
             }
 
@@ -1015,6 +1028,15 @@ public class CertificationAOImpl implements ICertificationAO {
         tongdunPreloan.setCompanyCode(companyCode);
         certificationBO.saveCertification(tongdunPreloan);
         certifications.add(tongdunPreloan);
+
+        // 支付宝认证
+        Certification zfb = new Certification();
+        zfb.setUserId(userId);
+        zfb.setCertiKey(ECertiKey.INFO_ZHIFUBAO.getCode());
+        zfb.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        zfb.setCompanyCode(companyCode);
+        certificationBO.saveCertification(zfb);
+        certifications.add(zfb);
 
         // 授信额度
         Certification creditAmount = new Certification();

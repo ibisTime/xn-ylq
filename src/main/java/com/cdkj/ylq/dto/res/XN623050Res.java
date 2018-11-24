@@ -16,6 +16,7 @@ import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoTongDunPreLoan;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.InfoZfb;
 import com.cdkj.ylq.domain.User;
 
 /** 
@@ -99,6 +100,28 @@ public class XN623050Res {
 
     // 同盾贷前审核报告
     private InfoTongDunPreLoan infoTongDunPreLoan;
+
+    // 支付宝标示
+    private String infoZfbFlag;
+
+    // 支付宝报告
+    private InfoZfb infoZfb;
+
+    public String getInfoZfbFlag() {
+        return infoZfbFlag;
+    }
+
+    public void setInfoZfbFlag(String infoZfbFlag) {
+        this.infoZfbFlag = infoZfbFlag;
+    }
+
+    public InfoZfb getInfoZfb() {
+        return infoZfb;
+    }
+
+    public void setInfoZfb(InfoZfb infoZfb) {
+        this.infoZfb = infoZfb;
+    }
 
     public String getInfoTongDunPreLoanFlag() {
         return infoTongDunPreLoanFlag;

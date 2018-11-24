@@ -5,7 +5,6 @@
 	<resultMap id="sysuser_DB_Result" type="sysuser">
 		<result column="user_id" property="userId" />
 		<result column="role_code" property="roleCode" />
-		<result column="company_code" property="companyCode" />
 		<result column="real_name" property="realName" />	
 		<result column="photo" property="photo" />	
 		<result column="mobile" property="mobile" />	
@@ -23,9 +22,6 @@
 		<trim prefix="WHERE" prefixOverrides="AND | OR">			
 			<if test="userId != null and userId != '' ">
 				AND t.user_id = #{userId}
-			</if>
-			<if test="companyCode != null and companyCode != '' ">
-				AND t.company_code = #{companyCode}
 			</if>
 			<if test="loginName != null and loginName != '' ">
 				AND t.login_name = #{loginName}
@@ -67,7 +63,6 @@
 		SELECT
 		t.user_id
 		,t.role_code
-		,t.company_code
 		,t.real_name
 		,t.photo
 		,t.mobile
@@ -216,11 +211,5 @@
 		WHERE user_id = #{userId}
 	</update>
 	
-	<update id="update_company" parameterType="sysuser">
-		UPDATE tsys_user
-		SET
-		company_code=#{companyCode}
-		WHERE user_id = #{userId}
-	</update>
 	
 </mapper>

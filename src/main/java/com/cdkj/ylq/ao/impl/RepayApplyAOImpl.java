@@ -97,8 +97,8 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             // 更新借款订单信息
             borrowOrderBO
                 .repayOffline(borrow, repayApply.getAmount(), approver);
-            // 额度重置为0
-            certificationBO.resetSxAmount(borrow.getApplyUser());
+            // // 额度重置为0
+            // certificationBO.resetSxAmount(borrow.getApplyUser());
             // 发放优惠券
             // couponConditionAO.repaySuccess(repayApply.getApplyUser());
             List<BorrowOrder> orders = borrowOrderBO.getCouponOrders(borrow

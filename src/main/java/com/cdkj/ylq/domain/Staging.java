@@ -27,6 +27,9 @@ public class Staging extends ABaseDO {
     // 支付金额
     private BigDecimal payAmount;
 
+    // 开始日期
+    private String startPayDate;
+
     // 最晚支付日期
     private Date lastPayDate;
 
@@ -156,6 +159,14 @@ public class Staging extends ABaseDO {
 
     public String getCompanyCode() {
         return companyCode;
+    }
+
+    public String getStartPayDate() {
+        return startPayDate;
+    }
+
+    public void setStartPayDate(String startPayDate) {
+        this.startPayDate = startPayDate;
     }
 
 }

@@ -149,7 +149,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         }
         // 借款总额
         BigDecimal borrowAmount = infoAmount.getSxAmount();
-        if (borrowAmount.compareTo(product.getAmount()) < 0) {
+        if (borrowAmount.compareTo(product.getAmount()) > 0) {
             borrowAmount = product.getAmount();
         }
         // 利息
@@ -611,7 +611,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         long count = rule.getCount();
         long cycle = rule.getCycle();
         BigDecimal rate = rule.getRate();
-        for (long i = 0; i < count; i++) {
+        for (long i = 1; i <= count; i++) {
             // TODO
         }
     }
