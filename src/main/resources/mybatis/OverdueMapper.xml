@@ -9,6 +9,7 @@
 		<result column="days" property="days" />
 		<result column="amount" property="amount" />
 		<result column="result" property="result" />
+		<result column="company_code" property="companyCode" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -21,6 +22,9 @@
 			<if test="borrowCode != null and borrowCode != '' ">
 				AND t.borrow_code = #{borrowCode}
 			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
+			</if>
 		</trim>
 	</sql>
 	<select id="select_overdue" parameterType="overdue" resultMap="overdue_DB_Result">
@@ -31,8 +35,9 @@
 		,t.days
 		,t.amount
 		,t.result
+		,t.companyCode
 		FROM
-		t_overdue t
+		tjd_overdue t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -43,18 +48,19 @@
 
 	<select id="select_overdue_count" parameterType="overdue"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM t_overdue t
+		SELECT count(1) FROM tjd_overdue t
 		<include refid="where_condition" />
 	</select>
 
 	<insert id="insert_overdue" parameterType="overdue">
 		INSERT INTO
-		t_overdue(
+		tjd_overdue(
 		user_id
 		,borrow_code
 		,days
 		,amount
 		,result
+		,company_code
 		)
 		VALUES(
 		#{userId}
@@ -62,6 +68,7 @@
 		,#{days}
 		,#{amount}
 		,#{result}
+		,#{companyCode}
 		)
 	</insert>
 

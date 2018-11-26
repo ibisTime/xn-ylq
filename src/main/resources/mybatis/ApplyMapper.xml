@@ -90,7 +90,6 @@
 		,type
 		,apply_user
 		,apply_datetime
-		,product_code
 		,status
 		,credit_score
 		,approver
@@ -108,7 +107,6 @@
 		,#{type}
 		,#{applyUser}
 		,#{applyDatetime}
-		,#{productCode}
 		,#{status}
 		,#{creditScore}
 		,#{approver}

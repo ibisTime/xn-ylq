@@ -30,6 +30,7 @@
 		<result column="pay_group" property="payGroup" />
 		<result column="pay_type" property="payType" />
 		<result column="loan_type" property="loanType" />
+		<result column="is_stage" property="isStage" />
 		<result column="stage_count" property="stageCount" />
 		<result column="stage_rule_code" property="stageRuleCode" />
 		<result column="status" property="status" />
@@ -65,6 +66,9 @@
 			</if>
 			<if test="level != null and level != '' ">
 				AND t.level = #{level}
+			</if>
+			<if test="isStage != null and isStage != '' ">
+				AND t.is_stage = #{isStage}
 			</if>
 			<if test="isArchive != null and isArchive != '' ">
 				AND t.is_archive = #{isArchive}
@@ -133,6 +137,7 @@
 		,t.pay_group
 		,t.pay_type
 		,t.loan_type
+		,t.is_stage
 		,t.stage_count
 		,t.stage_rule_code
 		,t.status
@@ -184,13 +189,15 @@
 		,rate1
 		,rate2
 		,total_amount
+		,real_hk_amount
 		
+		,is_stage
 		,status
 		,stage_count
 		,is_archive
 		,is_coupon
-		,updater
 		
+		,updater
 		,update_datetime
 		,remark
 		,company_code
@@ -219,13 +226,15 @@
 		,#{rate1}
 		,#{rate2}
 		,#{totalAmount}
+		,#{realHkAmount}
 		
+		,#{isStage}
 		,#{status}
 		,#{stageCount}
 		,#{isArchive}
 		,#{isCoupon}
-		,#{updater}
 		
+		,#{updater}
 		,#{updateDatetime}
 		,#{remark}
 		,#{companyCode}
@@ -302,6 +311,7 @@
 		,real_hk_amount = #{realHkAmount}
 		,pay_type = #{payType}
 		,status = #{status}
+		,is_stage=#{isStage}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
@@ -360,13 +370,27 @@
 	<update id="update_stage" parameterType="borrowOrder">
 		UPDATE tjd_borrow_order
 		SET
-		total_amount=#{totalAmount}
+		yq_days=#{yqDays}
+		,yqlx_amount=#{yqlxAmount}
+		,is_stage=#{isStage}
 		,stage_count = #{stageCount}
 		,stage_rule_code=#{stageRuleCode}
+		,status=#{status}
 		,updater=#{updater}
 		,update_datetime=#{updateDatetime}
 		,remark=#{remark}
 		WHERE code = #{code}
+	</update>
+	
+	<update id="update_repay_stage" parameterType="borrowOrder">
+		UPDATE tjd_borrow_order
+		SET
+		total_amount=#{totalAmount}
+		,pay_type=#{payType}
+		,updater=#{updater}
+		,update_datetime=#{updateDatetime}
+		,remark=#{remark}
+		WHERE code=#{code}
 	</update>
 
 </mapper>

@@ -22,14 +22,13 @@ public class XN623030Req extends APageReq {
     // 申请人（选填）
     private String applyUser;
 
-    // 产品编号（选填）
-    private String productCode;
-
     // 状态
     private String status;
 
     // 状态List（选填）
     private List<String> statusList;
+
+    private String companyCode;
 
     public String getApplyUser() {
         return applyUser;
@@ -39,12 +38,12 @@ public class XN623030Req extends APageReq {
         this.applyUser = applyUser;
     }
 
-    public String getProductCode() {
-        return productCode;
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public String getStatus() {

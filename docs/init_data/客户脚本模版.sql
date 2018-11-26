@@ -510,12 +510,25 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('ios-c','note','v121版本更新说明','admin','2017-10-16 15:52:19','更新说明','GS2018112119133810071833');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('ios-c','downloadUrl','http://m.yiliangqian.com/share/share-qrcord.html','admin','2017-10-16 15:52:19','iOS下载地址','GS2018112119133810071833');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('ios-c','copyright','Copyright ©福建省大田县鑫盛小额贷款有限公司','admin','2017-10-16 15:52:19','版权所属','GS2018112119133810071833');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('qiniu','qiniu_access_key','zBD-sJ0fARnTQ8oFW5Fug6fAV0ZLqlibo_l4AJqk','admin','2018-11-19 01:55:09','七牛云key1','GS2018112119133810071833');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('qiniu','qiniu_secret_key','7EjwyeaoQKovNRR9zT08xSEjfUiXaULj_Cx05KUA','admin','2018-11-19 01:55:09','七牛云key1','GS2018112119133810071833');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('qiniu','qiniu_bucket','o2lin','admin','2018-11-19 01:55:09','存储空间','GS2018112119133810071833');
-INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('qiniu','qiniu_domain','http://image.o2lin.com','admin','2018-11-19 01:55:09','访问域名','GS2018112119133810071833');
 
 INSERT INTO `tjd_coupon_rule` (`code`,`type`,`get_condition`,`amount`,`valid_days`,`start_amount`,`status`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('CD-YLQ000014001','0',1,50000,30,1000000,'1','admin',now(),'推荐成功送','GS2018112119133810071833');
 INSERT INTO `tjd_coupon_rule` (`code`,`type`,`get_condition`,`amount`,`valid_days`,`start_amount`,`status`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('CD-YLQ000014002','1',2,80000,30,1000000,'1','ylq',now(),'借还成功送','GS2018112119133810071833');
+
+/*
+-- Query: SELECT * FROM dev_xn_ylq.tjd_business_man
+LIMIT 0, 5000
+
+-- Date: 2018-11-26 13:45
+*/
+INSERT INTO `tjd_business_man` (`user_id`,`role_code`,`company_code`,`real_name`,`photo`,`mobile`,`login_name`,`login_pwd`,`login_pwd_strength`,`create_datetime`,`status`,`is_jt`,`is_fk`,`is_dl`,`updater`,`update_datetime`,`remark`) VALUES ('JDS2018112119133807240821','JS201811081749297484833','GS2018112119133810071833','tao','','18251859953','test','96e79218965eb72c92a549dd5a330112','1','2018-11-21 19:13:38','0','1','1','1','UCOIN201700000000000001','2018-11-24 18:11:10',NULL);
+
+
+/*
+-- Query: SELECT * FROM dev_xn_ylq.tsys_company
+LIMIT 0, 5000
+
+-- Date: 2018-11-26 13:49
+*/
+INSERT INTO `tsys_company` (`code`,`user_id`,`name`,`charger`,`charge_mobile`,`province`,`city`,`area`,`address`,`description`,`bussiness_license`,`organization_code`,`certificate_template`,`contract_template`,`create_datetime`,`updater`,`update_datetime`,`remark`) VALUES ('GS2018112119133810071833','JDS2018112119133807240821',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2018-11-21 19:13:38',NULL,NULL,NULL);
 
 

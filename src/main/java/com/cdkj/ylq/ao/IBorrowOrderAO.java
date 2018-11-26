@@ -31,10 +31,12 @@ public interface IBorrowOrderAO {
             BigDecimal amount);
 
     // 正常分期
-    public void nomalStaging(String ruleCode, String orderCode);
+    public void nomalStaging(String ruleCode, String orderCode, String updater,
+            String remark);
 
     // 逾期分期
-    public void yqStaging(String ruleCode, String orderCode);
+    public void yqStaging(String ruleCode, String orderCode, String updater,
+            String remark);
 
     // 管理端：催收（发送短信至紧急联系人和运营商联系人中排名前N的手机）
     public void cuishou(String code);
@@ -60,6 +62,9 @@ public interface IBorrowOrderAO {
 
     // 定时器调用：每日17:00:00点检查明天即将到期借款，并短信提醒
     public void doCheckWillRepayDaily();
+
+    // 每天检查分期记录
+    public void doCheckStageDaily();
 
     // 查询用户当前是否有借款
     public XN623091Res isBorrowing(String userId);

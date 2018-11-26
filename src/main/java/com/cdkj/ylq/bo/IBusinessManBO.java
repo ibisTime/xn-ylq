@@ -21,6 +21,8 @@ public interface IBusinessManBO extends IPaginableBO<BusinessMan> {
 
     public BusinessMan getBusinessMan(String userId);
 
+    public BusinessMan getBusinessManByCompanyCode(String companyCode);
+
     public void refreshMobile(BusinessMan data, String mobile);
 
     public void refreshLoginPwd(BusinessMan data, String password);

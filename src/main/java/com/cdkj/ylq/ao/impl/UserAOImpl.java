@@ -639,6 +639,7 @@ public class UserAOImpl implements IUserAO {
             if (userReferee != null) {
                 user.setRefereeUser(userReferee);
             }
+            user.setCompany(companyBO.getCompany(user.getCompanyCode()));
         }
         return page;
     }

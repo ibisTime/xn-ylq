@@ -51,4 +51,9 @@ public class StagingDAOImpl extends AMybatisTemplate implements IStagingDAO {
         return super.update(NAMESPACE.concat("update_repay"), data);
     }
 
+    @Override
+    public int updateStatus(Staging data) {
+        return super.update(NAMESPACE.concat("update_status"), data);
+    }
+
 }

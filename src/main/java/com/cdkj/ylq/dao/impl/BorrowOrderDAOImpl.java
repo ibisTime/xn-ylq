@@ -107,4 +107,14 @@ public class BorrowOrderDAOImpl extends AMybatisTemplate implements
         return super.update(NAMESPACE.concat("update_coupon"), data);
     }
 
+    @Override
+    public int updateStage(BorrowOrder data) {
+        return super.update(NAMESPACE.concat("update_stage"), data);
+    }
+
+    @Override
+    public int updateRepayStage(BorrowOrder data) {
+        return super.update(NAMESPACE.concat("update_repay_stage"), data);
+    }
+
 }

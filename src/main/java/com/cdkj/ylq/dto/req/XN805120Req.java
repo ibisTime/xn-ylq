@@ -90,11 +90,33 @@ public class XN805120Req extends APageReq {
     // 更新人(选填)
     private String updater;
 
+    // 是否黑名单
+    private String isBlackList;
+
+    // 是否白名单
+    private String isWhiteList;
+
     // 公司编号(必填)
     private String companyCode;
 
     // 系统编号(必填)
     private String systemCode;
+
+    public String getIsBlackList() {
+        return isBlackList;
+    }
+
+    public void setIsBlackList(String isBlackList) {
+        this.isBlackList = isBlackList;
+    }
+
+    public String getIsWhiteList() {
+        return isWhiteList;
+    }
+
+    public void setIsWhiteList(String isWhiteList) {
+        this.isWhiteList = isWhiteList;
+    }
 
     public String getLoginName() {
         return loginName;

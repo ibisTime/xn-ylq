@@ -97,6 +97,9 @@ public class BorrowOrder extends ABaseDO {
     // 放款方式
     private String loanType;
 
+    // 是否分期
+    private String isStage;
+
     // 分期次数
     private Integer stageCount;
 
@@ -153,6 +156,25 @@ public class BorrowOrder extends ABaseDO {
 
     // 是否逾期
     private String isOverdue;
+
+    // 分期列表
+    private List<StageInfo> stageList;
+
+    public List<StageInfo> getStageList() {
+        return stageList;
+    }
+
+    public void setStageList(List<StageInfo> stageList) {
+        this.stageList = stageList;
+    }
+
+    public String getIsStage() {
+        return isStage;
+    }
+
+    public void setIsStage(String isStage) {
+        this.isStage = isStage;
+    }
 
     public String getCode() {
         return code;

@@ -13,8 +13,8 @@ public interface IStagingBO extends IPaginableBO<Staging> {
     public boolean isStagingExist(String code);
 
     public String saveStaging(String applyUser, String orderCode,
-            BigDecimal payAmount, Date lastPayDate, Integer count,
-            Integer batch, String companyCode);
+            BigDecimal mainAmount, BigDecimal rate, Date startPayDate,
+            Date lastPayDate, Long count, Integer batch, String companyCode);
 
     public List<Staging> queryStagingList(Staging condition);
 
@@ -22,5 +22,9 @@ public interface IStagingBO extends IPaginableBO<Staging> {
 
     public void refreshRepay(String code, String payType, String payCode,
             String payGroup);
+
+    public List<Staging> queryBorrowStagings(String orderCode);
+
+    public void refreshOverdue(Staging staging);
 
 }

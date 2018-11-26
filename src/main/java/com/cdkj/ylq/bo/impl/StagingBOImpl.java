@@ -55,14 +55,16 @@ public class StagingBOImpl extends PaginableBOImpl<Staging> implements
 
     @Override
     public String saveStaging(String applyUser, String orderCode,
-            BigDecimal payAmount, Date lastPayDate, Integer count,
-            Integer batch, String companyCode) {
+            BigDecimal mainAmount, BigDecimal rate, Date startPayDate,
+            Date lastPayDate, Long count, Integer batch, String companyCode) {
         Staging data = new Staging();
         String code = OrderNoGenerater.generateM("ST");
         data.setCode(code);
         data.setApplyUser(applyUser);
         data.setOrderCode(orderCode);
-        data.setPayAmount(payAmount);
+        data.setMainAmount(mainAmount);
+        data.setRate(rate);
+        data.setStartPayDate(startPayDate);
         data.setLastPayDate(lastPayDate);
         data.setStatus(EStagingStatus.TOREPAY.getCode());
         data.setCount(count);
@@ -80,5 +82,20 @@ public class StagingBOImpl extends PaginableBOImpl<Staging> implements
         staging.setPayType(payType);
         staging.setPayGroup(payGroup);
         staging.setPayDatetime(new Date());
+    }
+
+    @Override
+    public List<Staging> queryBorrowStagings(String orderCode) {
+        Staging condition = new Staging();
+        condition.setOrderCode(orderCode);
+        condition.setStatus(EStagingStatus.TOREPAY.getCode());
+        List<Staging> stageList = stagingDAO.selectList(condition);
+        return stageList;
+    }
+
+    @Override
+    public void refreshOverdue(Staging staging) {
+        staging.setStatus(EStagingStatus.OVERDUE.getCode());
+        stagingDAO.updateStatus(staging);
     }
 }
