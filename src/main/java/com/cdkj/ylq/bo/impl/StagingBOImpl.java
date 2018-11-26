@@ -75,12 +75,11 @@ public class StagingBOImpl extends PaginableBOImpl<Staging> implements
     }
 
     @Override
-    public void refreshRepay(String code, String payType, String payCode,
-            String payGroup) {
+    public void refreshRepay(String code, String payType, String payCode) {
         Staging staging = getStaging(payCode);
         staging.setPayCode(payCode);
         staging.setPayType(payType);
-        staging.setPayGroup(payGroup);
+        staging.setStatus(EStagingStatus.REPAY.getCode());
         staging.setPayDatetime(new Date());
     }
 

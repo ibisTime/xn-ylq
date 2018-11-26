@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.cdkj.ylq.exception.EBizErrorCode;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -213,23 +214,30 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
     private void initStageList(BorrowOrder order) {
 
         List<StageInfo> infoList = new ArrayList<StageInfo>();
+
+        //待还款的分期计划列表（实时计算应还金额）
         List<Staging> stageList = stagingBO
             .queryBorrowStagings(order.getCode());
+
         for (Staging staging : stageList) {
-            Date now = new Date();
-            if (!now.after(staging.getStartPayDate())) {
-                now = staging.getStartPayDate();
+            Date startDate = new Date();
+            //如果当前时间在还款开始时间之前，按开始时间算
+            if (startDate.before(staging.getStartPayDate())) {
+                startDate = staging.getStartPayDate();
             }
-            for (; now.before(staging.getLastPayDate()); DateUtil
-                .getRelativeDateOfDays(now, 1)) {
-                int days = DateUtil.daysBetween(staging.getStartPayDate(), now) + 1;
+            for (; startDate.before(staging.getLastPayDate()); DateUtil
+                .getRelativeDateOfDays(startDate, 1)) {
+                //距离开始时间已有几天
+                int days = DateUtil.daysBetween(staging.getStartPayDate(), startDate) + 1;
+                //利息
                 BigDecimal amount = staging.getRate()
                     .multiply(new BigDecimal(days))
                     .add(staging.getMainAmount());
+                //构建还款信息
                 StageInfo info = new StageInfo();
                 info.setStageCode(staging.getCode());
                 info.setAmount(amount);
-                info.setDate(DateUtil.dateToStr(now,
+                info.setDate(DateUtil.dateToStr(startDate,
                     DateUtil.DB_DATE_FORMAT_STRING));
                 info.setRemark("第" + staging.getCount() + "期，第" + days + "天");
                 infoList.add(info);
@@ -254,10 +262,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                     DateUtil.getTodayStart(),
                     DateUtil.getTomorrowStart(borrow.getHkDatetime())));
             }
-            if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
-                    && EBoolean.YES.getCode().equals(borrow.getIsStage())) {
-                initStageList(borrow);
-            }
         }
         return results;
     }
@@ -274,10 +278,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 borrow.setRemainDays(DateUtil.daysBetween(
                     DateUtil.getTodayStart(),
                     DateUtil.getTomorrowStart(borrow.getHkDatetime())));
-            }
-            if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
-                    && EBoolean.YES.getCode().equals(borrow.getIsStage())) {
-                initStageList(borrow);
             }
 
         }
@@ -664,7 +664,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
 
     private void stageOverdue(Staging staging) {
 
-        // 更新借款记录
+        // 查询借款订单
         BorrowOrder borrow = borrowOrderBO.getBorrow(staging.getOrderCode());
 
         Staging condition = new Staging();
@@ -673,20 +673,27 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         List<Staging> stagingList = stagingBO.queryStagingList(condition);
         StagingRule rule = stagingRuleBO.getStagingRule(borrow
             .getStageRuleCode());
-        // 分期利息
-        BigDecimal remainAmount = staging.getRate().multiply(
+
+        // 此次分期应付利息
+        BigDecimal lxAmount = staging.getRate().multiply(staging.getMainAmount()).multiply(
             new BigDecimal(rule.getCycle()));
+
+        //剩余未还总本金
+        BigDecimal remainAmount = BigDecimal.ZERO;
         for (Staging data : stagingList) {
-            // 分期记录更新
+            // 分期记录设置成逾期
             stagingBO.refreshOverdue(data);
-            // 剩余金额累加
+            // 分期应还本金累加
             remainAmount = remainAmount.add(data.getMainAmount());
         }
-        stagingBO.refreshOverdue(staging);
+
+        //本次逾期一天造成利息=7天内逾期利息*应还本息
+        BigDecimal yqlxAmount = borrow.getRate1().multiply(remainAmount.add(lxAmount));
+
+        // 更新借款订单
         borrow.setYqDays(1);
-        borrow.setYqlxAmount(remainAmount);
-        borrow.setTotalAmount(borrow.getRate1().multiply(remainAmount)
-            .add(remainAmount));
+        borrow.setYqlxAmount(yqlxAmount);
+        borrow.setTotalAmount(yqlxAmount.add(remainAmount));
         borrow.setStatus(EBorrowStatus.OVERDUE.getCode());
         borrow.setUpdater("程序自动");
         borrow.setUpdateDatetime(new Date());
@@ -715,13 +722,22 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
     public void nomalStaging(String ruleCode, String orderCode, String updater,
             String remark) {
         BorrowOrder borrow = borrowOrderBO.getBorrow(orderCode);
-        if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())) {
-            throw new BizException("xn0000", "该订单状态不可正常分期");
+        if (!EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "订单不处于待还款状态，不可进行分期");
         }
+        if (EBoolean.YES.getCode().equals(borrow.getIsStage())) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "订单已分期，请勿重复分期");
+        }
+        List<RepayApply> result = repayApplyBO
+                .queryCurrentRepayApplyList(borrow.getApplyUser());
+        if (result.size() > 0) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "该订单当前有一条待审核的还款申请，请先完成审批");
+        }
+        //分期规则
         StagingRule rule = stagingRuleBO.getStagingRule(ruleCode);
-        long count = rule.getCount();
-        long cycle = rule.getCycle();
-        BigDecimal rate = rule.getRate();
+        long count = rule.getCount(); //期数
+        long cycle = rule.getCycle(); //周期
+        BigDecimal rate = rule.getRate(); //分期日利率
         for (int i = 0; i < count; i++) {
             // 本期分期开始时间
             Date startPayDate = DateUtil.getDaysStart(borrow.getHkDatetime(),
@@ -772,6 +788,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 borrow.getCompanyCode());
         }
         borrowOrderBO.refreshStaging(borrow, ruleCode, updater, remark);
+
+        //落地逾期记录
 
     }
 

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.cdkj.ylq.enums.*;
+import com.cdkj.ylq.exception.EBizErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,15 +31,6 @@ import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.RepayApply;
 import com.cdkj.ylq.domain.Staging;
 import com.cdkj.ylq.domain.StagingRule;
-import com.cdkj.ylq.enums.EBoolean;
-import com.cdkj.ylq.enums.EBorrowStatus;
-import com.cdkj.ylq.enums.ECouponStatus;
-import com.cdkj.ylq.enums.ECouponType;
-import com.cdkj.ylq.enums.EGeneratePrefix;
-import com.cdkj.ylq.enums.EOverdueDeal;
-import com.cdkj.ylq.enums.ERepayApplyStatus;
-import com.cdkj.ylq.enums.ERepayApplyType;
-import com.cdkj.ylq.enums.EStagingStatus;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
@@ -151,7 +144,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             status = ERepayApplyStatus.APPROVE_YES.getCode();
             Staging staging = stagingBO.getStaging(repayApply.getRefNo());
             if (EStagingStatus.TOREPAY.getCode().equals(staging.getStatus())) {
-                throw new BizException("xn623000", "关联的不处于待还款状态");
+                throw new BizException(EBizErrorCode.DEFAULT.getCode(), "分期计划不处于待还款状态");
             }
             BorrowOrder order = borrowOrderBO.getBorrow(staging.getOrderCode());
             // 判断是否是最后一次分期
@@ -181,6 +174,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                 borrowOrderBO.refreshStageRepay(order, staging.getMainAmount(),
                     approver);
             }
+            stagingBO.refreshRepay(staging.getCode(),EPayType.OFFLINE.getCode(),repayApply.getCode());
             // 发送短信
             smsContent = "您的"
                     + CalculationUtil
@@ -225,17 +219,17 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
     @Transactional
     public String repayStage(String code) {
         Staging staging = stagingBO.getStaging(code);
-        if (EStagingStatus.REPAY.getCode().equals(staging.getStatus())) {
-            throw new BizException("xn6230000", "借款不处于待还款状态");
+        if (!EStagingStatus.TOREPAY.getCode().equals(staging.getStatus())) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "分期计划不处于待还款状态，不能进行还款操作");
         }
         List<RepayApply> result = repayApplyBO
             .queryCurrentRepayApplyList(staging.getApplyUser());
         if (result.size() > 0) {
-            throw new BizException("xn623000", "您已经有一条待审核的打款申请，请勿重复提交");
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "您已经有一条待审核的还款申请，请勿重复提交");
         }
         Date now = new Date();
         if (staging.getStartPayDate().after(now)) {
-            throw new BizException("xn623000", "此次分期还未到开始还款日期，无法提前还款");
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "此次分期还未到开始还款日期，无法提前还款");
         }
 
         // 计息天数
@@ -244,6 +238,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         BigDecimal lxAmount = new BigDecimal(days).multiply(staging.getRate());
         // 还款金额
         BigDecimal payAmount = staging.getMainAmount().add(lxAmount);
+
         RepayApply repayApply = new RepayApply();
         String repayCode = OrderNoGenerater
             .generateM(EGeneratePrefix.REPAY_APPLY.getCode());

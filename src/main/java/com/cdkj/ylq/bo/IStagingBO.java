@@ -20,8 +20,7 @@ public interface IStagingBO extends IPaginableBO<Staging> {
 
     public Staging getStaging(String code);
 
-    public void refreshRepay(String code, String payType, String payCode,
-            String payGroup);
+    public void refreshRepay(String code, String payType, String payCode);
 
     public List<Staging> queryBorrowStagings(String orderCode);
 
