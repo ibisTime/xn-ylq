@@ -41,8 +41,8 @@ public class APIServlet extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
         logger.info("Successful Deployment");
         PrintWriter writer = response.getWriter();
-        writer.append("Version:1.3.0 \n");
-        writer.append("Description:ylq 3.1rd \n");
+        writer.append("Version:1.4.0 \n");
+        writer.append("Description:ylq 1.4.0 \n");
         writer.flush();
     }
 
