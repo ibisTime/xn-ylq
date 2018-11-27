@@ -22,4 +22,6 @@ public interface INoticerBO extends IPaginableBO<Noticer> {
 
     public Noticer getNoticer(String code);
 
+    public List<Noticer> queryNoticersNow(String type, String companyCode);
+
 }

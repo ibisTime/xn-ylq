@@ -305,14 +305,16 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
     }
 
     @Override
-    public void refreshStaging(BorrowOrder borrow, String ruleCode,
-            String updater, String remark) {
+    public void refreshStaging(BorrowOrder borrow, Long stageCount,
+            Long stageCycle, String updater, String remark) {
         borrow.setYqDays(0);
         borrow.setYqlxAmount(BigDecimal.ZERO);
+        borrow.setAmount(borrow.getTotalAmount());
         borrow.setIsStage(EBoolean.YES.getCode());
         borrow.setStatus(EBorrowStatus.LOANING.getCode());
-        borrow.setStageCount(borrow.getStageCount() + 1);
-        borrow.setStageRuleCode(ruleCode);
+        borrow.setStageBatch(borrow.getStageBatch() + 1);
+        borrow.setStageCount(stageCount);
+        borrow.setStageCycle(stageCycle);
         borrow.setUpdater(updater);
         borrow.setUpdateDatetime(new Date());
         borrow.setRemark(remark);

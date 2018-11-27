@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cdkj.ylq.ao.IApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.ICertificationBO;
+import com.cdkj.ylq.bo.INoticerBO;
 import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
@@ -23,6 +24,7 @@ import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
+import com.cdkj.ylq.domain.Noticer;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.res.XN623020Res;
 import com.cdkj.ylq.enums.EApplyStatus;
@@ -30,6 +32,8 @@ import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
+import com.cdkj.ylq.enums.ENoticerType;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
@@ -37,6 +41,9 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Autowired
     private IApplyBO applyBO;
+
+    @Autowired
+    private INoticerBO noticerBO;
 
     @Autowired
     private IUserBO userBO;
@@ -56,6 +63,7 @@ public class ApplyAOImpl implements IApplyAO {
     @Override
     public XN623020Res submitApply(String applyUser, String companyCode,
             String remark) {
+        Date now = new Date();
         User user = userBO.getUser(applyUser);
         if (EBoolean.YES.getCode().equals(user.getIsBlackList())) {
             throw new BizException("xn000000", "由于您逾期未还款，已被平台拉入黑名单，请联系平台进行处理！");
@@ -64,18 +72,27 @@ public class ApplyAOImpl implements IApplyAO {
         String status = EApplyStatus.TO_CERTI.getCode();
         if (certificationBO.isCompleteCerti(applyUser)) {
             status = EApplyStatus.TO_APPROVE.getCode();
+            // 通知信用分审核人
+            List<Noticer> noticers = noticerBO.queryNoticersNow(
+                ENoticerType.Credit.getCode(), companyCode);
+            for (Noticer noticer : noticers) {
+                smsOutBO.sendContent(noticer.getMobile(),
+                    "有一个信用分申请单待审核，请尽快登陆管理端进行审核", companyCode,
+                    ESystemCode.YLQ.getCode());
+            }
         }
 
         Apply apply = applyBO.getCurrentApply(applyUser);
         if (apply != null) {
             if (EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())) {
-                if (DateUtil.daysBetween(apply.getApplyDatetime(), new Date()) < 7) {
+                if (DateUtil.daysBetween(apply.getApplyDatetime(), now) < 7) {
                     throw new BizException("xn623020",
                         "您在一周内已经有一个申请被驳回，请在一周后重新尝试。");
                 }
+                apply.setApplyDatetime(now);
                 apply.setStatus(status);
                 apply.setUpdater(applyUser);
-                apply.setUpdateDatetime(new Date());
+                apply.setUpdateDatetime(now);
                 apply.setRemark("重新提交申请");
                 applyBO.resubmit(apply);
                 res.setCode(apply.getCode());
@@ -89,10 +106,10 @@ public class ApplyAOImpl implements IApplyAO {
                 .getCode());
             data.setCode(code);
             data.setApplyUser(applyUser);
-            data.setApplyDatetime(new Date());
+            data.setApplyDatetime(now);
             data.setStatus(status);
             data.setUpdater(applyUser);
-            data.setUpdateDatetime(new Date());
+            data.setUpdateDatetime(now);
             data.setRemark("新申请");
             data.setCompanyCode(companyCode);
             applyBO.saveApply(data);
@@ -151,7 +168,8 @@ public class ApplyAOImpl implements IApplyAO {
                     + "，请保证填写的资料为本人真实资料,如需再次申请，请7天后再登陆APP提交审核。";
         }
         applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
-        smsOutBO.sentContent(apply.getApplyUser(), content);
+        smsOutBO.sendContent(apply.getApplyUser(), content,
+            apply.getCompanyCode(), ESystemCode.YLQ.getCode());
     }
 
     @Override

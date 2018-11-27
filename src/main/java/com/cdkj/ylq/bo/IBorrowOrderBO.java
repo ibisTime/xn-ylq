@@ -53,8 +53,8 @@ public interface IBorrowOrderBO extends IPaginableBO<BorrowOrder> {
 
     public List<BorrowOrder> getCouponOrders(String userId);
 
-    public void refreshStaging(BorrowOrder borrow, String ruleCode,
-            String updater, String remark);
+    public void refreshStaging(BorrowOrder borrow, Long stageCount,
+            Long stageCycle, String updater, String remark);
 
     public void refreshStageRepay(BorrowOrder order, BigDecimal amount,
             String updater);

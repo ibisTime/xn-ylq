@@ -6,7 +6,7 @@ package com.cdkj.ylq.enums;
  * @history:
  */
 public enum EOverdueDeal {
-    REPAY("0", "逾期后还款"), RENEWAL("1", "逾期后续期"), BAD("2", "逾期后确认坏账");
+    REPAY("0", "逾期后还款"), STAGE("1", "逾期后分期"), BAD("2", "逾期后确认坏账");
 
     EOverdueDeal(String code, String value) {
         this.code = code;

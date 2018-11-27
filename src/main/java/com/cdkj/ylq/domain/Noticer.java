@@ -47,6 +47,40 @@ public class Noticer extends ABaseDO {
     // 公司编号
     private String companyCode;
 
+    // ******************************
+    // 当前时间
+    private Date curDatetime;
+
+    // 本日开始时间
+    private Date dayStartTime;
+
+    // 本日结束时间
+    private Date dayEndTime;
+
+    public Date getCurDatetime() {
+        return curDatetime;
+    }
+
+    public void setCurDatetime(Date curDatetime) {
+        this.curDatetime = curDatetime;
+    }
+
+    public Date getDayStartTime() {
+        return dayStartTime;
+    }
+
+    public void setDayStartTime(Date dayStartTime) {
+        this.dayStartTime = dayStartTime;
+    }
+
+    public Date getDayEndTime() {
+        return dayEndTime;
+    }
+
+    public void setDayEndTime(Date dayEndTime) {
+        this.dayEndTime = dayEndTime;
+    }
+
     public void setCode(String code) {
         this.code = code;
     }

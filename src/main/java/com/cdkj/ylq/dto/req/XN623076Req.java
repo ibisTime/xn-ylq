@@ -8,6 +8,8 @@
  */
 package com.cdkj.ylq.dto.req;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /** 
  * @author: haiqingzheng 
  * @since: 2017年8月16日 下午5:03:02 
@@ -16,16 +18,19 @@ package com.cdkj.ylq.dto.req;
 public class XN623076Req {
 
     // 借款编号（必填）
+    @NotBlank
     private String code;
 
-    // 审核结果（必填）
-    private String approveResult;
+    // 规则编号（必填）
+    @NotBlank
+    private String stageRuleCode;
 
     // 审核人（必填）
-    private String approver;
+    @NotBlank
+    private String updater;
 
     // 审核说明（必填）
-    private String approveNote;
+    private String remark;
 
     public String getCode() {
         return code;
@@ -35,28 +40,28 @@ public class XN623076Req {
         this.code = code;
     }
 
-    public String getApproveResult() {
-        return approveResult;
+    public String getStageRuleCode() {
+        return stageRuleCode;
     }
 
-    public void setApproveResult(String approveResult) {
-        this.approveResult = approveResult;
+    public void setStageRuleCode(String stageRuleCode) {
+        this.stageRuleCode = stageRuleCode;
     }
 
-    public String getApprover() {
-        return approver;
+    public String getUpdater() {
+        return updater;
     }
 
-    public void setApprover(String approver) {
-        this.approver = approver;
+    public void setUpdater(String updater) {
+        this.updater = updater;
     }
 
-    public String getApproveNote() {
-        return approveNote;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setApproveNote(String approveNote) {
-        this.approveNote = approveNote;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
 }

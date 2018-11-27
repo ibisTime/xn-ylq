@@ -162,7 +162,8 @@
 	<update id="update_resubmit" parameterType="apply">
 		UPDATE tjd_apply
 		SET
-		status = #{status}
+		apply_datetime=#{applyDatetime}
+		,status = #{status}
 		,type = #{type}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}

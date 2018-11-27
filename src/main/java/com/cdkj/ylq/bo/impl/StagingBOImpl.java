@@ -12,6 +12,7 @@ import com.cdkj.ylq.bo.IStagingBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IStagingDAO;
+import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Staging;
 import com.cdkj.ylq.enums.EStagingStatus;
 import com.cdkj.ylq.exception.BizException;
@@ -84,10 +85,10 @@ public class StagingBOImpl extends PaginableBOImpl<Staging> implements
     }
 
     @Override
-    public List<Staging> queryBorrowStagings(String orderCode) {
+    public List<Staging> queryBorrowStagings(BorrowOrder order) {
         Staging condition = new Staging();
-        condition.setOrderCode(orderCode);
-        condition.setStatus(EStagingStatus.TOREPAY.getCode());
+        condition.setOrderCode(order.getCode());
+        condition.setBatch(order.getStageBatch().intValue());
         List<Staging> stageList = stagingDAO.selectList(condition);
         return stageList;
     }

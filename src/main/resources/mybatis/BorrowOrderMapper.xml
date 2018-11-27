@@ -31,8 +31,9 @@
 		<result column="pay_type" property="payType" />
 		<result column="loan_type" property="loanType" />
 		<result column="is_stage" property="isStage" />
+		<result column="stage_batch" property="stageBatch" />
 		<result column="stage_count" property="stageCount" />
-		<result column="stage_rule_code" property="stageRuleCode" />
+		<result column="stage_cycle" property="stageCycle" />
 		<result column="status" property="status" />
 		<result column="is_archive" property="isArchive" />
 		<result column="is_coupon" property="isCoupon" />
@@ -138,8 +139,9 @@
 		,t.pay_type
 		,t.loan_type
 		,t.is_stage
+		,t.stage_batch
 		,t.stage_count
-		,t.stage_rule_code
+		,t.stage_cycle
 		,t.status
 		,t.is_archive
 		,t.is_coupon
@@ -193,7 +195,7 @@
 		
 		,is_stage
 		,status
-		,stage_count
+		,stage_batch
 		,is_archive
 		,is_coupon
 		
@@ -230,7 +232,7 @@
 		
 		,#{isStage}
 		,#{status}
-		,#{stageCount}
+		,#{stageBatch}
 		,#{isArchive}
 		,#{isCoupon}
 		
@@ -372,9 +374,11 @@
 		SET
 		yq_days=#{yqDays}
 		,yqlx_amount=#{yqlxAmount}
+		,amount=#{amount}
 		,is_stage=#{isStage}
-		,stage_count = #{stageCount}
-		,stage_rule_code=#{stageRuleCode}
+		,stage_batch = #{stageBatch}
+		,stage_count=#{stageCount}
+		,stage_cycle=#{stageCycle}
 		,status=#{status}
 		,updater=#{updater}
 		,update_datetime=#{updateDatetime}

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.cdkj.ylq.bo.base.IPaginableBO;
+import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Staging;
 
 //CHECK ��鲢��ע�� 
@@ -22,7 +23,7 @@ public interface IStagingBO extends IPaginableBO<Staging> {
 
     public void refreshRepay(String code, String payType, String payCode);
 
-    public List<Staging> queryBorrowStagings(String orderCode);
+    public List<Staging> queryBorrowStagings(BorrowOrder order);
 
     public void refreshOverdue(Staging staging);
 

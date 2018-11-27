@@ -162,9 +162,12 @@ INSERT INTO `tsys_menu` (`code`,`name`,`type`,`url`,`order_no`,`updater`,`update
 INSERT INTO `tsys_menu` (`code`,`name`,`type`,`url`,`order_no`,`updater`,`update_datetime`,`remark`,`parent_code`,`company_code`) VALUES ('YLQSM2016101719143965297','修改','2','/edit','1','admin',now(),'','YLQSM2016101716295904680','GS2018112119133810071833');
 INSERT INTO `tsys_menu` (`code`,`name`,`type`,`url`,`order_no`,`updater`,`update_datetime`,`remark`,`parent_code`,`company_code`) VALUES ('YLQSM2016120610552303416','激活','2','/active','3','admin',now(),'','YLQSM2016101716261754674','GS2018112119133810071833');
 INSERT INTO `tsys_menu` (`code`,`name`,`type`,`url`,`order_no`,`updater`,`update_datetime`,`remark`,`parent_code`,`company_code`) VALUES ('YLQSM2017032911200961325','修改','2','/edit','2','admin',now(),'','YLQSM201600001000000003','GS2018112119133810071833');
+INSERT INTO `tsys_menu` (`code`,`parent_code`,`name`,`type`,`url`,`order_no`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('SM2018112217325547237538','SM201708071501160616280','信用分设置','2','/setCreditScore',4,'test','2018-11-22 17:43:59','','GS2018112119133810071833');
 
-
-
+INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('SR2018112217361154717967','SM201708232117575498751','test','2018-11-22 17:36:26',NULL,'GS2018112119133810071833');
+INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('JS201811081749297484833','SM201708232117575498751','test','2018-11-26 17:54:31',NULL,'GS2018112119133810071833');
+INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('SR2018112217361154717967','SM2018112217325547237538','test','2018-11-22 17:36:26',NULL,'GS2018112119133810071833');
+INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('JS201811081749297484833','SM2018112217325547237538','test','2018-11-26 17:54:31',NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('JS201811081749297484833','YLQSM201600000000000000','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('JS201811081749297484833','SM201707261741263791893','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('JS201811081749297484833','SM201707261747250339518','admin',now(),NULL,'GS2018112119133810071833');

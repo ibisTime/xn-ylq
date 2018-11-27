@@ -23,8 +23,20 @@ public class StageInfo {
     // 日期
     private String date;
 
-    // 金额
+    // 利息
+    private BigDecimal lxAmount;
+
+    // 本金
+    private BigDecimal mainAmount;
+
+    // 总金额金额
     private BigDecimal amount;
+
+    // 状态
+    private String status;
+
+    // 第几期
+    private Integer stageCount;
 
     // 备注
     private String remark;
@@ -59,5 +71,37 @@ public class StageInfo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public BigDecimal getLxAmount() {
+        return lxAmount;
+    }
+
+    public void setLxAmount(BigDecimal lxAmount) {
+        this.lxAmount = lxAmount;
+    }
+
+    public BigDecimal getMainAmount() {
+        return mainAmount;
+    }
+
+    public void setMainAmount(BigDecimal mainAmount) {
+        this.mainAmount = mainAmount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getStageCount() {
+        return stageCount;
+    }
+
+    public void setStageCount(Integer stageCount) {
+        this.stageCount = stageCount;
     }
 }

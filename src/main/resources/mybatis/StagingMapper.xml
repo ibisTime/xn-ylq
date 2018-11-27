@@ -40,6 +40,9 @@
 			<if test="applyUser != null and applyUser != '' ">
 				AND t.apply_user = #{applyUser}
 			</if>
+			<if test="batch != null and batch != '' ">
+				AND t.batch = #{batch}
+			</if>
 		</trim>
 	</sql>
 	<select id="select_staging" parameterType="staging" resultMap="staging_DB_Result">

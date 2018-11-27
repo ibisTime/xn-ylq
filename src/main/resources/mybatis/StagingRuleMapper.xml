@@ -32,7 +32,7 @@
 		,t.remark
 		,t.company_code
 		FROM
-		tjd_staging_rule t
+		tjd_stage_rule t
 		<include refid="where_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
@@ -43,13 +43,13 @@
 
 	<select id="select_stagingRule_count" parameterType="stagingRule"
 		resultType="java.lang.Long">
-		SELECT count(1) FROM tjd_staging_rule t
+		SELECT count(1) FROM tjd_stage_rule t
 		<include refid="where_condition" />
 	</select>
 
 	<insert id="insert_stagingRule" parameterType="stagingRule">
 		INSERT INTO
-		tjd_staging_rule(
+		tjd_stage_rule(
 		code
 		,count
 		,cycle
@@ -74,7 +74,7 @@
 	</insert>
 
 	<update id="update_stagingRule" parameterType="stagingRule">
-		UPDATE tjd_staging_rule
+		UPDATE tjd_stage_rule
 		SET
 		count = #{count}
 		,cycle = #{cycle}
@@ -87,7 +87,7 @@
 	</update>
 
 	<delete id="delete_stagingRule" parameterType="stagingRule">
-		DELETE FROM tjd_staging_rule
+		DELETE FROM tjd_stage_rule
 		WHERE code=#{code}
 	</delete>
 

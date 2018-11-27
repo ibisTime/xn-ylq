@@ -1,5 +1,7 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.cdkj.ylq.bo.INoticerBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.core.OrderNoGenerater;
+import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.dao.INoticerDAO;
 import com.cdkj.ylq.domain.Noticer;
 import com.cdkj.ylq.dto.req.XN623160Req;
@@ -96,5 +99,27 @@ public class NoticerBOImpl extends PaginableBOImpl<Noticer> implements
             }
         }
         return data;
+    }
+
+    @Override
+    public List<Noticer> queryNoticersNow(String type, String companyCode) {
+        // 获取当前小时数
+        Calendar now = Calendar.getInstance();
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        Noticer condition = new Noticer();
+        condition.setType(type);
+        condition.setCompanyCode(companyCode);
+        List<Noticer> noticers = noticerDAO.selectList(condition);
+        List<Noticer> smsList = new ArrayList<Noticer>();
+        if (!noticers.isEmpty()) {
+            for (Noticer noticer : noticers) {
+                if (hour >= StringValidater.toInteger(noticer.getStartTime())
+                        && hour < StringValidater.toInteger(noticer
+                            .getEndTime())) {
+                    smsList.add(noticer);
+                }
+            }
+        }
+        return smsList;
     }
 }
