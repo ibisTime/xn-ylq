@@ -8,6 +8,7 @@
  */
 package com.cdkj.ylq.bo;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import com.cdkj.ylq.bo.base.IPaginableBO;
@@ -46,10 +47,12 @@ public interface ISYSConfigBO extends IPaginableBO<SYSConfig> {
     public SYSConfig getSYSConfig(String key, String companyCode,
             String systemCode);
 
-    public String getStringValue(String key);
+    public String getStringValue(String key, String companyCode);
 
-    public Double getDoubleValue(String key);
+    public Double getDoubleValue(String key, String companyCode);
 
-    public Integer getIntegerValue(String key);
+    public Integer getIntegerValue(String key, String companyCode);
+
+    public BigDecimal getBigDecimalValue(String key, String companyCode);
 
 }

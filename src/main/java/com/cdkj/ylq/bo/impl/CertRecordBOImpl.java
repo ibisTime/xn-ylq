@@ -49,7 +49,7 @@ public class CertRecordBOImpl extends PaginableBOImpl<CertRecord> implements
     }
 
     @Override
-    public String saveCertRecord(String userId, BigDecimal fee, String certKey,
+    public long saveCertRecord(String userId, BigDecimal fee, String certKey,
             String companyCode) {
         CertRecord data = new CertRecord();
         data.setUserId(userId);
@@ -58,6 +58,6 @@ public class CertRecordBOImpl extends PaginableBOImpl<CertRecord> implements
         data.setCertKey(certKey);
         data.setCompanyCode(companyCode);
         certRecordDAO.insert(data);
-        return certKey;
+        return data.getId();
     }
 }

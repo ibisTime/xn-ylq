@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
+import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.ICertRecordBO;
 import com.cdkj.ylq.bo.ICertiBO;
 import com.cdkj.ylq.bo.ICertificationBO;
@@ -35,6 +36,7 @@ import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Apply;
+import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
@@ -46,12 +48,14 @@ import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoTongDunPreLoan;
 import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.InfoZfb;
+import com.cdkj.ylq.domain.InfoZqzn;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.dto.req.XN623040Req;
 import com.cdkj.ylq.dto.req.XN623041Req;
 import com.cdkj.ylq.dto.req.XN623042Req;
+import com.cdkj.ylq.dto.req.XN798650Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
 import com.cdkj.ylq.dto.res.XN623054Res;
 import com.cdkj.ylq.dto.res.XN798013Res;
@@ -60,9 +64,16 @@ import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
+import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.enums.EIDKind;
+import com.cdkj.ylq.enums.EJourBizTypeBoss;
+import com.cdkj.ylq.enums.EJourBizTypePlat;
+import com.cdkj.ylq.enums.ESysUser;
 import com.cdkj.ylq.exception.BizException;
+import com.cdkj.ylq.exception.EBizErrorCode;
+import com.cdkj.ylq.http.BizConnecter;
 import com.cdkj.ylq.http.HttpUtil;
+import com.cdkj.ylq.http.JsonUtils;
 import com.cdkj.ylq.tongdun.RiskServicePreloan;
 import com.cdkj.ylq.tongdun.YunYingShang;
 
@@ -101,6 +112,57 @@ public class CertificationAOImpl implements ICertificationAO {
 
     @Autowired
     private YunYingShang yunYingShang;
+
+    @Autowired
+    private IBusinessManBO businessManBO;
+
+    @Override
+    public InfoZqzn doZqznVerify(String userId, String frontImage,
+            String backImage, String faceImage) {
+        User user = userBO.getUser(userId);
+        XN798650Req req = new XN798650Req();
+        req.setFaceImage(faceImage);
+        req.setFrontImage(frontImage);
+        req.setBackImage(backImage);
+        InfoZqzn infoZqzn = BizConnecter.getBizData("798650",
+            JsonUtils.object2Json(req), InfoZqzn.class);
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_ZQZN);
+        // 认证成功
+        if (infoZqzn.getZqznInfoRealAuth().getVerifyStatus() == 1) {
+            if (certification != null) {
+                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+                certification.setResult(JsonUtil.Object2Json(infoZqzn));
+                certification.setCerDatetime(new Date());
+                certification.setRef("");
+                certificationBO.refreshCertification(certification);
+            }
+            if (certificationBO.isCompleteCerti(userId)) {
+                Apply apply = applyBO.getInCertApply(userId);
+                if (apply != null) {
+                    apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                    applyBO.refreshStatus(apply);
+                }
+            }
+            userBO.refreshRealName(userId, infoZqzn.getZqznInfoFront()
+                .getName());
+        } else {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                "认证失败，失败原因为:" + infoZqzn.getZqznInfoRealAuth().getReason());
+        }
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(
+            ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
+        Long id = certRecordBO.saveCertRecord(userId, fee,
+            ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
+        // 接口费用
+        BusinessMan man = businessManBO.getBusinessManByCompanyCode(user
+            .getCompanyCode());
+        accountBO.transAmount(man.getUserId(), ESysUser.SYS_USER.getCode(),
+            ECurrency.CNY.getCode(), fee, EJourBizTypeBoss.API.getCode(),
+            EJourBizTypePlat.API.getCode(), EJourBizTypeBoss.API.getValue(),
+            EJourBizTypePlat.API.getValue(), id.toString());
+        return infoZqzn;
+    }
 
     @Override
     @Transactional
@@ -181,8 +243,8 @@ public class CertificationAOImpl implements ICertificationAO {
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_IDENTIFY);
         InfoIdentify infoIdentify = certiInfo.getInfoIdentifyFace();
-        Integer config = sysConfigBO
-            .getIntegerValue(SysConstants.IDENTIFY_VALID_DAYS);
+        Integer config = sysConfigBO.getIntegerValue(
+            SysConstants.IDENTIFY_VALID_DAYS, certification.getCompanyCode());
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setCerDatetime(new Date());
@@ -316,8 +378,8 @@ public class CertificationAOImpl implements ICertificationAO {
 
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_ANTIFRAUD);
-        Integer config = sysConfigBO
-            .getIntegerValue(SysConstants.ANTIFRAUD_VALID_DAYS);
+        Integer config = sysConfigBO.getIntegerValue(
+            SysConstants.ANTIFRAUD_VALID_DAYS, certification.getCompanyCode());
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             // certification.setResult(JsonUtil.Object2Json(infoAntifraud));
@@ -348,7 +410,8 @@ public class CertificationAOImpl implements ICertificationAO {
             Certification certification = certificationBO.getCertification(
                 userId, ECertiKey.INFO_ZMCREDIT);
             Integer config = sysConfigBO
-                .getIntegerValue(SysConstants.ZMSCORE_VALID_DAYS);
+                .getIntegerValue(SysConstants.ZMSCORE_VALID_DAYS,
+                    certification.getCompanyCode());
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoZMCredit));
@@ -370,7 +433,8 @@ public class CertificationAOImpl implements ICertificationAO {
             Certification certification = certificationBO.getCertification(
                 userId, ECertiKey.INFO_CARRIER);
             Integer config = sysConfigBO
-                .getIntegerValue(SysConstants.CARRIER_VALID_DAYS);
+                .getIntegerValue(SysConstants.CARRIER_VALID_DAYS,
+                    certification.getCompanyCode());
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(mxReportData.getReportData());
@@ -446,12 +510,12 @@ public class CertificationAOImpl implements ICertificationAO {
         String userId = notification.getUser_id();
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_CARRIER);
-        Integer config = sysConfigBO
-            .getIntegerValue(SysConstants.CARRIER_VALID_DAYS);
+        Integer config = sysConfigBO.getIntegerValue(
+            SysConstants.CARRIER_VALID_DAYS, certification.getCompanyCode());
         // 认证成功
         if (notification.isResult()) {
             String report = getMxReport(notification.getMobile(),
-                notification.getTask_id());
+                notification.getTask_id(), certification.getCompanyCode());
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(notification));
@@ -507,7 +571,8 @@ public class CertificationAOImpl implements ICertificationAO {
             .getCarrierCertificationByTaskId(taskId);
         if (isSuccess) {
             Integer config = sysConfigBO
-                .getIntegerValue(SysConstants.CARRIER_VALID_DAYS);
+                .getIntegerValue(SysConstants.CARRIER_VALID_DAYS,
+                    certification.getCompanyCode());
             String report = yunYingShang.query(taskId, userId);
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
@@ -537,8 +602,9 @@ public class CertificationAOImpl implements ICertificationAO {
             List<InfoAddressBook> addressBookList) {
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_ADDRESS_BOOK);
-        Integer config = sysConfigBO
-            .getIntegerValue(SysConstants.ADDRESS_BOOK_VALID_DAYS);
+        Integer config = sysConfigBO.getIntegerValue(
+            SysConstants.ADDRESS_BOOK_VALID_DAYS,
+            certification.getCompanyCode());
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setResult(JsonUtil.Object2Json(addressBookList));
@@ -1132,10 +1198,12 @@ public class CertificationAOImpl implements ICertificationAO {
         logger.info("***************结束扫描认证结果***************");
     }
 
-    private String getMxReport(String mobile, String taskId) {
+    private String getMxReport(String mobile, String taskId, String companyCode) {
         String report = null;
-        String url = sysConfigBO.getStringValue(SysConstants.MX_URL);
-        String token = sysConfigBO.getStringValue(SysConstants.MX_TOKEN);
+        String url = sysConfigBO.getStringValue(SysConstants.MX_URL,
+            companyCode);
+        String token = sysConfigBO.getStringValue(SysConstants.MX_TOKEN,
+            companyCode);
         String urlString = String.format(url, mobile, taskId);
         Properties formProperties = new Properties();
         formProperties.put("Authorization", "token " + token);
@@ -1211,8 +1279,8 @@ public class CertificationAOImpl implements ICertificationAO {
             ECertiKey.INFO_AMOUNT);
         InfoAmount infoAmount = new InfoAmount();
         infoAmount.setSxAmount(creditScore);
-        Integer config = sysConfigBO
-            .getIntegerValue(SysConstants.AMOUNT_VALID_DAYS);
+        Integer config = sysConfigBO.getIntegerValue(
+            SysConstants.AMOUNT_VALID_DAYS, certification.getCompanyCode());
         if (certification != null) {
             certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
             certification.setResult(JsonUtil.Object2Json(infoAmount));

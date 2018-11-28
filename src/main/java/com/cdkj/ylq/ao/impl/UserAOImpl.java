@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.ao.IUserAO;
 import com.cdkj.ylq.bo.IBankcardBO;
+import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.ICompanyBO;
 import com.cdkj.ylq.bo.ICouponBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
@@ -65,6 +66,9 @@ public class UserAOImpl implements IUserAO {
 
     @Autowired
     private ICertificationAO certificationAO;
+
+    @Autowired
+    private IBusinessManBO businessManBO;
 
     @Autowired
     protected ISYSConfigBO sysConfigBO;
@@ -640,6 +644,8 @@ public class UserAOImpl implements IUserAO {
                 user.setRefereeUser(userReferee);
             }
             user.setCompany(companyBO.getCompany(user.getCompanyCode()));
+            user.setBusinessMan(businessManBO.getBusinessManByCompanyCode(user
+                .getCompanyCode()));
         }
         return page;
     }
@@ -711,13 +717,16 @@ public class UserAOImpl implements IUserAO {
             .getSxAmount());
         // 银行卡信息
         Bankcard condition = new Bankcard();
+        condition.setUserId(userId);
         List<Bankcard> cards = bankcardBO.queryBankcardList(condition);
         if (cards.isEmpty()) {
             user.setBankcardFlag(EBoolean.NO.getCode());
         } else {
             user.setBankcardFlag(EBoolean.YES.getCode());
         }
-        condition.setUserId(userId);
+        user.setCompany(companyBO.getCompany(user.getCompanyCode()));
+        user.setBusinessMan(businessManBO.getBusinessManByCompanyCode(user
+            .getCompanyCode()));
 
         return user;
     }

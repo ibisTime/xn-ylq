@@ -1,5 +1,6 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,6 @@ import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.dao.ISYSConfigDAO;
 import com.cdkj.ylq.domain.SYSConfig;
-import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 
 /**
@@ -104,10 +104,9 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     }
 
     @Override
-    public Double getDoubleValue(String key) {
+    public Double getDoubleValue(String key, String companyCode) {
         Double result = 0.0;
-        SYSConfig config = getSYSConfig(key, ESystemCode.YLQ.getCode(),
-            ESystemCode.YLQ.getCode());
+        SYSConfig config = getSYSConfig(key, companyCode);
         try {
             result = Double.valueOf(config.getCvalue());
         } catch (Exception e) {
@@ -118,10 +117,9 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     }
 
     @Override
-    public Integer getIntegerValue(String key) {
+    public Integer getIntegerValue(String key, String companyCode) {
         Integer result = 0;
-        SYSConfig config = getSYSConfig(key, ESystemCode.YLQ.getCode(),
-            ESystemCode.YLQ.getCode());
+        SYSConfig config = getSYSConfig(key, companyCode);
         try {
             result = Integer.valueOf(config.getCvalue());
         } catch (Exception e) {
@@ -132,10 +130,22 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     }
 
     @Override
-    public String getStringValue(String key) {
-        SYSConfig config = getSYSConfig(key, ESystemCode.YLQ.getCode(),
-            ESystemCode.YLQ.getCode());
+    public String getStringValue(String key, String companyCode) {
+        SYSConfig config = getSYSConfig(key, companyCode);
         return config.getCvalue();
+    }
+
+    @Override
+    public BigDecimal getBigDecimalValue(String key, String companyCode) {
+        BigDecimal result = BigDecimal.ZERO;
+        SYSConfig config = getSYSConfig(key, companyCode);
+        try {
+            result = new BigDecimal(config.getCvalue());
+        } catch (Exception e) {
+            logger.error("参数名为" + key + "的配置转换成bigdecimal类型发生错误, 原因："
+                    + e.getMessage());
+        }
+        return result;
     }
 
 }

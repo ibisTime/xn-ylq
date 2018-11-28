@@ -8,6 +8,7 @@ import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoZMCredit;
+import com.cdkj.ylq.domain.InfoZqzn;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.dto.req.XN623040Req;
@@ -21,6 +22,9 @@ import com.cdkj.ylq.enums.ECertiKey;
 
 public interface ICertificationAO {
     static final String DEFAULT_ORDER_COLUMN = "apply_datetime";
+
+    public InfoZqzn doZqznVerify(String userId, String frontImage,
+            String backImage, String faceImage);
 
     // 提交身份证照片
     public void submitIdentifyPic(String userId, String identifyPic,

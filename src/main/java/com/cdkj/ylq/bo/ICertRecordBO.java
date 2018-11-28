@@ -11,7 +11,7 @@ public interface ICertRecordBO extends IPaginableBO<CertRecord> {
 
     public boolean isCertRecordExist(Long id);
 
-    public String saveCertRecord(String userId, BigDecimal fee, String certKey,
+    public long saveCertRecord(String userId, BigDecimal fee, String certKey,
             String companyCode);
 
     public List<CertRecord> queryCertRecordList(CertRecord condition);

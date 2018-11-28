@@ -24,6 +24,7 @@ import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.dto.res.XN623050Res;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 
 /**
@@ -53,13 +54,17 @@ public class YunYingShang {
         String data = null;
         try {
             String urlString = new StringBuilder()
-                .append(sysConfigBO.getStringValue(SysConstants.SJ_QUERY_URL))
+                .append(
+                    sysConfigBO.getStringValue(SysConstants.SJ_QUERY_URL,
+                        ESystemCode.YLQ.getCode()))
                 .append("?partner_code=")
                 .append(
-                    sysConfigBO.getStringValue(SysConstants.SJ_PARTNER_CODE))
+                    sysConfigBO.getStringValue(SysConstants.SJ_PARTNER_CODE,
+                        ESystemCode.YLQ.getCode()))
                 .append("&partner_key=")
-                .append(sysConfigBO.getStringValue(SysConstants.SJ_PARTNER_KEY))
-                .toString();
+                .append(
+                    sysConfigBO.getStringValue(SysConstants.SJ_PARTNER_KEY,
+                        ESystemCode.YLQ.getCode())).toString();
             URL url = new URL(urlString);
             StringBuilder postBody = new StringBuilder();
             for (Map.Entry<String, Object> entry : params.entrySet()) {

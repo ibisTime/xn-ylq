@@ -149,8 +149,8 @@ public class ApplyAOImpl implements IApplyAO {
             infoAmount.setSxAmount(sxAmount);
             Certification certification = certificationBO.getCertification(
                 apply.getApplyUser(), ECertiKey.INFO_AMOUNT);
-            Integer config = sysConfigBO
-                .getIntegerValue(SysConstants.AMOUNT_VALID_DAYS);
+            Integer config = sysConfigBO.getIntegerValue(
+                SysConstants.AMOUNT_VALID_DAYS, certification.getCompanyCode());
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoAmount));

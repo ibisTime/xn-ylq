@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.SysConstants;
+import com.cdkj.ylq.enums.ESystemCode;
 
 /**
  * @author: haiqingzheng 
@@ -63,15 +64,21 @@ public class RiskServicePreloan {
         PreloanSubmitResponse submitResponse = new PreloanSubmitResponse();
         try {
             String urlString = new StringBuilder()
-                .append(sysConfigBO.getStringValue(SysConstants.TD_SUBMIT_URL))
+                .append(
+                    sysConfigBO.getStringValue(SysConstants.TD_SUBMIT_URL,
+                        ESystemCode.YLQ.getCode()))
                 .append("?partner_code=")
                 .append(
-                    sysConfigBO.getStringValue(SysConstants.TD_PARTNER_CODE))
+                    sysConfigBO.getStringValue(SysConstants.TD_PARTNER_CODE,
+                        ESystemCode.YLQ.getCode()))
                 .append("&partner_key=")
-                .append(sysConfigBO.getStringValue(SysConstants.TD_PARTNER_KEY))
+                .append(
+                    sysConfigBO.getStringValue(SysConstants.TD_PARTNER_KEY,
+                        ESystemCode.YLQ.getCode()))
                 .append("&app_name=")
-                .append(sysConfigBO.getStringValue(SysConstants.TD_PARTNER_APP))
-                .toString();
+                .append(
+                    sysConfigBO.getStringValue(SysConstants.TD_PARTNER_APP,
+                        ESystemCode.YLQ.getCode())).toString();
             URL url = new URL(urlString);
             // 组织请求参数
             StringBuilder postBody = new StringBuilder();
@@ -129,13 +136,18 @@ public class RiskServicePreloan {
         PreloanQueryResponse queryResponse = new PreloanQueryResponse();
         try {
             String urlString = new StringBuilder()
-                .append(sysConfigBO.getStringValue(SysConstants.TD_QUERY_URL))
+                .append(
+                    sysConfigBO.getStringValue(SysConstants.TD_QUERY_URL,
+                        ESystemCode.YLQ.getCode()))
                 .append("?partner_code=")
                 .append(
-                    sysConfigBO.getStringValue(SysConstants.TD_PARTNER_CODE))
+                    sysConfigBO.getStringValue(SysConstants.TD_PARTNER_CODE,
+                        ESystemCode.YLQ.getCode()))
                 .append("&partner_key=")
-                .append(sysConfigBO.getStringValue(SysConstants.TD_PARTNER_KEY))
-                .append("&report_id=").append(reportId).toString();
+                .append(
+                    sysConfigBO.getStringValue(SysConstants.TD_PARTNER_KEY,
+                        ESystemCode.YLQ.getCode())).append("&report_id=")
+                .append(reportId).toString();
             URL url = new URL(urlString);
 
             conn = (HttpsURLConnection) url.openConnection();

@@ -151,6 +151,16 @@ public class User extends ABaseDO {
 
     private Company company;
 
+    private BusinessMan businessMan;
+
+    public BusinessMan getBusinessMan() {
+        return businessMan;
+    }
+
+    public void setBusinessMan(BusinessMan businessMan) {
+        this.businessMan = businessMan;
+    }
+
     public Company getCompany() {
         return company;
     }

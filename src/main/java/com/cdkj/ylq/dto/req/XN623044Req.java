@@ -19,35 +19,13 @@ public class XN623044Req {
     private String userId;
 
     // 身份证正面（必填）
-    private String identifyPic;
+    private String frontImage;
 
     // 身份证反面（必填）
-    private String identifyPicReverse;
+    private String backImage;
 
     // 手持身份证（必填）
-    private String identifyPicHand;
-
-    // 真名
-    private String realName;
-
-    // 身份证号
-    private String idNo;
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-    public String getIdNo() {
-        return idNo;
-    }
-
-    public void setIdNo(String idNo) {
-        this.idNo = idNo;
-    }
+    private String faceImage;
 
     public String getUserId() {
         return userId;
@@ -57,27 +35,28 @@ public class XN623044Req {
         this.userId = userId;
     }
 
-    public String getIdentifyPic() {
-        return identifyPic;
+    public String getFrontImage() {
+        return frontImage;
     }
 
-    public void setIdentifyPic(String identifyPic) {
-        this.identifyPic = identifyPic;
+    public void setFrontImage(String frontImage) {
+        this.frontImage = frontImage;
     }
 
-    public String getIdentifyPicReverse() {
-        return identifyPicReverse;
+    public String getBackImage() {
+        return backImage;
     }
 
-    public void setIdentifyPicReverse(String identifyPicReverse) {
-        this.identifyPicReverse = identifyPicReverse;
+    public void setBackImage(String backImage) {
+        this.backImage = backImage;
     }
 
-    public String getIdentifyPicHand() {
-        return identifyPicHand;
+    public String getFaceImage() {
+        return faceImage;
     }
 
-    public void setIdentifyPicHand(String identifyPicHand) {
-        this.identifyPicHand = identifyPicHand;
+    public void setFaceImage(String faceImage) {
+        this.faceImage = faceImage;
     }
+
 }

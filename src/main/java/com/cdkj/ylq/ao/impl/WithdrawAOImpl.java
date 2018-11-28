@@ -11,12 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IWithdrawAO;
 import com.cdkj.ylq.bo.IAccountBO;
+import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IWithdrawBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Account;
-import com.cdkj.ylq.domain.SYSUser;
+import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.Withdraw;
 import com.cdkj.ylq.dto.res.XN629903Res;
@@ -42,6 +43,9 @@ public class WithdrawAOImpl implements IWithdrawAO {
 
     @Autowired
     private IWithdrawBO withdrawBO;
+
+    @Autowired
+    private IBusinessManBO businessManBO;
 
     @Override
     @Transactional
@@ -217,14 +221,15 @@ public class WithdrawAOImpl implements IWithdrawAO {
         String realName = null;
 
         // 其他用户
-        SYSUser sysUser = sysUserBO.getSYSUser(withdraw.getApplyUser());
+        BusinessMan businessMan = businessManBO.getBusinessMan(withdraw
+            .getApplyUser());
         User user = new User();
-        user.setMobile(sysUser.getMobile());
+        user.setMobile(businessMan.getMobile());
         withdraw.setUser(user);
 
-        realName = sysUser.getMobile();
-        if (StringUtils.isNotBlank(sysUser.getRealName())) {
-            realName = sysUser.getRealName().concat("-").concat(realName);
+        realName = businessMan.getMobile();
+        if (StringUtils.isNotBlank(businessMan.getRealName())) {
+            realName = businessMan.getRealName().concat("-").concat(realName);
         }
 
         withdraw.setRealName(realName);

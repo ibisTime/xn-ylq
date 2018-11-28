@@ -562,8 +562,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         User user = userBO.getUser(userId);
 
         StringBuffer sb = new StringBuffer(user.getIdNo());
-        String contentTemplate = sysConfigBO
-            .getStringValue(SysConstants.SMS_CUISHOU);
+        String contentTemplate = sysConfigBO.getStringValue(
+            SysConstants.SMS_CUISHOU, borrow.getCompanyCode());
         contentTemplate = String.format(contentTemplate, user.getMobile(), sb
             .replace(8, 11, "****").toString(), user.getMobile());
         // 向本人发送催收短信
@@ -661,8 +661,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 .multiply(borrow.getRate2()).setScale(2, BigDecimal.ROUND_UP));
         }
         // 逾期利息封顶
-        BigDecimal yqlxFdRate = BigDecimal.valueOf(sysConfigBO
-            .getDoubleValue(SysConstants.YQLX_FD_RATE));
+        BigDecimal yqlxFdRate = BigDecimal.valueOf(sysConfigBO.getDoubleValue(
+            SysConstants.YQLX_FD_RATE, borrow.getCompanyCode()));
         BigDecimal fdAmount = borrow.getAmount().multiply(yqlxFdRate);
         if (yqlxAmount.compareTo(fdAmount) > 0) {
             yqlxAmount = fdAmount;

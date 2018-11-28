@@ -16,6 +16,8 @@ package com.cdkj.ylq.enums;
 public enum ECertiKey {
     INFO_IDENTIFY("INFO_IDENTIFY", "实名认证提交")
 
+    , INFO_ZQZN("INFO_ZQZN", "智趣智能")
+
     , INFO_IDENTIFY_PIC("INFO_IDENTIFY_PIC", "身份证照片")//
 
     , INFO_ZHIFUBAO("INFO_ZHIFUBAO", "支付宝信息")//

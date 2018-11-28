@@ -64,8 +64,6 @@ public class CompanyBOImpl extends PaginableBOImpl<Company> implements
             if (data == null) {
                 throw new BizException("xn0000", "公司不存在");
             }
-            data.setBusinessMan(businessManBO.getBusinessManByCompanyCode(data
-                .getCode()));
         }
         return data;
     }
