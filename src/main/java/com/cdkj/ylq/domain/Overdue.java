@@ -32,6 +32,17 @@ public class Overdue extends ABaseDO {
     // 逾期后处理
     private String result;
 
+    // 公司编号
+    private String companyCode;
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
     public Long getId() {
         return id;
     }

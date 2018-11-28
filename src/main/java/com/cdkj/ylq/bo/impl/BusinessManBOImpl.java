@@ -85,7 +85,7 @@ public class BusinessManBOImpl extends PaginableBOImpl<BusinessMan> implements
             condition.setUserId(userId);
             data = businessManDAO.select(condition);
             if (data == null) {
-                throw new BizException("xn0000", "不存在改借贷商");
+                throw new BizException("xn0000", "不存在该借款商");
             }
         }
         return data;
@@ -159,6 +159,17 @@ public class BusinessManBOImpl extends PaginableBOImpl<BusinessMan> implements
         BusinessMan data = businessManDAO.select(condition);
         if (null == data) {
             throw new BizException("xn0000", "手机号不存在");
+        }
+        return data;
+    }
+
+    @Override
+    public BusinessMan getBusinessManByCompanyCode(String companyCode) {
+        BusinessMan condition = new BusinessMan();
+        condition.setCompanyCode(companyCode);
+        BusinessMan data = businessManDAO.select(condition);
+        if (null == data) {
+            throw new BizException("xn0000", "公司编号不存在");
         }
         return data;
     }

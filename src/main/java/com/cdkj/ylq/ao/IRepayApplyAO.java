@@ -15,4 +15,6 @@ public interface IRepayApplyAO {
 
     public RepayApply getRepayApply(String code);
 
+    public String repayStage(String code);
+
 }

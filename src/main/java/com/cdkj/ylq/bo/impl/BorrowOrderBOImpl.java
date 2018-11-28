@@ -161,9 +161,10 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
         int count = 0;
         if (borrow != null && StringUtils.isNotBlank(borrow.getCode())) {
             borrow.setRealHkDatetime(new Date());
-            borrow.setRealHkAmount(repayAmount);
+            borrow.setRealHkAmount(borrow.getRealHkAmount().add(repayAmount));
             borrow.setPayType(EPayType.OFFLINE.getCode());
             borrow.setStatus(EBorrowStatus.REPAY.getCode());
+            borrow.setIsStage(EBoolean.NO.getCode());
             borrow.setUpdater(updater);
             borrow.setUpdateDatetime(new Date());
             borrow.setRemark("已成功还款");
@@ -301,6 +302,34 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
         condition.setStatus(EBorrowStatus.REPAY.getCode());
         List<BorrowOrder> lists = borrowOrderDAO.selectList(condition);
         return lists;
+    }
+
+    @Override
+    public void refreshStaging(BorrowOrder borrow, Long stageCount,
+            Long stageCycle, String updater, String remark) {
+        borrow.setYqDays(0);
+        borrow.setYqlxAmount(BigDecimal.ZERO);
+        borrow.setAmount(borrow.getTotalAmount());
+        borrow.setIsStage(EBoolean.YES.getCode());
+        borrow.setStatus(EBorrowStatus.LOANING.getCode());
+        borrow.setStageBatch(borrow.getStageBatch() + 1);
+        borrow.setStageCount(stageCount);
+        borrow.setStageCycle(stageCycle);
+        borrow.setUpdater(updater);
+        borrow.setUpdateDatetime(new Date());
+        borrow.setRemark(remark);
+        borrowOrderDAO.updateStage(borrow);
+    }
+
+    @Override
+    public void refreshStageRepay(BorrowOrder order, BigDecimal amount,
+            String updater) {
+        order.setTotalAmount(order.getTotalAmount().subtract(amount));
+        order.setPayType(EPayType.OFFLINE.getCode());
+        order.setUpdater(updater);
+        order.setUpdateDatetime(new Date());
+        order.setRemark("分期还款");
+        borrowOrderDAO.updateRepayStage(order);
     }
 
 }

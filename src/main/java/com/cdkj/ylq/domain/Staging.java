@@ -24,11 +24,17 @@ public class Staging extends ABaseDO {
     // 借款编号
     private String orderCode;
 
-    // 支付金额
+    // 利率
+    private BigDecimal rate;
+
+    // 本期应还本金
+    private BigDecimal mainAmount;
+
+    // 还款金额
     private BigDecimal payAmount;
 
     // 开始日期
-    private String startPayDate;
+    private Date startPayDate;
 
     // 最晚支付日期
     private Date lastPayDate;
@@ -49,13 +55,23 @@ public class Staging extends ABaseDO {
     private String status;
 
     // 第几期
-    private Integer count;
+    private Long count;
 
     // 批次号
     private Integer batch;
 
     // 公司编号
     private String companyCode;
+
+    private Date curDatetime;
+
+    public Date getCurDatetime() {
+        return curDatetime;
+    }
+
+    public void setCurDatetime(Date curDatetime) {
+        this.curDatetime = curDatetime;
+    }
 
     public void setCode(String code) {
         this.code = code;
@@ -137,11 +153,11 @@ public class Staging extends ABaseDO {
         return status;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
 
@@ -161,12 +177,28 @@ public class Staging extends ABaseDO {
         return companyCode;
     }
 
-    public String getStartPayDate() {
+    public Date getStartPayDate() {
         return startPayDate;
     }
 
-    public void setStartPayDate(String startPayDate) {
+    public void setStartPayDate(Date startPayDate) {
         this.startPayDate = startPayDate;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public BigDecimal getMainAmount() {
+        return mainAmount;
+    }
+
+    public void setMainAmount(BigDecimal mainAmount) {
+        this.mainAmount = mainAmount;
     }
 
 }

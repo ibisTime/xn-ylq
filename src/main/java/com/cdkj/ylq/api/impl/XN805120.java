@@ -41,6 +41,8 @@ public class XN805120 extends AProcessor {
         condition.setArea(req.getArea());
         condition.setLongitude(req.getLongitude());
         condition.setLatitude(req.getLatitude());
+        condition.setIsBlackList(req.getIsBlackList());
+        condition.setIsWhiteList(req.getIsWhiteList());
         condition.setCreateDatetimeStart(DateUtil.getFrontDate(
             req.getCreateDatetimeStart(), false));
         condition.setCreateDatetimeEnd(DateUtil.getFrontDate(
@@ -62,7 +64,6 @@ public class XN805120 extends AProcessor {
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN805120Req.class);
         StringValidater.validateNumber(req.getStart(), req.getLimit());
-        StringValidater
-            .validateBlank(req.getCompanyCode(), req.getSystemCode());
+        StringValidater.validateBlank(req.getSystemCode());
     }
 }

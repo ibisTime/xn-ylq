@@ -97,11 +97,17 @@ public class BorrowOrder extends ABaseDO {
     // 放款方式
     private String loanType;
 
-    // 分期次数
-    private Integer stageCount;
+    // 是否分期
+    private String isStage;
 
-    // 分期规则编号
-    private String stageRuleCode;
+    // 分期次数
+    private Integer stageBatch;
+
+    // 本次分期期数
+    private Long stageCount;
+
+    // 本次分期周期
+    private Long stageCycle;
 
     // 状态
     private String status;
@@ -153,6 +159,36 @@ public class BorrowOrder extends ABaseDO {
 
     // 是否逾期
     private String isOverdue;
+
+    // 分期列表
+    private List<StageInfo> stageList;
+
+    // 当天分期还款信息
+    private StageInfo info;
+
+    public StageInfo getInfo() {
+        return info;
+    }
+
+    public void setInfo(StageInfo info) {
+        this.info = info;
+    }
+
+    public List<StageInfo> getStageList() {
+        return stageList;
+    }
+
+    public void setStageList(List<StageInfo> stageList) {
+        this.stageList = stageList;
+    }
+
+    public String getIsStage() {
+        return isStage;
+    }
+
+    public void setIsStage(String isStage) {
+        this.isStage = isStage;
+    }
 
     public String getCode() {
         return code;
@@ -306,12 +342,12 @@ public class BorrowOrder extends ABaseDO {
         this.yqlxAmount = yqlxAmount;
     }
 
-    public Integer getStageCount() {
-        return stageCount;
+    public Integer getStageBatch() {
+        return stageBatch;
     }
 
-    public void setStageCount(Integer stageCount) {
-        this.stageCount = stageCount;
+    public void setStageBatch(Integer stageBatch) {
+        this.stageBatch = stageBatch;
     }
 
     public Integer getYqDays() {
@@ -378,12 +414,20 @@ public class BorrowOrder extends ABaseDO {
         this.loanType = loanType;
     }
 
-    public String getStageRuleCode() {
-        return stageRuleCode;
+    public Long getStageCount() {
+        return stageCount;
     }
 
-    public void setStageRuleCode(String stageRuleCode) {
-        this.stageRuleCode = stageRuleCode;
+    public void setStageCount(Long stageCount) {
+        this.stageCount = stageCount;
+    }
+
+    public Long getStageCycle() {
+        return stageCycle;
+    }
+
+    public void setStageCycle(Long stageCycle) {
+        this.stageCycle = stageCycle;
     }
 
     public String getStatus() {

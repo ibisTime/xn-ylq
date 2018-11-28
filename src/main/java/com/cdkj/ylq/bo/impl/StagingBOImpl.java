@@ -12,6 +12,7 @@ import com.cdkj.ylq.bo.IStagingBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IStagingDAO;
+import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Staging;
 import com.cdkj.ylq.enums.EStagingStatus;
 import com.cdkj.ylq.exception.BizException;
@@ -55,14 +56,16 @@ public class StagingBOImpl extends PaginableBOImpl<Staging> implements
 
     @Override
     public String saveStaging(String applyUser, String orderCode,
-            BigDecimal payAmount, Date lastPayDate, Integer count,
-            Integer batch, String companyCode) {
+            BigDecimal mainAmount, BigDecimal rate, Date startPayDate,
+            Date lastPayDate, Long count, Integer batch, String companyCode) {
         Staging data = new Staging();
         String code = OrderNoGenerater.generateM("ST");
         data.setCode(code);
         data.setApplyUser(applyUser);
         data.setOrderCode(orderCode);
-        data.setPayAmount(payAmount);
+        data.setMainAmount(mainAmount);
+        data.setRate(rate);
+        data.setStartPayDate(startPayDate);
         data.setLastPayDate(lastPayDate);
         data.setStatus(EStagingStatus.TOREPAY.getCode());
         data.setCount(count);
@@ -73,12 +76,26 @@ public class StagingBOImpl extends PaginableBOImpl<Staging> implements
     }
 
     @Override
-    public void refreshRepay(String code, String payType, String payCode,
-            String payGroup) {
+    public void refreshRepay(String code, String payType, String payCode) {
         Staging staging = getStaging(payCode);
         staging.setPayCode(payCode);
         staging.setPayType(payType);
-        staging.setPayGroup(payGroup);
+        staging.setStatus(EStagingStatus.REPAY.getCode());
         staging.setPayDatetime(new Date());
+    }
+
+    @Override
+    public List<Staging> queryBorrowStagings(BorrowOrder order) {
+        Staging condition = new Staging();
+        condition.setOrderCode(order.getCode());
+        condition.setBatch(order.getStageBatch().intValue());
+        List<Staging> stageList = stagingDAO.selectList(condition);
+        return stageList;
+    }
+
+    @Override
+    public void refreshOverdue(Staging staging) {
+        staging.setStatus(EStagingStatus.OVERDUE.getCode());
+        stagingDAO.updateStatus(staging);
     }
 }

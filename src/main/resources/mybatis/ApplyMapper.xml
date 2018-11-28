@@ -90,7 +90,6 @@
 		,type
 		,apply_user
 		,apply_datetime
-		,product_code
 		,status
 		,credit_score
 		,approver
@@ -108,7 +107,6 @@
 		,#{type}
 		,#{applyUser}
 		,#{applyDatetime}
-		,#{productCode}
 		,#{status}
 		,#{creditScore}
 		,#{approver}
@@ -164,7 +162,8 @@
 	<update id="update_resubmit" parameterType="apply">
 		UPDATE tjd_apply
 		SET
-		status = #{status}
+		apply_datetime=#{applyDatetime}
+		,status = #{status}
 		,type = #{type}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}

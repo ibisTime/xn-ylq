@@ -123,6 +123,32 @@ public class DateUtil {
         return tommrow;
     }
 
+    /**
+     * 相对参数today的days天后起始时刻。比如今天是11日23点，2日后起始时刻为13日0点0分0秒
+     * @param today
+     * @param days
+     * @return 
+     * @create: 2018年11月26日 下午12:35:10 taojian
+     * @history:
+     */
+    public static Date getDaysStart(Date today, int days) {
+        String str = dateToStr(today, FRONT_DATE_FORMAT_STRING);
+        Date day = getRelativeDate(strToDate(str, FRONT_DATE_FORMAT_STRING),
+            24 * 3600 * days);
+        return day;
+    }
+
+    public static Date getDaysEnd(Date today, int days) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(today.getTime());
+        c.add(Calendar.DATE, days);// 天后的日期
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+        Date date = new Date(c.getTimeInMillis()); // 将c转换成Date
+        return date;
+    }
+
     /** 
      * String 按格式pattern转Date
      * @param str
@@ -267,6 +293,9 @@ public class DateUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(getRelativeDateOfDays(getTodayStart(), 7));
+        Date now = new Date();
+        System.out.println(now.toString());
+        System.out.println(getDaysStart(new Date(), 2));
+        System.out.println(getDaysEnd(now, 2));
     }
 }

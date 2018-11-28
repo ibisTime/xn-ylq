@@ -48,6 +48,9 @@ public class RepayApply extends ABaseDO {
     // 状态
     private String status;
 
+    // 公司编号
+    private String companyCode;
+
     // ****查询字段******
 
     // 订单编号模糊查询
@@ -190,6 +193,14 @@ public class RepayApply extends ABaseDO {
 
     public void setRefNoForQuery(String refNoForQuery) {
         this.refNoForQuery = refNoForQuery;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
 }

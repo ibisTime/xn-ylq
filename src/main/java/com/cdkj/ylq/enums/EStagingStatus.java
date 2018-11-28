@@ -7,7 +7,7 @@ package com.cdkj.ylq.enums;
  */
 public enum EStagingStatus {
 
-    TOREPAY("0", "待还款"), REPAY("1", "已还款");
+    TOREPAY("0", "待还款"), REPAY("1", "已还款"), OVERDUE("2", "逾期");
 
     EStagingStatus(String code, String value) {
         this.code = code;

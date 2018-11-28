@@ -6,7 +6,9 @@
 		<result column="code" property="code" />
 		<result column="apply_user" property="applyUser" />
 		<result column="order_code" property="orderCode" />
+		<result column="main_amount" property="mainAmount" />
 		<result column="pay_amount" property="payAmount" />
+		<result column="rate" property="rate" />
 		<result column="start_pay_date" property="startPayDate" />
 		<result column="last_pay_date" property="lastPayDate" />
 		<result column="pay_datetime" property="payDatetime" />
@@ -26,11 +28,20 @@
 			<if test="lastPayDate != null and lastPayDate != '' ">
 				AND t.last_pay_date = #{lastPayDate}
 			</if>
+			<if test="curDatetime != null and curDatetime != '' ">
+				<![CDATA[AND t.last_pay_date <= #{curDatetime}]]>
+			</if>
+			<if test="startPayDate != null and startPayDate != '' ">
+				AND t.start_pay_date = #{startPayDate}
+			</if>
 			<if test="status != null and status != '' ">
 				AND t.status = #{status}
 			</if>
 			<if test="applyUser != null and applyUser != '' ">
 				AND t.apply_user = #{applyUser}
+			</if>
+			<if test="batch != null and batch != '' ">
+				AND t.batch = #{batch}
 			</if>
 		</trim>
 	</sql>
@@ -39,7 +50,9 @@
 		t.code
 		,t.apply_user
 		,t.order_code
+		,t.main_amount
 		,t.pay_amount
+		,t.rate
 		,t.start_pay_date
 		,t.last_pay_date
 		,t.pay_datetime
@@ -72,7 +85,9 @@
 		code
 		,apply_user
 		,order_code
+		,main_amount
 		,pay_amount
+		,rate
 		,start_pay_date
 		,last_pay_date
 		,pay_datetime
@@ -88,7 +103,9 @@
 		#{code}
 		,#{applyUser}
 		,#{orderCode}
+		,#{mainAmount}
 		,#{payAmount}
+		,#{rate}
 		,#{startPayDate}
 		,#{lastPayDate}
 		,#{payDatetime}
@@ -130,6 +147,13 @@
 		,pay_code = #{payCode}
 		,pay_group = #{payGroup}
 		,status = #{status}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_status" parameterType="staging">
+		UPDATE tjd_staging
+		SET
+		status = #{status}
 		WHERE code = #{code}
 	</update>
 

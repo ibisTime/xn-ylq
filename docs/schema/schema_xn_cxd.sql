@@ -391,8 +391,10 @@ CREATE TABLE `tjd_borrow_order` (
   `pay_group` varchar(45) DEFAULT NULL COMMENT '支付组号',
   `pay_type` varchar(4) DEFAULT NULL COMMENT '还款方式',
   `loan_type` varchar(4) DEFAULT NULL COMMENT '放款方式',
-  `stage_count` int(11) DEFAULT NULL COMMENT '分期次数',
-  `stage_rule_code` varchar(45) DEFAULT NULL COMMENT '分期规则',
+  `is_stage` varchar(4) DEFAULT NULL COMMENT '是否分期',
+  `stage_batch` int(11) DEFAULT NULL COMMENT '分期批次',
+  `stage_count` int(11) DEFAULT NULL COMMENT '分期期数',
+  `stage_cycle` int(11) DEFAULT NULL COMMENT '分期周期',
   `status` varchar(4) DEFAULT NULL COMMENT '状态（0 待审核，1 审核不通过，2 待放款，3 付款失败，4 已放款，5 逾期，6 已还款，7 坏账）',
   `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
@@ -400,6 +402,7 @@ CREATE TABLE `tjd_borrow_order` (
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='借款订单';
+
 
 
 DROP TABLE IF EXISTS `tjd_cert_apply`;
@@ -505,7 +508,10 @@ CREATE TABLE `tjd_staging` (
   `code` varchar(32) NOT NULL COMMENT '编号',
   `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
   `order_code` varchar(32) DEFAULT NULL COMMENT '借款订单号',
+  `main_amount` decimal(64,0) DEFAULT NULL COMMENT '本期应还本金',
   `pay_amount` decimal(64,0) DEFAULT NULL COMMENT '还款金额',
+  `rate` decimal(18,8) DEFAULT NULL COMMENT '利率',
+  `start_pay_date` datetime DEFAULT NULL COMMENT '开始支付时间',
   `last_pay_date` datetime DEFAULT NULL COMMENT '最晚支付日期',
   `pay_datetime` datetime DEFAULT NULL COMMENT '支付时间',
   `pay_type` varchar(4) DEFAULT NULL COMMENT '支付类型',
@@ -517,6 +523,8 @@ CREATE TABLE `tjd_staging` (
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分期记录';
+
+
 
 DROP TABLE IF EXISTS `tjd_staging_rule`;
 CREATE TABLE `tjd_stage_rule` (

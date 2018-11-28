@@ -18,7 +18,7 @@ import com.cdkj.ylq.exception.ParaException;
 import com.cdkj.ylq.spring.SpringContextHolder;
 
 /** 
- * 申请借款（针对产品，发放额度）
+ * 申请信用分
  * @author: haiqingzheng 
  * @since: 2017年8月12日 上午11:30:59 
  * @history:

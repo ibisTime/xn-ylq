@@ -71,6 +71,16 @@ public class Company extends ABaseDO {
     // ******************db properties*******************
     private String nameForQuery;
 
+    private BusinessMan businessMan;
+
+    public BusinessMan getBusinessMan() {
+        return businessMan;
+    }
+
+    public void setBusinessMan(BusinessMan businessMan) {
+        this.businessMan = businessMan;
+    }
+
     public String getNameForQuery() {
         return nameForQuery;
     }

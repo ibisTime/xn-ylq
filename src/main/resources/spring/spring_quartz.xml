@@ -18,14 +18,12 @@
   <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
        <property name="triggers">  
            <list>
-           	  <!-- <ref bean="borrowTrigger"/>
+           	  <ref bean="borrowTrigger"/>
+           	  <ref bean="stageTrigger"/>
            	  <ref bean="certificationTrigger"/>
            	  <ref bean="userCouponTrigger"/>
            	  <ref bean="repayRemindTrigger"/>
-           	  <ref bean="autoRepayTrigger"/>
-           	  <ref bean="autoRepayOfOverdueTrigger"/>
-           	  <ref bean="doBaofooPayQueryTrigger"/>
-           	  <ref bean="doInsertStatisticDailyTrigger"/> -->
+           	  <ref bean="doInsertStatisticDailyTrigger"/>
           </list>  
        </property>  
        <property name="autoStartup" value="true"/>  
@@ -38,6 +36,16 @@
 	<bean id="doCheckOverdueDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="borrowOrderAOImpl"/>  
 	        <property name="targetMethod" value="doCheckOverdueDaily"/>  
+	        <property name="concurrent" value="false"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
+	</bean>
+	
+	<bean id="stageTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail" ref="doCheckStageDaily"/>  
+       <property name="cronExpression" value="0 0 0 * * ?"/><!-- 每天0点执行 -->
+	</bean>
+	<bean id="doCheckStageDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
+	        <property name="targetObject" ref="borrowOrderAOImpl"/>  
+	        <property name="targetMethod" value="doCheckStageDaily"/>  
 	        <property name="concurrent" value="false"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
 	</bean>
 	
