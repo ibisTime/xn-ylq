@@ -10,11 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IChargeAO;
 import com.cdkj.ylq.bo.IAccountBO;
+import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.IChargeBO;
 import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Account;
+import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.domain.Charge;
 import com.cdkj.ylq.domain.SYSUser;
 import com.cdkj.ylq.domain.User;
@@ -40,6 +42,9 @@ public class ChargeAOImpl implements IChargeAO {
 
     @Autowired
     private ISYSUserBO sysUserBO;
+
+    @Autowired
+    private IBusinessManBO businessManBO;
 
     @Override
     public String applyOrderOnline(String userId, String payType,
@@ -141,11 +146,12 @@ public class ChargeAOImpl implements IChargeAO {
         Account account = accountBO.getAccount(charge.getAccountNumber());
 
         // 其他用户
-        SYSUser sysUser = sysUserBO.getSYSUser(account.getUserId());
+        BusinessMan businessMan = businessManBO.getBusinessMan(account
+            .getUserId());
 
-        realName = sysUser.getMobile();
-        if (StringUtils.isNotBlank(sysUser.getRealName())) {
-            realName = sysUser.getRealName().concat("-").concat(realName);
+        realName = businessMan.getMobile();
+        if (StringUtils.isNotBlank(businessMan.getRealName())) {
+            realName = businessMan.getRealName().concat("-").concat(realName);
         }
 
         SYSUser payUser = sysUserBO.getSYSUserUnCheck(charge.getPayUser());

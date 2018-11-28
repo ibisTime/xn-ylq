@@ -18,13 +18,15 @@ import org.springframework.stereotype.Service;
 import com.cdkj.ylq.ao.IAccountAO;
 import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IBorrowOrderBO;
+import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.IJourBO;
 import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.BorrowOrder;
-import com.cdkj.ylq.domain.SYSUser;
+import com.cdkj.ylq.domain.BusinessMan;
+import com.cdkj.ylq.enums.EAccountType;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.exception.BizException;
 
@@ -41,6 +43,9 @@ public class AccountAOImpl implements IAccountAO {
 
     @Autowired
     private IBorrowOrderBO borrowOrderBO;
+
+    @Autowired
+    private IBusinessManBO businessManBO;
 
     @Autowired
     private IUserBO userBO;
@@ -82,16 +87,19 @@ public class AccountAOImpl implements IAccountAO {
 
         // 户名
         String realName = null;
+        if (EAccountType.BUSINESS.getCode().equals(account.getType())) {
+            // 其他用户
+            BusinessMan businessMan = businessManBO.getBusinessMan(account
+                .getUserId());
+            if (null != businessMan) {
+                realName = businessMan.getMobile();
+                account.setMobile(realName);
+                if (StringUtils.isNotBlank(businessMan.getRealName())) {
+                    realName = businessMan.getRealName().concat("-")
+                        .concat(realName);
+                }
 
-        // 其他用户
-        SYSUser sysUser = sysUserBO.getSYSUserUnCheck(account.getUserId());
-        if (null != sysUser) {
-            realName = sysUser.getMobile();
-            account.setMobile(realName);
-            if (StringUtils.isNotBlank(sysUser.getRealName())) {
-                realName = sysUser.getRealName().concat("-").concat(realName);
             }
-
         }
 
         account.setRealName(realName);

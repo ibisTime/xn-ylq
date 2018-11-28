@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.ICertRecordDAO">
+	<resultMap id="certRecord_DB_Result" type="certRecord">
+		<result column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="use_datetime" property="useDatetime" />
+		<result column="fee" property="fee" />
+		<result column="cert_key" property="certKey" />
+		<result column="company_code" property="companyCode" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
+			</if>
+			<if test="certKey != null and certKey != '' ">
+				AND t.cert_key = #{certKey}
+			</if>
+			<if test="userId != null and userId != '' ">
+				AND t.user_id = #{userId}
+			</if>
+			<if test="useDatetimeStart != null and useDatetimeStart != '' ">
+				<![CDATA[AND t.use_datetime >= #{useDatetimeStart}]]>
+			</if>
+			<if test="useDatetimeEnd != null and useDatetimeEnd != '' ">
+				<![CDATA[AND t.use_datetime <= #{useDatetimeEnd}]]>
+			</if>
+		</trim>
+	</sql>
+	<select id="select_certRecord" parameterType="certRecord" resultMap="certRecord_DB_Result">
+		SELECT
+		t.id
+		,t.user_id
+		,t.use_datetime
+		,t.fee
+		,t.cert_key
+		,t.company_code
+		FROM
+		tjd_cert_record t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_certRecord_count" parameterType="certRecord"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM tjd_cert_record t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_certRecord" parameterType="certRecord">
+		INSERT INTO
+		tjd_cert_record(
+		id
+		,user_id
+		,use_datetime
+		,fee
+		,cert_key
+		,company_code
+		)
+		VALUES(
+		#{id}
+		,#{userId}
+		,#{useDatetime}
+		,#{fee}
+		,#{certKey}
+		,#{companyCode}
+		)
+	</insert>
+
+	<update id="update_certRecord" parameterType="certRecord">
+		UPDATE tjd_cert_record
+		SET
+		user_id = #{userId}
+		,use_datetime = #{useDatetime}
+		,fee = #{fee}
+		,cert_key = #{certKey}
+		,company_code = #{companyCode}
+		WHERE code = #{code}
+	</update>
+
+
+</mapper>

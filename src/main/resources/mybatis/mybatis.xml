@@ -11,6 +11,7 @@
 	    <typeAlias alias="repayApply" type="com.cdkj.ylq.domain.RepayApply" />
 	    <typeAlias alias="renewal" type="com.cdkj.ylq.domain.Renewal" />
 	    <typeAlias alias="overdue" type="com.cdkj.ylq.domain.Overdue" />
+	    <typeAlias alias="certRecord" type="com.cdkj.ylq.domain.CertRecord" />
 	    <typeAlias alias="statistic" type="com.cdkj.ylq.domain.Statistic" />
 	    
 	    <typeAlias alias="sysDict" type="com.cdkj.ylq.domain.SYSDict" />

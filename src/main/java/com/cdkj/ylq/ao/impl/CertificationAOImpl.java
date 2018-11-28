@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
+import com.cdkj.ylq.bo.ICertRecordBO;
 import com.cdkj.ylq.bo.ICertiBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.IProductBO;
@@ -90,6 +91,9 @@ public class CertificationAOImpl implements ICertificationAO {
     private IProductBO productBO;
 
     @Autowired
+    private ICertRecordBO certRecordBO;
+
+    @Autowired
     private IAccountBO accountBO;
 
     @Autowired
@@ -127,6 +131,9 @@ public class CertificationAOImpl implements ICertificationAO {
             }
         }
         userBO.refreshRealName(userId, realName);
+
+        // 财务测试
+
     }
 
     @Override

@@ -12,6 +12,11 @@ import com.cdkj.ylq.spring.ServiceModule;
 public interface IWithdrawAO {
     String DEFAULT_ORDER_COLUMN = "code";
 
+    // 待申请
+    public String applyOrder(String accountNumber, BigDecimal amount,
+            String payCardInfo, String payCardNo, String tradePwd,
+            String applyUser, String applyUserType, String applyNote);
+
     // 取现审核
     public void approveOrder(String code, String approveUser,
             String approveResult, String approveNote);

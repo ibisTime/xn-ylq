@@ -326,14 +326,16 @@ CREATE TABLE `tsys_noticer` (
   `name` varchar(64) DEFAULT NULL COMMENT '姓名',
   `mobile` varchar(64) DEFAULT NULL COMMENT '手机号',
   `type` varchar(4) DEFAULT NULL COMMENT '类型',
-  `strat_time` varchar(4) DEFAULT NULL COMMENT '开始时间点',
+  `start_time` varchar(4) DEFAULT NULL COMMENT '开始时间点',
   `end_time` varchar(4) DEFAULT NULL COMMENT '结束时间点',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
   `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `company_code` varchar(32) NOT NULL COMMENT '公司编号',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知人';
+
 
 DROP TABLE IF EXISTS `tjd_product`;
 CREATE TABLE `tjd_product` (
@@ -576,3 +578,14 @@ CREATE TABLE `tjd_business_man` (
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='借款商';
+
+DROP TABLE IF EXISTS `tjd_cert_record`;
+CREATE TABLE `tjd_cert_record` (
+  `id` bigint(20) NOT NULL COMMENT 'id',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `use_datetime` datetime DEFAULT NULL COMMENT '使用时间',
+  `fee` decimal(64,0) DEFAULT NULL COMMENT '费用',
+  `cert_key` varchar(32) DEFAULT NULL COMMENT '认证类型',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='认证记录';

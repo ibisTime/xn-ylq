@@ -45,6 +45,36 @@ public class WithdrawAOImpl implements IWithdrawAO {
 
     @Override
     @Transactional
+    public String applyOrder(String accountNumber, BigDecimal amount,
+            String payCardInfo, String payCardNo, String tradePwd,
+            String applyUser, String applyUserType, String applyNote) {
+
+        Account dbAccount = accountBO.getAccount(accountNumber);
+        // 取现获取手续费
+        BigDecimal fee = withdrawBO.doCheckAndGetFee(dbAccount, amount);
+        if (amount.compareTo(fee) == 0 || amount.compareTo(fee) == -1) {
+            throw new BizException("xn000000", "提现金额需大于手续费");
+        }
+
+        // 账户可用余额是否充足
+        if (dbAccount.getAmount().subtract(dbAccount.getFrozenAmount())
+            .compareTo(amount) == -1) {
+            throw new BizException("xn000000", "可用余额不足");
+        }
+        // 生成取现订单
+        String withdrawCode = withdrawBO.applyOrder(dbAccount, amount, fee,
+            payCardInfo, payCardNo, applyUser, applyUserType, applyNote);
+
+        // 冻结取现金额
+        dbAccount = accountBO.frozenAmount(dbAccount, amount,
+            EJourBizTypeBoss.WITHDRAW_FROZEN.getCode(),
+            EJourBizTypeBoss.WITHDRAW_FROZEN.getValue(), withdrawCode);
+
+        return withdrawCode;
+    }
+
+    @Override
+    @Transactional
     public void approveOrder(String code, String approveUser,
             String approveResult, String approveNote) {
         Withdraw data = withdrawBO.getWithdraw(code);

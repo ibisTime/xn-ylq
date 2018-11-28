@@ -153,7 +153,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         if (EBoolean.YES.getCode().equals(result)) {
             status = ERepayApplyStatus.APPROVE_YES.getCode();
             Staging staging = stagingBO.getStaging(repayApply.getRefNo());
-            if (EStagingStatus.TOREPAY.getCode().equals(staging.getStatus())) {
+            if (!EStagingStatus.TOREPAY.getCode().equals(staging.getStatus())) {
                 throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                     "分期计划不处于待还款状态");
             }
@@ -184,11 +184,12 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                     approver);
             }
             stagingBO.refreshRepay(staging.getCode(),
-                EPayType.OFFLINE.getCode(), repayApply.getCode());
+                EPayType.OFFLINE.getCode(), repayApply.getCode(),
+                repayApply.getAmount());
             // 发送短信
             smsContent = "您的"
                     + CalculationUtil
-                        .diviUp(staging.getPayAmount().longValue())
+                        .diviUp(repayApply.getAmount().longValue())
                     + "分期借款（分期编号：" + staging.getCode() + "）已经成功还款，详情查看请登录APP。";
 
         } else {

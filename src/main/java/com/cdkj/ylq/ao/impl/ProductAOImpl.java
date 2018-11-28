@@ -121,66 +121,19 @@ public class ProductAOImpl implements IProductAO {
         Paginable<Product> results = productBO.getPaginable(start, limit,
             condition);
         List<Product> products = results.getList();
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_AMOUNT);
+        InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
+            InfoAmount.class);
         // 未登录，只显示最低等级
         // if (StringUtils.isBlank(userId)) {
         for (Product product : products) {
-            if (EProductLevel.ONE.getCode().equals(product.getLevel())) {
+            if (infoAmount.getSxAmount().compareTo(product.getAmount()) >= 0) {
                 product.setIsLocked(EBoolean.NO.getCode());
             } else {
                 product.setIsLocked(EBoolean.YES.getCode());
             }
         }
-        // } else {
-        // EProductLevel curProductLevel = borrowOrderBO
-        // .getUserBorrowLevel(userId);
-        // Apply apply = applyBO.getCurrentApply(userId);
-        // if (apply != null) {
-        // BorrowOrder borrow = borrowOrderBO.getCurrentBorrow(userId);
-        // for (Product product : products) {
-        // if (apply.getProductCode().equals(product.getCode())) {
-        // product.setUserProductStatus(apply.getStatus());
-        // product.setApproveNote(apply.getApproveNote());
-        // if (borrow != null) {
-        // product.setBorrowCode(borrow.getCode());
-        // product.setBorrowInfo(borrow);
-        // if (EBorrowStatus.LOANING.getCode().equals(
-        // borrow.getStatus())) {
-        // product.setHkDays(DateUtil.daysBetweenDate(
-        // new Date(), borrow.getHkDatetime()));
-        // } else if (EBorrowStatus.OVERDUE.getCode().equals(
-        // borrow.getStatus())) {
-        // product.setHkDays(DateUtil.daysBetweenDate(
-        // borrow.getHkDatetime(), new Date()));
-        // }
-        // }
-        // product.setIsLocked(EBoolean.NO.getCode());
-        // } else {
-        // if (Integer.valueOf(curProductLevel.getCode()) >= Integer
-        // .valueOf((product.getLevel()))) {
-        // product
-        // .setUserProductStatus(EUserProductStatus.TO_APPLY
-        // .getCode());
-        // product.setIsLocked(EBoolean.NO.getCode());
-        // } else {
-        // product.setIsLocked(EBoolean.YES.getCode());
-        // }
-        // }
-        // }
-        // } else {
-        // for (Product product : products) {
-        // if (Integer.valueOf(curProductLevel.getCode()) >= Integer
-        // .valueOf((product.getLevel()))) {
-        // product
-        // .setUserProductStatus(EUserProductStatus.TO_APPLY
-        // .getCode());
-        // product.setIsLocked(EBoolean.NO.getCode());
-        // } else {
-        // product.setIsLocked(EBoolean.YES.getCode());
-        // }
-        // }
-        // }
-        //
-        // }
 
         return results;
     }

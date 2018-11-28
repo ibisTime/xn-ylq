@@ -16,7 +16,9 @@ public enum EJourBizTypeBoss {
 
     API("API", "征信接口支出"),
 
-    WITHDRAW_UNFROZEN("WITHDRAW_UNFROZEN", "取现冻结"),
+    WITHDRAW_FROZEN("WITHDRAW_FROZEN", "取现冻结"),
+
+    WITHDRAW_UNFROZEN("WITHDRAW_UNFROZEN", "取现解冻"),
 
     WITHDRAW("WITHDRAW", "取现");
 

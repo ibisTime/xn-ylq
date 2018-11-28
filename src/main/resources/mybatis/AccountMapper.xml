@@ -103,9 +103,7 @@
 		
 		FROM
 		tstd_account t
-		<include refid="join_condition"/>
 		<include refid="where_condition"/>
-		<include refid="mobileForQuery_condition"/>
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
 				t.${order}
