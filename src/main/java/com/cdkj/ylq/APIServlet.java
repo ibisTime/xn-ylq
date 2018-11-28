@@ -1,34 +1,36 @@
 /**
- * @Title APIServlet.java
- * @Package com.hsnet.pz.api
- * @Description
- * @author miyb
- * @date 2015-3-24 下午4:23:53
- * @version V1.0
+ * @Title APIServlet.java 
+ * @Package com.hsnet.pz.api 
+ * @Description 
+ * @author miyb  
+ * @date 2015-3-24 下午4:23:53 
+ * @version V1.0   
  */
 package com.cdkj.ylq;
 
-import com.cdkj.ylq.proxy.DispatcherImpl;
-import com.cdkj.ylq.proxy.IDispatcher;
-import org.apache.log4j.Logger;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
-/**
- * @author: miyb
- * @since: 2015-3-24 下午4:23:53
+import org.apache.log4j.Logger;
+
+import com.cdkj.ylq.proxy.DispatcherImpl;
+import com.cdkj.ylq.proxy.IDispatcher;
+
+/** 
+ * @author: miyb 
+ * @since: 2015-3-24 下午4:23:53 
  * @history:
  */
 public class APIServlet extends HttpServlet {
     static Logger logger = Logger.getLogger(APIServlet.class);
 
-    /**
-     * @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+    /** 
+     * @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
      */
     private static final long serialVersionUID = 6175432226630152841L;
 
@@ -36,11 +38,11 @@ public class APIServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response) throws ServletException, IOException {
+            HttpServletResponse response) throws ServletException, IOException {
         logger.info("Successful Deployment");
         PrintWriter writer = response.getWriter();
         writer.append("Version:1.4.0 \n");
-        writer.append("Description:ylq 1.4.0 \n");
+        writer.append("Description:shuanglong 2nd \n");
         writer.flush();
     }
 
@@ -48,7 +50,7 @@ public class APIServlet extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response) throws ServletException, IOException {
+            HttpServletResponse response) throws ServletException, IOException {
         String code = request.getParameter("code");
         String json = request.getParameter("json");
         IDispatcher dispatcher = new DispatcherImpl();
