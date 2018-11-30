@@ -14,7 +14,7 @@ import com.cdkj.ylq.domain.SYSRole;
 public interface ISYSRoleBO extends IPaginableBO<SYSRole> {
     public boolean isSYSRoleExist(String code);
 
-    public int saveSYSRole(SYSRole data);
+    public String saveSYSRole(SYSRole data);
 
     public int removeSYSRole(String code);
 

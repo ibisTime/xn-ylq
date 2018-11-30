@@ -32,8 +32,8 @@ public class XN623152 extends AProcessor {
 
     @Override
     public Object doBusiness() throws BizException {
-        wayAO.editWay(req.getCode(), req.getName(), req.getUrl(),
-            req.getUpdater(), req.getRemark());
+        wayAO.editWay(req.getCode(), req.getName(), req.getUpdater(),
+            req.getRemark());
         return new BooleanRes(true);
     }
 

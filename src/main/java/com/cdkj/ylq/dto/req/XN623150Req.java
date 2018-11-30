@@ -21,10 +21,6 @@ public class XN623150Req {
     @NotBlank
     private String name;
 
-    // 链接
-    @NotBlank
-    private String url;
-
     // 公司编号
     @NotBlank
     private String companyCode;
@@ -35,14 +31,6 @@ public class XN623150Req {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public String getCompanyCode() {

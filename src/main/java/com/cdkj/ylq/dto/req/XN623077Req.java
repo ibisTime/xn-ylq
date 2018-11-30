@@ -15,48 +15,26 @@ package com.cdkj.ylq.dto.req;
  */
 public class XN623077Req {
 
-    // 申请编号（必填）
-    private String code;
+    // 分期规则编号
+    private String stageRuleCode;
 
-    // 审核人（必填）
-    private String approver;
+    // 订单编号
+    private String orderCode;
 
-    // 审核结果（必填）
-    private String approveResult;
-
-    // 审核说明（必填）
-    private String approveNote;
-
-    public String getCode() {
-        return code;
+    public String getStageRuleCode() {
+        return stageRuleCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setStageRuleCode(String stageRuleCode) {
+        this.stageRuleCode = stageRuleCode;
     }
 
-    public String getApprover() {
-        return approver;
+    public String getOrderCode() {
+        return orderCode;
     }
 
-    public void setApprover(String approver) {
-        this.approver = approver;
-    }
-
-    public String getApproveResult() {
-        return approveResult;
-    }
-
-    public void setApproveResult(String approveResult) {
-        this.approveResult = approveResult;
-    }
-
-    public String getApproveNote() {
-        return approveNote;
-    }
-
-    public void setApproveNote(String approveNote) {
-        this.approveNote = approveNote;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
 }

@@ -59,14 +59,15 @@ public class AccountBOImpl extends PaginableBOImpl<Account> implements
     private ISYSConfigBO sysConfigBO;
 
     @Override
-    public String distributeAccount(String userId, EAccountType accountType,
+    public Account distributeAccount(String userId, EAccountType accountType,
             String currency) {
         String accountNumber = null;
+        Account data = new Account();
         if (StringUtils.isNotBlank(userId)) {
 
             accountNumber = OrderNoGenerater.generateM(EGeneratePrefix.Account
                 .getCode());
-            Account data = new Account();
+
             data.setAccountNumber(accountNumber);
             data.setUserId(userId);
             data.setType(accountType.getCode());
@@ -84,7 +85,7 @@ public class AccountBOImpl extends PaginableBOImpl<Account> implements
             accountDAO.insert(data);
 
         }
-        return accountNumber;
+        return data;
     }
 
     @Override

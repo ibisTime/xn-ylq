@@ -179,6 +179,32 @@ INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime
 INSERT INTO `tsys_menu_role` (`role_code`,`menu_code`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('COINSR201700000000000000','SM201711272034567989636','admin',now(),'','CD-YLQ000014');
 
 
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'jour_status','流水状态','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','1','待对账','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','3','已对账且账已平','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','4','帐不平待调账审批','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','5','已对账且账不平','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','6','无需对账','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'biz_type','流水类型','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','CHARGE','充值','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','API','征信接口支出','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','WITHDRAW_FROZEN','取现冻结','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','WITHDRAW_UNFROZEN','取现解冻','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','WITHDRAW','取现','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'withdraw_status','取现订单状态','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','withdraw_status','1','待审批','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','withdraw_status','2','审批不通过','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','withdraw_status','3','审批通过待支付','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','withdraw_status','4','支付失败','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','withdraw_status','5','支付成功','admin',now(),'','CD-YLQ000014');
+
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'charge_status','充值订单状态','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','charge_status','1','待支付','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','charge_status','2','支付失败','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','charge_status','3','支付成功','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'account_type','账户类型','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','account_type','P','平台','admin',now(),'','CD-YLQ000014');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','account_type','B','借款商','admin',now(),'','CD-YLQ000014');
 /*
 -- Query: SELECT `user_id`,`role_code`,`real_name`,`photo`,`mobile`,`login_name`,`login_pwd`,`login_pwd_strength`,`create_datetime`,`status`,`updater`, now() `update_datetime`,`remark`,`system_code` FROM tsys_user where user_id='UCOIN201700000000000001'
 LIMIT 0, 500

@@ -8,6 +8,9 @@
  */
 package com.cdkj.ylq.enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /** 
  * @author: haiqingzheng 
  * @since: 2017年8月12日 上午11:56:22 
@@ -16,7 +19,7 @@ package com.cdkj.ylq.enums;
 public enum ECertiKey {
     INFO_IDENTIFY("INFO_IDENTIFY", "实名认证提交")
 
-    , INFO_ZQZN("INFO_ZQZN", "智趣智能")
+    , INFO_ZQZN("INFO_ZQZN", "智趣智能活体识别")
 
     , INFO_IDENTIFY_PIC("INFO_IDENTIFY_PIC", "身份证照片")//
 
@@ -43,6 +46,14 @@ public enum ECertiKey {
 
     // 同盾贷前审核报告
     , INFO_TONGDUN_PRELOAN("INFO_TONGDUN_PRELOAN", "同盾贷前审核报告");
+
+    public static Map<String, ECertiKey> getCertiKeyMap() {
+        Map<String, ECertiKey> map = new HashMap<String, ECertiKey>();
+        for (ECertiKey key : ECertiKey.values()) {
+            map.put(key.getCode(), key);
+        }
+        return map;
+    }
 
     ECertiKey(String code, String value) {
         this.code = code;

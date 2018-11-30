@@ -19,6 +19,7 @@ import com.cdkj.ylq.ao.IAccountAO;
 import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IBorrowOrderBO;
 import com.cdkj.ylq.bo.IBusinessManBO;
+import com.cdkj.ylq.bo.ICompanyBO;
 import com.cdkj.ylq.bo.IJourBO;
 import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.IUserBO;
@@ -56,6 +57,9 @@ public class AccountAOImpl implements IAccountAO {
     @Autowired
     private IJourBO jourBO;
 
+    @Autowired
+    private ICompanyBO companyBO;
+
     @Override
     public Paginable<Account> queryAccountPage(int start, int limit,
             Account condition) {
@@ -79,14 +83,12 @@ public class AccountAOImpl implements IAccountAO {
 
     @Override
     public List<Account> getAccountByUserId(String userId, String currency) {
-
         return accountBO.queryAccountList(userId, currency);
     }
 
     private void initAccount(Account account) {
-
         // 户名
-        String realName = null;
+        String realName = "平台";
         if (EAccountType.BUSINESS.getCode().equals(account.getType())) {
             // 其他用户
             BusinessMan businessMan = businessManBO.getBusinessMan(account
@@ -136,4 +138,5 @@ public class AccountAOImpl implements IAccountAO {
         accountBO.editBankcard(code, realName, bankcardNumber, bankCode,
             bankName, status);
     }
+
 }

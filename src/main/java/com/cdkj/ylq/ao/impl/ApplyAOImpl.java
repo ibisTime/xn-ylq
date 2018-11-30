@@ -168,8 +168,9 @@ public class ApplyAOImpl implements IApplyAO {
                     + "，请保证填写的资料为本人真实资料,如需再次申请，请7天后再登陆APP提交审核。";
         }
         applyBO.doApprove(apply, status, sxAmount, approver, approveNote);
-        smsOutBO.sendContent(apply.getApplyUser(), content,
-            apply.getCompanyCode(), ESystemCode.YLQ.getCode());
+        User user = userBO.getUser(apply.getApplyUser());
+        smsOutBO.sendContent(user.getMobile(), content, apply.getCompanyCode(),
+            ESystemCode.YLQ.getCode());
     }
 
     @Override
@@ -179,6 +180,9 @@ public class ApplyAOImpl implements IApplyAO {
         List<Apply> applyList = results.getList();
         for (Apply apply : applyList) {
             apply.setUser(userBO.getUser(apply.getApplyUser()));
+            List<Certification> certifications = certificationBO
+                .queryCertiedList(apply.getApplyUser());
+            apply.setCertifications(certifications);
         }
         return results;
     }
@@ -187,6 +191,9 @@ public class ApplyAOImpl implements IApplyAO {
     public Apply getApply(String code) {
         Apply apply = applyBO.getApply(code);
         apply.setUser(userBO.getUser(apply.getApplyUser()));
+        List<Certification> certifications = certificationBO
+            .queryCertiedList(apply.getApplyUser());
+        apply.setCertifications(certifications);
         return apply;
     }
 

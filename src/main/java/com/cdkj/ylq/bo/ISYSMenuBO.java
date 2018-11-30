@@ -23,4 +23,6 @@ public interface ISYSMenuBO extends IPaginableBO<SYSMenu> {
     public SYSMenu getSYSMenu(String code);
 
     public List<SYSMenu> querySYSMenuList(SYSMenu data);
+
+    public List<SYSMenu> queryModelMenus();
 }

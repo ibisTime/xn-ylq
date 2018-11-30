@@ -18,16 +18,15 @@ public class WayAOImpl implements IWayAO {
     private IWayBO wayBO;
 
     @Override
-    public String addWay(String name, String url, String companyCode) {
-        String code = wayBO.saveWay(name, url, companyCode);
+    public String addWay(String name, String companyCode) {
+        String code = wayBO.saveWay(name, companyCode);
         return code;
     }
 
     @Override
-    public int editWay(String code, String name, String url, String updater,
-            String remark) {
+    public int editWay(String code, String name, String updater, String remark) {
         Way data = wayBO.getWay(code);
-        wayBO.refreshWay(data, name, url, updater, remark);
+        wayBO.refreshWay(data, name, updater, remark);
         return 0;
     }
 

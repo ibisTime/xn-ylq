@@ -72,13 +72,13 @@ public class ProductAOImpl implements IProductAO {
         data.setFwAmount(StringValidater.toBigDecimal(req.getFwAmount()));
         data.setStatus(EProductStatus.OFF.getCode());
         data.setLocation(EProductLocation.NORMAL.getCode());
-        data.setOrderNo(0);
         data.setColor(EProductLevel.getLevelCode(req.getLevel()));
 
         data.setUpdater(req.getUpdater());
         data.setUpdateDatetime(new Date());
         data.setRemark(req.getRemark());
         data.setCompanyCode(req.getCompanyCode());
+        data.setOrderNo(StringValidater.toInteger(req.getOrderNo()));
 
         productBO.saveProduct(data);
         return code;
@@ -99,12 +99,14 @@ public class ProductAOImpl implements IProductAO {
         data.setYqRate2(StringValidater.toBigDecimal(req.getYqRate2()));
         data.setLxRate(StringValidater.toBigDecimal(req.getLxRate()));
         data.setXsAmount(StringValidater.toBigDecimal(req.getXsAmount()));
+        data.setColor(EProductLevel.getLevelCode(req.getLevel()));
 
         data.setGlAmount(StringValidater.toBigDecimal(req.getGlAmount()));
         data.setFwAmount(StringValidater.toBigDecimal(req.getFwAmount()));
         data.setUpdater(req.getUpdater());
         data.setUpdateDatetime(new Date());
         data.setRemark(req.getRemark());
+        data.setOrderNo(StringValidater.toInteger(req.getOrderNo()));
 
         return productBO.refreshProduct(data);
     }
@@ -118,23 +120,25 @@ public class ProductAOImpl implements IProductAO {
     @Override
     public Paginable<Product> queryProductPage(int start, int limit,
             Product condition, String userId) {
+
         Paginable<Product> results = productBO.getPaginable(start, limit,
             condition);
-        List<Product> products = results.getList();
-        Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_AMOUNT);
-        InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
-            InfoAmount.class);
-        // 未登录，只显示最低等级
-        // if (StringUtils.isBlank(userId)) {
-        for (Product product : products) {
-            if (infoAmount.getSxAmount().compareTo(product.getAmount()) >= 0) {
-                product.setIsLocked(EBoolean.NO.getCode());
-            } else {
-                product.setIsLocked(EBoolean.YES.getCode());
+        if (!StringUtils.isBlank(userId)) {
+            List<Product> products = results.getList();
+            Certification certification = certificationBO.getCertification(
+                userId, ECertiKey.INFO_AMOUNT);
+            InfoAmount infoAmount = JsonUtil.json2Bean(
+                certification.getResult(), InfoAmount.class);
+            // 未登录，只显示最低等级
+            // if (StringUtils.isBlank(userId)) {
+            for (Product product : products) {
+                if (infoAmount.getSxAmount().compareTo(product.getAmount()) >= 0) {
+                    product.setIsLocked(EBoolean.NO.getCode());
+                } else {
+                    product.setIsLocked(EBoolean.YES.getCode());
+                }
             }
         }
-
         return results;
     }
 

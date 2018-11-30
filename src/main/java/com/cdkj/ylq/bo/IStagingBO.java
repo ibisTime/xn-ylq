@@ -28,4 +28,6 @@ public interface IStagingBO extends IPaginableBO<Staging> {
 
     public void refreshOverdue(Staging staging);
 
+    public Staging getNextStaging(Staging staging);
+
 }

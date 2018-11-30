@@ -581,7 +581,7 @@ CREATE TABLE `tjd_business_man` (
 
 DROP TABLE IF EXISTS `tjd_cert_record`;
 CREATE TABLE `tjd_cert_record` (
-  `id` bigint(20) NOT NULL COMMENT 'id',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
   `use_datetime` datetime DEFAULT NULL COMMENT '使用时间',
   `fee` decimal(64,0) DEFAULT NULL COMMENT '费用',
@@ -589,3 +589,4 @@ CREATE TABLE `tjd_cert_record` (
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='认证记录';
+

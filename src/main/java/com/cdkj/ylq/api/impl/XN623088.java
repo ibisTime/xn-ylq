@@ -46,6 +46,7 @@ public class XN623088 extends AProcessor {
         condition.setApplyUser(req.getApplyUser());
         condition.setApprover(req.getApprover());
         condition.setStatus(req.getStatus());
+        condition.setCompanyCode(req.getCompanyCode());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = IBorrowOrderAO.DEFAULT_ORDER_COLUMN;

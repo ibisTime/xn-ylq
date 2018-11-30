@@ -69,6 +69,7 @@ import com.cdkj.ylq.enums.EIDKind;
 import com.cdkj.ylq.enums.EJourBizTypeBoss;
 import com.cdkj.ylq.enums.EJourBizTypePlat;
 import com.cdkj.ylq.enums.ESysUser;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.EBizErrorCode;
 import com.cdkj.ylq.http.BizConnecter;
@@ -116,14 +117,26 @@ public class CertificationAOImpl implements ICertificationAO {
     @Autowired
     private IBusinessManBO businessManBO;
 
+    private String qiniu(String image) {
+        StringBuilder str = new StringBuilder("http://");
+        str.append(
+            sysConfigBO.getStringValue(SysConstants.QINIU_DOMAIN,
+                ESystemCode.YLQ.getCode())).append("/").append(image);
+        logger.info(str.toString());
+        return str.toString();
+    }
+
     @Override
+    @Transactional
     public InfoZqzn doZqznVerify(String userId, String frontImage,
             String backImage, String faceImage) {
         User user = userBO.getUser(userId);
         XN798650Req req = new XN798650Req();
-        req.setFaceImage(faceImage);
-        req.setFrontImage(frontImage);
-        req.setBackImage(backImage);
+        req.setFaceImage(qiniu(faceImage));
+        req.setFrontImage(qiniu(frontImage));
+        req.setBackImage(qiniu(backImage));
+        req.setCompanyCode(ESystemCode.YLQ.getCode());
+        req.setSystemCode(ESystemCode.YLQ.getCode());
         InfoZqzn infoZqzn = BizConnecter.getBizData("798650",
             JsonUtils.object2Json(req), InfoZqzn.class);
         Certification certification = certificationBO.getCertification(userId,
@@ -144,23 +157,25 @@ public class CertificationAOImpl implements ICertificationAO {
                     applyBO.refreshStatus(apply);
                 }
             }
-            userBO.refreshRealName(userId, infoZqzn.getZqznInfoFront()
-                .getName());
+            userBO.refreshIdentity(userId, infoZqzn.getZqznInfoFront()
+                .getName(), EIDKind.IDCard.getCode(), infoZqzn
+                .getZqznInfoFront().getIdNo());
         } else {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "认证失败，失败原因为:" + infoZqzn.getZqznInfoRealAuth().getReason());
         }
-        BigDecimal fee = sysConfigBO.getBigDecimalValue(
-            ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
-        Long id = certRecordBO.saveCertRecord(userId, fee,
+        // BigDecimal fee = sysConfigBO.getBigDecimalValue(
+        // ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
+        Long id = certRecordBO.saveCertRecord(userId, new BigDecimal(1500),
             ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
         // 接口费用
         BusinessMan man = businessManBO.getBusinessManByCompanyCode(user
             .getCompanyCode());
         accountBO.transAmount(man.getUserId(), ESysUser.SYS_USER.getCode(),
-            ECurrency.CNY.getCode(), fee, EJourBizTypeBoss.API.getCode(),
-            EJourBizTypePlat.API.getCode(), EJourBizTypeBoss.API.getValue(),
-            EJourBizTypePlat.API.getValue(), id.toString());
+            ECurrency.CNY.getCode(), new BigDecimal(1500),
+            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypeBoss.API.getValue(), EJourBizTypePlat.API.getValue(),
+            id.toString());
         return infoZqzn;
     }
 
@@ -867,6 +882,7 @@ public class CertificationAOImpl implements ICertificationAO {
         res.setInfoAddressBookFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoTongDunPreLoanFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoZfbFlag(ECertificationStatus.TO_CERTI.getCode());
+        res.setInfoZqznFlag(ECertificationStatus.TO_CERTI.getCode());
 
         for (Certification certification : certifications) {
             if (ECertiKey.INFO_IDENTIFY_PIC.getCode().equals(
@@ -994,6 +1010,18 @@ public class CertificationAOImpl implements ICertificationAO {
                     res.setInfoAddressBook(certification.getResult());
                 }
             }
+
+            if (ECertiKey.INFO_ZQZN.getCode().equals(
+                certification.getCertiKey())) {
+                res.setInfoZqznFlag(certification.getFlag());
+                if (ECertificationStatus.CERTI_YES.getCode().equals(
+                    certification.getFlag())
+                        || ECertificationStatus.INVALID.getCode().equals(
+                            certification.getFlag())) {
+                    res.setInfoZqzn(JsonUtil.json2Bean(
+                        certification.getResult(), InfoZqzn.class));
+                }
+            }
         }
         return res;
     }
@@ -1003,32 +1031,15 @@ public class CertificationAOImpl implements ICertificationAO {
         List<Certification> certifications = new ArrayList<Certification>();
         User user = userBO.getUser(userId);
         String companyCode = user.getCompanyCode();
-        // 实名认证信息
-        Certification identify = new Certification();
-        identify.setUserId(userId);
-        identify.setCertiKey(ECertiKey.INFO_IDENTIFY.getCode());
-        identify.setFlag(ECertificationStatus.TO_CERTI.getCode());
-        identify.setCompanyCode(companyCode);
-        certificationBO.saveCertification(identify);
-        certifications.add(identify);
 
-        // 身份证照片信息
-        Certification identifyPic = new Certification();
-        identifyPic.setUserId(userId);
-        identifyPic.setCertiKey(ECertiKey.INFO_IDENTIFY_PIC.getCode());
-        identifyPic.setFlag(ECertificationStatus.TO_CERTI.getCode());
-        identifyPic.setCompanyCode(companyCode);
-        certificationBO.saveCertification(identifyPic);
-        certifications.add(identifyPic);
-
-        // 人脸识别
-        Certification identifyFace = new Certification();
-        identifyFace.setUserId(userId);
-        identifyFace.setCertiKey(ECertiKey.INFO_IDENTIFY_FACE.getCode());
-        identifyFace.setFlag(ECertificationStatus.TO_CERTI.getCode());
-        identifyFace.setCompanyCode(companyCode);
-        certificationBO.saveCertification(identifyFace);
-        certifications.add(identifyFace);
+        // 活体认证
+        Certification ZQZN = new Certification();
+        ZQZN.setUserId(userId);
+        ZQZN.setCertiKey(ECertiKey.INFO_ZQZN.getCode());
+        ZQZN.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        ZQZN.setCompanyCode(companyCode);
+        certificationBO.saveCertification(ZQZN);
+        certifications.add(ZQZN);
 
         // 基本信息
         Certification certification1 = new Certification();
@@ -1057,24 +1068,6 @@ public class CertificationAOImpl implements ICertificationAO {
         certificationBO.saveCertification(certification3);
         certifications.add(certification3);
 
-        // 欺诈信息
-        Certification antifraud = new Certification();
-        antifraud.setUserId(userId);
-        antifraud.setCertiKey(ECertiKey.INFO_ANTIFRAUD.getCode());
-        antifraud.setFlag(ECertificationStatus.TO_CERTI.getCode());
-        antifraud.setCompanyCode(companyCode);
-        certificationBO.saveCertification(antifraud);
-        certifications.add(antifraud);
-
-        // 芝麻认证
-        Certification zmCredit = new Certification();
-        zmCredit.setUserId(userId);
-        zmCredit.setCertiKey(ECertiKey.INFO_ZMCREDIT.getCode());
-        zmCredit.setFlag(ECertificationStatus.TO_CERTI.getCode());
-        zmCredit.setCompanyCode(companyCode);
-        certificationBO.saveCertification(zmCredit);
-        certifications.add(zmCredit);
-
         // 运营商认证
         Certification carrier = new Certification();
         carrier.setUserId(userId);
@@ -1092,15 +1085,6 @@ public class CertificationAOImpl implements ICertificationAO {
         addressBook.setCompanyCode(companyCode);
         certificationBO.saveCertification(addressBook);
         certifications.add(addressBook);
-
-        // 同盾贷前审核报告
-        Certification tongdunPreloan = new Certification();
-        tongdunPreloan.setUserId(userId);
-        tongdunPreloan.setCertiKey(ECertiKey.INFO_TONGDUN_PRELOAN.getCode());
-        tongdunPreloan.setFlag(ECertificationStatus.TO_CERTI.getCode());
-        tongdunPreloan.setCompanyCode(companyCode);
-        certificationBO.saveCertification(tongdunPreloan);
-        certifications.add(tongdunPreloan);
 
         // 支付宝认证
         Certification zfb = new Certification();

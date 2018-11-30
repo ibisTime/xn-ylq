@@ -9,12 +9,11 @@ public interface IWayBO extends IPaginableBO<Way> {
 
     public boolean isWayExist(String code);
 
-    public String saveWay(String name, String url, String companyCode);
+    public String saveWay(String name, String companyCode);
 
     public int removeWay(String code);
 
-    public int refreshWay(Way data, String name, String url, String updater,
-            String remark);
+    public int refreshWay(Way data, String name, String updater, String remark);
 
     public int refreshPointCount(Way data, Long count);
 

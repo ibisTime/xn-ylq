@@ -34,4 +34,9 @@ public interface ISYSDictBO extends IPaginableBO<SYSDict> {
 
     public SYSDict getSYSDict(Long id);
 
+    public List<SYSDict> queryDictList();
+
+    public void saveDict(String type, String parentKey, String dkey,
+            String dvalue, String updater, String remark, String comapnyCode);
+
 }

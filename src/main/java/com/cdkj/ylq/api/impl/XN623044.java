@@ -37,7 +37,7 @@ public class XN623044 extends AProcessor {
     public Object doBusiness() throws BizException {
 
         return certificationAO.doZqznVerify(req.getUserId(),
-            req.getFaceImage(), req.getBackImage(), req.getFaceImage());
+            req.getFrontImage(), req.getBackImage(), req.getFaceImage());
     }
 
     /** 

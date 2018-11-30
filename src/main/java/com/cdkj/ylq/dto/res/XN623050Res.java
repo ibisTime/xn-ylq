@@ -17,6 +17,7 @@ import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoTongDunPreLoan;
 import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.InfoZfb;
+import com.cdkj.ylq.domain.InfoZqzn;
 import com.cdkj.ylq.domain.User;
 
 /** 
@@ -106,6 +107,26 @@ public class XN623050Res {
 
     // 支付宝报告
     private InfoZfb infoZfb;
+
+    private String infoZqznFlag;
+
+    private InfoZqzn infoZqzn;
+
+    public String getInfoZqznFlag() {
+        return infoZqznFlag;
+    }
+
+    public void setInfoZqznFlag(String infoZqznFlag) {
+        this.infoZqznFlag = infoZqznFlag;
+    }
+
+    public InfoZqzn getInfoZqzn() {
+        return infoZqzn;
+    }
+
+    public void setInfoZqzn(InfoZqzn infoZqzn) {
+        this.infoZqzn = infoZqzn;
+    }
 
     public String getInfoZfbFlag() {
         return infoZfbFlag;

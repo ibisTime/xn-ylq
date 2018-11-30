@@ -153,6 +153,26 @@ public class User extends ABaseDO {
 
     private BusinessMan businessMan;
 
+    private Long couponCount;
+
+    private Long refereeCount;
+
+    public Long getCouponCount() {
+        return couponCount;
+    }
+
+    public void setCouponCount(Long couponCount) {
+        this.couponCount = couponCount;
+    }
+
+    public Long getRefereeCount() {
+        return refereeCount;
+    }
+
+    public void setRefereeCount(Long refereeCount) {
+        this.refereeCount = refereeCount;
+    }
+
     public BusinessMan getBusinessMan() {
         return businessMan;
     }

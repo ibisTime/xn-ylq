@@ -18,6 +18,7 @@ import com.cdkj.ylq.bo.ISYSDictBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.dao.ISYSDictDAO;
 import com.cdkj.ylq.domain.SYSDict;
+import com.cdkj.ylq.enums.ECompanyCodeModel;
 import com.cdkj.ylq.enums.EDictType;
 import com.cdkj.ylq.exception.BizException;
 
@@ -107,6 +108,28 @@ public class SYSDictBOImpl extends PaginableBOImpl<SYSDict> implements
             throw new BizException("xn000000", "当前节点下，key重复");
         }
 
+    }
+
+    @Override
+    public void saveDict(String type, String parentKey, String dkey,
+            String dvalue, String updater, String remark, String companyCode) {
+        SYSDict data = new SYSDict();
+        data.setType(type);
+        data.setParentKey(parentKey);
+        data.setDkey(dkey);
+        data.setDvalue(dvalue);
+        data.setUpdater(updater);
+        data.setUpdateDatetime(new Date());
+        data.setRemark(remark);
+        data.setCompanyCode(companyCode);
+        sysDictDAO.insert(data);
+    }
+
+    @Override
+    public List<SYSDict> queryDictList() {
+        SYSDict condition = new SYSDict();
+        condition.setCompanyCode(ECompanyCodeModel.MODEL.getCode());
+        return sysDictDAO.selectList(condition);
     }
 
 }

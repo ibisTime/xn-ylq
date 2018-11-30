@@ -57,6 +57,16 @@ public class XN623001Req {
     // 备注（选填）
     private String remark;
 
+    private String orderNo;
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
     public String getCode() {
         return code;
     }

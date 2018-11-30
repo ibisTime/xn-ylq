@@ -31,14 +31,15 @@ public class SYSRoleBOImpl extends PaginableBOImpl<SYSRole> implements
     }
 
     @Override
-    public int saveSYSRole(SYSRole data) {
-        int count = 0;
+    public String saveSYSRole(SYSRole data) {
+        String code = null;
         if (data != null) {
-            data.setCode(OrderNoGenerater.generateM("SR"));
+            code = OrderNoGenerater.generateM("SR");
+            data.setCode(code);
             data.setUpdateDatetime(new Date());
-            count = sysRoleDAO.insert(data);
+            sysRoleDAO.insert(data);
         }
-        return count;
+        return code;
     }
 
     @Override

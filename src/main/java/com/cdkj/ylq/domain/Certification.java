@@ -45,6 +45,17 @@ public class Certification extends ABaseDO {
     // 当前时间
     private Date curDatetime;
 
+    // 认证名
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Date getCurDatetime() {
         return curDatetime;
     }

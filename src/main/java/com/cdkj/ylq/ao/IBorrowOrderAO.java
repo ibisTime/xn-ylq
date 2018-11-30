@@ -1,9 +1,11 @@
 package com.cdkj.ylq.ao;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.BorrowOrder;
+import com.cdkj.ylq.domain.StageInfo;
 import com.cdkj.ylq.dto.res.XN623091Res;
 
 public interface IBorrowOrderAO {
@@ -70,5 +72,7 @@ public interface IBorrowOrderAO {
     public XN623091Res isBorrowing(String userId);
 
     public void editRemark(String code, String remark);
+
+    public List<StageInfo> calStage(String stageRuleCode, String orderCode);
 
 }

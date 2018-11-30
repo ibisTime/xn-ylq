@@ -24,9 +24,6 @@ public class XN623152Req {
     // 姓名
     private String name;
 
-    // 链接
-    private String url;
-
     // 更新人
     @NotBlank
     private String updater;
@@ -40,14 +37,6 @@ public class XN623152Req {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public String getCode() {

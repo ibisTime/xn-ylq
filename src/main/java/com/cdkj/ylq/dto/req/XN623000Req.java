@@ -57,6 +57,17 @@ public class XN623000Req {
     // 公司编号
     private String companyCode;
 
+    // UI次序
+    private String orderNo;
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
     public String getCompanyCode() {
         return companyCode;
     }

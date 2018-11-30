@@ -11,13 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IJourAO;
 import com.cdkj.ylq.bo.IAccountBO;
+import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.IJourBO;
 import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
+import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.domain.Jour;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EJourStatus;
+import com.cdkj.ylq.enums.ESysUser;
 import com.cdkj.ylq.exception.BizException;
 
 /** 
@@ -39,6 +42,9 @@ public class JourAOImpl implements IJourAO {
 
     @Autowired
     private ISYSUserBO sysUserBO;
+
+    @Autowired
+    private IBusinessManBO businessManBO;
 
     /*
      * 人工调账： 1、判断流水账是否平，平则更改订单状态，不平则更改产生红冲蓝补订单，而后更改订单状态
@@ -81,7 +87,19 @@ public class JourAOImpl implements IJourAO {
         }
 
         Paginable<Jour> page = jourBO.getPaginable(start, limit, condition);
-
+        String realName = null;
+        for (Jour jour : page.getList()) {
+            if (ESysUser.SYS_USER.getCode().equals(jour.getUserId())) {
+                jour.setRealName(ESysUser.SYS_USER.getValue());
+            } else {
+                BusinessMan man = businessManBO
+                    .getBusinessMan(jour.getUserId());
+                if (man.getRealName() != null) {
+                    realName = man.getRealName();
+                    jour.setRealName(realName);
+                }
+            }
+        }
         return page;
     }
 

@@ -20,7 +20,6 @@ public class XN623012Req extends APageReq {
     private static final long serialVersionUID = 1845471254089653851L;
 
     // 用户编号（必填）
-    @NotBlank
     private String userId;
 
     // 公司编号

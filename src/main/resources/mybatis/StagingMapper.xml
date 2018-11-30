@@ -28,6 +28,9 @@
 			<if test="lastPayDate != null and lastPayDate != '' ">
 				AND t.last_pay_date = #{lastPayDate}
 			</if>
+			<if test="orderCode != null and orderCode != '' ">
+				AND t.order_code = #{orderCode}
+			</if>
 			<if test="curDatetime != null and curDatetime != '' ">
 				<![CDATA[AND t.last_pay_date <= #{curDatetime}]]>
 			</if>

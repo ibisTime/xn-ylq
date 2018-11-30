@@ -23,4 +23,9 @@ public class OrderNoGenerater {
         String today = DateUtil.getToday(DateUtil.DATA_TIME_PATTERN_5);
         return prefix + today + String.valueOf(random);
     }
+
+    public static void main(String[] args) {
+        int random = Math.abs(new Random().nextInt()) % 100000;
+        System.out.println(String.valueOf(random));
+    }
 }

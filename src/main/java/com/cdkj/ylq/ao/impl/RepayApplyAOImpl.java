@@ -28,6 +28,7 @@ import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.RepayApply;
 import com.cdkj.ylq.domain.Staging;
+import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBorrowStatus;
 import com.cdkj.ylq.enums.ECouponStatus;
@@ -142,7 +143,8 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             smsContent = "您的线下还款申请审核未通过，原因：" + approveNote + "。";
         }
         repayApplyBO.doApprove(repayApply, status, approver, approveNote);
-        smsOutBO.sendContent(repayApply.getApplyUser(), smsContent,
+        User user = userBO.getUser(repayApply.getApplyUser());
+        smsOutBO.sendContent(user.getMobile(), smsContent,
             repayApply.getCompanyCode(), ESystemCode.YLQ.getCode());
     }
 
@@ -197,7 +199,8 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             smsContent = "您的线下还款申请审核未通过，原因：" + approveNote + "。";
         }
         repayApplyBO.doApprove(repayApply, status, approver, approveNote);
-        smsOutBO.sendContent(repayApply.getApplyUser(), smsContent,
+        User user = userBO.getUser(repayApply.getApplyUser());
+        smsOutBO.sendContent(user.getMobile(), smsContent,
             repayApply.getCompanyCode(), ESystemCode.YLQ.getCode());
     }
 

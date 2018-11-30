@@ -321,6 +321,12 @@ INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_d
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','user_status','1','程序锁定','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','user_status','2','人工锁定','admin',now(),NULL,'GS2018112119133810071833');
 
+
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'noticer_type','通知人类型','admin',now(),NULL,'GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','noticer_type','0','借款审批通知人','admin',now(),NULL,'GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','noticer_type','1','放款通知人','admin',now(),NULL,'GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','noticer_type','2','信用分审批通知人','admin',now(),NULL,'GS2018112119133810071833');
+
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'mobile_modify_status','手机修改申请状态','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','mobile_modify_status','0','待审核','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','mobile_modify_status','1','审核通过','admin',now(),NULL,'GS2018112119133810071833');

@@ -9,16 +9,30 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cdkj.ylq.ao.IBusinessManAO;
 import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IBusinessManBO;
+import com.cdkj.ylq.bo.IChargeBO;
 import com.cdkj.ylq.bo.ICompanyBO;
+import com.cdkj.ylq.bo.ISYSConfigBO;
+import com.cdkj.ylq.bo.ISYSDictBO;
+import com.cdkj.ylq.bo.ISYSMenuBO;
+import com.cdkj.ylq.bo.ISYSMenuRoleBO;
 import com.cdkj.ylq.bo.ISYSRoleBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.MD5Util;
+import com.cdkj.ylq.core.StringValidater;
+import com.cdkj.ylq.dao.ISYSMenuDAO;
+import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.BusinessMan;
+import com.cdkj.ylq.domain.SYSConfig;
+import com.cdkj.ylq.domain.SYSDict;
+import com.cdkj.ylq.domain.SYSMenu;
+import com.cdkj.ylq.domain.SYSMenuRole;
+import com.cdkj.ylq.domain.SYSRole;
 import com.cdkj.ylq.dto.req.XN630100Req;
 import com.cdkj.ylq.dto.res.XN630101Res;
 import com.cdkj.ylq.enums.EAccountType;
 import com.cdkj.ylq.enums.ECurrency;
+import com.cdkj.ylq.enums.EJourBizTypeBoss;
 import com.cdkj.ylq.exception.BizException;
 
 //CHECK ��鲢��ע�� 
@@ -39,6 +53,24 @@ public class BusinessManAOImpl implements IBusinessManAO {
 
     @Autowired
     private ISYSRoleBO sysRoleBO;
+
+    @Autowired
+    private ISYSMenuBO sysMenuBO;
+
+    @Autowired
+    private ISYSMenuDAO sysMenuDAO;
+
+    @Autowired
+    private ISYSMenuRoleBO sysMenuRoleBO;
+
+    @Autowired
+    private ISYSConfigBO sysConfigBO;
+
+    @Autowired
+    private ISYSDictBO sysDictBO;
+
+    @Autowired
+    private IChargeBO chargeBO;
 
     @Override
     public Paginable<BusinessMan> queryBusinessManPage(int start, int limit,
@@ -78,12 +110,56 @@ public class BusinessManAOImpl implements IBusinessManAO {
         // 落地数据
         String userId = businessManBO.saveBusinessMan(req);
         // 开设公司
-        companyBO.saveCompany(userId);
+        String companyCode = companyBO.saveCompany(userId);
         // 分配账户
-        accountBO.distributeAccount(userId, EAccountType.BUSINESS,
-            ECurrency.CNY.getCode());
-        // TODO
-        // 分配菜单
+        Account account = accountBO.distributeAccount(userId,
+            EAccountType.BUSINESS, ECurrency.CNY.getCode());
+        // 分配菜单、角色、权限、数据字典、系统参数
+        // 角色
+        SYSRole role = new SYSRole();
+        role.setName("借款商");
+        role.setUpdater("UCOIN201700000000000001");
+        role.setRemark("新增客户角色");
+        role.setCompanyCode(companyCode);
+        String roleCode = sysRoleBO.saveSYSRole(role);
+        // 菜单
+        List<SYSMenu> modelMenus = sysMenuBO.queryModelMenus();
+        for (SYSMenu sysMenu : modelMenus) {
+            StringBuilder menuCode = new StringBuilder(sysMenu.getCode())
+                .append(companyCode);
+            sysMenu.setCompanyCode(companyCode);
+            sysMenu.setCode(menuCode.toString());
+            if (sysMenu.getParentCode() != null) {
+                StringBuilder parentCode = new StringBuilder(
+                    sysMenu.getParentCode()).append(companyCode);
+                sysMenu.setParentCode(parentCode.toString());
+            }
+            sysMenuDAO.insert(sysMenu);
+            // 权限
+            SYSMenuRole menuRole = new SYSMenuRole();
+            menuRole.setRoleCode(roleCode);
+            menuRole.setMenuCode(menuCode.toString());
+            menuRole.setUpdater("admin");
+            menuRole.setCompanyCode(companyCode);
+            sysMenuRoleBO.saveSYSMenuRole(menuRole);
+        }
+        // 系统参数
+        List<SYSConfig> configList = sysConfigBO.queryModelConfigs();
+        for (SYSConfig sysConfig : configList) {
+            sysConfigBO.saveConfig(sysConfig.getCkey(), sysConfig.getCvalue(),
+                sysConfig.getUpdater(), sysConfig.getRemark(), companyCode);
+        }
+        // 数据字典
+        List<SYSDict> dictList = sysDictBO.queryDictList();
+        for (SYSDict sysDict : dictList) {
+            sysDictBO.saveDict(sysDict.getType(), sysDict.getParentKey(),
+                sysDict.getDkey(), sysDict.getDvalue(), sysDict.getUpdater(),
+                sysDict.getRemark(), companyCode);
+        }
+        // 预充值
+        chargeBO.applyOrderOffline(account, EJourBizTypeBoss.CHARGE.getCode(),
+            StringValidater.toBigDecimal(req.getPrecharge()), null, null,
+            userId, "B", "新建账户预充值");
         return userId;
     }
 

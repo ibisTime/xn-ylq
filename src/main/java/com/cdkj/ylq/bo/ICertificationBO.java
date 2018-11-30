@@ -41,4 +41,6 @@ public interface ICertificationBO extends IPaginableBO<Certification> {
     // 是否完成必要认证
     public boolean isCompleteCerti(String userId);
 
+    public List<Certification> queryCertiedList(String userId);
+
 }

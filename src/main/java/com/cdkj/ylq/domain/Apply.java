@@ -74,6 +74,17 @@ public class Apply extends ABaseDO {
     // 状态列表
     private List<String> statusList;
 
+    // 已认证节点
+    private List<Certification> certifications;
+
+    public List<Certification> getCertifications() {
+        return certifications;
+    }
+
+    public void setCertifications(List<Certification> certifications) {
+        this.certifications = certifications;
+    }
+
     public String getCode() {
         return code;
     }

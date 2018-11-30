@@ -16,6 +16,7 @@ import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.dao.ISYSConfigDAO;
 import com.cdkj.ylq.domain.SYSConfig;
+import com.cdkj.ylq.enums.ECompanyCodeModel;
 import com.cdkj.ylq.exception.BizException;
 
 /**
@@ -146,6 +147,27 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
                     + e.getMessage());
         }
         return result;
+    }
+
+    @Override
+    public void saveConfig(String ckey, String cvalue, String updater,
+            String remark, String companyCode) {
+        SYSConfig config = new SYSConfig();
+        config.setCkey(ckey);
+        config.setCvalue(cvalue);
+        config.setUpdater(updater);
+        config.setUpdateDatetime(new Date());
+        config.setRemark(remark);
+        config.setCompanyCode(companyCode);
+        sysConfigDAO.insert(config);
+
+    }
+
+    @Override
+    public List<SYSConfig> queryModelConfigs() {
+        SYSConfig condition = new SYSConfig();
+        condition.setCompanyCode(ECompanyCodeModel.MODEL.getCode());
+        return sysConfigDAO.selectList(condition);
     }
 
 }

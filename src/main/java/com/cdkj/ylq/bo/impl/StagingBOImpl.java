@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.IStagingBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
+import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IStagingDAO;
 import com.cdkj.ylq.domain.BorrowOrder;
@@ -100,5 +101,15 @@ public class StagingBOImpl extends PaginableBOImpl<Staging> implements
     public void refreshOverdue(Staging staging) {
         staging.setStatus(EStagingStatus.OVERDUE.getCode());
         stagingDAO.updateStatus(staging);
+    }
+
+    @Override
+    public Staging getNextStaging(Staging staging) {
+        Staging condition = new Staging();
+        condition.setOrderCode(staging.getOrderCode());
+        condition.setCurDatetime(DateUtil.getRelativeDateOfDays(
+            staging.getLastPayDate(), 1));
+
+        return stagingDAO.select(condition);
     }
 }

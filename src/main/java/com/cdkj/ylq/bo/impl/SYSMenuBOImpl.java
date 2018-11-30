@@ -12,6 +12,7 @@ import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.ISYSMenuDAO;
 import com.cdkj.ylq.domain.SYSMenu;
+import com.cdkj.ylq.enums.ECompanyCodeModel;
 
 /**
  * @author: Gejin 
@@ -99,5 +100,14 @@ public class SYSMenuBOImpl extends PaginableBOImpl<SYSMenu> implements
     @Override
     public List<SYSMenu> querySYSMenuList(SYSMenu data) {
         return sysMenuDAO.selectList(data);
+    }
+
+    @Override
+    public List<SYSMenu> queryModelMenus() {
+        SYSMenu condition = new SYSMenu();
+        condition.setCompanyCode(ECompanyCodeModel.MODEL.getCode());
+        List<SYSMenu> dataList = sysMenuDAO.selectList(condition);
+
+        return dataList;
     }
 }

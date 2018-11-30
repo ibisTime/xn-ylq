@@ -2,6 +2,7 @@ package com.cdkj.ylq.bo.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,8 +126,7 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
     @Override
     public boolean isCompleteCerti(String userId) {
         boolean flag = false;
-        Certification identify = getCertification(userId,
-            ECertiKey.INFO_IDENTIFY_PIC);
+        Certification ZQZN = getCertification(userId, ECertiKey.INFO_ZQZN);
         Certification zhifubao = getCertification(userId,
             ECertiKey.INFO_ZHIFUBAO);
         Certification basic = getCertification(userId, ECertiKey.INFO_BASIC);
@@ -134,9 +134,9 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
         Certification occupation = getCertification(userId,
             ECertiKey.INFO_OCCUPATION);
         Certification contact = getCertification(userId, ECertiKey.INFO_CONTACT);
-        if (identify != null && zhifubao != null && basic != null
+        if (ZQZN != null && zhifubao != null && basic != null
                 && carrier != null && contact != null && occupation != null) {
-            if (EBoolean.YES.getCode().equals(identify.getFlag())
+            if (EBoolean.YES.getCode().equals(ZQZN.getFlag())
                     && EBoolean.YES.getCode().equals(zhifubao.getFlag())
                     && EBoolean.YES.getCode().equals(basic.getFlag())
                     // && EBoolean.YES.getCode().equals(carrier.getFlag())
@@ -146,6 +146,20 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
             }
         }
         return flag;
+    }
+
+    @Override
+    public List<Certification> queryCertiedList(String userId) {
+        Map<String, ECertiKey> keyMap = ECertiKey.getCertiKeyMap();
+        Certification condition = new Certification();
+        condition.setFlag(EBoolean.YES.getCode());
+        condition.setUserId(userId);
+        List<Certification> dataList = certificationDAO.selectList(condition);
+        for (Certification certification : dataList) {
+            certification.setName(keyMap.get(certification.getCertiKey())
+                .getValue());
+        }
+        return dataList;
     }
 
 }

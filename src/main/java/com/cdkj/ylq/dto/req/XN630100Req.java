@@ -17,9 +17,9 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class XN630100Req {
 
-    // 角色编号
+    // 预充值金额
     @NotBlank
-    private String roleCode;
+    private String precharge;
 
     // 真名
     @NotBlank
@@ -55,12 +55,22 @@ public class XN630100Req {
     // 备注
     private String remark;
 
+    private String roleCode;
+
     public String getRoleCode() {
         return roleCode;
     }
 
     public void setRoleCode(String roleCode) {
         this.roleCode = roleCode;
+    }
+
+    public String getPrecharge() {
+        return precharge;
+    }
+
+    public void setPrecharge(String precharge) {
+        this.precharge = precharge;
     }
 
     public String getRealName() {
