@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.dto.req.XN001200Req;
-import com.cdkj.ylq.dto.req.XN001201Req;
 import com.cdkj.ylq.dto.req.XN804080Req;
 import com.cdkj.ylq.dto.req.XN804081Req;
 import com.cdkj.ylq.dto.req.XN804082Req;
@@ -42,13 +41,13 @@ public class SmsOutBOImpl implements ISmsOutBO {
     public void sendContent(String mobile, String content, String companyCode,
             String systemCode) {
         try {
-            XN001201Req req = new XN001201Req();
-            req.setTokenId(mobile);
+            XN804080Req req = new XN804080Req();
             req.setMobile(mobile);
             req.setContent(content);
+            req.setType("M");
             req.setCompanyCode(companyCode);
             req.setSystemCode(systemCode);
-            BizConnecter.getBizData("001201", JsonUtils.object2Json(req),
+            BizConnecter.getBizData("804080", JsonUtils.object2Json(req),
                 Object.class);
         } catch (Exception e) {
             logger.error("调用短信发送服务异常, 原因：" + e.getMessage());

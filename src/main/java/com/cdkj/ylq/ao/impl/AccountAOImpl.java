@@ -83,7 +83,11 @@ public class AccountAOImpl implements IAccountAO {
 
     @Override
     public List<Account> getAccountByUserId(String userId, String currency) {
-        return accountBO.queryAccountList(userId, currency);
+        List<Account> dataList = accountBO.queryAccountList(userId, currency);
+        for (Account account : dataList) {
+            initAccount(account);
+        }
+        return dataList;
     }
 
     private void initAccount(Account account) {

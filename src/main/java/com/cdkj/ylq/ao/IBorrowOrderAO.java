@@ -75,4 +75,7 @@ public interface IBorrowOrderAO {
 
     public List<StageInfo> calStage(String stageRuleCode, String orderCode);
 
+    public List<BorrowOrder> queryNearlyOrder(String isStage, int start,
+            int limit);
+
 }

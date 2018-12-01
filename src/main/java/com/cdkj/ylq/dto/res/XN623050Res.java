@@ -8,14 +8,9 @@
  */
 package com.cdkj.ylq.dto.res;
 
-import com.cdkj.ylq.domain.InfoAntifraud;
 import com.cdkj.ylq.domain.InfoBasic;
 import com.cdkj.ylq.domain.InfoContact;
-import com.cdkj.ylq.domain.InfoIdentify;
-import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
-import com.cdkj.ylq.domain.InfoTongDunPreLoan;
-import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.InfoZfb;
 import com.cdkj.ylq.domain.InfoZqzn;
 import com.cdkj.ylq.domain.User;
@@ -32,24 +27,6 @@ public class XN623050Res {
 
     // 用户信息
     private User userInfo;
-
-    // 身份证上传标识
-    private String infoIdentifyPicFlag;
-
-    // 身份证照片信息
-    private InfoIdentifyPic infoIdentifyPic;
-
-    // 人脸标识标识
-    private String infoIdentifyFaceFlag;
-
-    // 实名认证信息
-    private InfoIdentify infoIdentifyFace;
-
-    // 身份认证标识
-    private String infoIdentifyFlag;
-
-    // 实名认证信息
-    private InfoIdentify infoIdentify;
 
     // 基本信息标识
     private String infoBasicFlag;
@@ -69,18 +46,6 @@ public class XN623050Res {
     // 紧急联系人信息
     private InfoContact infoContact;
 
-    // 欺诈信息标识
-    private String infoAntifraudFlag;
-
-    // 欺诈信息
-    private InfoAntifraud infoAntifraud;
-
-    // 芝麻信用标识
-    private String infoZMCreditFlag;
-
-    // 芝麻信用结果
-    private InfoZMCredit infoZMCredit;
-
     // 运营商标识
     private String infoCarrierFlag;
 
@@ -96,21 +61,26 @@ public class XN623050Res {
     // 通讯录标识
     private String wechatFlag;
 
-    // 同盾贷前审核报告标识
-    private String infoTongDunPreLoanFlag;
-
-    // 同盾贷前审核报告
-    private InfoTongDunPreLoan infoTongDunPreLoan;
-
     // 支付宝标示
     private String infoZfbFlag;
 
     // 支付宝报告
     private InfoZfb infoZfb;
 
+    //
     private String infoZqznFlag;
 
     private InfoZqzn infoZqzn;
+
+    private String infoPersonalFlag;
+
+    public String getInfoPersonalFlag() {
+        return infoPersonalFlag;
+    }
+
+    public void setInfoPersonalFlag(String infoPersonalFlag) {
+        this.infoPersonalFlag = infoPersonalFlag;
+    }
 
     public String getInfoZqznFlag() {
         return infoZqznFlag;
@@ -144,22 +114,6 @@ public class XN623050Res {
         this.infoZfb = infoZfb;
     }
 
-    public String getInfoTongDunPreLoanFlag() {
-        return infoTongDunPreLoanFlag;
-    }
-
-    public void setInfoTongDunPreLoanFlag(String infoTongDunPreLoanFlag) {
-        this.infoTongDunPreLoanFlag = infoTongDunPreLoanFlag;
-    }
-
-    public InfoTongDunPreLoan getInfoTongDunPreLoan() {
-        return infoTongDunPreLoan;
-    }
-
-    public void setInfoTongDunPreLoan(InfoTongDunPreLoan infoTongDunPreLoan) {
-        this.infoTongDunPreLoan = infoTongDunPreLoan;
-    }
-
     public String getInfoCarrier() {
         return infoCarrier;
     }
@@ -182,46 +136,6 @@ public class XN623050Res {
 
     public void setUserInfo(User userInfo) {
         this.userInfo = userInfo;
-    }
-
-    public String getInfoIdentifyPicFlag() {
-        return infoIdentifyPicFlag;
-    }
-
-    public void setInfoIdentifyPicFlag(String infoIdentifyPicFlag) {
-        this.infoIdentifyPicFlag = infoIdentifyPicFlag;
-    }
-
-    public InfoIdentifyPic getInfoIdentifyPic() {
-        return infoIdentifyPic;
-    }
-
-    public void setInfoIdentifyPic(InfoIdentifyPic infoIdentifyPic) {
-        this.infoIdentifyPic = infoIdentifyPic;
-    }
-
-    public String getInfoIdentifyFaceFlag() {
-        return infoIdentifyFaceFlag;
-    }
-
-    public void setInfoIdentifyFaceFlag(String infoIdentifyFaceFlag) {
-        this.infoIdentifyFaceFlag = infoIdentifyFaceFlag;
-    }
-
-    public InfoIdentify getInfoIdentifyFace() {
-        return infoIdentifyFace;
-    }
-
-    public void setInfoIdentifyFace(InfoIdentify infoIdentifyFace) {
-        this.infoIdentifyFace = infoIdentifyFace;
-    }
-
-    public String getInfoIdentifyFlag() {
-        return infoIdentifyFlag;
-    }
-
-    public void setInfoIdentifyFlag(String infoIdentifyFlag) {
-        this.infoIdentifyFlag = infoIdentifyFlag;
     }
 
     public String getInfoBasicFlag() {
@@ -270,46 +184,6 @@ public class XN623050Res {
 
     public void setInfoContact(InfoContact infoContact) {
         this.infoContact = infoContact;
-    }
-
-    public String getInfoAntifraudFlag() {
-        return infoAntifraudFlag;
-    }
-
-    public void setInfoAntifraudFlag(String infoAntifraudFlag) {
-        this.infoAntifraudFlag = infoAntifraudFlag;
-    }
-
-    public InfoAntifraud getInfoAntifraud() {
-        return infoAntifraud;
-    }
-
-    public void setInfoAntifraud(InfoAntifraud infoAntifraud) {
-        this.infoAntifraud = infoAntifraud;
-    }
-
-    public String getInfoZMCreditFlag() {
-        return infoZMCreditFlag;
-    }
-
-    public void setInfoZMCreditFlag(String infoZMCreditFlag) {
-        this.infoZMCreditFlag = infoZMCreditFlag;
-    }
-
-    public InfoZMCredit getInfoZMCredit() {
-        return infoZMCredit;
-    }
-
-    public void setInfoZMCredit(InfoZMCredit infoZMCredit) {
-        this.infoZMCredit = infoZMCredit;
-    }
-
-    public InfoIdentify getInfoIdentify() {
-        return infoIdentify;
-    }
-
-    public void setInfoIdentify(InfoIdentify infoIdentify) {
-        this.infoIdentify = infoIdentify;
     }
 
     public String getInfoCarrierFlag() {

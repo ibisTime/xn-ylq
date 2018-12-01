@@ -59,7 +59,10 @@ public class CompanyAOImpl implements ICompanyAO {
         req.setRemark(remark);
         req.setRoleCode(roleCode);
         req.setIsAdmin(EBoolean.NO.getCode());
-        return businessManBO.saveBusinessMan(req);
+
+        String userId = businessManBO.saveBusinessMan(req);
+        businessManBO.refereshCompany(userId, companyCode);
+        return userId;
     }
 
     @Override

@@ -12,10 +12,8 @@ import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.ICompanyBO;
 import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
-import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.ICompanyDAO;
 import com.cdkj.ylq.domain.Company;
-import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.exception.BizException;
 
 @Component
@@ -33,11 +31,9 @@ public class CompanyBOImpl extends PaginableBOImpl<Company> implements
 
     @Override
     @Transactional
-    public String saveCompany(String userId) {
-        String code = null;
+    public String saveCompany(String userId, String code) {
         if (StringUtils.isNotBlank(userId)) {
             Company data = new Company();
-            code = OrderNoGenerater.generateM(EGeneratePrefix.GS.getCode());
             data.setCode(code);
             data.setUserId(userId);
             data.setCreateDatetime(new Date());

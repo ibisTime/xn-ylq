@@ -19,6 +19,7 @@ import com.cdkj.ylq.bo.ISYSRoleBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.MD5Util;
+import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.dao.ISYSMenuDAO;
 import com.cdkj.ylq.domain.Account;
@@ -33,6 +34,7 @@ import com.cdkj.ylq.dto.res.XN630101Res;
 import com.cdkj.ylq.enums.EAccountType;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECurrency;
+import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EJourBizTypeBoss;
 import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.exception.BizException;
@@ -107,16 +109,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
     @Override
     @Transactional
     public String addBusinessMan(XN630100Req req) {
-        // 手机检验
-        businessManBO.isMobileExist(req.getMobile());
-        // 落地数据
-        req.setIsAdmin(EBoolean.YES.getCode());
-        String userId = businessManBO.saveBusinessMan(req);
-        // 开设公司
-        String companyCode = companyBO.saveCompany(userId);
-        // 分配账户
-        Account account = accountBO.distributeAccount(userId,
-            EAccountType.BUSINESS, ECurrency.CNY.getCode());
+        // 公司编号
+        String companyCode = OrderNoGenerater.generateM(EGeneratePrefix.GS
+            .getCode());
         // 分配菜单、角色、权限、数据字典、系统参数
         // 角色
         SYSRole role = new SYSRole();
@@ -125,6 +120,19 @@ public class BusinessManAOImpl implements IBusinessManAO {
         role.setRemark("新增客户角色");
         role.setCompanyCode(companyCode);
         String roleCode = sysRoleBO.saveSYSRole(role);
+        // 手机检验
+        businessManBO.isMobileExist(req.getMobile());
+        // 落地数据
+        req.setIsAdmin(EBoolean.YES.getCode());
+        req.setRoleCode(roleCode);
+        String userId = businessManBO.saveBusinessMan(req);
+        // 开设公司
+
+        companyBO.saveCompany(userId, companyCode);
+        // 分配账户
+        Account account = accountBO.distributeAccount(userId,
+            EAccountType.BUSINESS, ECurrency.CNY.getCode());
+
         // 菜单
         List<SYSMenu> modelMenus = sysMenuBO.queryModelMenus();
         for (SYSMenu sysMenu : modelMenus) {

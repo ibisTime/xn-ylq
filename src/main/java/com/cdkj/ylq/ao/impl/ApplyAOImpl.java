@@ -75,10 +75,12 @@ public class ApplyAOImpl implements IApplyAO {
             // 通知信用分审核人
             List<Noticer> noticers = noticerBO.queryNoticersNow(
                 ENoticerType.Credit.getCode(), companyCode);
-            for (Noticer noticer : noticers) {
-                smsOutBO.sendContent(noticer.getMobile(),
-                    "有一个信用分申请单待审核，请尽快登陆管理端进行审核", companyCode,
-                    ESystemCode.YLQ.getCode());
+            if (!noticers.isEmpty()) {
+                for (Noticer noticer : noticers) {
+                    smsOutBO.sendContent(noticer.getMobile(),
+                        "有一个信用分申请单待审核，请尽快登陆管理端进行审核", companyCode,
+                        ESystemCode.YLQ.getCode());
+                }
             }
         }
 
@@ -223,7 +225,7 @@ public class ApplyAOImpl implements IApplyAO {
                     data = apply;
                 }
             }
-
+            res.setApply(data);
             res.setStatus(data.getStatus());
             // 状态为123时返回一样状态（认证中，待审核，已驳回）
             if (!EApplyStatus.TO_APPROVE.getCode().equals(data.getStatus())
@@ -248,6 +250,9 @@ public class ApplyAOImpl implements IApplyAO {
                         certification.getFlag())) {// 信用分未用且未过期
                         res.setStatus("4");
                         res.setCreditScore(infoAmount.getSxAmount());
+                        res.setValidDays(DateUtil.daysBetween(
+                            DateUtil.getTodayStart(),
+                            certification.getValidDatetime()));
                     }
                 }
 

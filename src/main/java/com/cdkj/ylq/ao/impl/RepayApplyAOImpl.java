@@ -159,7 +159,14 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                 throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                     "分期计划不处于待还款状态");
             }
+
             BorrowOrder order = borrowOrderBO.getBorrow(staging.getOrderCode());
+            Date now = new Date();
+            // 距离开始时间已有几天
+            int days = DateUtil.daysBetween(staging.getStartPayDate(), now) + 1;
+            // 利息=利率*天数*分期总本金
+            BigDecimal lxAmount = staging.getRate()
+                .multiply(new BigDecimal(days)).multiply(order.getAmount());
             // 判断是否是最后一次分期
             if (order.getStageCount() == staging.getCount()) {
                 // 发放优惠券
@@ -177,13 +184,14 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                     }
                     borrowOrderBO.refreshIsCoupon(order);
                 }
+
                 // 更新借款订单还款金额
-                borrowOrderBO.repayOffline(order, staging.getPayAmount(),
-                    approver);
+                borrowOrderBO.repayOffline(order,
+                    staging.getMainAmount().add(lxAmount), approver);
             } else {
                 // 更新借款订单还款金额
-                borrowOrderBO.refreshStageRepay(order, staging.getMainAmount(),
-                    approver);
+                borrowOrderBO.refreshStageRepay(order, staging.getMainAmount()
+                    .add(lxAmount), approver);
             }
             stagingBO.refreshRepay(staging.getCode(),
                 EPayType.OFFLINE.getCode(), repayApply.getCode(),
@@ -214,6 +222,10 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             if (ERepayApplyType.REPAY.getCode().equals(repayApply.getType())) {
                 repayApply.setBorrow(borrowOrderBO.getBorrow(repayApply
                     .getRefNo()));
+            } else {
+                String orderCode = stagingBO.getStaging(repayApply.getRefNo())
+                    .getOrderCode();
+                repayApply.setBorrow(borrowOrderBO.getBorrow(orderCode));
             }
         }
         return results;
@@ -226,6 +238,10 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         if (ERepayApplyType.REPAY.getCode().equals(repayApply.getType())) {
             repayApply
                 .setBorrow(borrowOrderBO.getBorrow(repayApply.getRefNo()));
+        } else {
+            String orderCode = stagingBO.getStaging(repayApply.getRefNo())
+                .getOrderCode();
+            repayApply.setBorrow(borrowOrderBO.getBorrow(orderCode));
         }
         return repayApply;
     }

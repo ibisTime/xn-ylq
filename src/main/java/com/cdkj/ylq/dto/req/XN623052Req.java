@@ -18,50 +18,6 @@ public class XN623052Req {
     // userId(必填)
     private String userId;
 
-    // ip地址（选填）
-    private String ip;
-
-    // 物理地址（选填）
-    private String mac;
-
-    // wifi的物理地址（选填）
-    private String wifimac;
-
-    // 国际移动设备标志（选填）
-    private String imei;
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getMac() {
-        return mac;
-    }
-
-    public void setMac(String mac) {
-        this.mac = mac;
-    }
-
-    public String getWifimac() {
-        return wifimac;
-    }
-
-    public void setWifimac(String wifimac) {
-        this.wifimac = wifimac;
-    }
-
-    public String getImei() {
-        return imei;
-    }
-
-    public void setImei(String imei) {
-        this.imei = imei;
-    }
-
     public String getUserId() {
         return userId;
     }

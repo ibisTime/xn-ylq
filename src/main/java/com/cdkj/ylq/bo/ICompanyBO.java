@@ -7,7 +7,7 @@ import com.cdkj.ylq.domain.Company;
 
 public interface ICompanyBO extends IPaginableBO<Company> {
 
-    public String saveCompany(String userId);
+    public String saveCompany(String userId, String code);
 
     public List<Company> queryCompanyList(Company condition);
 

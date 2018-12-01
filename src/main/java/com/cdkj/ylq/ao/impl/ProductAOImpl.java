@@ -123,22 +123,28 @@ public class ProductAOImpl implements IProductAO {
 
         Paginable<Product> results = productBO.getPaginable(start, limit,
             condition);
+        List<Product> products = results.getList();
         if (!StringUtils.isBlank(userId)) {
-            List<Product> products = results.getList();
+
             Certification certification = certificationBO.getCertification(
                 userId, ECertiKey.INFO_AMOUNT);
             InfoAmount infoAmount = JsonUtil.json2Bean(
                 certification.getResult(), InfoAmount.class);
-            // 未登录，只显示最低等级
-            // if (StringUtils.isBlank(userId)) {
             for (Product product : products) {
+
                 if (infoAmount.getSxAmount().compareTo(product.getAmount()) >= 0) {
                     product.setIsLocked(EBoolean.NO.getCode());
                 } else {
                     product.setIsLocked(EBoolean.YES.getCode());
                 }
+
+            }
+        } else {
+            for (Product product : products) {
+                product.setIsLocked(EBoolean.YES.getCode());
             }
         }
+
         return results;
     }
 

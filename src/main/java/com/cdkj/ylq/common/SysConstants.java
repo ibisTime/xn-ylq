@@ -20,7 +20,7 @@ public class SysConstants {
 
     public static final String RENEWAL_STEP = "renewalStep"; // 续期步长
 
-    public static final String WAY_URL = "wayUrl"; // 渠道url
+    public static final String WAY_URL = "domainURL"; // 渠道url
 
     public static final String RENEWAL_LIMIT = "renewalLimit"; // 最大续期次数
 

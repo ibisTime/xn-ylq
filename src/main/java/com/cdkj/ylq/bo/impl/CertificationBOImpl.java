@@ -129,19 +129,16 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
         Certification ZQZN = getCertification(userId, ECertiKey.INFO_ZQZN);
         Certification zhifubao = getCertification(userId,
             ECertiKey.INFO_ZHIFUBAO);
-        Certification basic = getCertification(userId, ECertiKey.INFO_BASIC);
         Certification carrier = getCertification(userId, ECertiKey.INFO_CARRIER);
-        Certification occupation = getCertification(userId,
-            ECertiKey.INFO_OCCUPATION);
-        Certification contact = getCertification(userId, ECertiKey.INFO_CONTACT);
-        if (ZQZN != null && zhifubao != null && basic != null
-                && carrier != null && contact != null && occupation != null) {
+        Certification personal = getCertification(userId,
+            ECertiKey.INFO_PERSONAL);
+        if (ZQZN != null && zhifubao != null && personal != null
+                && carrier != null) {
             if (EBoolean.YES.getCode().equals(ZQZN.getFlag())
                     && EBoolean.YES.getCode().equals(zhifubao.getFlag())
-                    && EBoolean.YES.getCode().equals(basic.getFlag())
-                    // && EBoolean.YES.getCode().equals(carrier.getFlag())
-                    && EBoolean.YES.getCode().equals(occupation.getFlag())
-                    && EBoolean.YES.getCode().equals(contact.getFlag())) {
+                    && EBoolean.YES.getCode().equals(personal.getFlag())
+            // && EBoolean.YES.getCode().equals(carrier.getFlag())
+            ) {
                 flag = true;
             }
         }

@@ -10,6 +10,8 @@ package com.cdkj.ylq.dto.res;
 
 import java.math.BigDecimal;
 
+import com.cdkj.ylq.domain.Apply;
+
 /** 
  * @author: haiqingzheng 
  * @since: 2017年8月31日 上午12:26:17 
@@ -23,6 +25,26 @@ public class XN623020Res {
     private String status;
 
     private BigDecimal creditScore;
+
+    private int validDays;
+
+    private Apply apply;
+
+    public Apply getApply() {
+        return apply;
+    }
+
+    public void setApply(Apply apply) {
+        this.apply = apply;
+    }
+
+    public int getValidDays() {
+        return validDays;
+    }
+
+    public void setValidDays(int validDays) {
+        this.validDays = validDays;
+    }
 
     public BigDecimal getCreditScore() {
         return creditScore;

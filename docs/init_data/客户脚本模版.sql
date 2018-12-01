@@ -320,8 +320,28 @@ INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_d
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','user_status','0','正常','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','user_status','1','程序锁定','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','user_status','2','人工锁定','admin',now(),NULL,'GS2018112119133810071833');
-
-
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'charge_status','充值订单状态','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','charge_status','1','待支付','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','charge_status','2','支付失败','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','charge_status','3','支付成功','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'jour_status','流水状态','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','1','待对账','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','3','已对账且账已平','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','4','帐不平待调账审批','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','5','已对账且账不平','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','jour_status','6','无需对账','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'biz_type','业务类型','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','CHARGE','充值','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','API','征信接口支出','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','WITHDRAW_FROZEN','取现冻结','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','WITHDRAW_UNFROZEN','取现解冻','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','biz_type','WITHDRAW','取现','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'channel_type','渠道类型','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','channel_type','01','线下_橙账本','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','channel_type','0','内部账','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','channel_type','9','调账','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','channel_type','10','轧账','admin',now(),'','GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','channel_type','35','微信公众号支付','admin',now(),'','GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0',NULL,'noticer_type','通知人类型','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','noticer_type','0','借款审批通知人','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','noticer_type','1','放款通知人','admin',now(),NULL,'GS2018112119133810071833');

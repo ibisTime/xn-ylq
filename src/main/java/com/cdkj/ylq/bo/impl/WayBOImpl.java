@@ -43,7 +43,7 @@ public class WayBOImpl extends PaginableBOImpl<Way> implements IWayBO {
         String code = OrderNoGenerater.generateM(EGeneratePrefix.WAY.getCode());
         StringBuilder url = new StringBuilder(sysConfigBO.getStringValue(
             SysConstants.WAY_URL, companyCode)).append("?code=").append(code)
-            .append("&refereeType=").append(EUserRefereeType.W.getCode());
+            .append("&userRefereeKind=").append(EUserRefereeType.W.getCode());
         data.setCode(code);
         data.setName(name);
         data.setUrl(url.toString());

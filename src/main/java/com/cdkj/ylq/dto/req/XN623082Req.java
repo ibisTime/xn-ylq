@@ -8,46 +8,25 @@
  */
 package com.cdkj.ylq.dto.req;
 
-import java.util.List;
 
 /** 
  * @author: haiqingzheng 
  * @since: 2017年8月16日 下午5:03:02 
  * @history:
  */
-public class XN623082Req {
+public class XN623082Req extends APageReq {
 
-    // 借款编号（必填）
-    private List<String> codeList;
+    private static final long serialVersionUID = 3722601087921882256L;
 
-    // 最后更新人（必填）
-    private String updater;
+    // 是否分期
+    private String isStage;
 
-    // 备注（选填）
-    private String remark;
-
-    public List<String> getCodeList() {
-        return codeList;
+    public String getIsStage() {
+        return isStage;
     }
 
-    public void setCodeList(List<String> codeList) {
-        this.codeList = codeList;
-    }
-
-    public String getUpdater() {
-        return updater;
-    }
-
-    public void setUpdater(String updater) {
-        this.updater = updater;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setIsStage(String isStage) {
+        this.isStage = isStage;
     }
 
 }

@@ -394,6 +394,7 @@
 		SET
 		total_amount=#{totalAmount}
 		,repay_count=#{repayCount}
+		,real_hk_amount = #{realHkAmount}
 		,pay_type=#{payType}
 		,updater=#{updater}
 		,update_datetime=#{updateDatetime}

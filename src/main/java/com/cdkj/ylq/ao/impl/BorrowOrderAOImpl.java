@@ -217,10 +217,12 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         // 通知审批人
         List<Noticer> noticers = noticerBO.queryNoticersNow(
             ENoticerType.Approver.getCode(), user.getCompanyCode());
-        String sendContent = "用户：" + user.getUserId() + "有一笔借款等待审批，请尽早在管理段进行审批";
-        for (Noticer noticer : noticers) {
-            smsOutBO.sendContent(noticer.getMobile(), sendContent,
-                borrow.getCompanyCode(), ESystemCode.YLQ.getCode());
+        String sendContent = "用户：" + user.getMobile() + "有一笔借款等待审批，请尽早在管理端进行审批";
+        if (!noticers.isEmpty()) {
+            for (Noticer noticer : noticers) {
+                smsOutBO.sendContent(noticer.getMobile(), sendContent,
+                    borrow.getCompanyCode(), ESystemCode.YLQ.getCode());
+            }
         }
         return code;
     }
@@ -461,10 +463,12 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             // 通知放款人
             List<Noticer> noticers = noticerBO.queryNoticersNow(
                 ENoticerType.Loaner.getCode(), borrow.getCompanyCode());
-            for (Noticer noticer : noticers) {
-                smsOutBO.sendContent(noticer.getMobile(),
-                    "借款订单" + borrow.getCode() + "已审核通过，请尽早在管理端给该订单放款",
-                    borrow.getCompanyCode(), ESystemCode.YLQ.getCode());
+            if (!noticers.isEmpty()) {
+                for (Noticer noticer : noticers) {
+                    smsOutBO.sendContent(noticer.getMobile(),
+                        "借款订单" + borrow.getCode() + "已审核通过，请尽早在管理端给该订单放款",
+                        borrow.getCompanyCode(), ESystemCode.YLQ.getCode());
+                }
             }
         } else {
             status = EBorrowStatus.APPROVE_NO.getCode();
@@ -1031,6 +1035,12 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             }
         }
         return infos;
+    }
+
+    @Override
+    public List<BorrowOrder> queryNearlyOrder(String isStage, int start,
+            int limit) {
+        return null;
     }
 
 }

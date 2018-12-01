@@ -42,11 +42,7 @@ import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoBasic;
 import com.cdkj.ylq.domain.InfoContact;
-import com.cdkj.ylq.domain.InfoIdentify;
-import com.cdkj.ylq.domain.InfoIdentifyPic;
 import com.cdkj.ylq.domain.InfoOccupation;
-import com.cdkj.ylq.domain.InfoTongDunPreLoan;
-import com.cdkj.ylq.domain.InfoZMCredit;
 import com.cdkj.ylq.domain.InfoZfb;
 import com.cdkj.ylq.domain.InfoZqzn;
 import com.cdkj.ylq.domain.MxCarrierNofification;
@@ -57,11 +53,7 @@ import com.cdkj.ylq.dto.req.XN623041Req;
 import com.cdkj.ylq.dto.req.XN623042Req;
 import com.cdkj.ylq.dto.req.XN798650Req;
 import com.cdkj.ylq.dto.res.XN623050Res;
-import com.cdkj.ylq.dto.res.XN623054Res;
-import com.cdkj.ylq.dto.res.XN798013Res;
-import com.cdkj.ylq.dto.res.XN798014Res;
 import com.cdkj.ylq.enums.EApplyStatus;
-import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
 import com.cdkj.ylq.enums.ECurrency;
@@ -180,98 +172,6 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
-    @Transactional
-    public void submitIdentifyPic(String userId, String identifyPic,
-            String identifyPicReverse, String identifyPicHand, String realName,
-            String idNo) {
-
-        InfoIdentifyPic data = new InfoIdentifyPic();
-        data.setIdentifyPic(identifyPic);
-        data.setIdentifyPicReverse(identifyPicReverse);
-        data.setIdentifyPicHand(identifyPicHand);
-        data.setRealName(realName);
-        data.setIdNo(idNo);
-        Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_IDENTIFY_PIC);
-        if (certification != null) {
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setResult(JsonUtil.Object2Json(data));
-            certification.setCerDatetime(new Date());
-            certification.setRef("");
-            certificationBO.refreshCertification(certification);
-        }
-        if (certificationBO.isCompleteCerti(userId)) {
-            Apply apply = applyBO.getInCertApply(userId);
-            if (apply != null) {
-                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
-                applyBO.refreshStatus(apply);
-            }
-        }
-        userBO.refreshRealName(userId, realName);
-
-        // 财务测试
-
-    }
-
-    @Override
-    public XN798013Res doZhimaVerify(String userId, String idKind, String idNo,
-            String realName, String returnUrl, String localCheck, String remark) {
-        User user = userBO.getUser(userId);
-        return certiBO.doZhimaVerify(null, user.getCompanyCode(), userId,
-            idKind, idNo, realName, returnUrl, localCheck, remark);
-    }
-
-    @Override
-    public XN798014Res doZhimaQuery(String userId, String bizNo) {
-        User user = userBO.getUser(userId);
-        XN798014Res res = certiBO.doZhimaQuery(null, user.getCompanyCode(),
-            bizNo);
-        if (res.isSuccess()) {
-            InfoIdentify infoIdentify = new InfoIdentify();
-            infoIdentify.setRealName(res.getRealName());
-            infoIdentify.setIdNo(res.getIdNo());
-            Certification certification = certificationBO.getCertification(
-                userId, ECertiKey.INFO_IDENTIFY_FACE);
-            if (certification != null) {
-                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(JsonUtil.Object2Json(infoIdentify));
-                certification.setCerDatetime(new Date());
-                certification.setRef("");
-                certificationBO.refreshCertification(certification);
-            }
-            userBO.doIdentify(userId, EIDKind.IDCard.getCode(),
-                infoIdentify.getIdNo(), infoIdentify.getRealName());
-        }
-        return res;
-    }
-
-    @Override
-    public void submitIdentifyInfo(String userId) {
-        userBO.getUser(userId);
-        XN623050Res certiInfo = getCertiInfo(userId);
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyPicFlag())) {
-            throw new BizException("xn623000", "请先在上传身份证");
-        }
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFaceFlag())) {
-            throw new BizException("xn623000", "请先进行人脸识别");
-        }
-        Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_IDENTIFY);
-        InfoIdentify infoIdentify = certiInfo.getInfoIdentifyFace();
-        Integer config = sysConfigBO.getIntegerValue(
-            SysConstants.IDENTIFY_VALID_DAYS, certification.getCompanyCode());
-        if (certification != null) {
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            certification.setCerDatetime(new Date());
-            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), config));
-            certification.setResult(JsonUtil.Object2Json(infoIdentify));
-            certification.setRef("");
-            certificationBO.refreshCertification(certification);
-        }
-    }
-
-    @Override
     public void submitInfoBasic(XN623040Req req) {
         InfoBasic data = getInfoBasic(req);
         Certification certification = certificationBO.getCertification(
@@ -332,112 +232,6 @@ public class CertificationAOImpl implements ICertificationAO {
                 applyBO.refreshStatus(apply);
             }
         }
-    }
-
-    // @Override
-    // public void submitInfoBankcard(XN623043Req req) {
-    // InfoBankcard data = getInfoBankcard(req);
-    // Certification certification = certificationBO.getCertification(
-    // req.getUserId(), ECertiKey.INFO_BANKCARD);
-    // if (certification != null) {
-    // certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-    // certification.setResult(JsonUtil.Object2Json(data));
-    // certification.setCerDatetime(new Date());
-    // certification.setRef("");
-    // certificationBO.refreshCertification(certification);
-    // } else {
-    // certification = new Certification();
-    // certification.setUserId(req.getUserId());
-    // certification.setCertiKey(ECertiKey.INFO_BANKCARD.getCode());
-    // certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-    // certification.setResult(JsonUtil.Object2Json(data));
-    // certification.setCerDatetime(new Date());
-    // certification.setRef("");
-    // certificationBO.saveCertification(certification);
-    // }
-    // }
-
-    @Override
-    public void submitPersonalInfo(String userId, String ip, String mac,
-            String wifiMac, String imei) {
-        // User user = userBO.getRemoteUser(userId);
-        XN623050Res certiInfo = getCertiInfo(userId);
-        // if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
-        // throw new BizException("xn623000", "请先进行身份认证");
-        // }
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoBasicFlag())) {
-            throw new BizException("xn623000", "请先完善基本信息");
-        }
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoOccupationFlag())) {
-            throw new BizException("xn623000", "请先完善职业信息");
-        }
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoContactFlag())) {
-            throw new BizException("xn623000", "请先完善紧急联系人信息");
-        }
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoAddressBookFlag())) {
-            throw new BizException("xn623000", "请先完成通信录认证");
-        }
-        // if (EBoolean.NO.getCode().equals(certiInfo.getInfoBankcardFlag())) {
-        // throw new BizException("xn623000", "请先完善银行卡信息");
-        // }
-        // InfoBasic infoBasic = certiInfo.getInfoBasic();
-        // InfoBankcard infoBankcard = certiInfo.getInfoBankcard();
-        // InfoIdentify infoIdentify = certiInfo.getInfoIdentify();
-
-        // InfoAntifraud infoAntifraud = certiBO.doZhimaCreditAntifraud(
-        // user.getSystemCode(), user.getCompanyCode(), user.getMobile(),
-        // infoIdentify.getIdNo(), infoIdentify.getRealName(), null,
-        // infoBasic.getEmail(),
-        // infoBasic.getProvinceCity() + infoBasic.getAddress(), ip, mac,
-        // wifiMac, imei);
-
-        Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_ANTIFRAUD);
-        Integer config = sysConfigBO.getIntegerValue(
-            SysConstants.ANTIFRAUD_VALID_DAYS, certification.getCompanyCode());
-        if (certification != null) {
-            certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-            // certification.setResult(JsonUtil.Object2Json(infoAntifraud));
-            certification.setResult("欺诈识别保留，暂不启用");
-            certification.setCerDatetime(new Date());
-            certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                DateUtil.getTodayStart(), config));
-            certification.setRef("");
-            certificationBO.refreshCertification(certification);
-        }
-    }
-
-    @Override
-    public InfoZMCredit doZhimaCreditScoreGet(String userId) {
-        User user = userBO.getUser(userId);
-        XN623050Res certiInfo = getCertiInfo(userId);
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoIdentifyFlag())) {
-            throw new BizException("xn623000", "请先进行身份认证");
-        }
-        if (EBoolean.NO.getCode().equals(certiInfo.getInfoAntifraudFlag())) {
-            throw new BizException("xn623000", "请先提交基本信息");
-        }
-        InfoIdentify infoIdentify = certiInfo.getInfoIdentify();
-        InfoZMCredit infoZMCredit = certiBO.doZhimaCreditGet(null,
-            user.getCompanyCode(), infoIdentify.getRealName(),
-            infoIdentify.getIdNo());
-        if (infoZMCredit.isAuthorized()) {
-            Certification certification = certificationBO.getCertification(
-                userId, ECertiKey.INFO_ZMCREDIT);
-            Integer config = sysConfigBO
-                .getIntegerValue(SysConstants.ZMSCORE_VALID_DAYS,
-                    certification.getCompanyCode());
-            if (certification != null) {
-                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(JsonUtil.Object2Json(infoZMCredit));
-                certification.setCerDatetime(new Date());
-                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-                    DateUtil.getTodayStart(), config));
-                certification.setRef("");
-                certificationBO.refreshCertification(certification);
-            }
-        }
-        return infoZMCredit;
     }
 
     @Override
@@ -632,189 +426,6 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
-    @Transactional
-    public XN623054Res doTongDunPreLoanQuery(String userId) {
-        XN623054Res res = new XN623054Res();
-        Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_TONGDUN_PRELOAN);
-        if (certification == null) {
-            certification = new Certification();
-            certification.setUserId(userId);
-            certification.setCertiKey(ECertiKey.INFO_TONGDUN_PRELOAN.getCode());
-            certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
-            certificationBO.saveCertification(certification);
-        }
-        if (ECertificationStatus.TO_CERTI.getCode().equals(
-            certification.getFlag())) {
-            // InfoTongDunPreLoan infoTongDunPreLoan =
-            // doTongDunPreLoanSubmitAndQuery(
-            // userId, certification);
-            // if (infoTongDunPreLoan != null) {
-            // res.setPersonInfo(infoTongDunPreLoan.getPersonInfo());
-            // res.setTdData(infoTongDunPreLoan.getTdData());
-            // }
-        } else {
-            res = JsonUtil.json2Bean(certification.getResult(),
-                XN623054Res.class);
-        }
-        return res;
-    }
-
-    @Override
-    @Transactional
-    public void doTongDunPreLoanReload(String userId) {
-        Certification certification = certificationBO.getCertification(userId,
-            ECertiKey.INFO_TONGDUN_PRELOAN);
-        if (certification == null) {
-            certification = new Certification();
-            certification.setUserId(userId);
-            certification.setCertiKey(ECertiKey.INFO_TONGDUN_PRELOAN.getCode());
-            certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
-            certificationBO.saveCertification(certification);
-        }
-        // doTongDunPreLoanSubmitAndQuery(userId, certification);
-    }
-
-    //
-    // private InfoTongDunPreLoan doTongDunPreLoanSubmitAndQuery(String userId,
-    // Certification certification) {
-    // //
-    // // InfoTongDunPreLoan infoTongDunPreLoan = null;
-    // //
-    // // Map<String, Object> params = new HashMap<String, Object>();
-    // // // 个人信息
-    // // User user = userBO.getRemoteUser(userId);
-    // // // 银行卡信息
-    // // Bankcard bankcard = accountBO.getBankcard(userId);
-    // // // 申请信息
-    // // Apply apply = applyBO.getCurrentApply(userId);
-    // // if (apply == null) {
-    // // throw new BizException("xn623054", "该用户暂时没有贷前申请");
-    // // }
-    // // // 申请产品信信息
-    // // Product product = productBO.getProduct(apply.getProductCode());
-    // //
-    // // if (apply != null && product != null) {
-    // // params.put("loan_amount",
-    // // CalculationUtil.diviUp(product.getAmount().longValue())); // 申请借款金额
-    // // params.put("loan_term", product.getDuration()); // 申请借款期限
-    // // params.put("loan_term_unit", "DAY"); // 期限单位
-    // // params.put("loan_date", DateUtil.dateToStr(
-    // // apply.getApplyDatetime(), DateUtil.FRONT_DATE_FORMAT_STRING)); //
-    // // 申请借款日期
-    // // params.put("purpose", "消费"); // 借款用途
-    // // }
-    // // if (bankcard != null) {
-    // // params.put("card_number", bankcard.getBankcardNumber()); // 银行卡
-    // // }
-    // // if (user != null) {
-    // // params.put("mobile", user.getMobile()); // 手机号
-    // // params.put("name", user.getRealName()); // 姓名
-    // // params.put("id_number", user.getIdNo()); // 身份证号
-    // // params.put("apply_province", user.getProvince()); // 进件省份
-    // // params.put("apply_city", user.getCity()); // 进件城市
-    // // if (StringUtils.isBlank(user.getRealName())) {
-    // // params.put("is_id_checked", "false"); // 是否通过实名认证
-    // // } else {
-    // // params.put("is_id_checked", "true"); // 是否通过实名认证
-    // // }
-    // // }
-    // //
-    // // XN623050Res xn623050Res = getCertiInfo(userId);
-    // // if (!xn623050Res.getInfoBasicFlag().equals(
-    // // ECertificationStatus.TO_CERTI.getCode())) {
-    // // params.put("diploma", riskServicePreloan.getDiploma(xn623050Res
-    // // .getInfoBasic().getEducation())); // 学历
-    // // params.put("marriage", riskServicePreloan.getMarriage(xn623050Res
-    // // .getInfoBasic().getMarriage())); // 婚姻
-    // // params.put("home_address", xn623050Res.getInfoBasic()
-    // // .getProvinceCity() + xn623050Res.getInfoBasic().getAddress()); //
-    // // 家庭地址
-    // // params.put("qq", xn623050Res.getInfoBasic().getQq()); // qq
-    // // params.put("email", xn623050Res.getInfoBasic().getEmail()); // 电子邮箱
-    // // }
-    // // if (!xn623050Res.getInfoOccupationFlag().equals(
-    // // ECertificationStatus.TO_CERTI.getCode())) {
-    // // params.put("career", ""); // 职业
-    // // params.put("annual_income", riskServicePreloan
-    // // .getAnnualIncome(xn623050Res.getInfoOccupation().getIncome())); //
-    // // 年收入
-    // // params.put("company_name", xn623050Res.getInfoOccupation()
-    // // .getCompany()); // 工作单位
-    // // params.put("company_address", xn623050Res.getInfoOccupation()
-    // // .getProvinceCity()
-    // // + xn623050Res.getInfoOccupation().getAddress()); // 单位地址
-    // // params
-    // // .put("work_phone", xn623050Res.getInfoOccupation().getPhone()); //
-    // // 单位座机
-    // // }
-    // // if (!xn623050Res.getInfoContactFlag().equals(
-    // // ECertificationStatus.TO_CERTI.getCode())) {
-    // // InfoContact infoContact = xn623050Res.getInfoContact();
-    // // String contact1_relation = "";
-    // // if ("0".equals(infoContact.getFamilyRelation())) {
-    // // contact1_relation = "father";
-    // // } else if ("1".equals(infoContact.getFamilyRelation())) {
-    // // contact1_relation = "spouse";
-    // // } else if ("2".equals(infoContact.getFamilyRelation())) {
-    // // contact1_relation = "other_relative";
-    // // }
-    // // String contact2_relation = "";
-    // // if ("0".equals(infoContact.getSocietyRelation())) {
-    // // contact1_relation = "others";
-    // // } else if ("1".equals(infoContact.getSocietyRelation())) {
-    // // contact1_relation = "coworker";
-    // // } else if ("2".equals(infoContact.getSocietyRelation())) {
-    // // contact1_relation = "friend";
-    // // }
-    // // params.put("contact1_relation", contact1_relation); // 第一联系人社会关系
-    // // params.put("concatc1_name", infoContact.getFamilyName()); // 第一联系人姓名
-    // // params.put("contact1_mobile", infoContact.getFamilyMobile()); //
-    // // 第一联系人手机号
-    // // params.put("contact2_relation", contact2_relation);
-    // // params.put("contact2_name", infoContact.getSocietyName());
-    // // params.put("contact2_mobile", infoContact.getSocietyMobile());
-    // // }
-    // //
-    // // PreloanSubmitResponse riskPreloanResponse = riskServicePreloan
-    // // .apply(params);
-    // // System.out.println(riskPreloanResponse.toString());
-    // // if (riskPreloanResponse.getSuccess()) {
-    // // // 等待一定时间后，可调用query接口查询结果。
-    // // // 时间建议：5s后可调用
-    // // try {
-    // // Thread.sleep(5 * 1000);
-    // // } catch (Exception e) {
-    // // //
-    // // }
-    // // // query接口获取结果
-    // // PreloanQueryResponse response = riskServicePreloan
-    // // .query(riskPreloanResponse.getReport_id());
-    // // infoTongDunPreLoan = new InfoTongDunPreLoan();
-    // // infoTongDunPreLoan.setTdData(JSONObject.fromObject(response)
-    // // .toString());
-    // // infoTongDunPreLoan.setPersonInfo(JSONObject.fromObject(params)
-    // // .toString());
-    // // // 其他处理 。。。
-    // // Integer config = sysConfigBO
-    // // .getIntegerValue(SysConstants.TONGDUN_PRELOAN_VALID_DAYS);
-    // // if (certification != null) {
-    // // certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-    // // certification.setResult(JsonUtil
-    // // .Object2Json(infoTongDunPreLoan));
-    // // certification.setCerDatetime(new Date());
-    // // certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-    // // DateUtil.getTodayStart(), config));
-    // // certification.setRef("");
-    // // certificationBO.refreshCertification(certification);
-    // // }
-    // // } else {
-    // // throw new BizException("xn623000", "同盾贷前审核信息提交发送错误，请过一段时间重新尝试！");
-    // // }
-    // return infoTongDunPreLoan;
-    // }
-
-    @Override
     public Paginable<Certification> queryCertificationPage(int start,
             int limit, Certification condition) {
         return certificationBO.getPaginable(start, limit, condition);
@@ -870,50 +481,16 @@ public class CertificationAOImpl implements ICertificationAO {
 
     private XN623050Res transferCertiInfo(List<Certification> certifications) {
         XN623050Res res = new XN623050Res();
-        res.setInfoIdentifyPicFlag(ECertificationStatus.TO_CERTI.getCode());
-        res.setInfoIdentifyFaceFlag(ECertificationStatus.TO_CERTI.getCode());
-        res.setInfoIdentifyFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoBasicFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoOccupationFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoContactFlag(ECertificationStatus.TO_CERTI.getCode());
-        res.setInfoAntifraudFlag(ECertificationStatus.TO_CERTI.getCode());
-        res.setInfoZMCreditFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoCarrierFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoAddressBookFlag(ECertificationStatus.TO_CERTI.getCode());
-        res.setInfoTongDunPreLoanFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoZfbFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoZqznFlag(ECertificationStatus.TO_CERTI.getCode());
+        res.setInfoPersonalFlag(ECertificationStatus.TO_CERTI.getCode());
 
         for (Certification certification : certifications) {
-            if (ECertiKey.INFO_IDENTIFY_PIC.getCode().equals(
-                certification.getCertiKey())) {
-                res.setInfoIdentifyPicFlag(certification.getFlag());
-                if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())) {
-                    res.setInfoIdentifyPic(JsonUtil.json2Bean(
-                        certification.getResult(), InfoIdentifyPic.class));
-                }
-            }
-            if (ECertiKey.INFO_IDENTIFY_FACE.getCode().equals(
-                certification.getCertiKey())) {
-                res.setInfoIdentifyFaceFlag(certification.getFlag());
-                if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())) {
-                    res.setInfoIdentifyFace(JsonUtil.json2Bean(
-                        certification.getResult(), InfoIdentify.class));
-                }
-            }
-            if (ECertiKey.INFO_IDENTIFY.getCode().equals(
-                certification.getCertiKey())) {
-                res.setInfoIdentifyFlag(certification.getFlag());
-                if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())
-                        || ECertificationStatus.INVALID.getCode().equals(
-                            certification.getFlag())) {
-                    res.setInfoIdentify(JsonUtil.json2Bean(
-                        certification.getResult(), InfoIdentify.class));
-                }
-            }
 
             if (ECertiKey.INFO_BASIC.getCode().equals(
                 certification.getCertiKey())) {
@@ -953,30 +530,6 @@ public class CertificationAOImpl implements ICertificationAO {
                 }
             }
 
-            if (ECertiKey.INFO_ANTIFRAUD.getCode().equals(
-                certification.getCertiKey())) {
-                res.setInfoAntifraudFlag(certification.getFlag());
-                // if (ECertificationStatus.CERTI_YES.getCode().equals(
-                // certification.getFlag())
-                // || ECertificationStatus.INVALID.getCode().equals(
-                // certification.getFlag())) {
-                // res.setInfoAntifraud(JsonUtil.json2Bean(
-                // certification.getResult(), InfoAntifraud.class));
-                // }
-            }
-
-            if (ECertiKey.INFO_ZMCREDIT.getCode().equals(
-                certification.getCertiKey())) {
-                res.setInfoZMCreditFlag(certification.getFlag());
-                if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())
-                        || ECertificationStatus.INVALID.getCode().equals(
-                            certification.getFlag())) {
-                    res.setInfoZMCredit(JsonUtil.json2Bean(
-                        certification.getResult(), InfoZMCredit.class));
-                }
-            }
-
             if (ECertiKey.INFO_CARRIER.getCode().equals(
                 certification.getCertiKey())) {
                 res.setInfoCarrierFlag(certification.getFlag());
@@ -985,18 +538,6 @@ public class CertificationAOImpl implements ICertificationAO {
                         || ECertificationStatus.INVALID.getCode().equals(
                             certification.getFlag())) {
                     res.setInfoCarrier(certification.getResult());
-                }
-            }
-
-            if (ECertiKey.INFO_TONGDUN_PRELOAN.getCode().equals(
-                certification.getCertiKey())) {
-                res.setInfoTongDunPreLoanFlag(certification.getFlag());
-                if (ECertificationStatus.CERTI_YES.getCode().equals(
-                    certification.getFlag())
-                        || ECertificationStatus.INVALID.getCode().equals(
-                            certification.getFlag())) {
-                    res.setInfoTongDunPreLoan(JsonUtil.json2Bean(
-                        certification.getResult(), InfoTongDunPreLoan.class));
                 }
             }
 
@@ -1018,9 +559,15 @@ public class CertificationAOImpl implements ICertificationAO {
                     certification.getFlag())
                         || ECertificationStatus.INVALID.getCode().equals(
                             certification.getFlag())) {
+                    res.setInfoZqznFlag(certification.getFlag());
                     res.setInfoZqzn(JsonUtil.json2Bean(
                         certification.getResult(), InfoZqzn.class));
                 }
+            }
+            if (ECertiKey.INFO_PERSONAL.getCode().equals(
+                certification.getCertiKey())) {
+                res.setInfoPersonalFlag(certification.getFlag());
+
             }
         }
         return res;
@@ -1068,6 +615,14 @@ public class CertificationAOImpl implements ICertificationAO {
         certificationBO.saveCertification(certification3);
         certifications.add(certification3);
 
+        // 个人信息
+        Certification personal = new Certification();
+        personal.setUserId(userId);
+        personal.setCertiKey(ECertiKey.INFO_PERSONAL.getCode());
+        personal.setFlag(ECertificationStatus.TO_CERTI.getCode());
+        personal.setCompanyCode(companyCode);
+        certificationBO.saveCertification(personal);
+        certifications.add(personal);
         // 运营商认证
         Certification carrier = new Certification();
         carrier.setUserId(userId);
@@ -1164,6 +719,15 @@ public class CertificationAOImpl implements ICertificationAO {
             .queryCertificationList(condition);
         if (CollectionUtils.isNotEmpty(certificationList)) {
             for (Certification certification : certificationList) {
+                if (ECertiKey.INFO_BASIC.getCode().equals(
+                    certification.getCertiKey())
+                        || ECertiKey.INFO_CONTACT.getCode().equals(
+                            certification.getCertiKey())
+                        || ECertiKey.INFO_OCCUPATION.getCode().equals(
+                            certification.getCertiKey())) {
+                    Certification personal = certificationBO.getCertification(
+                        certification.getUserId(), ECertiKey.INFO_PERSONAL);
+                }
                 certificationBO.makeInvalid(certification);
                 // 如果额度失效，用户还未使用该额度，则将产品重置可申请
                 if (ECertiKey.INFO_AMOUNT.getCode().equals(
@@ -1299,4 +863,64 @@ public class CertificationAOImpl implements ICertificationAO {
         }
     }
 
+    @Override
+    public void submitInfoPersonal(String userId) {
+        // 获取认证结果
+        List<Certification> certifications = certificationBO
+            .queryCertificationList(userId);
+
+        if (CollectionUtils.isEmpty(certifications)) {
+            throw new BizException("xn623000", "个人认证信息初始化失败");
+        }
+        Map<String, ECertiKey> keyMap = ECertiKey.getCertiKeyMap();
+        for (Certification certification : certifications) {
+            if (ECertiKey.INFO_BASIC.getCode().equals(
+                certification.getCertiKey())) {
+                if (!ECertificationStatus.CERTI_YES.getCode().equals(
+                    certification.getFlag())) {
+                    throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                        keyMap.get(ECertiKey.INFO_BASIC.getCode()).getValue()
+                                + "未完成认证");
+                }
+            }
+            if (ECertiKey.INFO_CONTACT.getCode().equals(
+                certification.getCertiKey())) {
+                if (!ECertificationStatus.CERTI_YES.getCode().equals(
+                    certification.getFlag())) {
+                    throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                        keyMap.get(ECertiKey.INFO_CONTACT.getCode()).getValue()
+                                + "未完成认证");
+                }
+            }
+            if (ECertiKey.INFO_OCCUPATION.getCode().equals(
+                certification.getCertiKey())) {
+                if (!ECertificationStatus.CERTI_YES.getCode().equals(
+                    certification.getFlag())) {
+                    throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                        keyMap.get(ECertiKey.INFO_OCCUPATION.getCode())
+                            .getValue() + "未完成认证");
+                }
+            }
+        }
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_PERSONAL);
+        certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+        certification.setResult("认证完毕");
+        certificationBO.refreshCertification(certification);
+
+        if (certificationBO.isCompleteCerti(userId)) {
+            Apply apply = applyBO.getInCertApply(userId);
+            if (apply != null) {
+                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                applyBO.refreshStatus(apply);
+            }
+        }
+
+    }
+
+    public static void main(String[] args) {
+        Map<String, ECertiKey> keyMap = ECertiKey.getCertiKeyMap();
+        System.out.println(keyMap.get(ECertiKey.INFO_OCCUPATION.getCode())
+            .getValue() + "未完成认证");
+    }
 }

@@ -139,8 +139,8 @@ public class YunYingShang {
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("task_id", taskId); // 授权爬取任务的任务编号
-        params.put("real_name", res.getInfoIdentify().getRealName()); // 真实姓名
-        params.put("identity_code", res.getInfoIdentify().getIdNo()); // 身份证号
+        // params.put("real_name", res.getInfoIdentify().getRealName()); // 真实姓名
+        // params.put("identity_code", res.getInfoIdentify().getIdNo()); // 身份证号
         params.put("email", res.getInfoBasic().getEmail()); // 邮箱地址
         params.put("home_addr", res.getInfoBasic().getProvinceCity()
                 + res.getInfoBasic().getAddress());// 居住地址

@@ -327,6 +327,7 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
             String updater) {
         order.setTotalAmount(order.getTotalAmount().subtract(amount));
         order.setPayType(EPayType.OFFLINE.getCode());
+        order.setRealHkAmount(order.getRealHkAmount().add(amount));
         order.setRepayCount(order.getRepayCount() + 1);
         order.setUpdater(updater);
         order.setUpdateDatetime(new Date());
