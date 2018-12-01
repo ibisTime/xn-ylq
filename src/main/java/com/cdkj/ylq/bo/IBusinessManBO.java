@@ -38,4 +38,6 @@ public interface IBusinessManBO extends IPaginableBO<BusinessMan> {
 
     public BusinessMan getBusinessManByMobile(String mobile);
 
+    public BusinessMan getBusinessBoss(String companyCode);
+
 }

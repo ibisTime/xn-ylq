@@ -22,7 +22,7 @@ public class XN623023Req {
     private String approveResult;
 
     // 授信额度（必填）
-    private String sxAmount;
+    private String creditScore;
 
     // 审核人（必填）
     private String approver;
@@ -46,12 +46,12 @@ public class XN623023Req {
         this.approveResult = approveResult;
     }
 
-    public String getSxAmount() {
-        return sxAmount;
+    public String getCreditScore() {
+        return creditScore;
     }
 
-    public void setSxAmount(String sxAmount) {
-        this.sxAmount = sxAmount;
+    public void setCreditScore(String creditScore) {
+        this.creditScore = creditScore;
     }
 
     public String getApprover() {

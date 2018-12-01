@@ -23,8 +23,18 @@ public class XN623165Req extends APageReq {
 
     private String mobile;
 
+    private String type;
+
     @NotBlank
     private String companyCode;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getName() {
         return name;

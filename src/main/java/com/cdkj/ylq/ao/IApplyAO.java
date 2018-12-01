@@ -27,4 +27,6 @@ public interface IApplyAO {
 
     public Apply getApply(String code);
 
+    public XN623020Res getRes(String userId);
+
 }

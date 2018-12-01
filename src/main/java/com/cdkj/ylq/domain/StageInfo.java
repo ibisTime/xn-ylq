@@ -9,6 +9,7 @@
 package com.cdkj.ylq.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /** 
  * @author: taojian 
@@ -22,6 +23,12 @@ public class StageInfo {
 
     // 日期
     private String date;
+
+    // 本期开始时间
+    private Date startTime;
+
+    // 本期结束时间
+    private Date endTime;
 
     // 利息
     private BigDecimal lxAmount;
@@ -55,6 +62,22 @@ public class StageInfo {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     public BigDecimal getAmount() {

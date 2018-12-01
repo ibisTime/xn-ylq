@@ -397,6 +397,7 @@ CREATE TABLE `tjd_borrow_order` (
   `stage_batch` int(11) DEFAULT NULL COMMENT '分期批次',
   `stage_count` int(11) DEFAULT NULL COMMENT '分期期数',
   `stage_cycle` int(11) DEFAULT NULL COMMENT '分期周期',
+  `repay_count` int(11) DEFAULT NULL COMMENT '还款次数',
   `status` varchar(4) DEFAULT NULL COMMENT '状态（0 待审核，1 审核不通过，2 待放款，3 付款失败，4 已放款，5 逾期，6 已还款，7 坏账）',
   `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
@@ -404,6 +405,7 @@ CREATE TABLE `tjd_borrow_order` (
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='借款订单';
+
 
 
 
@@ -573,11 +575,13 @@ CREATE TABLE `tjd_business_man` (
   `is_jt` varchar(4) DEFAULT NULL COMMENT '是否借条',
   `is_fk` varchar(4) DEFAULT NULL COMMENT '是否风控',
   `is_dl` varchar(4) DEFAULT NULL COMMENT '是否导流',
+  `is_admin` varchar(4) DEFAULT '0' COMMENT '是否admin',
   `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='借款商';
+
 
 DROP TABLE IF EXISTS `tjd_cert_record`;
 CREATE TABLE `tjd_cert_record` (

@@ -16,6 +16,7 @@ import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IBusinessManDAO;
 import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.dto.req.XN630100Req;
+import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EBusinessManStatus;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.exception.BizException;
@@ -57,6 +58,7 @@ public class BusinessManBOImpl extends PaginableBOImpl<BusinessMan> implements
         data.setIsJt(req.getIsJt());
         data.setIsFk(req.getIsFk());
         data.setIsDl(req.getIsDl());
+        data.setIsAdmin(req.getIsAdmin());
         businessManDAO.insert(data);
         return userId;
     }
@@ -171,6 +173,15 @@ public class BusinessManBOImpl extends PaginableBOImpl<BusinessMan> implements
         if (null == data) {
             throw new BizException("xn0000", "公司编号不存在");
         }
+        return data;
+    }
+
+    @Override
+    public BusinessMan getBusinessBoss(String companyCode) {
+        BusinessMan condition = new BusinessMan();
+        condition.setCompanyCode(companyCode);
+        condition.setIsAdmin(EBoolean.YES.getCode());
+        BusinessMan data = businessManDAO.select(condition);
         return data;
     }
 }

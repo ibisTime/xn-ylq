@@ -9,10 +9,12 @@ import com.cdkj.ylq.ao.INoticerAO;
 import com.cdkj.ylq.bo.INoticerBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.PhoneUtil;
+import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Noticer;
 import com.cdkj.ylq.dto.req.XN623160Req;
 import com.cdkj.ylq.dto.req.XN623162Req;
 import com.cdkj.ylq.exception.BizException;
+import com.cdkj.ylq.exception.EBizErrorCode;
 
 //CHECK ��鲢��ע�� 
 @Service
@@ -24,6 +26,12 @@ public class NoticerAOImpl implements INoticerAO {
     @Override
     public String addNoticer(XN623160Req req) {
         PhoneUtil.checkMobile(req.getMobile());
+        int start = StringValidater.toInteger(req.getStratTime());
+        int end = StringValidater.toInteger(req.getEndTime());
+        if (start >= end) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                "开始时间要早于结束时间");
+        }
         return noticerBO.saveNoticer(req);
     }
 

@@ -109,6 +109,9 @@ public class BorrowOrder extends ABaseDO {
     // 本次分期周期
     private Long stageCycle;
 
+    // 已还期数
+    private Long repayCount;
+
     // 状态
     private String status;
 
@@ -212,6 +215,14 @@ public class BorrowOrder extends ABaseDO {
 
     public void setApplyUser(String applyUser) {
         this.applyUser = applyUser;
+    }
+
+    public Long getRepayCount() {
+        return repayCount;
+    }
+
+    public void setRepayCount(Long repayCount) {
+        this.repayCount = repayCount;
     }
 
     public Date getSignDatetime() {

@@ -31,8 +31,10 @@ import com.cdkj.ylq.domain.SYSRole;
 import com.cdkj.ylq.dto.req.XN630100Req;
 import com.cdkj.ylq.dto.res.XN630101Res;
 import com.cdkj.ylq.enums.EAccountType;
+import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.enums.EJourBizTypeBoss;
+import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.exception.BizException;
 
 //CHECK ��鲢��ע�� 
@@ -108,6 +110,7 @@ public class BusinessManAOImpl implements IBusinessManAO {
         // 手机检验
         businessManBO.isMobileExist(req.getMobile());
         // 落地数据
+        req.setIsAdmin(EBoolean.YES.getCode());
         String userId = businessManBO.saveBusinessMan(req);
         // 开设公司
         String companyCode = companyBO.saveCompany(userId);
@@ -176,9 +179,21 @@ public class BusinessManAOImpl implements IBusinessManAO {
         if (dataList.isEmpty()) {
             throw new BizException("xn0000", "密码不正确");
         }
-
-        String userId = dataList.get(0).getUserId();
-        String companyCode = dataList.get(0).getCompanyCode();
+        BusinessMan businessMan = dataList.get(0);
+        BusinessMan boss = businessManBO.getBusinessBoss(businessMan
+            .getCompanyCode());
+        if (!EUserStatus.NORMAL.getCode().equals(boss.getStatus())) {
+            throw new BizException("xn805050", "该公司"
+                    + EUserStatus.getMap().get(businessMan.getStatus())
+                        .getValue() + "，请联系工作人员");
+        }
+        if (!EUserStatus.NORMAL.getCode().equals(businessMan.getStatus())) {
+            throw new BizException("xn805050", "该账号"
+                    + EUserStatus.getMap().get(businessMan.getStatus())
+                        .getValue() + "，请联系工作人员");
+        }
+        String userId = businessMan.getUserId();
+        String companyCode = businessMan.getCompanyCode();
         return new XN630101Res(userId, companyCode);
     }
 

@@ -315,6 +315,7 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
         borrow.setStageBatch(borrow.getStageBatch() + 1);
         borrow.setStageCount(stageCount);
         borrow.setStageCycle(stageCycle);
+        borrow.setRepayCount(Long.valueOf(0));
         borrow.setUpdater(updater);
         borrow.setUpdateDatetime(new Date());
         borrow.setRemark(remark);
@@ -326,6 +327,7 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
             String updater) {
         order.setTotalAmount(order.getTotalAmount().subtract(amount));
         order.setPayType(EPayType.OFFLINE.getCode());
+        order.setRepayCount(order.getRepayCount() + 1);
         order.setUpdater(updater);
         order.setUpdateDatetime(new Date());
         order.setRemark("分期还款");

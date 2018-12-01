@@ -35,6 +35,7 @@ public class XN623167 extends AProcessor {
         Noticer condition = new Noticer();
         condition.setName(req.getName());
         condition.setMobile(req.getMobile());
+        condition.setType(req.getType());
         condition.setCompanyCode(req.getCompanyCode());
         return noticerAO.queryNoticerList(condition);
     }

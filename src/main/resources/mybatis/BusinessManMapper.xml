@@ -17,6 +17,7 @@
 		<result column="is_jt" property="isJt" />
 		<result column="is_fk" property="isFk" />
 		<result column="is_dl" property="isDl" />
+		<result column="is_admin" property="isAdmin" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
@@ -74,6 +75,9 @@
 			<if test="isDl != null and isDl != '' ">
 				AND t.is_dl = #{isDl}
 			</if>
+			<if test="isAdmin != null and isAdmin != '' ">
+				AND t.is_admin = #{isAdmin}
+			</if>
 		</trim>
 	</sql>
 	<select id="select_businessMan" parameterType="businessMan" resultMap="businessMan_DB_Result">
@@ -92,6 +96,7 @@
 		,t.is_jt
 		,t.is_fk
 		,t.is_dl
+		,t.is_admin
 		,t.updater
 		,t.update_datetime
 		,t.remark
@@ -128,6 +133,7 @@
 		,is_jt
 		,is_fk
 		,is_dl
+		,is_admin
 		,updater
 		,update_datetime
 		,remark
@@ -147,6 +153,7 @@
 		,#{isJt}
 		,#{isFk}
 		,#{isDl}
+		,#{isAdmin}
 		,#{updater}
 		,#{updateDatetime}
 		,#{remark}

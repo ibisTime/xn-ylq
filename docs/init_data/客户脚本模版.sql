@@ -399,6 +399,7 @@ INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_d
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0','','coupon_type','优惠券类型','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','coupon_type','0','获客优惠券','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','coupon_type','1','借还优惠券','admin',now(),NULL,'GS2018112119133810071833');
+INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','coupon_type','2','直送优惠券','admin',now(),NULL,'GS2018112119133810071833');
 
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('0','','coupon_status','优惠券状态','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','coupon_status','0','关闭','admin',now(),NULL,'GS2018112119133810071833');
@@ -493,6 +494,7 @@ INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_d
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','repay_apply_type','0','正常还款','admin',now(),NULL,'GS2018112119133810071833');
 INSERT INTO `tsys_dict` (`type`,`parent_key`,`dkey`,`dvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','repay_apply_type','1','分期还款','admin',now(),NULL,'GS2018112119133810071833');
 
+INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','amountValidDays','15','admin','2017-10-16 15:55:37','额度有效天数','GS2018112119133810071833');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','identifyValidDays','180','admin','2017-10-16 15:55:37','身份认证有效天数','GS2018112119133810071833');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','antifraudValidDays','180','admin','2017-10-16 15:55:37','欺诈识别认证有效天数','GS2018112119133810071833');
 INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('1','zmScoreValidDays','180','admin','2017-10-16 15:55:37','芝麻分认证有效天数','GS2018112119133810071833');
@@ -527,6 +529,7 @@ INSERT INTO `tsys_config` (`type`,`ckey`,`cvalue`,`updater`,`update_datetime`,`r
 
 INSERT INTO `tjd_coupon_rule` (`code`,`type`,`get_condition`,`amount`,`valid_days`,`start_amount`,`status`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('CD-YLQ000014001','0',1,50000,30,1000000,'1','admin',now(),'推荐成功送','GS2018112119133810071833');
 INSERT INTO `tjd_coupon_rule` (`code`,`type`,`get_condition`,`amount`,`valid_days`,`start_amount`,`status`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('CD-YLQ000014002','1',2,80000,30,1000000,'1','ylq',now(),'借还成功送','GS2018112119133810071833');
+INSERT INTO `tjd_coupon_rule` (`code`,`type`,`get_condition`,`amount`,`valid_days`,`start_amount`,`status`,`updater`,`update_datetime`,`remark`,`company_code`) VALUES ('CD-YLQ000014003','2',0,80000,30,1000000,'1','ylq',now(),'直接赠送','GS2018112119133810071833');
 
 /*
 -- Query: SELECT * FROM dev_xn_ylq.tjd_business_man

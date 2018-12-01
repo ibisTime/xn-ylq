@@ -229,49 +229,96 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         Date now = new Date();
         List<StageInfo> infoList = new ArrayList<StageInfo>();
 
+        StageInfo stageInfo = new StageInfo();
+
         // 本次分期的分期计划列表（实时计算应还金额）
         List<Staging> stageList = stagingBO.queryBorrowStagings(order);
 
-        // 初始化第一期第一天分期数据
-        StageInfo stageInfo = new StageInfo();
+        Long repayCount = order.getRepayCount();
         for (Staging staging : stageList) {
-            if (staging.getCount() == 1) {
-                stageInfo.setStageCode(staging.getCode());
-                stageInfo.setLxAmount(staging.getRate().multiply(
-                    order.getAmount()));
-                stageInfo.setMainAmount(staging.getMainAmount());
-                stageInfo.setAmount(stageInfo.getLxAmount().add(
-                    stageInfo.getMainAmount()));
-                stageInfo.setDate(DateUtil.dateToStr(staging.getStartPayDate(),
-                    DateUtil.FRONT_DATE_FORMAT_STRING));
-                stageInfo.setStageCount(staging.getCount().intValue());
-                stageInfo.setRemark("第1期第1天还款情况");
-                order.setInfo(stageInfo);
-                break;
+            if (staging.getCount() == repayCount + 1) {
+                if (now.before(staging.getStartPayDate())) {
+                    stageInfo.setStageCode(staging.getCode());
+                    stageInfo.setLxAmount(staging.getRate().multiply(
+                        order.getAmount()));
+                    stageInfo.setMainAmount(staging.getMainAmount());
+                    stageInfo.setAmount(stageInfo.getLxAmount().add(
+                        stageInfo.getMainAmount()));
+                    stageInfo.setDate(DateUtil.dateToStr(
+                        staging.getStartPayDate(),
+                        DateUtil.FRONT_DATE_FORMAT_STRING));
+                    stageInfo.setStartTime(staging.getStartPayDate());
+                    stageInfo.setEndTime(staging.getLastPayDate());
+                    stageInfo.setStageCount(staging.getCount().intValue());
+                    stageInfo.setRemark("第" + staging.getCount() + "第1天");
+                    order.setInfo(stageInfo);
+                } else {
+                    Date startDate = now;
+                    // 距离开始时间已有几天
+                    int days = DateUtil.daysBetween(staging.getStartPayDate(),
+                        startDate) + 1;
+                    // 利息=利率*天数*分期总本金
+                    BigDecimal lxAmount = staging.getRate()
+                        .multiply(new BigDecimal(days))
+                        .multiply(order.getAmount());
+                    // 可以开始还款，覆盖初始化的分期数据
+                    StageInfo info = new StageInfo();
+                    info.setStageCode(staging.getCode());
+                    info.setLxAmount(lxAmount);
+                    info.setMainAmount(staging.getMainAmount());
+                    info.setAmount(lxAmount.add(staging.getMainAmount()));
+                    info.setDate(DateUtil.dateToStr(startDate,
+                        DateUtil.FRONT_DATE_FORMAT_STRING));
+                    info.setStartTime(staging.getStartPayDate());
+                    info.setEndTime(staging.getLastPayDate());
+                    info.setStatus(staging.getStatus());
+                    info.setStageCount(staging.getCount().intValue());
+                    info.setRemark("第" + staging.getCount() + "期，第" + days
+                            + "天");
+                    order.setInfo(info);
+                }
             }
         }
+        // // 初始化第一期第一天分期数据
+        //
+        // for (Staging staging : stageList) {
+        // if (staging.getCount() == 1) {
+        // stageInfo.setStageCode(staging.getCode());
+        // stageInfo.setLxAmount(staging.getRate().multiply(
+        // order.getAmount()));
+        // stageInfo.setMainAmount(staging.getMainAmount());
+        // stageInfo.setAmount(stageInfo.getLxAmount().add(
+        // stageInfo.getMainAmount()));
+        // stageInfo.setDate(DateUtil.dateToStr(staging.getStartPayDate(),
+        // DateUtil.FRONT_DATE_FORMAT_STRING));
+        // stageInfo.setStageCount(staging.getCount().intValue());
+        // stageInfo.setRemark("第1期第1天还款情况");
+        // order.setInfo(stageInfo);
+        // break;
+        // }
+        // }
 
         // 已还本期，时间还未到下期，展示下期第一天情况
-        for (Staging data : stageList) {
-            if (now.after(data.getStartPayDate())
-                    && now.before(data.getLastPayDate())
-                    && EStagingStatus.REPAY.getCode().equals(data.getStatus())) {
-                Staging staging = stagingBO.getNextStaging(data);
-
-                stageInfo.setStageCode(staging.getCode());
-                stageInfo.setLxAmount(staging.getRate().multiply(
-                    order.getAmount()));
-                stageInfo.setMainAmount(staging.getMainAmount());
-                stageInfo.setAmount(stageInfo.getLxAmount().add(
-                    stageInfo.getMainAmount()));
-                stageInfo.setDate(DateUtil.dateToStr(staging.getStartPayDate(),
-                    DateUtil.FRONT_DATE_FORMAT_STRING));
-                stageInfo.setStageCount(staging.getCount().intValue());
-                stageInfo.setRemark("第" + staging.getCount() + "期第1天还款情况");
-                order.setInfo(stageInfo);
-                break;
-            }
-        }
+        // for (Staging data : stageList) {
+        // if (now.after(data.getStartPayDate())
+        // && now.before(data.getLastPayDate())
+        // && EStagingStatus.REPAY.getCode().equals(data.getStatus())) {
+        // Staging staging = stagingBO.getNextStaging(data);
+        //
+        // stageInfo.setStageCode(staging.getCode());
+        // stageInfo.setLxAmount(staging.getRate().multiply(
+        // order.getAmount()));
+        // stageInfo.setMainAmount(staging.getMainAmount());
+        // stageInfo.setAmount(stageInfo.getLxAmount().add(
+        // stageInfo.getMainAmount()));
+        // stageInfo.setDate(DateUtil.dateToStr(staging.getStartPayDate(),
+        // DateUtil.FRONT_DATE_FORMAT_STRING));
+        // stageInfo.setStageCount(staging.getCount().intValue());
+        // stageInfo.setRemark("第" + staging.getCount() + "期第1天还款情况");
+        // order.setInfo(stageInfo);
+        // break;
+        // }
+        // }
         for (Staging staging : stageList) {
             if (EStagingStatus.REPAY.getCode().equals(staging.getStatus())) {
                 // 构建还款信息
@@ -290,30 +337,30 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             } else {
                 Date startDate = staging.getStartPayDate();
 
-                // 如果还款开始时间在当前时间之前，按当前时间算
-                if (now.after(startDate)) {
-                    startDate = now;
-                    // 距离开始时间已有几天
-                    int days = DateUtil.daysBetween(staging.getStartPayDate(),
-                        startDate) + 1;
-                    // 利息=利率*天数*分期总本金
-                    BigDecimal lxAmount = staging.getRate()
-                        .multiply(new BigDecimal(days))
-                        .multiply(order.getAmount());
-                    // 可以开始还款，覆盖初始化的分期数据
-                    StageInfo info = new StageInfo();
-                    info.setStageCode(staging.getCode());
-                    info.setLxAmount(lxAmount);
-                    info.setMainAmount(staging.getMainAmount());
-                    info.setAmount(lxAmount.add(staging.getMainAmount()));
-                    info.setDate(DateUtil.dateToStr(startDate,
-                        DateUtil.FRONT_DATE_FORMAT_STRING));
-                    info.setStatus(staging.getStatus());
-                    info.setStageCount(staging.getCount().intValue());
-                    info.setRemark("第" + staging.getCount() + "期，第" + days
-                            + "天");
-                    order.setInfo(info);
-                }
+                // // 如果还款开始时间在当前时间之前，按当前时间算
+                // if (now.after(startDate)) {
+                // startDate = now;
+                // // 距离开始时间已有几天
+                // int days = DateUtil.daysBetween(staging.getStartPayDate(),
+                // startDate) + 1;
+                // // 利息=利率*天数*分期总本金
+                // BigDecimal lxAmount = staging.getRate()
+                // .multiply(new BigDecimal(days))
+                // .multiply(order.getAmount());
+                // // 可以开始还款，覆盖初始化的分期数据
+                // StageInfo info = new StageInfo();
+                // info.setStageCode(staging.getCode());
+                // info.setLxAmount(lxAmount);
+                // info.setMainAmount(staging.getMainAmount());
+                // info.setAmount(lxAmount.add(staging.getMainAmount()));
+                // info.setDate(DateUtil.dateToStr(startDate,
+                // DateUtil.FRONT_DATE_FORMAT_STRING));
+                // info.setStatus(staging.getStatus());
+                // info.setStageCount(staging.getCount().intValue());
+                // info.setRemark("第" + staging.getCount() + "期，第" + days
+                // + "天");
+                // order.setInfo(info);
+                // }
                 for (; startDate.before(staging.getLastPayDate()); startDate = DateUtil
                     .getRelativeDateOfDays(startDate, 1)) {
                     // 距离开始时间已有几天
@@ -391,7 +438,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 DateUtil.getTomorrowStart(borrow.getHkDatetime())));
         }
         if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
-                && EBoolean.YES.getCode().equals(borrow.getIsStage())) {
+                && EBoolean.YES.getCode().equals(borrow.getIsStage())
+                && borrow.getRepayCount() != null) {
             initStageList(borrow);
         }
         return borrow;

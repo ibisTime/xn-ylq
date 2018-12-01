@@ -56,6 +56,9 @@ public class BusinessMan extends ABaseDO {
     // 是否导流
     private String isDl;
 
+    // 是否admin
+    private String isAdmin;
+
     // 更新人
     private String updater;
 
@@ -200,6 +203,14 @@ public class BusinessMan extends ABaseDO {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public void setIsJt(String isJt) {

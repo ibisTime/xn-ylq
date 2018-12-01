@@ -21,6 +21,8 @@ public class XN623167Req {
 
     private String mobile;
 
+    private String type;
+
     @NotBlank
     private String companyCode;
 
@@ -30,6 +32,14 @@ public class XN623167Req {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getMobile() {

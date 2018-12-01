@@ -36,6 +36,7 @@ public class XN623165 extends AProcessor {
         Noticer condition = new Noticer();
         condition.setName(req.getName());
         condition.setMobile(req.getMobile());
+        condition.setType(req.getType());
         condition.setCompanyCode(req.getCompanyCode());
         int start = StringValidater.toInteger(req.getStart());
         int limit = StringValidater.toInteger(req.getLimit());

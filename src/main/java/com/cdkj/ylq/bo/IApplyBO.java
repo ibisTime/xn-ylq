@@ -1,6 +1,7 @@
 package com.cdkj.ylq.bo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.cdkj.ylq.bo.base.IPaginableBO;
 import com.cdkj.ylq.domain.Apply;
@@ -24,6 +25,8 @@ public interface IApplyBO extends IPaginableBO<Apply> {
     public Apply getInCertApply(String userId);
 
     public void refreshCurNode(Apply apply, String curNode);
+
+    public List<Apply> queryApplyList(Apply condition);
 
     public void refreshStatus(Apply data);
 

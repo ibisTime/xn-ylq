@@ -78,7 +78,6 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
         List<String> statusList = new ArrayList<String>();
         statusList.add(EApplyStatus.TO_CERTI.getCode());
         statusList.add(EApplyStatus.TO_APPROVE.getCode());
-        statusList.add(EApplyStatus.APPROVE_YES.getCode());
         statusList.add(EApplyStatus.APPROVE_NO.getCode());
         condition.setApplyUser(userId);
         condition.setStatusList(statusList);
@@ -121,6 +120,12 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
     public void refreshCurNode(Apply apply, String curNode) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public List<Apply> queryApplyList(Apply condition) {
+
+        return applyDAO.selectList(condition);
     }
 
 }

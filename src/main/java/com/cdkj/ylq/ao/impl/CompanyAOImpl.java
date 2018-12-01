@@ -14,6 +14,7 @@ import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.domain.Company;
 import com.cdkj.ylq.dto.req.XN630100Req;
+import com.cdkj.ylq.enums.EBoolean;
 
 @Service
 public class CompanyAOImpl implements ICompanyAO {
@@ -57,7 +58,7 @@ public class CompanyAOImpl implements ICompanyAO {
         req.setRealName(realName);
         req.setRemark(remark);
         req.setRoleCode(roleCode);
-
+        req.setIsAdmin(EBoolean.NO.getCode());
         return businessManBO.saveBusinessMan(req);
     }
 

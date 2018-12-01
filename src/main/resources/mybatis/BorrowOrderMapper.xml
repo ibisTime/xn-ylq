@@ -34,6 +34,7 @@
 		<result column="stage_batch" property="stageBatch" />
 		<result column="stage_count" property="stageCount" />
 		<result column="stage_cycle" property="stageCycle" />
+		<result column="repay_count" property="repayCount" />
 		<result column="status" property="status" />
 		<result column="is_archive" property="isArchive" />
 		<result column="is_coupon" property="isCoupon" />
@@ -142,6 +143,7 @@
 		,t.stage_batch
 		,t.stage_count
 		,t.stage_cycle
+		,t.repay_count
 		,t.status
 		,t.is_archive
 		,t.is_coupon
@@ -379,6 +381,7 @@
 		,stage_batch = #{stageBatch}
 		,stage_count=#{stageCount}
 		,stage_cycle=#{stageCycle}
+		,repay_count=#{repayCount}
 		,status=#{status}
 		,updater=#{updater}
 		,update_datetime=#{updateDatetime}
@@ -390,6 +393,7 @@
 		UPDATE tjd_borrow_order
 		SET
 		total_amount=#{totalAmount}
+		,repay_count=#{repayCount}
 		,pay_type=#{payType}
 		,updater=#{updater}
 		,update_datetime=#{updateDatetime}

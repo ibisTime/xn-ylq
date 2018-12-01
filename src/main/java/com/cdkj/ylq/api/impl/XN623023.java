@@ -35,8 +35,8 @@ public class XN623023 extends AProcessor {
     @Override
     public Object doBusiness() throws BizException {
         applyAO.doApprove(req.getCode(), req.getApproveResult(),
-            StringValidater.toBigDecimal(req.getSxAmount()), req.getApprover(),
-            req.getApproveNote());
+            StringValidater.toBigDecimal(req.getCreditScore()),
+            req.getApprover(), req.getApproveNote());
         return new BooleanRes(true);
     }
 
@@ -47,7 +47,7 @@ public class XN623023 extends AProcessor {
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN623023Req.class);
         StringValidater.validateBlank(req.getCode(), req.getApproveResult(),
-            req.getSxAmount(), req.getApprover());
+            req.getCreditScore(), req.getApprover());
     }
 
 }

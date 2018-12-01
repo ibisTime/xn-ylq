@@ -57,6 +57,16 @@ public class XN630100Req {
 
     private String roleCode;
 
+    private String isAdmin;
+
+    public String getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     public String getRoleCode() {
         return roleCode;
     }
