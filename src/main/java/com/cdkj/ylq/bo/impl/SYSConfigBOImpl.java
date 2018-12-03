@@ -150,9 +150,10 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
     }
 
     @Override
-    public void saveConfig(String ckey, String cvalue, String updater,
-            String remark, String companyCode) {
+    public void saveConfig(String type, String ckey, String cvalue,
+            String updater, String remark, String companyCode) {
         SYSConfig config = new SYSConfig();
+        config.setType(type);
         config.setCkey(ckey);
         config.setCvalue(cvalue);
         config.setUpdater(updater);

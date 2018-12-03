@@ -186,8 +186,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
         // 系统参数
         List<SYSConfig> configList = sysConfigBO.queryModelConfigs();
         for (SYSConfig sysConfig : configList) {
-            sysConfigBO.saveConfig(sysConfig.getCkey(), sysConfig.getCvalue(),
-                sysConfig.getUpdater(), sysConfig.getRemark(), companyCode);
+            sysConfigBO.saveConfig(sysConfig.getType(), sysConfig.getCkey(),
+                sysConfig.getCvalue(), sysConfig.getUpdater(),
+                sysConfig.getRemark(), companyCode);
         }
         // 数据字典
         List<SYSDict> dictList = sysDictBO.queryDictList();

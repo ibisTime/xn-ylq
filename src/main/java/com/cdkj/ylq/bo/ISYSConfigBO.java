@@ -56,8 +56,8 @@ public interface ISYSConfigBO extends IPaginableBO<SYSConfig> {
 
     public BigDecimal getBigDecimalValue(String key, String companyCode);
 
-    public void saveConfig(String ckey, String cvalue, String updater,
-            String remark, String companyCode);
+    public void saveConfig(String type, String ckey, String cvalue,
+            String updater, String remark, String companyCode);
 
     public List<SYSConfig> queryModelConfigs();
 
