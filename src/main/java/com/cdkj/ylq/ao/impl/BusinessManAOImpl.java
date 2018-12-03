@@ -1,5 +1,6 @@
 package com.cdkj.ylq.ao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,10 @@ import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EJourBizTypeBoss;
+import com.cdkj.ylq.enums.EMenuCode;
 import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.exception.BizException;
+import com.cdkj.ylq.exception.EBizErrorCode;
 
 //CHECK ��鲢��ע�� 
 @Service
@@ -82,7 +85,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
         Paginable<BusinessMan> page = businessManBO.getPaginable(start, limit,
             condition);
         for (BusinessMan man : page.getList()) {
-            man.setAccount(accountBO.getAccountByUser(man.getUserId(),
+            BusinessMan boss = businessManBO.getBusinessManByCompanyCode(man
+                .getCompanyCode());
+            man.setAccount(accountBO.getAccountByUser(boss.getUserId(),
                 ECurrency.CNY.getCode()));
         }
         return page;
@@ -92,8 +97,10 @@ public class BusinessManAOImpl implements IBusinessManAO {
     public List<BusinessMan> queryBusinessManList(BusinessMan condition) {
         List<BusinessMan> list = businessManBO.queryBusinessManList(condition);
         for (BusinessMan businessMan : list) {
-            businessMan.setAccount(accountBO.getAccountByUser(
-                businessMan.getUserId(), ECurrency.CNY.getCode()));
+            BusinessMan boss = businessManBO
+                .getBusinessManByCompanyCode(businessMan.getCompanyCode());
+            businessMan.setAccount(accountBO.getAccountByUser(boss.getUserId(),
+                ECurrency.CNY.getCode()));
         }
         return list;
     }
@@ -101,7 +108,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
     @Override
     public BusinessMan getBusinessMan(String userId) {
         BusinessMan man = businessManBO.getBusinessMan(userId);
-        man.setAccount(accountBO.getAccountByUser(man.getUserId(),
+        BusinessMan boss = businessManBO.getBusinessManByCompanyCode(man
+            .getCompanyCode());
+        man.setAccount(accountBO.getAccountByUser(boss.getUserId(),
             ECurrency.CNY.getCode()));
         return man;
     }
@@ -122,12 +131,15 @@ public class BusinessManAOImpl implements IBusinessManAO {
         String roleCode = sysRoleBO.saveSYSRole(role);
         // 手机检验
         businessManBO.isMobileExist(req.getMobile());
+        // 登录名检验
+        if (businessManBO.isLoginNameExist(req.getLoginName())) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "登录名已存在");
+        }
         // 落地数据
         req.setIsAdmin(EBoolean.YES.getCode());
         req.setRoleCode(roleCode);
         String userId = businessManBO.saveBusinessMan(req);
         // 开设公司
-
         companyBO.saveCompany(userId, companyCode);
         // 分配账户
         Account account = accountBO.distributeAccount(userId,
@@ -135,22 +147,39 @@ public class BusinessManAOImpl implements IBusinessManAO {
 
         // 菜单
         List<SYSMenu> modelMenus = sysMenuBO.queryModelMenus();
+        List<SYSMenu> toRemoveList = new ArrayList<SYSMenu>();
+        // 借条模块权限
+        if (EBoolean.NO.getCode().equals(req.getIsJt())) {
+            toRemoveList.addAll(sysMenuBO.queryMenuList(EMenuCode.borrow
+                .getCode()));
+        }
+        // 风控模块权限
+        if (EBoolean.NO.getCode().equals(req.getIsFk())) {
+            toRemoveList.addAll(sysMenuBO.queryMenuList(EMenuCode.risk
+                .getCode()));
+        }
+        // 导流模块权限
+        if (EBoolean.NO.getCode().equals(req.getIsDl())) {
+            toRemoveList
+                .addAll(sysMenuBO.queryMenuList(EMenuCode.way.getCode()));
+        }
+        if (!toRemoveList.isEmpty()) {
+            modelMenus.removeAll(toRemoveList);
+        }
         for (SYSMenu sysMenu : modelMenus) {
             StringBuilder menuCode = new StringBuilder(sysMenu.getCode())
                 .append(companyCode);
             sysMenu.setCompanyCode(companyCode);
             sysMenu.setCode(menuCode.toString());
-            if (sysMenu.getParentCode() != null) {
-                StringBuilder parentCode = new StringBuilder(
-                    sysMenu.getParentCode()).append(companyCode);
-                sysMenu.setParentCode(parentCode.toString());
-            }
+            StringBuilder parentCode = new StringBuilder(
+                sysMenu.getParentCode()).append(companyCode);
+            sysMenu.setParentCode(parentCode.toString());
             sysMenuDAO.insert(sysMenu);
             // 权限
             SYSMenuRole menuRole = new SYSMenuRole();
             menuRole.setRoleCode(roleCode);
             menuRole.setMenuCode(menuCode.toString());
-            menuRole.setUpdater("admin");
+            menuRole.setUpdater(req.getLoginName());
             menuRole.setCompanyCode(companyCode);
             sysMenuRoleBO.saveSYSMenuRole(menuRole);
         }
@@ -202,7 +231,8 @@ public class BusinessManAOImpl implements IBusinessManAO {
         }
         String userId = businessMan.getUserId();
         String companyCode = businessMan.getCompanyCode();
-        return new XN630101Res(userId, companyCode);
+        String rootMenuCode = sysMenuBO.getRootMenu(companyCode).getCode();
+        return new XN630101Res(userId, companyCode, rootMenuCode);
     }
 
     @Override
@@ -249,5 +279,10 @@ public class BusinessManAOImpl implements IBusinessManAO {
     public void editPhoto(String userId, String photo) {
         BusinessMan data = businessManBO.getBusinessMan(userId);
         businessManBO.refershPhoto(data, photo);
+    }
+
+    @Override
+    public BusinessMan getBusinessManByCompanyCode(String companyCode) {
+        return businessManBO.getBusinessManByCompanyCode(companyCode);
     }
 }

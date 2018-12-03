@@ -28,7 +28,7 @@ public class XN805120 extends AProcessor {
     public Object doBusiness() throws BizException {
         User condition = new User();
         condition.setLoginName(req.getLoginName());
-        condition.setMobile(req.getMobile());
+        condition.setMobileForQuery(req.getMobile());
         condition.setNickname(req.getNickname());
         condition.setUserReferee(req.getUserReferee());
         condition.setIdKind(req.getIdKind());

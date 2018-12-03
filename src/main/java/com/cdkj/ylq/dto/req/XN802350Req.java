@@ -27,7 +27,6 @@ public class XN802350Req {
     private String payCardNo;
 
     // 资金密码
-    @NotBlank
     private String tradePwd;
 
     // 申请人（必填）

@@ -11,7 +11,7 @@ public class XN802025Req extends APageReq {
     private static final long serialVersionUID = 3761955416182378078L;
 
     // 系统编号
-    private String systemCode;
+    private String companyCode;
 
     // 银行卡号
     private String bankcardNumber;
@@ -31,12 +31,12 @@ public class XN802025Req extends APageReq {
     // 状态(0 不可用 1可用)
     private String status;
 
-    public String getSystemCode() {
-        return systemCode;
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public String getBankcardNumber() {

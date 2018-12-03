@@ -110,4 +110,20 @@ public class SYSMenuBOImpl extends PaginableBOImpl<SYSMenu> implements
 
         return dataList;
     }
+
+    @Override
+    public SYSMenu getRootMenu(String companyCode) {
+        SYSMenu condition = new SYSMenu();
+        condition.setCompanyCode(companyCode);
+        condition.setParentCode("");
+        condition.setName("根目录");
+        return sysMenuDAO.select(condition);
+    }
+
+    @Override
+    public List<SYSMenu> queryMenuList(String menuCode) {
+        SYSMenu condition = new SYSMenu();
+        condition.setCode(menuCode);
+        return sysMenuDAO.selectMenuList(condition);
+    }
 }

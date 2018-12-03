@@ -40,4 +40,6 @@ public interface IBusinessManBO extends IPaginableBO<BusinessMan> {
 
     public BusinessMan getBusinessBoss(String companyCode);
 
+    public boolean isLoginNameExist(String loginName);
+
 }

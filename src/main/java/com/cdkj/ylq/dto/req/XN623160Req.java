@@ -27,7 +27,7 @@ public class XN623160Req {
     private String type;
 
     @NotBlank
-    private String stratTime;
+    private String startTime;
 
     @NotBlank
     private String endTime;
@@ -60,11 +60,11 @@ public class XN623160Req {
     }
 
     public String getStratTime() {
-        return stratTime;
+        return startTime;
     }
 
     public void setStratTime(String stratTime) {
-        this.stratTime = stratTime;
+        this.startTime = stratTime;
     }
 
     public String getEndTime() {

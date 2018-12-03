@@ -1,5 +1,7 @@
 package com.cdkj.ylq.dao;
 
+import java.util.List;
+
 import com.cdkj.ylq.dao.base.IBaseDAO;
 import com.cdkj.ylq.domain.SYSMenu;
 
@@ -10,6 +12,8 @@ import com.cdkj.ylq.domain.SYSMenu;
  */
 public interface ISYSMenuDAO extends IBaseDAO<SYSMenu> {
     String NAMESPACE = ISYSMenuDAO.class.getName().concat(".");
+
+    public List<SYSMenu> selectMenuList(SYSMenu condition);
 
     public int update(SYSMenu data);
 }

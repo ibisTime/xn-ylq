@@ -50,4 +50,10 @@ public class SYSMenuDAOImpl extends AMybatisTemplate implements ISYSMenuDAO {
         return super.update(NAMESPACE.concat("update_sysMenu"), data);
     }
 
+    @Override
+    public List<SYSMenu> selectMenuList(SYSMenu condition) {
+        return super.selectList(NAMESPACE.concat("select_menu_list"),
+            condition, SYSMenu.class);
+    }
+
 }

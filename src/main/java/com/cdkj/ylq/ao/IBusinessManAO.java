@@ -36,4 +36,6 @@ public interface IBusinessManAO {
 
     public void editPhoto(String userId, String photo);
 
+    public BusinessMan getBusinessManByCompanyCode(String companyCode);
+
 }

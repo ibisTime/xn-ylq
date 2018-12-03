@@ -7,12 +7,23 @@ public class XN630101Res {
 
     private String companyCode;
 
+    private String rootMenuCode;
+
+    public String getRootMenuCode() {
+        return rootMenuCode;
+    }
+
+    public void setRootMenuCode(String rootMenuCode) {
+        this.rootMenuCode = rootMenuCode;
+    }
+
     public XN630101Res() {
     }
 
-    public XN630101Res(String userId, String companyCode) {
+    public XN630101Res(String userId, String companyCode, String rootMenuCode) {
         this.userId = userId;
         this.companyCode = companyCode;
+        this.rootMenuCode = rootMenuCode;
     }
 
     public String getCompanyCode() {

@@ -169,6 +169,7 @@ public class BusinessManBOImpl extends PaginableBOImpl<BusinessMan> implements
     public BusinessMan getBusinessManByCompanyCode(String companyCode) {
         BusinessMan condition = new BusinessMan();
         condition.setCompanyCode(companyCode);
+        condition.setIsAdmin(EBoolean.YES.getCode());
         BusinessMan data = businessManDAO.select(condition);
         if (null == data) {
             throw new BizException("xn0000", "公司编号不存在");
@@ -183,5 +184,15 @@ public class BusinessManBOImpl extends PaginableBOImpl<BusinessMan> implements
         condition.setIsAdmin(EBoolean.YES.getCode());
         BusinessMan data = businessManDAO.select(condition);
         return data;
+    }
+
+    @Override
+    public boolean isLoginNameExist(String loginName) {
+        BusinessMan condition = new BusinessMan();
+        condition.setLoginName(loginName);
+        if (getTotalCount(condition) > 0) {
+            return true;
+        }
+        return false;
     }
 }

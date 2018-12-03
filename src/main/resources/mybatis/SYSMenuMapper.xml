@@ -60,6 +60,19 @@
 		<include refid="where_condition"/>
 		order by t.order_no
 	</select>
+	
+	<select id="select_menu_list" parameterType="sysMenu" resultMap="sysMenu_DB_Result">
+		SELECT * FROM tsys_menu where company_code = 'GSModelCode' and code  in 
+		(
+		SELECT code FROM tsys_menu where code =#{code}
+		union
+		select code from tsys_menu where code =#{code} or parent_code=#{code}
+		union
+		select code from tsys_menu where parent_code in (select code from tsys_menu where parent_code=#{code})
+		union
+		select code from tsys_menu where parent_code in (select code from tsys_menu where parent_code in (select code from tsys_menu where parent_code=#{code}))
+		)
+	</select>
 
 	<select id="select_sysMenu_count" parameterType="sysMenu" resultType="java.lang.Long">
 		SELECT count(1) FROM tsys_menu t

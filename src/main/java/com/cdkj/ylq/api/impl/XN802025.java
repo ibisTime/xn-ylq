@@ -27,7 +27,7 @@ public class XN802025 extends AProcessor {
     @Override
     public Object doBusiness() throws BizException {
         Bankcard condition = new Bankcard();
-        condition.setSystemCode(req.getSystemCode());
+        condition.setSystemCode(req.getCompanyCode());
         condition.setUserId(req.getUserId());
         condition.setBankName(req.getBankName());
         condition.setBankcardNumber(req.getBankcardNumber());
@@ -47,7 +47,7 @@ public class XN802025 extends AProcessor {
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN802025Req.class);
         StringValidater.validateBlank(req.getStart(), req.getLimit(),
-            req.getSystemCode());
+            req.getCompanyCode());
     }
 
 }
