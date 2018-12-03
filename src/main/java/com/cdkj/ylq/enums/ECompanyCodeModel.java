@@ -9,7 +9,7 @@ import java.util.Map;
  * @history:
  */
 public enum ECompanyCodeModel {
-    MODEL("GS2018112119133810071833", "模版公司编号");
+    MODEL("GSModelCode", "模版公司编号");
     public static Map<String, ECompanyCodeModel> getMap() {
         Map<String, ECompanyCodeModel> map = new HashMap<String, ECompanyCodeModel>();
         for (ECompanyCodeModel direction : ECompanyCodeModel.values()) {
