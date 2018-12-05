@@ -33,6 +33,16 @@ public class XN630115Req extends APageReq {
 
     private String isDl;
 
+    private String isAdmin;
+
+    public String getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     public String getIsJt() {
         return isJt;
     }

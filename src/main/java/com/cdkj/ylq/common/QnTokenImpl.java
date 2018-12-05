@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.enums.ESysConfigType;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 import com.qiniu.util.Auth;
 
@@ -33,8 +34,8 @@ public class QnTokenImpl {
 
     // 简单上传，使用默认策略，只需要设置上传的空间名就可以了
     public String getUploadToken(String systemCode) {
-        Map<String, String> resultMap = sysConfigBO
-            .getConfigsMap(ESysConfigType.QINIU.getCode());
+        Map<String, String> resultMap = sysConfigBO.getConfigsMap(
+            ESysConfigType.QINIU.getCode(), ESystemCode.YLQ.getCode());
         if (resultMap == null) {
             throw new BizException("xn000000", "七牛云图片参数异常");
         }

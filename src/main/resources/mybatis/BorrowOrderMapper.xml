@@ -189,6 +189,7 @@
 		,fw_amount
 		
 		,yh_amount
+		,yqlx_amount
 		,yq_days
 		,rate1
 		,rate2
@@ -226,6 +227,7 @@
 		,#{fwAmount}
 		
 		,#{yhAmount}
+		,#{yqlxAmount}
 		,#{yqDays}
 		,#{rate1}
 		,#{rate2}

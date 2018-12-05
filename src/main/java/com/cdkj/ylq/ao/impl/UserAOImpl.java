@@ -124,7 +124,7 @@ public class UserAOImpl implements IUserAO {
             Coupon rule = couponBO
                 .getCoupon(ECouponType.RECOMMENT, companyCode);
 
-            if (rule.getCondition() - users.size() == 1
+            if (rule != null && rule.getCondition() - users.size() == 1
                     && ECouponStatus.OPEN.getCode().equals(rule.getStatus())) {
                 isCoupon = EBoolean.YES.getCode();
                 // 发优惠券

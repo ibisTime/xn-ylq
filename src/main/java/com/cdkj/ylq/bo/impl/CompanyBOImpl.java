@@ -31,11 +31,14 @@ public class CompanyBOImpl extends PaginableBOImpl<Company> implements
 
     @Override
     @Transactional
-    public String saveCompany(String userId, String code) {
+    public String saveCompany(String userId, String code, String name,
+            String logo) {
         if (StringUtils.isNotBlank(userId)) {
             Company data = new Company();
             data.setCode(code);
             data.setUserId(userId);
+            data.setName(name);
+            data.setLogo(logo);
             data.setCreateDatetime(new Date());
             companyDAO.insert(data);
 

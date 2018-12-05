@@ -23,7 +23,7 @@
            	  <ref bean="certificationTrigger"/>
            	  <ref bean="userCouponTrigger"/>
            	  <ref bean="repayRemindTrigger"/>
-           	  <ref bean="doInsertStatisticDailyTrigger"/>
+           	  <!-- <ref bean="doInsertStatisticDailyTrigger"/> -->
           </list>  
        </property>  
        <property name="autoStartup" value="true"/>  
@@ -82,17 +82,17 @@
 	        <property name="concurrent" value="false"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
 	</bean>
 	
-	<bean id="doInsertStatisticDailyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+	<!-- <bean id="doInsertStatisticDailyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
        <property name="jobDetail" ref="doInsertStatisticDaily"/>  
-       <property name="cronExpression" value="50 59 23 * * ?"/> <!-- 每天0点执行 -->
-       <!-- <property name="cronExpression" value="1 * * * * ?"/> -->
-       <!-- <property name="cronExpression" value="0 */10 * * * ?"/> --><!-- 每10分钟执行 -->
+       <property name="cronExpression" value="50 59 23 * * ?"/> 每天0点执行
+       <property name="cronExpression" value="1 * * * * ?"/>
+       <property name="cronExpression" value="0 */10 * * * ?"/>每10分钟执行
 	</bean>
 	<bean id="doInsertStatisticDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="statisticAOImpl"/>  
 	        <property name="targetMethod" value="doInsertStatisticDaily"/>  
-	        <property name="concurrent" value="false"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
-	</bean>
+	        <property name="concurrent" value="false"/>   是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  
+	</bean> -->
 	
 	
 </beans>

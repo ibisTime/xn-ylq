@@ -23,6 +23,8 @@ public class Company extends ABaseDO {
     // 公司名称
     private String name;
 
+    private String logo;
+
     // 负责人
     private String charger;
 
@@ -72,6 +74,14 @@ public class Company extends ABaseDO {
     private String nameForQuery;
 
     private BusinessMan businessMan;
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
 
     public BusinessMan getBusinessMan() {
         return businessMan;

@@ -124,7 +124,15 @@ public class JourAOImpl implements IJourAO {
     @Override
     public Jour getJour(String code) {
         Jour jour = jourBO.getJour(code);
-
+        if (ESysUser.SYS_USER.getCode().equals(jour.getUserId())) {
+            jour.setRealName(ESysUser.SYS_USER.getValue());
+        } else {
+            BusinessMan man = businessManBO.getBusinessMan(jour.getUserId());
+            if (man.getRealName() != null) {
+                String realName = man.getRealName();
+                jour.setRealName(realName);
+            }
+        }
         return jour;
     }
 

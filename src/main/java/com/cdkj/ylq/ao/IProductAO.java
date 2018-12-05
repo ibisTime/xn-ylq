@@ -14,8 +14,7 @@ public interface IProductAO {
     public int editProduct(XN623001Req req);
 
     // 上架
-    public int putOn(String code, String uiLocation, int uiOrder,
-            String uiColor, String updater, String remark);
+    public int putOn(String code, String updater, String remark);
 
     // 下架
     public int putOff(String code, String updater, String remark);

@@ -36,9 +36,7 @@ public class XN623002 extends AProcessor {
      */
     @Override
     public Object doBusiness() throws BizException {
-        productAO.putOn(req.getCode(), req.getUiLocation(),
-            StringValidater.toInteger(req.getUiOrder()), req.getUiColor(),
-            req.getUpdater(), req.getRemark());
+        productAO.putOn(req.getCode(), req.getUpdater(), req.getRemark());
         return new BooleanRes(true);
     }
 
@@ -48,8 +46,7 @@ public class XN623002 extends AProcessor {
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN623002Req.class);
-        StringValidater.validateBlank(req.getCode(), req.getUiLocation(),
-            req.getUiOrder(), req.getUiColor(), req.getUpdater());
+        StringValidater.validateBlank(req.getCode(), req.getUpdater());
     }
 
 }

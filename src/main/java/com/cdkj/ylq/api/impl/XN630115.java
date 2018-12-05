@@ -45,6 +45,7 @@ public class XN630115 extends AProcessor {
         condition.setIsJt(req.getIsJt());
         condition.setIsFk(req.getIsFk());
         condition.setIsDl(req.getIsDl());
+        condition.setIsAdmin(req.getIsAdmin());
         condition.setCreateDatetimeStart(DateUtil.getFrontDate(
             req.getDateStart(), false));
         condition.setCreateDatetimeEnd(DateUtil.getFrontDate(req.getDateEnd(),

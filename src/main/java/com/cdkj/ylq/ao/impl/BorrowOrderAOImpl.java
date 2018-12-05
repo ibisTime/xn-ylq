@@ -28,6 +28,7 @@ import com.cdkj.ylq.bo.IStagingBO;
 import com.cdkj.ylq.bo.IStagingRuleBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IUserCouponBO;
+import com.cdkj.ylq.bo.base.Page;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
@@ -195,6 +196,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setRate1(product.getYqRate1());
         borrow.setRate2(product.getYqRate2());
         borrow.setRealHkAmount(BigDecimal.ZERO);
+        borrow.setYqlxAmount(BigDecimal.ZERO);
         borrow.setYqDays(0);
         borrow.setTotalAmount(totalAmount);
         borrow.setStatus(EBorrowStatus.TO_APPROVE.getCode());
@@ -252,7 +254,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                     stageInfo.setStartTime(staging.getStartPayDate());
                     stageInfo.setEndTime(staging.getLastPayDate());
                     stageInfo.setStageCount(staging.getCount().intValue());
-                    stageInfo.setRemark("第" + staging.getCount() + "第1天");
+                    stageInfo.setRemark("第" + staging.getCount() + "期第1天");
                     order.setInfo(stageInfo);
                 } else {
                     Date startDate = now;
@@ -946,13 +948,13 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         long count = rule.getCount();
         long cycle = rule.getCycle();
         BigDecimal rate = rule.getRate();
+        Date now = new Date();
         for (int i = 0; i < count; i++) {
             // 本期分期开始时间
-            Date startPayDate = DateUtil.getDaysStart(borrow.getHkDatetime(),
-                (int) (i * cycle + 1));
+            Date startPayDate = DateUtil.getDaysStart(now, (int) (i * cycle));
             // 本期结束时间
-            Date lastPayDate = DateUtil.getDaysEnd(borrow.getHkDatetime(),
-                (int) ((i + 1) * cycle));
+            Date lastPayDate = DateUtil.getDaysEnd(now,
+                (int) ((i + 1) * cycle - 1));
             // 每期本金
             BigDecimal mainAmount = borrow.getTotalAmount()
                 .subtract(borrow.getYqlxAmount()).divide(new BigDecimal(count))
@@ -963,7 +965,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             // 落地本期
             stagingBO.saveStaging(borrow.getApplyUser(), orderCode, mainAmount,
                 rate, startPayDate, lastPayDate, (long) (i + 1),
-                borrow.getStageBatch(), borrow.getCompanyCode());
+                borrow.getStageBatch() + 1, borrow.getCompanyCode());
         }
         borrowOrderBO.refreshStaging(borrow, count, cycle, updater, remark);
 
@@ -979,7 +981,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         BorrowOrder order = borrowOrderBO.getBorrow(orderCode);
 
         if (!EBorrowStatus.LOANING.getCode().equals(order.getStatus())
-                && !EBorrowStatus.OVERDUE.getCode().equals(order.getCode())) {
+                && !EBorrowStatus.OVERDUE.getCode().equals(order.getStatus())) {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "只有已放款和逾期订单可以分期");
         }
@@ -1038,9 +1040,23 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
     }
 
     @Override
-    public List<BorrowOrder> queryNearlyOrder(String isStage, int start,
-            int limit) {
-        return null;
+    public Paginable<BorrowOrder> queryNearlyOrder(int start, int limit,
+            String companyCode) {
+        BorrowOrder condition = new BorrowOrder();
+        condition.setCompanyCode(companyCode);
+        condition.setStatus(EBorrowStatus.LOANING.getCode());
+        condition.setIsStage(EBoolean.NO.getCode());
+        List<BorrowOrder> result = borrowOrderBO.queryBorrowList(condition);
+        List<BorrowOrder> list = new ArrayList<BorrowOrder>();
+        for (BorrowOrder order : result) {
+            if (DateUtil.daysBetween(new Date(), order.getHkDatetime()) <= 2) {
+                list.add(order);
+            }
+        }
+        Paginable<BorrowOrder> page = new Page<BorrowOrder>(start, limit,
+            list.size());
+        page.setList(list);
+        return page;
     }
 
 }

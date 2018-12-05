@@ -56,7 +56,7 @@ public interface IBorrowOrderBO extends IPaginableBO<BorrowOrder> {
     public void refreshStaging(BorrowOrder borrow, Long stageCount,
             Long stageCycle, String updater, String remark);
 
-    public void refreshStageRepay(BorrowOrder order, BigDecimal amount,
-            String updater);
+    public void refreshStageRepay(BorrowOrder order, BigDecimal mainAmount,
+            BigDecimal amount, String updater);
 
 }

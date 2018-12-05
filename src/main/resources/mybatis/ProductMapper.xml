@@ -157,9 +157,6 @@
 		UPDATE tjd_product
 		SET
 		status = #{status}
-		,location = #{location}
-		,order_no = #{orderNo}
-		,color = #{color}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}

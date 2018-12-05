@@ -72,7 +72,9 @@ public class SYSRoleAOImpl implements ISYSRoleAO {
     @Override
     public Paginable<SYSRole> querySYSRolePage(int start, int limit,
             SYSRole condition) {
-        return sysRoleBO.getPaginable(start, limit, condition);
+        Paginable<SYSRole> page = sysRoleBO.getPaginable(start, limit,
+            condition);
+        return page;
     }
 
     /** 

@@ -124,7 +124,8 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                 .getApplyUser());
             Coupon rule = couponBO.getCoupon(ECouponType.BORROW,
                 borrow.getCompanyCode());
-            if (ECouponStatus.OPEN.getCode().equals(rule.getStatus())
+            if (rule != null
+                    && ECouponStatus.OPEN.getCode().equals(rule.getStatus())
                     && rule.getCondition() - orders.size() == 1) {
                 userCouponBO.saveUserCoupon(borrow.getApplyUser(), rule,
                     "程序自动发放", "成功借还" + rule.getCondition().toString()
@@ -174,7 +175,9 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                     .getApplyUser());
                 Coupon counpon = couponBO.getCoupon(ECouponType.BORROW,
                     order.getCompanyCode());
-                if (ECouponStatus.OPEN.getCode().equals(counpon.getStatus())
+                if (counpon != null
+                        && ECouponStatus.OPEN.getCode().equals(
+                            counpon.getStatus())
                         && counpon.getCondition() - orders.size() == 1) {
                     userCouponBO.saveUserCoupon(order.getApplyUser(), counpon,
                         "程序自动发放", "成功借还" + counpon.getCondition().toString()
@@ -190,8 +193,8 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                     staging.getMainAmount().add(lxAmount), approver);
             } else {
                 // 更新借款订单还款金额
-                borrowOrderBO.refreshStageRepay(order, staging.getMainAmount()
-                    .add(lxAmount), approver);
+                borrowOrderBO.refreshStageRepay(order, staging.getMainAmount(),
+                    staging.getMainAmount().add(lxAmount), approver);
             }
             stagingBO.refreshRepay(staging.getCode(),
                 EPayType.OFFLINE.getCode(), repayApply.getCode(),
@@ -269,7 +272,8 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         // 计息天数
         int days = DateUtil.daysBetween(staging.getStartPayDate(), new Date()) + 1;
         // 计算利息
-        BigDecimal lxAmount = new BigDecimal(days).multiply(staging.getRate());
+        BigDecimal lxAmount = new BigDecimal(days).multiply(staging.getRate())
+            .multiply(staging.getMainAmount());
         // 还款金额
         BigDecimal payAmount = staging.getMainAmount().add(lxAmount);
 

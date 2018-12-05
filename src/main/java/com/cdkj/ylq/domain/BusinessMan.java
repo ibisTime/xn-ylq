@@ -85,6 +85,16 @@ public class BusinessMan extends ABaseDO {
     // 账户
     private Account account;
 
+    private Company company;
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     public Account getAccount() {
         return account;
     }

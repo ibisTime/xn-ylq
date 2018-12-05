@@ -6,6 +6,7 @@
 		<result column="code" property="code" />
 		<result column="user_id" property="userId" />
 		<result column="name" property="name" />
+		<result column="logo" property="logo" />
 		<result column="charger" property="charger" />
 		<result column="charge_mobile" property="chargeMobile" />
 		
@@ -55,6 +56,7 @@
 		t.code
 		,t.user_id
 		,t.name
+		,t.logo
 		,t.charger
 		,t.charge_mobile
 		
@@ -95,6 +97,7 @@
 		code
 		,user_id
 		,name
+		,logo
 		,charger
 		,charge_mobile
 		
@@ -118,6 +121,7 @@
 		#{code}
 		,#{userId}
 		,#{name}
+		,#{logo}
 		,#{charger}
 		,#{chargeMobile}
 		

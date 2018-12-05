@@ -18,15 +18,6 @@ public class XN623002Req {
     // 编号（必填）
     private String code;
 
-    // UI位置（必填）
-    private String uiLocation;
-
-    // UI顺序（必填）
-    private String uiOrder;
-
-    // UI颜色（必填）
-    private String uiColor;
-
     // 最后更新人（必填）
     private String updater;
 
@@ -39,30 +30,6 @@ public class XN623002Req {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getUiLocation() {
-        return uiLocation;
-    }
-
-    public void setUiLocation(String uiLocation) {
-        this.uiLocation = uiLocation;
-    }
-
-    public String getUiOrder() {
-        return uiOrder;
-    }
-
-    public void setUiOrder(String uiOrder) {
-        this.uiOrder = uiOrder;
-    }
-
-    public String getUiColor() {
-        return uiColor;
-    }
-
-    public void setUiColor(String uiColor) {
-        this.uiColor = uiColor;
     }
 
     public String getUpdater() {

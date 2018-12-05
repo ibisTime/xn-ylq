@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.IWithdrawBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
@@ -22,6 +23,7 @@ import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.Withdraw;
 import com.cdkj.ylq.enums.EChannelType;
 import com.cdkj.ylq.enums.ECurrency;
+import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.enums.EWithdrawStatus;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.EBizErrorCode;
@@ -35,6 +37,9 @@ public class WithdrawBOImpl extends PaginableBOImpl<Withdraw> implements
 
     @Autowired
     ISYSConfigBO sysConfigBO;
+
+    @Autowired
+    private IBusinessManBO businessManBO;
 
     @Override
     public String applyOrder(Account account, BigDecimal amount,
@@ -125,7 +130,8 @@ public class WithdrawBOImpl extends PaginableBOImpl<Withdraw> implements
             throw new BizException("xn000000", "上笔取现申请还未处理成功，不能再次申请");
         }
 
-        Map<String, String> argsMap = sysConfigBO.getConfigsMap(null);
+        Map<String, String> argsMap = sysConfigBO.getConfigsMap(null,
+            ESystemCode.YLQ.getCode());
         String qxbs = SysConstants.USERQXBS; // 取现倍数
         String qxfl = SysConstants.USERQXFL; // 取现手续费率
         String monthTimesKey = SysConstants.USERMONTIMES;// 本月申请次数是否达到上限

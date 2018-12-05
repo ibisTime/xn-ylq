@@ -323,9 +323,9 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
     }
 
     @Override
-    public void refreshStageRepay(BorrowOrder order, BigDecimal amount,
-            String updater) {
-        order.setTotalAmount(order.getTotalAmount().subtract(amount));
+    public void refreshStageRepay(BorrowOrder order, BigDecimal mainAmount,
+            BigDecimal amount, String updater) {
+        order.setTotalAmount(order.getTotalAmount().subtract(mainAmount));
         order.setPayType(EPayType.OFFLINE.getCode());
         order.setRealHkAmount(order.getRealHkAmount().add(amount));
         order.setRepayCount(order.getRepayCount() + 1);

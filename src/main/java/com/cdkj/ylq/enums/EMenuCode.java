@@ -11,7 +11,7 @@ import java.util.Map;
 public enum EMenuCode {
     borrow("SM201707261741263791893", "借条菜单编号"),
 
-    way("SM2018120117265880380149", "导流菜单编号"),
+    way("SM2018121319024036412067", "导流菜单编号"),
 
     risk("SM2018120604520596132802", "风控菜单编号");
     public static Map<String, EMenuCode> getMap() {

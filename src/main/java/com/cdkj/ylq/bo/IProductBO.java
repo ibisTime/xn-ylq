@@ -11,8 +11,7 @@ public interface IProductBO extends IPaginableBO<Product> {
 
     public int refreshProduct(Product data);
 
-    public int putOn(Product data, String uiLocation, int uiOrder,
-            String uiColor, String updater, String remark);
+    public int putOn(Product data, String updater, String remark);
 
     public int putOff(Product data, String updater, String remark);
 

@@ -59,6 +59,28 @@ public class XN630100Req {
 
     private String isAdmin;
 
+    @NotBlank
+    private String appName;
+
+    @NotBlank
+    private String logo;
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
     public String getIsAdmin() {
         return isAdmin;
     }

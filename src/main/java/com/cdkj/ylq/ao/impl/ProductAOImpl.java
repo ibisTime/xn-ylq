@@ -166,14 +166,12 @@ public class ProductAOImpl implements IProductAO {
     }
 
     @Override
-    public int putOn(String code, String uiLocation, int uiOrder,
-            String uiColor, String updater, String remark) {
+    public int putOn(String code, String updater, String remark) {
         Product data = productBO.getProduct(code);
         if (!EProductStatus.OFF.getCode().equals(data.getStatus())) {
             throw new BizException("xn623001", "产品不处于可开启的状态，不能上架");
         }
-        return productBO.putOn(data, uiLocation, uiOrder, uiColor, updater,
-            remark);
+        return productBO.putOn(data, updater, remark);
     }
 
     @Override

@@ -17,15 +17,14 @@ public class XN623090Req extends APageReq {
 
     private static final long serialVersionUID = -7585865863094749310L;
 
-    // 关联编号（必填）
-    private String borrowCode;
+    private String companyCode;
 
-    public String getBorrowCode() {
-        return borrowCode;
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setBorrowCode(String borrowCode) {
-        this.borrowCode = borrowCode;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
 }

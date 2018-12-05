@@ -25,6 +25,7 @@ import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.dao.ISYSMenuDAO;
 import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.BusinessMan;
+import com.cdkj.ylq.domain.Company;
 import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.SYSDict;
 import com.cdkj.ylq.domain.SYSMenu;
@@ -140,7 +141,8 @@ public class BusinessManAOImpl implements IBusinessManAO {
         req.setRoleCode(roleCode);
         String userId = businessManBO.saveBusinessMan(req);
         // 开设公司
-        companyBO.saveCompany(userId, companyCode);
+        companyBO.saveCompany(userId, companyCode, req.getAppName(),
+            req.getLogo());
         // 分配账户
         Account account = accountBO.distributeAccount(userId,
             EAccountType.BUSINESS, ECurrency.CNY.getCode());
@@ -233,7 +235,11 @@ public class BusinessManAOImpl implements IBusinessManAO {
         String userId = businessMan.getUserId();
         String companyCode = businessMan.getCompanyCode();
         String rootMenuCode = sysMenuBO.getRootMenu(companyCode).getCode();
-        return new XN630101Res(userId, companyCode, rootMenuCode);
+        Company company = companyBO.getCompany(companyCode);
+        // 组装出参
+        return new XN630101Res(userId, companyCode, rootMenuCode,
+            boss.getIsJt(), boss.getIsFk(), boss.getIsDl(), company.getName(),
+            company.getLogo());
     }
 
     @Override
@@ -284,6 +290,13 @@ public class BusinessManAOImpl implements IBusinessManAO {
 
     @Override
     public BusinessMan getBusinessManByCompanyCode(String companyCode) {
-        return businessManBO.getBusinessManByCompanyCode(companyCode);
+        BusinessMan man = businessManBO
+            .getBusinessManByCompanyCode(companyCode);
+        man.setCompany(companyBO.getCompany(companyCode));
+        BusinessMan boss = businessManBO.getBusinessManByCompanyCode(man
+            .getCompanyCode());
+        man.setAccount(accountBO.getAccountByUser(boss.getUserId(),
+            ECurrency.CNY.getCode()));
+        return man;
     }
 }

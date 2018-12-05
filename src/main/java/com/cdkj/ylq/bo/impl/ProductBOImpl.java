@@ -54,11 +54,7 @@ public class ProductBOImpl extends PaginableBOImpl<Product> implements
     }
 
     @Override
-    public int putOn(Product data, String uiLocation, int uiOrder,
-            String uiColor, String updater, String remark) {
-        data.setLocation(uiLocation);
-        data.setOrderNo(uiOrder);
-        data.setColor(uiColor);
+    public int putOn(Product data, String updater, String remark) {
         data.setStatus(EProductStatus.ON.getCode());
         data.setUpdater(updater);
         data.setUpdateDatetime(new Date());

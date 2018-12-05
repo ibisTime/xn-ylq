@@ -46,6 +46,16 @@ public class XN623085Req extends APageReq {
     // 放款方式
     private String loanType;
 
+    private String companyCode;
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
     public String getLoanType() {
         return loanType;
     }
