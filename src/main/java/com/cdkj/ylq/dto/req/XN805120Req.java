@@ -102,6 +102,16 @@ public class XN805120Req extends APageReq {
     // 系统编号(必填)
     private String systemCode;
 
+    private String keyword;
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
     public String getIsBlackList() {
         return isBlackList;
     }

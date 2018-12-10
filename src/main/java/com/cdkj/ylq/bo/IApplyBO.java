@@ -34,4 +34,6 @@ public interface IApplyBO extends IPaginableBO<Apply> {
 
     public void refreshCurrentApplyStatus(String userId, EApplyStatus status);
 
+    public void refreshCreditScore(String userId, BigDecimal amount);
+
 }

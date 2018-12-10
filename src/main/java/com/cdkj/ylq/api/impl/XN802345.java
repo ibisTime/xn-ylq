@@ -34,6 +34,7 @@ public class XN802345 extends AProcessor {
         condition.setAccountNumber(req.getAccountNumber());
         condition.setAccountType(req.getAccountType());
         condition.setCurrency(req.getCurrency());
+        condition.setRealName(req.getRealName());
         if (CollectionUtils.isNotEmpty(req.getCurrencyList())) {
             condition.setCurrencyList(req.getCurrencyList());
         }

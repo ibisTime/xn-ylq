@@ -35,6 +35,7 @@ import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.core.StringValidater;
+import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.Apply;
 import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.domain.Certification;
@@ -45,6 +46,7 @@ import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.InfoOccupation;
 import com.cdkj.ylq.domain.InfoZfb;
 import com.cdkj.ylq.domain.InfoZqzn;
+import com.cdkj.ylq.domain.MxAlipayNotification;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.domain.User;
@@ -122,6 +124,7 @@ public class CertificationAOImpl implements ICertificationAO {
     @Transactional
     public InfoZqzn doZqznVerify(String userId, String frontImage,
             String backImage, String faceImage) {
+        Date now = new Date();
         User user = userBO.getUser(userId);
         XN798650Req req = new XN798650Req();
         req.setFaceImage(qiniu(faceImage));
@@ -135,11 +138,15 @@ public class CertificationAOImpl implements ICertificationAO {
             ECertiKey.INFO_ZQZN);
         // 认证成功
         if (infoZqzn.getZqznInfoRealAuth().getVerifyStatus() == 1) {
+            Integer config = sysConfigBO.getIntegerValue(
+                SysConstants.IDENTIFY_VALID_DAYS, user.getCompanyCode());
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
                 certification.setResult(JsonUtil.Object2Json(infoZqzn));
-                certification.setCerDatetime(new Date());
+                certification.setCerDatetime(now);
                 certification.setRef("");
+                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                    now, config));
                 certificationBO.refreshCertification(certification);
             }
             if (certificationBO.isCompleteCerti(userId)) {
@@ -156,18 +163,17 @@ public class CertificationAOImpl implements ICertificationAO {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "认证失败，失败原因为:" + infoZqzn.getZqznInfoRealAuth().getReason());
         }
-        // BigDecimal fee = sysConfigBO.getBigDecimalValue(
-        // ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
-        Long id = certRecordBO.saveCertRecord(userId, new BigDecimal(1500),
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(
+            ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
+        Long id = certRecordBO.saveCertRecord(userId, fee,
             ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
         // 接口费用
         BusinessMan man = businessManBO.getBusinessManByCompanyCode(user
             .getCompanyCode());
         accountBO.transAmount(man.getUserId(), ESysUser.SYS_USER.getCode(),
-            ECurrency.CNY.getCode(), new BigDecimal(1500),
-            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.API.getCode(),
-            EJourBizTypeBoss.API.getValue(), EJourBizTypePlat.API.getValue(),
-            id.toString());
+            ECurrency.CNY.getCode(), fee, EJourBizTypeBoss.API.getCode(),
+            EJourBizTypePlat.API.getCode(), EJourBizTypeBoss.API.getValue(),
+            EJourBizTypePlat.API.getValue(), id.toString());
         return infoZqzn;
     }
 
@@ -183,13 +189,13 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         }
-        if (certificationBO.isCompleteCerti(req.getUserId())) {
-            Apply apply = applyBO.getInCertApply(req.getUserId());
-            if (apply != null) {
-                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
-                applyBO.refreshStatus(apply);
-            }
-        }
+        // if (certificationBO.isCompleteCerti(req.getUserId())) {
+        // Apply apply = applyBO.getInCertApply(req.getUserId());
+        // if (apply != null) {
+        // apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+        // applyBO.refreshStatus(apply);
+        // }
+        // }
     }
 
     @Override
@@ -204,13 +210,13 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         }
-        if (certificationBO.isCompleteCerti(req.getUserId())) {
-            Apply apply = applyBO.getInCertApply(req.getUserId());
-            if (apply != null) {
-                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
-                applyBO.refreshStatus(apply);
-            }
-        }
+        // if (certificationBO.isCompleteCerti(req.getUserId())) {
+        // Apply apply = applyBO.getInCertApply(req.getUserId());
+        // if (apply != null) {
+        // apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+        // applyBO.refreshStatus(apply);
+        // }
+        // }
     }
 
     @Override
@@ -225,13 +231,13 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         }
-        if (certificationBO.isCompleteCerti(req.getUserId())) {
-            Apply apply = applyBO.getInCertApply(req.getUserId());
-            if (apply != null) {
-                apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
-                applyBO.refreshStatus(apply);
-            }
-        }
+        // if (certificationBO.isCompleteCerti(req.getUserId())) {
+        // Apply apply = applyBO.getInCertApply(req.getUserId());
+        // if (apply != null) {
+        // apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+        // applyBO.refreshStatus(apply);
+        // }
+        // }
     }
 
     @Override
@@ -253,11 +259,12 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setRef("");
                 certificationBO.refreshCertification(certification);
             }
-            Apply apply = applyBO.getCurrentApply(userId);
-            if (apply != null
-                    && EApplyStatus.TO_CERTI.getCode()
-                        .equals(apply.getStatus())) {
-                applyBO.toDoApprove(apply);
+            if (certificationBO.isCompleteCerti(userId)) {
+                Apply apply = applyBO.getInCertApply(userId);
+                if (apply != null) {
+                    apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                    applyBO.refreshStatus(apply);
+                }
             }
         }
         return mxReportData;
@@ -323,24 +330,125 @@ public class CertificationAOImpl implements ICertificationAO {
             SysConstants.CARRIER_VALID_DAYS, certification.getCompanyCode());
         // 认证成功
         if (notification.isResult()) {
-            String report = getMxReport(notification.getMobile(),
-                notification.getTask_id(), certification.getCompanyCode());
+            String report = getMxCarrierReport(notification.getMobile(),
+                notification.getTask_id(), ESystemCode.YLQ.getCode());
             if (certification != null) {
                 certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-                certification.setResult(JsonUtil.Object2Json(notification));
+                certification.setResult(report);
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                     DateUtil.getTodayStart(), config));
-                certification.setRef(report);
+                certification.setRef(notification.getTask_id());
                 certificationBO.refreshCertification(certification);
             }
-            Apply apply = applyBO.getCurrentApply(userId);
-            if (apply != null
-                    && EApplyStatus.TO_CERTI.getCode()
-                        .equals(apply.getStatus())) {
-                applyBO.toDoApprove(apply);
+            if (certificationBO.isCompleteCerti(userId)) {
+                Apply apply = applyBO.getInCertApply(userId);
+                if (apply != null) {
+                    apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                    applyBO.refreshStatus(apply);
+                }
+            }
+        } else {
+            if (certification != null) {
+                certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+                certification.setResult("认证失败，原因为" + notification.getMessage());
+                certification.setRef(notification.getTask_id());
+                certificationBO.refreshCertification(certification);
             }
         }
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(
+            ECertiKey.INFO_CARRIER.getCode(), certification.getCompanyCode());
+        Long id = certRecordBO.saveCertRecord(userId, fee,
+            ECertiKey.INFO_CARRIER.getCode(), certification.getCompanyCode());
+        // 接口费用
+        BusinessMan man = businessManBO
+            .getBusinessManByCompanyCode(certification.getCompanyCode());
+        accountBO.transAmount(man.getUserId(), ESysUser.SYS_USER.getCode(),
+            ECurrency.CNY.getCode(), fee, EJourBizTypeBoss.API.getCode(),
+            EJourBizTypePlat.API.getCode(), EJourBizTypeBoss.API.getValue(),
+            EJourBizTypePlat.API.getValue(), id.toString());
+    }
+
+    // 魔蝎支付宝登录完成回掉处理
+    @Override
+    public void doMxAlipayTaskCallback(MxAlipayNotification notification) {
+        logger.info("***************魔蝎支付宝登录成功通知***************");
+        String userId = notification.getUser_id();
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_ZHIFUBAO);
+        if (certification != null) {
+            if (notification.getResult()) {
+                certificationBO.refreshFlag(certification,
+                    ECertificationStatus.CERTING);
+            } else {
+                certificationBO.refreshFlag(certification,
+                    ECertificationStatus.TO_CERTI);
+            }
+        }
+
+    }
+
+    // 魔蝎支付宝采集任务失败通知回调处理
+    @Override
+    public void doMxAlipayTaskFailCallback(MxAlipayNotification notification) {
+        logger.info("***************魔蝎支付宝信息采集失败通知****************");
+        String userId = notification.getUser_id();
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_ZHIFUBAO);
+        if (certification != null) {
+            certificationBO.refreshFlag(certification,
+                ECertificationStatus.TO_CERTI);
+        }
+    }
+
+    // 魔蝎支付宝资信报告通知回掉处理
+    @Override
+    @Transactional
+    public void doMxAlipayReportCallback(MxAlipayNotification notification) {
+        logger.info("***************魔蝎支付宝信息采集通知***************");
+        String userId = notification.getUser_id();
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_ZHIFUBAO);
+        Integer config = sysConfigBO.getIntegerValue(
+            SysConstants.Alipay_VALID_DAYS, certification.getCompanyCode());
+        if (notification.getResult()) {
+            String report = getMxAlipayReport(notification.getTask_id(),
+                ESystemCode.YLQ.getCode());
+            if (certification != null) {
+                certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
+                certification.setResult(report);
+                certification.setCerDatetime(new Date());
+                certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+                    DateUtil.getTodayStart(), config));
+                certification.setRef(notification.getTask_id());
+                certificationBO.refreshCertification(certification);
+            }
+            if (certificationBO.isCompleteCerti(userId)) {
+                Apply apply = applyBO.getInCertApply(userId);
+                if (apply != null) {
+                    apply.setStatus(EApplyStatus.TO_APPROVE.getCode());
+                    applyBO.refreshStatus(apply);
+                }
+            }
+        } else {
+            if (certification != null) {
+                certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+                certification.setResult("认证失败，原因为" + notification.getMessage());
+                certification.setRef(notification.getTask_id());
+                certificationBO.refreshCertification(certification);
+            }
+        }
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(
+            ECertiKey.INFO_ZHIFUBAO.getCode(), certification.getCompanyCode());
+        Long id = certRecordBO.saveCertRecord(userId, fee,
+            ECertiKey.INFO_ZHIFUBAO.getCode(), certification.getCompanyCode());
+        // 接口费用
+        BusinessMan man = businessManBO
+            .getBusinessManByCompanyCode(certification.getCompanyCode());
+        accountBO.transAmount(man.getUserId(), ESysUser.SYS_USER.getCode(),
+            ECurrency.CNY.getCode(), fee, EJourBizTypeBoss.API.getCode(),
+            EJourBizTypePlat.API.getCode(), EJourBizTypeBoss.API.getValue(),
+            EJourBizTypePlat.API.getValue(), id.toString());
     }
 
     @Override
@@ -719,14 +827,19 @@ public class CertificationAOImpl implements ICertificationAO {
             .queryCertificationList(condition);
         if (CollectionUtils.isNotEmpty(certificationList)) {
             for (Certification certification : certificationList) {
-                if (ECertiKey.INFO_BASIC.getCode().equals(
-                    certification.getCertiKey())
-                        || ECertiKey.INFO_CONTACT.getCode().equals(
-                            certification.getCertiKey())
-                        || ECertiKey.INFO_OCCUPATION.getCode().equals(
-                            certification.getCertiKey())) {
-                    Certification personal = certificationBO.getCertification(
-                        certification.getUserId(), ECertiKey.INFO_PERSONAL);
+                if (ECertiKey.INFO_PERSONAL.getCode().equals(
+                    certification.getCertiKey())) {
+                    Certification basic = certificationBO.getCertification(
+                        certification.getUserId(), ECertiKey.INFO_BASIC);
+                    Certification occupation = certificationBO
+                        .getCertification(certification.getUserId(),
+                            ECertiKey.INFO_OCCUPATION);
+                    Certification contact = certificationBO.getCertification(
+                        certification.getUserId(), ECertiKey.INFO_CONTACT);
+                    certificationBO.makeInvalid(basic);
+                    certificationBO.makeInvalid(occupation);
+                    certificationBO.makeInvalid(contact);
+
                 }
                 certificationBO.makeInvalid(certification);
                 // 如果额度失效，用户还未使用该额度，则将产品重置可申请
@@ -746,9 +859,10 @@ public class CertificationAOImpl implements ICertificationAO {
         logger.info("***************结束扫描认证结果***************");
     }
 
-    private String getMxReport(String mobile, String taskId, String companyCode) {
+    private String getMxCarrierReport(String mobile, String taskId,
+            String companyCode) {
         String report = null;
-        String url = sysConfigBO.getStringValue(SysConstants.MX_URL,
+        String url = sysConfigBO.getStringValue(SysConstants.MX_CARRIER_URL,
             companyCode);
         String token = sysConfigBO.getStringValue(SysConstants.MX_TOKEN,
             companyCode);
@@ -758,6 +872,24 @@ public class CertificationAOImpl implements ICertificationAO {
         try {
             logger.info(urlString);
             report = HttpUtil.requestGetGzip(urlString, null, formProperties);
+        } catch (Exception e) {
+            logger.error("获取魔蝎报告异常,原因：" + e.getMessage());
+        }
+        return report;
+    }
+
+    private String getMxAlipayReport(String taskId, String companyCode) {
+        String report = null;
+        String url = sysConfigBO.getStringValue(SysConstants.MX_ALIPAY_URL,
+            companyCode);
+        String token = sysConfigBO.getStringValue(SysConstants.MX_TOKEN,
+            companyCode);
+        String urlString = String.format(url, taskId);
+        Properties formProperties = new Properties();
+        formProperties.put("Authorization", "token " + token);
+        try {
+            logger.info(urlString);
+            report = HttpUtil.requestGet(urlString, null, formProperties);
         } catch (Exception e) {
             logger.error("获取魔蝎报告异常,原因：" + e.getMessage());
         }
@@ -825,7 +957,8 @@ public class CertificationAOImpl implements ICertificationAO {
     public void setCreditScore(String userId, BigDecimal creditScore) {
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_AMOUNT);
-        InfoAmount infoAmount = new InfoAmount();
+        InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
+            InfoAmount.class);
         infoAmount.setSxAmount(creditScore);
         Integer config = sysConfigBO.getIntegerValue(
             SysConstants.AMOUNT_VALID_DAYS, certification.getCompanyCode());
@@ -904,8 +1037,12 @@ public class CertificationAOImpl implements ICertificationAO {
         }
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_PERSONAL);
+        Integer days = sysConfigBO.getIntegerValue(
+            SysConstants.PERSONAL_VALID_DAYS, certification.getCompanyCode());
         certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
         certification.setResult("认证完毕");
+        certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
+            new Date(), days));
         certificationBO.refreshCertification(certification);
 
         if (certificationBO.isCompleteCerti(userId)) {
@@ -918,9 +1055,51 @@ public class CertificationAOImpl implements ICertificationAO {
 
     }
 
+    // public static String base64Hmac256(String payload, String secret) {
+    // try {
+    // Mac sha256Hmac = Mac.getInstance("HmacSHA256");
+    // SecretKeySpec secretKey = new SecretKeySpec(
+    // secret.getBytes("UTF-8"), "HmacSHA256");
+    // sha256Hmac.init(secretKey);
+    // return Base64.encodeBase64String(sha256Hmac.doFinal(payload
+    // .getBytes()));
+    // } catch (Exception ignored) {
+    // return "";
+    // }
+    // }
+
     public static void main(String[] args) {
-        Map<String, ECertiKey> keyMap = ECertiKey.getCertiKeyMap();
-        System.out.println(keyMap.get(ECertiKey.INFO_OCCUPATION.getCode())
-            .getValue() + "未完成认证");
+        Properties formProperties = new Properties();
+        String token = "53fdf4a17bde45e993b1bdc6c6c24b13";
+        formProperties.put("Authorization", "token " + token);
+        String urlString = "https://api.51datakey.com/carrier/v3/mobiles/18251859953/mxreport?task_id=4ebc3e80-f911-11e8-a585-00163e0e0050";
+        try {
+            logger.info(urlString);
+            String report = HttpUtil.requestGetGzip(urlString, null,
+                formProperties);
+            System.out.println(report);
+        } catch (Exception e) {
+            logger.error("获取魔蝎报告异常,原因：" + e.getMessage());
+        }
+
+    }
+
+    @Override
+    public List<Certification> queryCertificationList(String userId) {
+        return certificationBO.queryCertiedList(userId);
+    }
+
+    @Override
+    public void checkAmount(String key, String userId) {
+        User user = userBO.getUser(userId);
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(key,
+            user.getCompanyCode());
+        BusinessMan boss = businessManBO.getBusinessBoss(user.getCompanyCode());
+        Account account = accountBO.getAccountByUser(boss.getUserId(),
+            ECurrency.CNY.getCode());
+        if (account.getAmount().compareTo(fee) < 0) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                "认证服务出现了错误，请联系管理员");
+        }
     }
 }

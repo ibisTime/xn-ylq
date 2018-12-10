@@ -35,17 +35,13 @@
 	
 	<sql id="join_condition">
 		<if test="relaNameForQuery != null and relaNameForQuery != '' ">
-			left join tstd_user tu on t.user_id = tu.user_id
-			left join tsys_agent_user tau on t.user_id = tau.user_id
-			left join tsys_user ts on t.user_id = ts.user_id
+			left join tjd_business_man tu on t.user_id = tu.user_id
 		</if>
 	</sql>
 	
 	<sql id="relaNameForQuery_condition">
 		<if test="relaNameForQuery != null and relaNameForQuery != '' ">
-			AND (concat_ws('-', tu.real_name, tu.mobile) like "%"#{relaNameForQuery}"%" or 
-				concat_ws('-', tau.real_name, tau.mobile) like "%"#{relaNameForQuery}"%" or 
-				concat_ws('-', ts.real_name, ts.mobile) like "%"#{relaNameForQuery}"%")
+			AND tu.real_name like "%"#{relaNameForQuery}"%"
 		</if>
 	</sql>
 	

@@ -4,9 +4,9 @@ public class SysConstants {
 
     public static final String IDENTIFY_VALID_DAYS = "identifyValidDays"; // 身份认证有效天数
 
-    public static final String ANTIFRAUD_VALID_DAYS = "antifraudValidDays"; // 欺诈识别认证有效天数
+    public static final String PERSONAL_VALID_DAYS = "personalValidDays"; // 个人信息认证有效天数
 
-    public static final String ZMSCORE_VALID_DAYS = "zmScoreValidDays"; // 芝麻分认证有效天数
+    public static final String Alipay_VALID_DAYS = "alipayValidDays"; // 支付宝认证有效天数
 
     public static final String CARRIER_VALID_DAYS = "carrierValidDays"; // 运营商认证有效天数
 
@@ -26,9 +26,13 @@ public class SysConstants {
 
     public static final String YQLX_FD_RATE = "yqlxFdRate"; // 逾期利息封顶（本金乘以该数值）
 
-    public static final String MX_URL = "mxUrl"; // 魔蝎URL
+    public static final String MX_CARRIER_URL = "mxCarrierUrl"; // 魔蝎URL
+
+    public static final String MX_ALIPAY_URL = "mxAlipayUrl"; // 魔蝎URL
 
     public static final String MX_TOKEN = "mxToken"; // 魔蝎token
+
+    public static final String MX_SECRET = "mxSecret"; // 魔蝎secret
 
     public static final String SMS_CUISHOU = "smsCuishou"; // 催收短信
 

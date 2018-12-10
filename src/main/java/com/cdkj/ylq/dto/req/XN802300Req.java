@@ -38,6 +38,17 @@ public class XN802300Req extends APageReq {
     // 真实姓名模糊查
     private String relaNameForQuery;
 
+    // 户名模糊查询
+    private String keyword;
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
     public String getUserId() {
         return userId;
     }

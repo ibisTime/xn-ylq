@@ -68,6 +68,17 @@ public class XN802355Req extends APageReq {
     // 支付时间止
     private String payDateEnd;
 
+    // 户名模糊查
+    private String realName;
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
     public String getCode() {
         return code;
     }

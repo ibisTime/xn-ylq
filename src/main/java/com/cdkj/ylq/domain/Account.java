@@ -79,6 +79,16 @@ public class Account extends ABaseDO {
     // 系统编号
     private String systemCode;
 
+    private String keyword;
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
     public String getAccountNumber() {
         return accountNumber;
     }

@@ -40,7 +40,6 @@ public class XN630115 extends AProcessor {
         condition.setRoleCode(req.getRoleCode());
         condition.setUpdater(req.getUpdater());
         condition.setMobileForQuery(req.getKeyword());
-        condition.setRealNameForQuery(req.getKeyword());
         condition.setStatus(req.getStatus());
         condition.setIsJt(req.getIsJt());
         condition.setIsFk(req.getIsFk());

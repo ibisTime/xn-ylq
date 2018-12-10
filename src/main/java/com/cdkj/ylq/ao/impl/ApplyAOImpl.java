@@ -110,6 +110,7 @@ public class ApplyAOImpl implements IApplyAO {
             data.setApplyUser(applyUser);
             data.setApplyDatetime(now);
             data.setStatus(status);
+            data.setCreditScore(BigDecimal.ZERO);
             data.setUpdater(applyUser);
             data.setUpdateDatetime(now);
             data.setRemark("新申请");
@@ -210,46 +211,44 @@ public class ApplyAOImpl implements IApplyAO {
         Apply condition = new Apply();
         condition.setApplyUser(userId);
         List<Apply> applies = applyBO.queryApplyList(condition);
-        // 没有申请单，状态为0，不返回信用分
-        if (applies.isEmpty()) {
-            res.setStatus("0");
-        } else {
-            // 获得最新申请单
-            Apply data = null;
-            for (Apply apply : applies) {
-                data = apply;
-                break;
-            }
-            for (Apply apply : applies) {
-                if (apply.getApplyDatetime().after(data.getApplyDatetime())) {
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_AMOUNT);
+        InfoAmount infoAmount = JsonUtil.json2Bean(certification.getResult(),
+            InfoAmount.class);
+        if (certification != null) {
+            res.setCreditScore(infoAmount.getSxAmount());
+            // 没有申请单，状态为0
+            if (applies.isEmpty()) {
+                res.setStatus("0");
+            } else {
+                // 获得最新申请单
+                Apply data = null;
+                for (Apply apply : applies) {
                     data = apply;
+                    break;
                 }
-            }
-            res.setApply(data);
-            res.setStatus(data.getStatus());
-            // 状态为123时返回一样状态（认证中，待审核，已驳回）
-            if (!EApplyStatus.TO_APPROVE.getCode().equals(data.getStatus())
-                    && !EApplyStatus.TO_CERTI.getCode()
-                        .equals(data.getStatus())
-                    && !EApplyStatus.APPROVE_NO.getCode().equals(
-                        data.getStatus())) {
-                Certification certification = certificationBO.getCertification(
-                    userId, ECertiKey.INFO_AMOUNT);
-                InfoAmount infoAmount = new InfoAmount();
-                if (certification != null) {
-                    infoAmount = JsonUtil.json2Bean(certification.getResult(),
-                        InfoAmount.class);
+                for (Apply apply : applies) {
+                    if (apply.getApplyDatetime().after(data.getApplyDatetime())) {
+                        data = apply;
+                    }
+                }
+                res.setApply(data);
+                res.setStatus(data.getStatus());
+                // 状态为123时返回一样状态（认证中，待审核，已驳回）
+                if (!EApplyStatus.TO_APPROVE.getCode().equals(data.getStatus())
+                        && !EApplyStatus.TO_CERTI.getCode().equals(
+                            data.getStatus())
+                        && !EApplyStatus.APPROVE_NO.getCode().equals(
+                            data.getStatus())) {
+
                     if (infoAmount.getSxAmount().compareTo(BigDecimal.ZERO) == 0) {// 信用分使用完
                         res.setStatus("6");
-                        res.setCreditScore(infoAmount.getSxAmount());
                     } else if (ECertificationStatus.INVALID.getCode().equals(
                         certification.getFlag())) {// 信用分过期
                         res.setStatus("5");
-                        res.setCreditScore(infoAmount.getSxAmount());
                     } else if (ECertificationStatus.CERTI_YES.getCode().equals(
                         certification.getFlag())) {// 信用分未用且未过期
                         res.setStatus("4");
-                        res.setCreditScore(infoAmount.getSxAmount());
                         res.setValidDays(DateUtil.daysBetween(
                             DateUtil.getTodayStart(),
                             certification.getValidDatetime()));

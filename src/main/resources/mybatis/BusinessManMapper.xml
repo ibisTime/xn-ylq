@@ -58,7 +58,7 @@
 				AND t.role_code = #{roleCode}
 			</if>
 			<if test="mobileForQuery != null and mobileForQuery != '' ">
-				AND (t.mobile like "%"#{mobileForQuery}"%" or t.login_name like "%"#{mobileForQuery}"%")
+				AND (t.mobile like "%"#{mobileForQuery}"%" or t.real_name like "%"#{mobileForQuery}"%")
 			</if>
 			<if test="realNameForQuery != null and realNameForQuery != '' ">
 				AND t.real_name like "%"#{realNameForQuery}"%" 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.common.JsonUtil;
+import com.cdkj.ylq.domain.MxAlipayNotification;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 
 /** 
@@ -111,16 +112,29 @@ public class CallbackConroller {
 
             // 如果事件类型是report(用户报告通知)
             if (StringUtils.equals(eventName.toLowerCase(), "report")) {
-                try {
-                    MxCarrierNofification notification = JsonUtil.json2Bean(
-                        body, MxCarrierNofification.class);
-                    certificationAO.doMxCarrierReportCallback(notification);
-                } catch (Exception e) {
-                    logger.error("body convert to object error", e);
-                }
+                MxCarrierNofification notification = JsonUtil.json2Bean(body,
+                    MxCarrierNofification.class);
+                logger.info(notification.getUser_id());
+                logger.info("HEADER_MOXIE_EVENT:" + eventName);
+                logger.info("X-Moxie-Type:" + eventType);
+                certificationAO.doMxCarrierReportCallback(notification);
             }
         } else if (StringUtils.equalsIgnoreCase(eventType, "alipay")) {
-
+            if (StringUtils.equalsIgnoreCase(eventName, "task")) {
+                MxAlipayNotification notification = JsonUtil.json2Bean(body,
+                    MxAlipayNotification.class);
+                certificationAO.doMxAlipayTaskCallback(notification);
+            }
+            if (StringUtils.equalsIgnoreCase(eventName, "task.fail")) {
+                MxAlipayNotification notification = JsonUtil.json2Bean(body,
+                    MxAlipayNotification.class);
+                certificationAO.doMxAlipayTaskFailCallback(notification);
+            }
+            if (StringUtils.equalsIgnoreCase(eventName, "report")) {
+                MxAlipayNotification notification = JsonUtil.json2Bean(body,
+                    MxAlipayNotification.class);
+                certificationAO.doMxAlipayReportCallback(notification);
+            }
         } else {
             logger.error("暂未开通此业务");
         }

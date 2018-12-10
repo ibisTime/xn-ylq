@@ -32,6 +32,19 @@
 		<result column="pay_fee" property="payFee" />
 		<result column="pay_datetime" property="payDatetime" />
 	</resultMap>
+	
+	<sql id="join_condition">
+		<if test="realName != null and realName != '' ">
+			left join tjd_business_man m on t.apply_user = m.user_id
+		</if>
+	</sql>
+	
+	<sql id="where_realname_condition">
+			<if test="realName != null and realName != '' ">
+				AND concat_ws('-', m.real_name, m.mobile) like "%"#{realName}"%"
+			</if>
+	</sql>
+	
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="code != null and code != '' ">
@@ -118,8 +131,12 @@
 			<if test="payDatetimeEnd != null and payDatetimeEnd != '' ">
 				<![CDATA[AND t.pay_datetime <= #{payDatetimeEnd}]]>
 			</if>
+			<if test="realName != null and realName != '' ">
+				AND m.real_name like "%"#{realName}"%"
+			</if>
 		</trim>
 	</sql>
+	
 	<select id="select_withdraw" parameterType="withdraw" resultMap="withdraw_DB_Result">
 		SELECT
 		t.code
@@ -151,8 +168,10 @@
 		,t.pay_fee
 		,t.pay_datetime
 		FROM
-		tstd_withdraw t
+		tstd_withdraw t 
 		<include refid="where_condition" />
+		<include refid="where_condition" />
+		<include refid="where_realname_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
 				t.${order}

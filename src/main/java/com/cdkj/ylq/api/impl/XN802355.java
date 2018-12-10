@@ -48,6 +48,7 @@ public class XN802355 extends AProcessor {
 
         condition.setPayUser(req.getPayUser());
         condition.setChannelOrder(req.getChannelOrder());
+        condition.setRealName(req.getRealName());
 
         condition.setApplyDatetimeStart(DateUtil.getFrontDate(
             req.getApplyDateStart(), false));

@@ -39,6 +39,19 @@
 		<result column="is_coupon" property="isCoupon" />
 		<result column="company_code" property="companyCode" />
 	</resultMap>
+	
+	<sql id="join_condition">
+		<if test="keyword != null and keyword != ''">
+			left join tjd_business_man tu on t.company_code = tu.company_code 
+		</if>
+	</sql>
+	
+	<sql id="mobileForQuery_condition">
+		<if test="keyword != null and keyword != '' ">
+			AND tu.mobile like "%"#{keyword}"%" OR tu.real_name like "%"#{keyword}"%"
+		</if>
+	</sql>
+	
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">			
 			<if test="userId != null and userId != '' ">
@@ -142,7 +155,9 @@
 		,t.company_code
 		FROM
 		tstd_user t
+		<include refid="join_condition"/>
 		<include refid="where_condition"/>
+		<include refid="mobileForQuery_condition"/>
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
 				${order}
@@ -152,7 +167,9 @@
 
 	<select id="select_user_count" parameterType="user" resultType="java.lang.Long">
 		SELECT count(1) FROM tstd_user t 
+		<include refid="join_condition"/>
 		<include refid="where_condition"/>
+		<include refid="mobileForQuery_condition"/>
 	</select>
 
 	<insert id="insert_user" parameterType="user">

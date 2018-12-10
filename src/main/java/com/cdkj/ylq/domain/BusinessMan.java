@@ -87,6 +87,16 @@ public class BusinessMan extends ABaseDO {
 
     private Company company;
 
+    // private String keyword;
+    //
+    // public String getKeyword() {
+    // return keyword;
+    // }
+    //
+    // public void setKeyword(String keyword) {
+    // this.keyword = keyword;
+    // }
+
     public Company getCompany() {
         return company;
     }

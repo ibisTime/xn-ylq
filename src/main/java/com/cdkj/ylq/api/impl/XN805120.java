@@ -43,6 +43,7 @@ public class XN805120 extends AProcessor {
         condition.setLatitude(req.getLatitude());
         condition.setIsBlackList(req.getIsBlackList());
         condition.setIsWhiteList(req.getIsWhiteList());
+        condition.setKeyword(req.getKeyword());
         condition.setCreateDatetimeStart(DateUtil.getFrontDate(
             req.getCreateDatetimeStart(), false));
         condition.setCreateDatetimeEnd(DateUtil.getFrontDate(

@@ -123,7 +123,7 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
     public int resubmitLoan(BorrowOrder borrow) {
         int count = 0;
         if (borrow != null) {
-            borrow.setStatus(EBorrowStatus.TO_APPROVE.getCode());
+            borrow.setStatus(EBorrowStatus.APPROVE_YES.getCode());
             count = borrowOrderDAO.updateResubmitLoan(borrow);
         }
         return count;

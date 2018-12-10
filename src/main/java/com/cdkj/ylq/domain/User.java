@@ -157,6 +157,28 @@ public class User extends ABaseDO {
 
     private Long refereeCount;
 
+    // 是否实名认证
+    private String isCert;
+
+    // 所属借款商
+    private String keyword;
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public String getIsCert() {
+        return isCert;
+    }
+
+    public void setIsCert(String isCert) {
+        this.isCert = isCert;
+    }
+
     public Long getCouponCount() {
         return couponCount;
     }

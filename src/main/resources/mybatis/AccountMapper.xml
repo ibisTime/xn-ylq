@@ -19,24 +19,18 @@
 		<result column="out_amount" property="outAmount" />
 		<result column="create_datetime" property="createDatetime" />	
 		<result column="last_order" property="lastOrder" />
+		<result column="company_code" property="companyCode" />
 	</resultMap>
 	
 	<sql id="join_condition">
-		<if test="(mobileForQuery != null and mobileForQuery != '') or  (relaNameForQuery != null and relaNameForQuery != '' )">
-			left join tstd_user tu on t.user_id = tu.user_id
-			left join tsys_agent_user tau on t.user_id = tau.user_id
-			left join tsys_user ts on t.user_id = ts.user_id
+		<if test="keyword != null and keyword != ''">
+			left join tjd_business_man tu on t.user_id = tu.user_id
 		</if>
 	</sql>
 	
 	<sql id="mobileForQuery_condition">
-		<if test="mobileForQuery != null and mobileForQuery != '' ">
-			AND (tu.mobile like "%"#{mobileForQuery}"%" or tu.mobile like "%"#{mobileForQuery}"%" or tu.mobile like "%"#{mobileForQuery}"%")
-		</if>
-		<if test="relaNameForQuery != null and relaNameForQuery != '' ">
-			AND (concat_ws('-', tu.real_name, tu.mobile) like "%"#{relaNameForQuery}"%" or 
-				concat_ws('-', tau.real_name, tau.mobile) like "%"#{relaNameForQuery}"%" or 
-				concat_ws('-', ts.real_name, ts.mobile) like "%"#{relaNameForQuery}"%")
+		<if test="keyword != null and keyword != '' ">
+			AND tu.mobile like "%"#{keyword}"%" OR tu.real_name like "%"#{keyword}"%"
 		</if>
 	</sql>
 	
@@ -103,7 +97,9 @@
 		
 		FROM
 		tstd_account t
+		<include refid="join_condition"/>
 		<include refid="where_condition"/>
+		<include refid="mobileForQuery_condition"/>
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
 				t.${order}
@@ -124,7 +120,9 @@
 
 	<select id="select_account_count" parameterType="account" resultType="java.lang.Long">
 		SELECT count(1) FROM tstd_account t 
+		<include refid="join_condition"/>
 		<include refid="where_condition"/>
+		<include refid="mobileForQuery_condition"/>
 	</select>
 	
 	<insert id="insert_account" parameterType="account">

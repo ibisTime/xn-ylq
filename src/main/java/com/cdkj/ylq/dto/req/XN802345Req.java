@@ -66,6 +66,17 @@ public class XN802345Req extends APageReq {
     // 渠道订单号
     private String channelOrder;
 
+    // 户名
+    private String realName;
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
     public String getCode() {
         return code;
     }

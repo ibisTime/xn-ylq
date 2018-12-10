@@ -18,10 +18,20 @@ public class MxAlipayNotification {
     private String account;
 
     // 结果
-    private String result;
+    private boolean result;
 
     // 信息描述
     private String message;
+
+    private long timestamp;
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public String getTask_id() {
         return task_id;
@@ -63,11 +73,11 @@ public class MxAlipayNotification {
         this.account = account;
     }
 
-    public String getResult() {
+    public boolean getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(boolean result) {
         this.result = result;
     }
 

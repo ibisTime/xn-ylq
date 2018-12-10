@@ -30,6 +30,18 @@
 		<result column="channel_order" property="channelOrder" />
 		
 	</resultMap>
+	
+	<sql id="join_condition">
+		<if test="realName != null and realName != '' ">
+			left join tjd_business_man m on t.apply_user = m.user_id
+		</if>
+	</sql>
+	
+	<sql id="where_realname_condition">
+			<if test="realName != null and realName != '' ">
+				AND m.mobile like "%"#{realName}"%" OR m.real_name like "%"#{realName}"%"
+			</if>
+	</sql>
 
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -128,7 +140,9 @@
 		
 		FROM
 		tstd_charge t
+		<include refid="join_condition" />
 		<include refid="where_condition" />
+		<include refid="where_realname_condition" />
 		<trim prefix="ORDER BY ">
 			<if test="order != null and order != '' ">
 				t.${order}
@@ -138,7 +152,9 @@
 
 	<select id="select_charge_count" parameterType="charge" resultType="java.lang.Long">
 		SELECT count(1) FROM tstd_charge t
+		<include refid="join_condition" />
 		<include refid="where_condition" />
+		<include refid="where_realname_condition" />
 	</select>
 	
 	<insert id="insert_charge" parameterType="charge" useGeneratedKeys="true" keyProperty="id">

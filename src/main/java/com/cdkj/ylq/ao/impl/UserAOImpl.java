@@ -727,6 +727,12 @@ public class UserAOImpl implements IUserAO {
         // 信用分返回
         user.setCreditScore(certificationAO.getMyCreditAmount(user.getUserId())
             .getSxAmount());
+        // 是否实名认证
+        if (user.getRealName() != null) {
+            user.setIsCert(EBoolean.YES.getCode());
+        } else {
+            user.setIsCert(EBoolean.NO.getCode());
+        }
         // 银行卡信息
         Bankcard condition = new Bankcard();
         condition.setUserId(userId);

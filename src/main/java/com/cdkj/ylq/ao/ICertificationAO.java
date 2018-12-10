@@ -8,6 +8,7 @@ import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAddressBook;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoZqzn;
+import com.cdkj.ylq.domain.MxAlipayNotification;
 import com.cdkj.ylq.domain.MxCarrierNofification;
 import com.cdkj.ylq.domain.MxReportData;
 import com.cdkj.ylq.dto.req.XN623040Req;
@@ -49,6 +50,15 @@ public interface ICertificationAO {
     // 魔蝎运营商资信报告通知回调处理
     public void doMxCarrierReportCallback(MxCarrierNofification notification);
 
+    // 魔蝎支付宝登录完成回掉处理
+    public void doMxAlipayTaskCallback(MxAlipayNotification notification);
+
+    // 魔蝎支付宝采集任务失败通知回调处理
+    public void doMxAlipayTaskFailCallback(MxAlipayNotification notification);
+
+    // 魔蝎支付宝资信报告通知回掉处理
+    public void doMxAlipayReportCallback(MxAlipayNotification notification);
+
     // 数聚魔盒运营商任务提交通知
     public void doTdCarrierTaskSubmitCallback(String userId, String taskId);
 
@@ -82,5 +92,9 @@ public interface ICertificationAO {
     public void setCreditScore(String userId, BigDecimal creditScore);
 
     public void submitInfoPersonal(String userId);
+
+    public List<Certification> queryCertificationList(String userId);
+
+    public void checkAmount(String key, String userId);
 
 }

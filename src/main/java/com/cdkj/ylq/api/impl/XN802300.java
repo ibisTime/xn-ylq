@@ -40,8 +40,7 @@ public class XN802300 extends AProcessor {
         condition.setType(req.getType());
         condition.setStatus(req.getStatus());
         condition.setLastOrder(req.getLastOrder());
-        condition.setMobileForQuery(req.getMobileForQuery());
-        condition.setRelaNameForQuery(req.getRelaNameForQuery());
+        condition.setKeyword(req.getKeyword());
 
         condition.setAccountNumber(req.getAccountNumber());
         if (CollectionUtils.isNotEmpty(req.getCurrencyList())) {
@@ -66,7 +65,6 @@ public class XN802300 extends AProcessor {
 
     @Override
     public void doCheck(String inputparams) throws ParaException {
-        // TODO Auto-generated method stub
         req = JsonUtil.json2Bean(inputparams, XN802300Req.class);
         ObjValidater.validateReq(req);
     }

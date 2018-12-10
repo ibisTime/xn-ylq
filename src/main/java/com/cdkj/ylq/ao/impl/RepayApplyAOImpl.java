@@ -117,8 +117,6 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             // 更新借款订单信息
             borrowOrderBO
                 .repayOffline(borrow, repayApply.getAmount(), approver);
-            // // 额度重置为0
-            // certificationBO.resetSxAmount(borrow.getApplyUser());
             // 发放优惠券
             List<BorrowOrder> orders = borrowOrderBO.getCouponOrders(borrow
                 .getApplyUser());
@@ -200,10 +198,12 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                 EPayType.OFFLINE.getCode(), repayApply.getCode(),
                 repayApply.getAmount());
             // 发送短信
-            smsContent = "您的"
+            smsContent = "您的第"
+                    + staging.getCount()
+                    + "期的"
                     + CalculationUtil
                         .diviUp(repayApply.getAmount().longValue())
-                    + "分期借款（分期编号：" + staging.getCode() + "）已经成功还款，详情查看请登录APP。";
+                    + "分期借款已经成功还款，详情查看请登录APP。";
 
         } else {
             status = ERepayApplyStatus.APPROVE_NO.getCode();

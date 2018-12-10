@@ -137,8 +137,7 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
             if (EBoolean.YES.getCode().equals(ZQZN.getFlag())
                     && EBoolean.YES.getCode().equals(zhifubao.getFlag())
                     && EBoolean.YES.getCode().equals(personal.getFlag())
-            // && EBoolean.YES.getCode().equals(carrier.getFlag())
-            ) {
+                    && EBoolean.YES.getCode().equals(carrier.getFlag())) {
                 flag = true;
             }
         }

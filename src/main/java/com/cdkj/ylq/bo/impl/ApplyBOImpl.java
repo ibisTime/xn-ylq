@@ -118,7 +118,6 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
 
     @Override
     public void refreshCurNode(Apply apply, String curNode) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -126,6 +125,18 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
     public List<Apply> queryApplyList(Apply condition) {
 
         return applyDAO.selectList(condition);
+    }
+
+    @Override
+    public void refreshCreditScore(String userId, BigDecimal amount) {
+        Apply condition = new Apply();
+        condition.setStatus(EApplyStatus.APPROVE_YES.getCode());
+        condition.setApplyUser(userId);
+        Apply apply = applyDAO.select(condition);
+        if (apply != null) {
+            apply.setCreditScore(apply.getCreditScore().subtract(amount));
+        }
+        applyDAO.updateApprove(apply);
     }
 
 }

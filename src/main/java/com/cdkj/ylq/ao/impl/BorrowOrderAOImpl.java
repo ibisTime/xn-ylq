@@ -35,7 +35,6 @@ import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
-import com.cdkj.ylq.domain.Bankcard;
 import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
@@ -216,6 +215,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         // 额度减去
         certificationBO.refreshSxAmount(borrow.getApplyUser(), borrow
             .getAmount().negate());
+        // 信用分减少
+        applyBO.refreshCreditScore(userId, totalAmount);
         // 通知审批人
         List<Noticer> noticers = noticerBO.queryNoticersNow(
             ENoticerType.Approver.getCode(), user.getCompanyCode());
@@ -477,17 +478,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             // 使用优惠券
             userCouponBO.useCancel(borrow.getCode());
             // 更新授信额度
-            Certification certification = certificationBO.getCertification(
-                borrow.getApplyUser(), ECertiKey.INFO_AMOUNT);
-            //
-            // if (ECertificationStatus.CERTI_YES.getCode().equals(
-            // certification.getFlag())) {
-            // applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-            // EApplyStatus.APPROVE_YES);
-            // } else {
-            // applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-            // EApplyStatus.CANCEL);
-            // }
+            applyBO.refreshCreditScore(borrow.getApplyUser(), borrow
+                .getAmount().negate());
             // 返还额度信用分
             certificationBO.refreshSxAmount(borrow.getApplyUser(),
                 borrow.getAmount());
@@ -511,19 +503,16 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         String smsContent = null;
         if (EBoolean.YES.getCode().equals(result)) {
             borrowOrderBO.loanSuccess(borrow, updater, remark);
-            // 生成电子合同
-            User user = userBO.getUser(borrow.getApplyUser());
-            Bankcard bankcard = accountBO.getBankcard(borrow.getApplyUser());
-            // contractBO.generate(user, bankcard, borrow);
-            // 首次借款成功推荐人发放优惠券
-            BorrowOrder condition = new BorrowOrder();
-            condition.setApplyUser(borrow.getApplyUser());
-            condition.setStatus(EBorrowStatus.REPAY.getCode());
-            if (borrowOrderBO.getTotalCount(condition) == 1) {
-                if (StringUtils.isNotBlank(user.getUserReferee())) {
-                    // couponConditionAO.recommendSuccess(user.getUserReferee());
-                }
-            }
+            // User user = userBO.getUser(borrow.getApplyUser());
+            // // 首次借款成功推荐人发放优惠券
+            // BorrowOrder condition = new BorrowOrder();
+            // condition.setApplyUser(borrow.getApplyUser());
+            // condition.setStatus(EBorrowStatus.REPAY.getCode());
+            // if (borrowOrderBO.getTotalCount(condition) == 1) {
+            // if (StringUtils.isNotBlank(user.getUserReferee())) {
+            // // couponConditionAO.recommendSuccess(user.getUserReferee());
+            // }
+            // }
             // 短信通知
             smsContent = "恭喜您，您的"
                     + CalculationUtil.diviUp(borrow.getAmount().longValue())
@@ -546,15 +535,21 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
     @Transactional
     public void resubmitLoan(String code) {
         BorrowOrder borrow = borrowOrderBO.getBorrow(code);
-        if (!EBorrowStatus.LOAN_NO.getCode().equals(borrow.getStatus())
-                || EBorrowStatus.APPROVE_NO.getCode()
-                    .equals(borrow.getStatus())) {
+        User user = userBO.getUser(borrow.getApplyUser());
+        if (!EBorrowStatus.LOAN_NO.getCode().equals(borrow.getStatus())) {
             throw new BizException("623071", "借款不处于打款失败状态，不能重新提交");
         }
         borrowOrderBO.resubmitLoan(borrow);
-        // // 更新申请单状态
-        // applyBO.refreshCurrentApplyStatus(borrow.getApplyUser(),
-        // EApplyStatus.TO_LOAN);
+        // 放款通知人
+        List<Noticer> noticers = noticerBO.queryNoticersNow(
+            ENoticerType.Loaner.getCode(), borrow.getCompanyCode());
+        String sendContent = "用户：" + user.getMobile() + "有一笔借款等待放款，请尽早在管理端进行放款";
+        if (!noticers.isEmpty()) {
+            for (Noticer noticer : noticers) {
+                smsOutBO.sendContent(noticer.getMobile(), sendContent,
+                    borrow.getCompanyCode(), ESystemCode.YLQ.getCode());
+            }
+        }
     }
 
     @Override
@@ -786,8 +781,9 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         List<Staging> stagingList = stagingBO
             .queryStagingList(conditionStaging);
         if (borrowList != null || stagingList != null) {
-            logger.info("***************共扫描到" + borrowList.size()
-                    + stagingList.size() + "条记录***************");
+            logger.info("***************共扫描到"
+                    + (borrowList.size() + stagingList.size())
+                    + "条记录***************");
         }
         if (CollectionUtils.isNotEmpty(borrowList)) {
             for (BorrowOrder borrow : borrowList) {
