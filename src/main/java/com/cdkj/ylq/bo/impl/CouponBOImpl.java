@@ -1,13 +1,18 @@
 package com.cdkj.ylq.bo.impl;
 
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.ICouponBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
+import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.ICouponDAO;
 import com.cdkj.ylq.domain.Coupon;
+import com.cdkj.ylq.enums.ECompanyCodeModel;
 import com.cdkj.ylq.enums.ECouponType;
 import com.cdkj.ylq.exception.BizException;
 
@@ -63,6 +68,23 @@ public class CouponBOImpl extends PaginableBOImpl<Coupon> implements ICouponBO {
             data = couponDAO.select(condition);
         }
         return data;
+    }
+
+    @Override
+    public List<Coupon> queryModelCoupons() {
+        Coupon condition = new Coupon();
+        condition.setCompanyCode(ECompanyCodeModel.MODEL.getCode());
+        List<Coupon> coupons = couponDAO.selectList(condition);
+
+        return coupons;
+    }
+
+    @Override
+    public void saveCoupon(Coupon data) {
+        String code = OrderNoGenerater.generateM("YHQ");
+        data.setCode(code);
+        data.setUpdateDatetime(new Date());
+        couponDAO.insert(data);
     }
 
 }

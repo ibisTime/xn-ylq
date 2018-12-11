@@ -139,4 +139,7 @@ public interface IUserBO extends IPaginableBO<User> {
     public void refreshIsCoupon(User data);
 
     public List<User> getNoCouponList(String referee, String companyCode);
+
+    public void refreshLocation(String userId, String province, String city,
+            String area, String address);
 }

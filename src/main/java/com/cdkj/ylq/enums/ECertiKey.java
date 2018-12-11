@@ -18,7 +18,9 @@ import java.util.Map;
  */
 public enum ECertiKey {
 
-    INFO_ZQZN("INFO_ZQZN", "智趣智能活体识别")
+    INFO_DT_REPORT("INFO_DT_REPORT", "多头报告")
+
+    , INFO_ZQZN("INFO_ZQZN", "智趣智能活体识别")
 
     , INFO_ZHIFUBAO("INFO_ZHIFUBAO", "支付宝信息")//
 

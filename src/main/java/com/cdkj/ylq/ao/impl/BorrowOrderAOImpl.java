@@ -456,6 +456,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             String approveNote) {
         // 订单检验
         BorrowOrder borrow = borrowOrderBO.getBorrow(code);
+        User user = userBO.getUser(borrow.getApplyUser());
         // 状态检验
         if (!EBorrowStatus.TO_APPROVE.getCode().equals(borrow.getStatus())) {
             throw new BizException("xn623000", "该申请记录不处于待审核状态");
@@ -483,10 +484,13 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             // 返还额度信用分
             certificationBO.refreshSxAmount(borrow.getApplyUser(),
                 borrow.getAmount());
-            smsOutBO.sendContent(borrow.getApplyUser(), "很抱歉，您的"
-                    + CalculationUtil.diviUp(borrow.getAmount().longValue())
-                    + "借款（合同编号为" + borrow.getCode() + ")额度使用受限，原因："
-                    + approveNote + "，详情请咨询客服。", borrow.getCompanyCode(),
+            smsOutBO.sendContent(
+                user.getMobile(),
+                "很抱歉，您的"
+                        + CalculationUtil
+                            .diviUp(borrow.getAmount().longValue())
+                        + "借款（合同编号为" + borrow.getCode() + ")额度使用受限，原因："
+                        + approveNote + "，详情请咨询客服。", borrow.getCompanyCode(),
                 ESystemCode.YLQ.getCode());
         }
         borrowOrderBO.doApprove(borrow, status, approver, approveNote);
@@ -800,9 +804,10 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         }
         if (CollectionUtils.isNotEmpty(stagingList)) {
             for (Staging staging : stagingList) {
-                smsOutBO.sentContent(staging.getApplyUser(), "您的分期借款即将到期，分期编号为"
+                smsOutBO.sendContent(staging.getApplyUser(), "您的分期借款即将到期，分期编号为"
                         + staging.getCode()
-                        + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。");
+                        + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。",
+                    staging.getCompanyCode(), ESystemCode.YLQ.getCode());
             }
         }
         logger.info("***************结束扫描明日到期借款和分期***************");

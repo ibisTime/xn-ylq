@@ -124,14 +124,13 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                 borrow.getCompanyCode());
             if (rule != null
                     && ECouponStatus.OPEN.getCode().equals(rule.getStatus())
-                    && rule.getCondition() - orders.size() == 1) {
+                    && rule.getCondition() == orders.size()) {
                 userCouponBO.saveUserCoupon(borrow.getApplyUser(), rule,
                     "程序自动发放", "成功借还" + rule.getCondition().toString()
                             + "次系统发放优惠券", rule.getCompanyCode());
                 for (BorrowOrder borrowOrder : orders) {
                     borrowOrderBO.refreshIsCoupon(borrowOrder);
                 }
-                borrowOrderBO.refreshIsCoupon(borrow);
             }
             // 发送短信
             smsContent = "您的"

@@ -23,6 +23,17 @@ public class XN623115Req extends APageReq {
     // 状态（选填）
     private String status;
 
+    // 公司编号
+    private String companyCode;
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
     public String getType() {
         return type;
     }

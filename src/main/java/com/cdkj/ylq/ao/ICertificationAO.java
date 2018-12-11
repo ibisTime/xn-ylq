@@ -97,4 +97,9 @@ public interface ICertificationAO {
 
     public void checkAmount(String key, String userId);
 
+    public void submitLocation(String userId, String province, String city,
+            String area, String address);
+
+    public String duotouReport(String userId);
+
 }

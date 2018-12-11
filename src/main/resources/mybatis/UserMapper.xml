@@ -42,18 +42,19 @@
 	
 	<sql id="join_condition">
 		<if test="keyword != null and keyword != ''">
-			left join tjd_business_man tu on t.company_code = tu.company_code 
+			left join tjd_business_man tu on t.company_code = tu.company_code AND tu.is_admin=1
 		</if>
 	</sql>
 	
 	<sql id="mobileForQuery_condition">
 		<if test="keyword != null and keyword != '' ">
-			AND tu.mobile like "%"#{keyword}"%" OR tu.real_name like "%"#{keyword}"%"
+			AND tu.mobile like "%"#{keyword}"%" OR tu.real_name like "%"#{keyword}"%" 
 		</if>
 	</sql>
 	
 	<sql id="where_condition">
-		<trim prefix="WHERE" prefixOverrides="AND | OR">			
+		<trim prefix="WHERE" prefixOverrides="AND | OR">	
+				AND 1=1		
 			<if test="userId != null and userId != '' ">
 				AND t.user_id = #{userId}
 			</if>
@@ -65,6 +66,9 @@
 			</if>
 			<if test="nickname != null and nickname != '' ">
 				AND t.nickname like "%"#{nickname}"%"
+			</if>
+			<if test="realName != null and realName != '' ">
+				AND t.real_name like "%"#{realName}"%"
 			</if>
 			<if test="userReferee != null and userReferee != '' ">
 				AND t.user_referee = #{userReferee}
@@ -408,10 +412,21 @@
 	<update id="approve_user" parameterType="user">
 		UPDATE tstd_user
 		SET
-		,status = #{status}
+		status = #{status}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}
+		WHERE
+		user_id = #{userId}		
+	</update>
+	
+	<update id="update_location" parameterType="user">
+		UPDATE tstd_user
+		SET
+		province = #{province}
+		,city = #{city}
+		,area = #{area}
+		,address = #{address}
 		WHERE
 		user_id = #{userId}		
 	</update>

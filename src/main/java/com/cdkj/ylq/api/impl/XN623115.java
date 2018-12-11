@@ -40,6 +40,7 @@ public class XN623115 extends AProcessor {
         Coupon condition = new Coupon();
         condition.setType(req.getType());
         condition.setStatus(req.getStatus());
+        condition.setCompanyCode(req.getCompanyCode());
         String orderColumn = req.getOrderColumn();
         if (StringUtils.isBlank(orderColumn)) {
             orderColumn = ICouponAO.DEFAULT_ORDER_COLUMN;

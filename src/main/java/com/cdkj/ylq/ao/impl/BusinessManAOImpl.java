@@ -12,6 +12,7 @@ import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.IChargeBO;
 import com.cdkj.ylq.bo.ICompanyBO;
+import com.cdkj.ylq.bo.ICouponBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISYSDictBO;
 import com.cdkj.ylq.bo.ISYSMenuBO;
@@ -26,6 +27,7 @@ import com.cdkj.ylq.dao.ISYSMenuDAO;
 import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.domain.Company;
+import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.SYSDict;
 import com.cdkj.ylq.domain.SYSMenu;
@@ -49,6 +51,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
 
     @Autowired
     private IBusinessManBO businessManBO;
+
+    @Autowired
+    private ICouponBO couponBO;
 
     @Autowired
     private ICompanyBO companyBO;
@@ -198,6 +203,12 @@ public class BusinessManAOImpl implements IBusinessManAO {
             sysDictBO.saveDict(sysDict.getType(), sysDict.getParentKey(),
                 sysDict.getDkey(), sysDict.getDvalue(), sysDict.getUpdater(),
                 sysDict.getRemark(), companyCode);
+        }
+        // 优惠券规则分配
+        List<Coupon> coupons = couponBO.queryModelCoupons();
+        for (Coupon coupon : coupons) {
+            coupon.setCompanyCode(companyCode);
+            couponBO.saveCoupon(coupon);
         }
         // 预充值
         chargeBO.applyOrderOffline(account, EJourBizTypeBoss.CHARGE.getCode(),

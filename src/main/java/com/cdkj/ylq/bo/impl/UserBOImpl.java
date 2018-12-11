@@ -684,4 +684,15 @@ public class UserBOImpl extends PaginableBOImpl<User> implements IUserBO {
         return dataList;
     }
 
+    @Override
+    public void refreshLocation(String userId, String province, String city,
+            String area, String address) {
+        User data = new User();
+        data.setUserId(userId);
+        data.setProvince(province);
+        data.setCity(city);
+        data.setArea(area);
+        data.setAddress(address);
+        userDAO.updateLocation(data);
+    }
 }

@@ -34,6 +34,12 @@ public class SysConstants {
 
     public static final String MX_SECRET = "mxSecret"; // 魔蝎secret
 
+    public static final String MX_APP_ID = "mxAppId"; // 魔蝎AppId
+
+    public static final String MX_PRIVATE_KEY = "mxPrivateKey"; // 魔蝎私钥
+
+    public static final String MX_PUBLIC_KEY = "mxPublicKey"; // 魔蝎公钥
+
     public static final String SMS_CUISHOU = "smsCuishou"; // 催收短信
 
     public static final String TD_SUBMIT_URL = "tdSubmitUrl"; // 同盾贷前审核信息提交URL

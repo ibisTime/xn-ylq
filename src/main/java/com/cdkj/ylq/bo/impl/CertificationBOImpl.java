@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cdkj.ylq.bo.ICertificationBO;
+import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.dao.ICertificationDAO;
 import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.InfoAmount;
+import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
@@ -25,6 +27,9 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
 
     @Autowired
     private ICertificationDAO certificationDAO;
+
+    @Autowired
+    private IUserBO userBO;
 
     @Override
     public String saveCertification(Certification data) {
@@ -126,6 +131,7 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
     @Override
     public boolean isCompleteCerti(String userId) {
         boolean flag = false;
+        User user = userBO.getUser(userId);
         Certification ZQZN = getCertification(userId, ECertiKey.INFO_ZQZN);
         Certification zhifubao = getCertification(userId,
             ECertiKey.INFO_ZHIFUBAO);
@@ -137,7 +143,8 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
             if (EBoolean.YES.getCode().equals(ZQZN.getFlag())
                     && EBoolean.YES.getCode().equals(zhifubao.getFlag())
                     && EBoolean.YES.getCode().equals(personal.getFlag())
-                    && EBoolean.YES.getCode().equals(carrier.getFlag())) {
+                    && EBoolean.YES.getCode().equals(carrier.getFlag())
+                    && user.getAddress() != null) {
                 flag = true;
             }
         }

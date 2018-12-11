@@ -74,6 +74,16 @@ public class XN623050Res {
 
     private String infoPersonalFlag;
 
+    private String locationFlag;
+
+    public String getLocationFlag() {
+        return locationFlag;
+    }
+
+    public void setLocationFlag(String locationFlag) {
+        this.locationFlag = locationFlag;
+    }
+
     public String getInfoPersonalFlag() {
         return infoPersonalFlag;
     }

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
@@ -33,6 +34,7 @@ import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.JsonUtil;
+import com.cdkj.ylq.common.MoxieRequest;
 import com.cdkj.ylq.common.SysConstants;
 import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.domain.Account;
@@ -164,7 +166,7 @@ public class CertificationAOImpl implements ICertificationAO {
                 "认证失败，失败原因为:" + infoZqzn.getZqznInfoRealAuth().getReason());
         }
         BigDecimal fee = sysConfigBO.getBigDecimalValue(
-            ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
+            ECertiKey.INFO_ZQZN.getCode(), ESystemCode.YLQ.getCode());
         Long id = certRecordBO.saveCertRecord(userId, fee,
             ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
         // 接口费用
@@ -357,7 +359,7 @@ public class CertificationAOImpl implements ICertificationAO {
             }
         }
         BigDecimal fee = sysConfigBO.getBigDecimalValue(
-            ECertiKey.INFO_CARRIER.getCode(), certification.getCompanyCode());
+            ECertiKey.INFO_CARRIER.getCode(), ESystemCode.YLQ.getCode());
         Long id = certRecordBO.saveCertRecord(userId, fee,
             ECertiKey.INFO_CARRIER.getCode(), certification.getCompanyCode());
         // 接口费用
@@ -439,7 +441,7 @@ public class CertificationAOImpl implements ICertificationAO {
             }
         }
         BigDecimal fee = sysConfigBO.getBigDecimalValue(
-            ECertiKey.INFO_ZHIFUBAO.getCode(), certification.getCompanyCode());
+            ECertiKey.INFO_ZHIFUBAO.getCode(), ESystemCode.YLQ.getCode());
         Long id = certRecordBO.saveCertRecord(userId, fee,
             ECertiKey.INFO_ZHIFUBAO.getCode(), certification.getCompanyCode());
         // 接口费用
@@ -547,6 +549,7 @@ public class CertificationAOImpl implements ICertificationAO {
     @Override
     @Transactional
     public XN623050Res getCertiInfo(String userId) {
+        User user = userBO.getUser(userId);
         // 获取认证结果
         List<Certification> certifications = certificationBO
             .queryCertificationList(userId);
@@ -555,8 +558,11 @@ public class CertificationAOImpl implements ICertificationAO {
         }
         // 组装认证结果信息
         XN623050Res res = transferCertiInfo(certifications);
+        if (user.getProvince() != null) {
+            res.setLocationFlag(ECertificationStatus.CERTI_YES.getCode());
+        }
         res.setUserId(userId);
-        res.setUserInfo(userBO.getUser(userId));
+        res.setUserInfo(user);
         return res;
     }
 
@@ -597,6 +603,7 @@ public class CertificationAOImpl implements ICertificationAO {
         res.setInfoZfbFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoZqznFlag(ECertificationStatus.TO_CERTI.getCode());
         res.setInfoPersonalFlag(ECertificationStatus.TO_CERTI.getCode());
+        res.setLocationFlag(ECertificationStatus.TO_CERTI.getCode());
 
         for (Certification certification : certifications) {
 
@@ -1093,13 +1100,68 @@ public class CertificationAOImpl implements ICertificationAO {
     public void checkAmount(String key, String userId) {
         User user = userBO.getUser(userId);
         BigDecimal fee = sysConfigBO.getBigDecimalValue(key,
-            user.getCompanyCode());
+            ESystemCode.YLQ.getCode());
         BusinessMan boss = businessManBO.getBusinessBoss(user.getCompanyCode());
         Account account = accountBO.getAccountByUser(boss.getUserId(),
             ECurrency.CNY.getCode());
         if (account.getAmount().compareTo(fee) < 0) {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "认证服务出现了错误，请联系管理员");
+        }
+    }
+
+    @Override
+    public void submitLocation(String userId, String province, String city,
+            String area, String address) {
+        User user = userBO.getUser(userId);
+        if (user.getAddress() != null) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                "已完成定位，无需重复定位");
+        }
+        userBO.refreshLocation(userId, province, city, area, address);
+    }
+
+    @Override
+    public String duotouReport(String userId) {
+        User user = userBO.getUser(userId);
+        if (user.getRealName() == null) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                "用户未实名认证，无法拉取多头报告");
+        }
+        Certification dtReport = certificationBO.getCertification(userId,
+            ECertiKey.INFO_DT_REPORT);
+        if (dtReport != null) {
+            return dtReport.getResult();
+        } else {
+            String appId = sysConfigBO.getStringValue(SysConstants.MX_APP_ID,
+                ESystemCode.YLQ.getCode());
+            String privateKey = sysConfigBO.getStringValue(
+                SysConstants.MX_PRIVATE_KEY, ESystemCode.YLQ.getCode());
+            String result = null;
+            try {
+                result = MoxieRequest.demoToRiskGateway(user.getRealName(),
+                    user.getIdNo(), user.getMobile(), appId, privateKey);
+            } catch (Exception e) {
+                throw new BizException(EBizErrorCode.DEFAULT.getCode(), "认证错误");
+            }
+            JSONObject jsonObject = JSONObject.parseObject(result);
+            boolean flag = jsonObject.getBooleanValue("success");
+            String data = jsonObject.getString("data");
+            String msg = jsonObject.getString("msg");
+            if (flag) {
+                Certification certification = new Certification();
+                certification.setUserId(userId);
+                certification.setCertiKey(ECertiKey.INFO_DT_REPORT.getCode());
+                certification.setCerDatetime(new Date());
+                certification.setResult(data);
+                certificationBO.saveCertification(certification);
+            } else {
+                throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                    "拉取报告失败，原因为：" + msg);
+            }
+
+            return result;
+
         }
     }
 }

@@ -188,4 +188,9 @@ public class UserDAOImpl extends AMybatisTemplate implements IUserDAO {
     public int updateIsCoupon(User data) {
         return super.update(NAMESPACE.concat("update_isCoupon"), data);
     }
+
+    @Override
+    public int updateLocation(User data) {
+        return super.update(NAMESPACE.concat("update_location"), data);
+    }
 }

@@ -169,7 +169,7 @@
 		,t.pay_datetime
 		FROM
 		tstd_withdraw t 
-		<include refid="where_condition" />
+		<include refid="join_condition" />
 		<include refid="where_condition" />
 		<include refid="where_realname_condition" />
 		<trim prefix="ORDER BY ">
@@ -182,7 +182,9 @@
 	<select id="select_withdraw_count" parameterType="withdraw"
 		resultType="java.lang.Long">
 		SELECT count(1) FROM tstd_withdraw t
+		<include refid="join_condition" />
 		<include refid="where_condition" />
+		<include refid="where_realname_condition" />
 	</select>
 
 	<select id="select_totalAmount" parameterType="withdraw"
