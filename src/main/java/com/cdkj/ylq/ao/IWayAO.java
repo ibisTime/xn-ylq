@@ -20,4 +20,6 @@ public interface IWayAO {
 
     public Way getWay(String code);
 
+    public void point(String code);
+
 }

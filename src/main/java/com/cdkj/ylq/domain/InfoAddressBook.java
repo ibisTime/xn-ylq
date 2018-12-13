@@ -21,6 +21,16 @@ public class InfoAddressBook {
     // 电话号码
     private String mobile;
 
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public String getName() {
         return name;
     }

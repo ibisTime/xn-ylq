@@ -132,7 +132,15 @@ public class ApplyBOImpl extends PaginableBOImpl<Apply> implements IApplyBO {
         Apply condition = new Apply();
         condition.setStatus(EApplyStatus.APPROVE_YES.getCode());
         condition.setApplyUser(userId);
-        Apply apply = applyDAO.select(condition);
+        List<Apply> applys = applyDAO.selectList(condition);
+        Apply apply = null;
+        Date date = applys.get(0).getApplyDatetime();
+        for (Apply data : applys) {
+            if (data.getApplyDatetime().after(date)) {
+                apply = data;
+                date = data.getApplyDatetime();
+            }
+        }
         if (apply != null) {
             apply.setCreditScore(apply.getCreditScore().subtract(amount));
         }

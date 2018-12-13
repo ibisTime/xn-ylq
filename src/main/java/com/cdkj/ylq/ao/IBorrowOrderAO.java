@@ -78,4 +78,6 @@ public interface IBorrowOrderAO {
     public Paginable<BorrowOrder> queryNearlyOrder(int start, int limit,
             String companyCode);
 
+    public void repayWarning(String code);
+
 }

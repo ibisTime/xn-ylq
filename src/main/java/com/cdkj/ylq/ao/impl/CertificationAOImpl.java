@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cdkj.ylq.ao.ICertificationAO;
 import com.cdkj.ylq.bo.IAccountBO;
@@ -46,6 +47,7 @@ import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.InfoBasic;
 import com.cdkj.ylq.domain.InfoContact;
 import com.cdkj.ylq.domain.InfoOccupation;
+import com.cdkj.ylq.domain.InfoPersonal;
 import com.cdkj.ylq.domain.InfoZfb;
 import com.cdkj.ylq.domain.InfoZqzn;
 import com.cdkj.ylq.domain.MxAlipayNotification;
@@ -136,6 +138,8 @@ public class CertificationAOImpl implements ICertificationAO {
         req.setSystemCode(ESystemCode.YLQ.getCode());
         InfoZqzn infoZqzn = BizConnecter.getBizData("798650",
             JsonUtils.object2Json(req), InfoZqzn.class);
+        infoZqzn.setFrontImage(frontImage);
+        infoZqzn.setBackImage(backImage);
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_ZQZN);
         // 认证成功
@@ -352,7 +356,7 @@ public class CertificationAOImpl implements ICertificationAO {
             }
         } else {
             if (certification != null) {
-                certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+                certification.setFlag(ECertificationStatus.FAILED.getCode());
                 certification.setResult("认证失败，原因为" + notification.getMessage());
                 certification.setRef(notification.getTask_id());
                 certificationBO.refreshCertification(certification);
@@ -434,7 +438,7 @@ public class CertificationAOImpl implements ICertificationAO {
             }
         } else {
             if (certification != null) {
-                certification.setFlag(ECertificationStatus.TO_CERTI.getCode());
+                certification.setFlag(ECertificationStatus.FAILED.getCode());
                 certification.setResult("认证失败，原因为" + notification.getMessage());
                 certification.setRef(notification.getTask_id());
                 certificationBO.refreshCertification(certification);
@@ -1012,6 +1016,7 @@ public class CertificationAOImpl implements ICertificationAO {
         if (CollectionUtils.isEmpty(certifications)) {
             throw new BizException("xn623000", "个人认证信息初始化失败");
         }
+        InfoPersonal personal = new InfoPersonal();
         Map<String, ECertiKey> keyMap = ECertiKey.getCertiKeyMap();
         for (Certification certification : certifications) {
             if (ECertiKey.INFO_BASIC.getCode().equals(
@@ -1022,6 +1027,9 @@ public class CertificationAOImpl implements ICertificationAO {
                         keyMap.get(ECertiKey.INFO_BASIC.getCode()).getValue()
                                 + "未完成认证");
                 }
+                InfoBasic basic = JsonUtil.json2Bean(certification.getResult(),
+                    InfoBasic.class);
+                personal.setBasic(basic);
             }
             if (ECertiKey.INFO_CONTACT.getCode().equals(
                 certification.getCertiKey())) {
@@ -1031,6 +1039,10 @@ public class CertificationAOImpl implements ICertificationAO {
                         keyMap.get(ECertiKey.INFO_CONTACT.getCode()).getValue()
                                 + "未完成认证");
                 }
+                InfoContact contact = JsonUtil.json2Bean(
+                    certification.getResult(), InfoContact.class);
+                personal.setContact(contact);
+
             }
             if (ECertiKey.INFO_OCCUPATION.getCode().equals(
                 certification.getCertiKey())) {
@@ -1040,16 +1052,21 @@ public class CertificationAOImpl implements ICertificationAO {
                         keyMap.get(ECertiKey.INFO_OCCUPATION.getCode())
                             .getValue() + "未完成认证");
                 }
+                InfoOccupation occupation = JsonUtil.json2Bean(
+                    certification.getResult(), InfoOccupation.class);
+                personal.setOccupation(occupation);
             }
         }
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_PERSONAL);
+        Date now = new Date();
         Integer days = sysConfigBO.getIntegerValue(
             SysConstants.PERSONAL_VALID_DAYS, certification.getCompanyCode());
         certification.setFlag(ECertificationStatus.CERTI_YES.getCode());
-        certification.setResult("认证完毕");
-        certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
-            new Date(), days));
+        certification.setResult(JsonUtil.Object2Json(personal));
+        certification.setCerDatetime(now);
+        certification.setValidDatetime(DateUtil
+            .getRelativeDateOfDays(now, days));
         certificationBO.refreshCertification(certification);
 
         if (certificationBO.isCompleteCerti(userId)) {
@@ -1092,8 +1109,9 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
-    public List<Certification> queryCertificationList(String userId) {
-        return certificationBO.queryCertiedList(userId);
+    public Certification getCertification(String userId, String key) {
+        Map<String, ECertiKey> keyMap = ECertiKey.getCertiKeyMap();
+        return certificationBO.getCertification(userId, keyMap.get(key));
     }
 
     @Override
@@ -1163,5 +1181,73 @@ public class CertificationAOImpl implements ICertificationAO {
             return result;
 
         }
+    }
+
+    @Override
+    public String updateDuotou(String userId) {
+        User user = userBO.getUser(userId);
+        if (user.getRealName() == null) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                "用户未实名认证，无法拉取多头报告");
+        }
+        String appId = sysConfigBO.getStringValue(SysConstants.MX_APP_ID,
+            ESystemCode.YLQ.getCode());
+        String privateKey = sysConfigBO.getStringValue(
+            SysConstants.MX_PRIVATE_KEY, ESystemCode.YLQ.getCode());
+        String result = null;
+        try {
+            result = MoxieRequest.demoToRiskGateway(user.getRealName(),
+                user.getIdNo(), user.getMobile(), appId, privateKey);
+        } catch (Exception e) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "认证错误");
+        }
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        boolean flag = jsonObject.getBooleanValue("success");
+        String data = jsonObject.getString("data");
+        String msg = jsonObject.getString("msg");
+        Certification dtReport = certificationBO.getCertification(userId,
+            ECertiKey.INFO_DT_REPORT);
+        if (dtReport != null) {
+            if (flag) {
+                dtReport.setCerDatetime(new Date());
+                dtReport.setResult(data);
+                certificationBO.refreshCertification(dtReport);
+            } else {
+                throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                    "拉取报告失败，原因为：" + msg);
+            }
+        } else {
+
+            if (flag) {
+                Certification certification = new Certification();
+                certification.setUserId(userId);
+                certification.setCertiKey(ECertiKey.INFO_DT_REPORT.getCode());
+                certification.setCerDatetime(new Date());
+                certification.setResult(data);
+                certificationBO.saveCertification(certification);
+            } else {
+                throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                    "拉取报告失败，原因为：" + msg);
+            }
+
+        }
+        return result;
+    }
+
+    @Override
+    public void addRemark(String userId, int id, String remark) {
+        Certification certification = certificationBO.getCertification(userId,
+            ECertiKey.INFO_ADDRESS_BOOK);
+        List<InfoAddressBook> addressBooks = JSON.parseArray(
+            certification.getResult(), InfoAddressBook.class);
+        for (int i = 0; i < addressBooks.size(); i++) {
+            if (i == id) {
+                InfoAddressBook addressBook = addressBooks.get(i);
+                addressBook.setRemark(remark);
+                addressBooks.set(i, addressBook);
+            }
+        }
+        certification.setResult(JsonUtil.Object2Json(addressBooks));
+        certificationBO.refreshCertification(certification);
     }
 }

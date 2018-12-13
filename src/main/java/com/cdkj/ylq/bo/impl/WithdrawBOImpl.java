@@ -23,6 +23,7 @@ import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.Withdraw;
 import com.cdkj.ylq.enums.EChannelType;
 import com.cdkj.ylq.enums.ECurrency;
+import com.cdkj.ylq.enums.ESysConfigType;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.enums.EWithdrawStatus;
 import com.cdkj.ylq.exception.BizException;
@@ -130,8 +131,8 @@ public class WithdrawBOImpl extends PaginableBOImpl<Withdraw> implements
             throw new BizException("xn000000", "上笔取现申请还未处理成功，不能再次申请");
         }
 
-        Map<String, String> argsMap = sysConfigBO.getConfigsMap(null,
-            ESystemCode.YLQ.getCode());
+        Map<String, String> argsMap = sysConfigBO.getConfigsMap(
+            ESysConfigType.WITH.getCode(), ESystemCode.YLQ.getCode());
         String qxbs = SysConstants.USERQXBS; // 取现倍数
         String qxfl = SysConstants.USERQXFL; // 取现手续费率
         String monthTimesKey = SysConstants.USERMONTIMES;// 本月申请次数是否达到上限

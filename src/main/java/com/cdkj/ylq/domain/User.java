@@ -163,6 +163,16 @@ public class User extends ABaseDO {
     // 所属借款商
     private String keyword;
 
+    private Way refereeWay;
+
+    public Way getRefereeWay() {
+        return refereeWay;
+    }
+
+    public void setRefereeWay(Way refereeWay) {
+        this.refereeWay = refereeWay;
+    }
+
     public String getKeyword() {
         return keyword;
     }

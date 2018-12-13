@@ -651,9 +651,16 @@ public class UserAOImpl implements IUserAO {
             user.setCreditScore(certificationAO.getMyCreditAmount(
                 user.getUserId()).getSxAmount());
             // 推荐人转义
-            User userReferee = userBO.getUser(user.getUserReferee());
-            if (userReferee != null) {
-                user.setRefereeUser(userReferee);
+            if (!EUserRefereeType.W.getCode().equals(user.getRefereeType())) {
+                User userReferee = userBO.getUser(user.getUserReferee());
+                if (userReferee != null) {
+                    user.setRefereeUser(userReferee);
+                }
+            } else {
+                Way way = wayBO.getWay(user.getUserReferee());
+                if (way != null) {
+                    user.setRefereeWay(way);
+                }
             }
             user.setCompany(companyBO.getCompany(user.getCompanyCode()));
             user.setBusinessMan(businessManBO.getBusinessManByCompanyCode(user
@@ -732,6 +739,18 @@ public class UserAOImpl implements IUserAO {
             user.setIsCert(EBoolean.YES.getCode());
         } else {
             user.setIsCert(EBoolean.NO.getCode());
+        }
+        // 推荐人转义
+        if (!EUserRefereeType.W.getCode().equals(user.getRefereeType())) {
+            User userReferee = userBO.getUser(user.getUserReferee());
+            if (userReferee != null) {
+                user.setRefereeUser(userReferee);
+            }
+        } else {
+            Way way = wayBO.getWay(user.getUserReferee());
+            if (way != null) {
+                user.setRefereeWay(way);
+            }
         }
         // 银行卡信息
         Bankcard condition = new Bankcard();

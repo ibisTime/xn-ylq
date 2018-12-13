@@ -93,7 +93,7 @@ public interface ICertificationAO {
 
     public void submitInfoPersonal(String userId);
 
-    public List<Certification> queryCertificationList(String userId);
+    public Certification getCertification(String userId, String key);
 
     public void checkAmount(String key, String userId);
 
@@ -101,5 +101,9 @@ public interface ICertificationAO {
             String area, String address);
 
     public String duotouReport(String userId);
+
+    public String updateDuotou(String userId);
+
+    public void addRemark(String userId, int id, String remark);
 
 }

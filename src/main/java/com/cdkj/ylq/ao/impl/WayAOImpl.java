@@ -53,4 +53,10 @@ public class WayAOImpl implements IWayAO {
         return wayBO.getWay(code);
     }
 
+    @Override
+    public void point(String code) {
+        Way way = wayBO.getWay(code);
+        wayBO.refreshPointCount(way, Long.valueOf(1));
+    }
+
 }

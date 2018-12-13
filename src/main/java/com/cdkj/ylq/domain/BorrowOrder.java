@@ -169,6 +169,17 @@ public class BorrowOrder extends ABaseDO {
     // 当天分期还款信息
     private StageInfo info;
 
+    // 借款次数
+    private Integer borrowCount;
+
+    public Integer getBorrowCount() {
+        return borrowCount;
+    }
+
+    public void setBorrowCount(Integer borrowCount) {
+        this.borrowCount = borrowCount;
+    }
+
     public StageInfo getInfo() {
         return info;
     }

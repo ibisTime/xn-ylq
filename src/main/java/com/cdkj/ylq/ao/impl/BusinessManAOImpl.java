@@ -95,6 +95,8 @@ public class BusinessManAOImpl implements IBusinessManAO {
                 .getCompanyCode());
             man.setAccount(accountBO.getAccountByUser(boss.getUserId(),
                 ECurrency.CNY.getCode()));
+            Company company = companyBO.getCompany(man.getCompanyCode());
+            man.setCompany(company);
         }
         return page;
     }

@@ -51,6 +51,9 @@ public class CallbackConroller {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
+        // 返回201
+        writeMessage(httpServletResponse, HttpServletResponse.SC_CREATED,
+            "default eventtype");
         // 事件类型：task or bill
         String eventName = httpServletRequest.getHeader(HEADER_MOXIE_EVENT);
 
@@ -86,14 +89,6 @@ public class CallbackConroller {
             return;
         }
 
-        // 任务提交
-        // if (StringUtils.equals(eventName.toLowerCase(), "task.submit")) {
-        // // 通知状态变更为 '认证中'
-        // MxCarrierNofification notification = JsonUtil.json2Bean(body,
-        // MxCarrierNofification.class);
-        // certificationAO.doMxCarrierTaskSubmitCallback(notification);
-        // }
-
         if (StringUtils.equalsIgnoreCase(eventType, "carrier")) {
             // 登录完成后的通知，包括登录成功或者失败
             if (StringUtils.equals(eventName.toLowerCase(), "task")) {
@@ -115,8 +110,11 @@ public class CallbackConroller {
                 MxCarrierNofification notification = JsonUtil.json2Bean(body,
                     MxCarrierNofification.class);
                 logger.info(notification.getUser_id());
-                logger.info("HEADER_MOXIE_EVENT:" + eventName);
-                logger.info("X-Moxie-Type:" + eventType);
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 certificationAO.doMxCarrierReportCallback(notification);
             }
         } else if (StringUtils.equalsIgnoreCase(eventType, "alipay")) {
@@ -133,14 +131,19 @@ public class CallbackConroller {
             if (StringUtils.equalsIgnoreCase(eventName, "report")) {
                 MxAlipayNotification notification = JsonUtil.json2Bean(body,
                     MxAlipayNotification.class);
+                logger.info(notification.getTask_id());
+                logger.info(notification.getUser_id());
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 certificationAO.doMxAlipayReportCallback(notification);
             }
         } else {
             logger.error("暂未开通此业务");
         }
 
-        writeMessage(httpServletResponse, HttpServletResponse.SC_CREATED,
-            "default eventtype");
     }
 
     private void writeMessage(HttpServletResponse response, int status,
@@ -150,6 +153,7 @@ public class CallbackConroller {
             PrintWriter printWriter = response.getWriter();
             printWriter.write(content);
         } catch (IOException ignored) {
+            logger.info(ignored);
         }
     }
 }

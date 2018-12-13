@@ -1,8 +1,5 @@
 package com.cdkj.ylq.domain;
 
-import com.cdkj.ylq.domain.ZqznInfoBack;
-import com.cdkj.ylq.domain.ZqznInfoFront;
-import com.cdkj.ylq.domain.ZqznInfoRealAuth;
 
 public class InfoZqzn {
 
@@ -11,6 +8,26 @@ public class InfoZqzn {
     ZqznInfoBack zqznInfoBack;
 
     ZqznInfoRealAuth zqznInfoRealAuth;
+
+    private String frontImage;
+
+    private String backImage;
+
+    public String getFrontImage() {
+        return frontImage;
+    }
+
+    public void setFrontImage(String frontImage) {
+        this.frontImage = frontImage;
+    }
+
+    public String getBackImage() {
+        return backImage;
+    }
+
+    public void setBackImage(String backImage) {
+        this.backImage = backImage;
+    }
 
     public ZqznInfoFront getZqznInfoFront() {
         return zqznInfoFront;

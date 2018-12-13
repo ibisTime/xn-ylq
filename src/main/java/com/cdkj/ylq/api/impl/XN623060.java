@@ -32,7 +32,7 @@ public class XN623060 extends AProcessor {
 
     @Override
     public Object doBusiness() throws BizException {
-        return certificationAO.queryCertificationList(req.getUserId());
+        return certificationAO.getCertification(req.getUserId(), req.getKey());
     }
 
     @Override

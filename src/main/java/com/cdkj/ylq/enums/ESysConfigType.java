@@ -7,7 +7,7 @@ package com.cdkj.ylq.enums;
  */
 public enum ESysConfigType {
 
-    QINIU("qiniu", "七牛");
+    QINIU("qiniu", "七牛"), WITH("WITH", "取现规则");
 
     ESysConfigType(String code, String value) {
         this.code = code;

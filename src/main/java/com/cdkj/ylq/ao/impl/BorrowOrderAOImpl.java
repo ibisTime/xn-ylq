@@ -18,6 +18,7 @@ import com.cdkj.ylq.bo.IAccountBO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowOrderBO;
 import com.cdkj.ylq.bo.ICertificationBO;
+import com.cdkj.ylq.bo.ICompanyBO;
 import com.cdkj.ylq.bo.INoticerBO;
 import com.cdkj.ylq.bo.IOverdueBO;
 import com.cdkj.ylq.bo.IProductBO;
@@ -37,6 +38,7 @@ import com.cdkj.ylq.core.CalculationUtil;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Certification;
+import com.cdkj.ylq.domain.Company;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.Noticer;
 import com.cdkj.ylq.domain.Product;
@@ -74,6 +76,9 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
 
     @Autowired
     private IStagingRuleBO stagingRuleBO;
+
+    @Autowired
+    private ICompanyBO companyBO;
 
     @Autowired
     private IApplyBO applyBO;
@@ -447,6 +452,9 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 && borrow.getRepayCount() != null) {
             initStageList(borrow);
         }
+        User user = borrow.getUser();
+        Integer count = borrowOrderBO.getTotalBorrowCount(user.getUserId());
+        borrow.setBorrowCount(count);
         return borrow;
     }
 
@@ -638,12 +646,13 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         }
         String userId = borrow.getApplyUser();
         User user = userBO.getUser(userId);
-
+        Company company = companyBO.getCompany(borrow.getCompanyCode());
         StringBuffer sb = new StringBuffer(user.getIdNo());
         String contentTemplate = sysConfigBO.getStringValue(
-            SysConstants.SMS_CUISHOU, borrow.getCompanyCode());
+            SysConstants.SMS_CUISHOU, ESystemCode.YLQ.getCode());
         contentTemplate = String.format(contentTemplate, user.getMobile(), sb
-            .replace(8, 11, "****").toString(), user.getMobile());
+            .replace(8, 11, "****").toString(), company.getName(), user
+            .getMobile());
         // 向本人发送催收短信
         smsOutBO.sendContent(user.getMobile(), contentTemplate,
             borrow.getCompanyCode(), ESystemCode.YLQ.getCode());
@@ -1058,6 +1067,19 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             list.size());
         page.setList(list);
         return page;
+    }
+
+    @Override
+    public void repayWarning(String code) {
+        BorrowOrder order = borrowOrderBO.getBorrow(code);
+        String content = "尊敬的用户，您的"
+                + order.getAmount().toString()
+                + "借款还款时间截止到"
+                + DateUtil.dateToStr(order.getHkDatetime(),
+                    DateUtil.FRONT_DATE_FORMAT_STRING) + "，请及时还款";
+        User user = userBO.getUser(order.getApplyUser());
+        smsOutBO.sendContent(user.getMobile(), content, order.getCompanyCode(),
+            ESystemCode.YLQ.getCode());
     }
 
 }
