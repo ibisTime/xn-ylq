@@ -1,6 +1,5 @@
 package com.cdkj.ylq.domain;
 
-
 public class InfoZqzn {
 
     ZqznInfoFront zqznInfoFront;
@@ -12,6 +11,16 @@ public class InfoZqzn {
     private String frontImage;
 
     private String backImage;
+
+    private String faceImage;
+
+    public String getFaceImage() {
+        return faceImage;
+    }
+
+    public void setFaceImage(String faceImage) {
+        this.faceImage = faceImage;
+    }
 
     public String getFrontImage() {
         return frontImage;

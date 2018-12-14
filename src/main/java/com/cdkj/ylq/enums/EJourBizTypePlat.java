@@ -17,7 +17,11 @@ public enum EJourBizTypePlat {
 
     WITHDRAW_FEE("WITHDRAW_FEE", "取现手续费"),
 
-    API("API", "征信接口支出");
+    API("API", "征信接口支出"),
+
+    WITHDRAW_ENTER("withdraw_enter", "提现回录"),
+
+    CHARGE("CHARGE", "boss充值");
 
     public static EJourBizTypePlat getBizType(String code) {
         Map<String, EJourBizTypePlat> map = getBizTypeMap();

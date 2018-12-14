@@ -8,6 +8,7 @@
  */
 package com.cdkj.ylq.ao.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +25,17 @@ import com.cdkj.ylq.bo.IJourBO;
 import com.cdkj.ylq.bo.ISYSUserBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.base.Paginable;
+import com.cdkj.ylq.common.AmountUtil;
 import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.enums.EAccountType;
 import com.cdkj.ylq.enums.EBorrowStatus;
+import com.cdkj.ylq.enums.EChannelType;
+import com.cdkj.ylq.enums.EJourBizTypePlat;
+import com.cdkj.ylq.enums.ESystemAccount;
 import com.cdkj.ylq.exception.BizException;
+import com.cdkj.ylq.exception.EBizErrorCode;
 
 /** 
  * @author: haiqingzheng 
@@ -141,6 +147,30 @@ public class AccountAOImpl implements IAccountAO {
         }
         accountBO.editBankcard(code, realName, bankcardNumber, bankCode,
             bankName, status);
+    }
+
+    // 取现回录
+    @Override
+    public void withdrawEnter(String accountNumber, BigDecimal amount,
+            String withDate, String channelOrder, String withNote,
+            String updater) {
+        if (!ESystemAccount.SYS_ACOUNT_OFFLINE.getCode().equals(accountNumber)) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "只支持系统托管账户");
+        }
+
+        Account account = accountBO.getAccount(accountNumber);
+        if (account.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "账户余额不足");
+        }
+
+        String bizNote = "平台于" + withDate + "进行取现"
+                + AmountUtil.div(amount, 1000L) + "元";
+        if (StringUtils.isNotBlank(withNote)) {
+            bizNote = bizNote + withNote;
+        }
+        accountBO.changeAmount(account, amount.negate(), EChannelType.Offline,
+            channelOrder, channelOrder,
+            EJourBizTypePlat.WITHDRAW_ENTER.getCode(), bizNote);
     }
 
 }

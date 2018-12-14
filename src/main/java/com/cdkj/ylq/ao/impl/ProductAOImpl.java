@@ -79,6 +79,7 @@ public class ProductAOImpl implements IProductAO {
         data.setRemark(req.getRemark());
         data.setCompanyCode(req.getCompanyCode());
         data.setOrderNo(StringValidater.toInteger(req.getOrderNo()));
+        data.setRemark(req.getRemark());
 
         productBO.saveProduct(data);
         return code;

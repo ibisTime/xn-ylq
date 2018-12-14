@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
+import com.cdkj.ylq.bo.IBorrowOrderBO;
 import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.INoticerBO;
 import com.cdkj.ylq.bo.IProductBO;
@@ -50,6 +51,9 @@ public class ApplyAOImpl implements IApplyAO {
 
     @Autowired
     private IProductBO productBO;
+
+    @Autowired
+    private IBorrowOrderBO borrowOrderBO;
 
     @Autowired
     private ICertificationBO certificationBO;
@@ -193,10 +197,13 @@ public class ApplyAOImpl implements IApplyAO {
     @Override
     public Apply getApply(String code) {
         Apply apply = applyBO.getApply(code);
+        User user = userBO.getUser(apply.getApplyUser());
         apply.setUser(userBO.getUser(apply.getApplyUser()));
         List<Certification> certifications = certificationBO
             .queryCertiedList(apply.getApplyUser());
         apply.setCertifications(certifications);
+        apply
+            .setBorrowCount(borrowOrderBO.getTotalBorrowCount(user.getUserId()));
         return apply;
     }
 
@@ -222,11 +229,7 @@ public class ApplyAOImpl implements IApplyAO {
                 res.setStatus("0");
             } else {
                 // 获得最新申请单
-                Apply data = null;
-                for (Apply apply : applies) {
-                    data = apply;
-                    break;
-                }
+                Apply data = applies.get(0);
                 for (Apply apply : applies) {
                     if (apply.getApplyDatetime().after(data.getApplyDatetime())) {
                         data = apply;
@@ -251,7 +254,7 @@ public class ApplyAOImpl implements IApplyAO {
                         res.setStatus("4");
                         res.setValidDays(DateUtil.daysBetween(
                             DateUtil.getTodayStart(),
-                            certification.getValidDatetime()));
+                            certification.getValidDatetime()) + 1);
                     }
                 }
 

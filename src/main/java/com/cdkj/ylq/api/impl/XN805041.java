@@ -22,12 +22,14 @@ public class XN805041 extends AProcessor {
     private XN805041Req req = null;
 
     @Override
-    public synchronized Object doBusiness() throws BizException {
-        return userAO.doRegister(req.getMobile(), req.getLoginPwd(),
-            req.getUserReferee(), req.getUserRefereeKind(),
-            req.getSmsCaptcha(), req.getProvince(), req.getCity(),
-            req.getArea(), req.getAddress(), req.getCompanyCode(),
-            req.getCreateClient());
+    public Object doBusiness() throws BizException {
+        synchronized (IUserAO.class) {
+            return userAO.doRegister(req.getMobile(), req.getLoginPwd(),
+                req.getUserReferee(), req.getUserRefereeKind(),
+                req.getSmsCaptcha(), req.getProvince(), req.getCity(),
+                req.getArea(), req.getAddress(), req.getCompanyCode(),
+                req.getCreateClient());
+        }
     }
 
     @Override

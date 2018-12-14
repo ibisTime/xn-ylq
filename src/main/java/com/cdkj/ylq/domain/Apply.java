@@ -77,6 +77,17 @@ public class Apply extends ABaseDO {
     // 已认证节点
     private List<Certification> certifications;
 
+    // 借款次数
+    private Integer borrowCount;
+
+    public Integer getBorrowCount() {
+        return borrowCount;
+    }
+
+    public void setBorrowCount(Integer borrowCount) {
+        this.borrowCount = borrowCount;
+    }
+
     public List<Certification> getCertifications() {
         return certifications;
     }

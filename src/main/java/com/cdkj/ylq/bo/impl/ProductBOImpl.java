@@ -58,7 +58,6 @@ public class ProductBOImpl extends PaginableBOImpl<Product> implements
         data.setStatus(EProductStatus.ON.getCode());
         data.setUpdater(updater);
         data.setUpdateDatetime(new Date());
-        data.setRemark(remark);
         return productDAO.updatePutOn(data);
     }
 
@@ -67,7 +66,6 @@ public class ProductBOImpl extends PaginableBOImpl<Product> implements
         data.setStatus(EProductStatus.OFF.getCode());
         data.setUpdater(updater);
         data.setUpdateDatetime(new Date());
-        data.setRemark(remark);
         return productDAO.updatePutOff(data);
     }
 

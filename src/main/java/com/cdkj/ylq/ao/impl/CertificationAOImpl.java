@@ -140,6 +140,7 @@ public class CertificationAOImpl implements ICertificationAO {
             JsonUtils.object2Json(req), InfoZqzn.class);
         infoZqzn.setFrontImage(frontImage);
         infoZqzn.setBackImage(backImage);
+        infoZqzn.setFaceImage(faceImage);
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_ZQZN);
         // 认证成功
@@ -344,7 +345,7 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                     DateUtil.getTodayStart(), config));
-                certification.setRef(notification.getTask_id());
+                certification.setRef(notification.getMessage());
                 certificationBO.refreshCertification(certification);
             }
             if (certificationBO.isCompleteCerti(userId)) {
@@ -426,7 +427,7 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                     DateUtil.getTodayStart(), config));
-                certification.setRef(notification.getTask_id());
+                certification.setRef(notification.getMessage());
                 certificationBO.refreshCertification(certification);
             }
             if (certificationBO.isCompleteCerti(userId)) {
@@ -852,10 +853,12 @@ public class CertificationAOImpl implements ICertificationAO {
                     certificationBO.makeInvalid(contact);
 
                 }
-                certificationBO.makeInvalid(certification);
+
                 // 如果额度失效，用户还未使用该额度，则将产品重置可申请
                 if (ECertiKey.INFO_AMOUNT.getCode().equals(
                     certification.getCertiKey())) {
+                    // 信用分失效后重置为0
+                    certificationBO.resetSxAmount(certification.getUserId());
                     Apply apply = applyBO.getCurrentApply(certification
                         .getUserId());
                     if (apply != null
@@ -865,6 +868,7 @@ public class CertificationAOImpl implements ICertificationAO {
                         applyBO.refreshStatus(apply);
                     }
                 }
+                certificationBO.makeInvalid(certification);
             }
         }
         logger.info("***************结束扫描认证结果***************");

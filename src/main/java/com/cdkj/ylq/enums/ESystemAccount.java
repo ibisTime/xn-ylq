@@ -10,7 +10,8 @@ import java.util.Map;
  */
 public enum ESystemAccount {
 
-    SYS_ACOUNT_CNY("SYS_ACOUNT_CNY", "平台人民币盈亏账户");
+    SYS_ACOUNT_CNY("SYS_ACOUNT_CNY", "平台人民币盈亏账户"), SYS_ACOUNT_OFFLINE(
+            "SYS_ACOUNT_OFFLINE", "线下托管账户");
 
     public static Map<String, ESystemAccount> getMap() {
         Map<String, ESystemAccount> map = new HashMap<String, ESystemAccount>();

@@ -79,7 +79,7 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
         borrow.setStatus(status);
         borrow.setUpdater(approver);
         borrow.setUpdateDatetime(now);
-        borrow.setRemark("已完成审核");
+        borrow.setRemark(approveNote);
         borrowOrderDAO.updateApprove(borrow);
     }
 

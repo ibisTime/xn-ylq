@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cdkj.ylq.ao.ICertificationAO;
+import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.common.JsonUtil;
+import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.MxAlipayNotification;
 import com.cdkj.ylq.domain.MxCarrierNofification;
+import com.cdkj.ylq.enums.ECertiKey;
 
 /** 
  * @author: haiqingzheng 
@@ -38,6 +41,9 @@ public class CallbackConroller {
 
     @Autowired
     ICertificationAO certificationAO;
+
+    @Autowired
+    ICertificationBO certificationBO;
 
     // ******魔蝎报告回调处理
 
@@ -94,7 +100,12 @@ public class CallbackConroller {
             if (StringUtils.equals(eventName.toLowerCase(), "task")) {
                 MxCarrierNofification notification = JsonUtil.json2Bean(body,
                     MxCarrierNofification.class);
-                certificationAO.doMxCarrierTaskCallback(notification);
+                String userId = notification.getUser_id();
+                Certification carrier = certificationBO.getCertification(
+                    userId, ECertiKey.INFO_CARRIER);
+                if (carrier.getResult() == null) {
+                    certificationAO.doMxCarrierTaskCallback(notification);
+                }
             }
 
             // 任务采集失败
@@ -102,7 +113,12 @@ public class CallbackConroller {
                 // 通知状态变更为 '认证失败'
                 MxCarrierNofification notification = JsonUtil.json2Bean(body,
                     MxCarrierNofification.class);
-                certificationAO.doMxCarrierTaskFailCallback(notification);
+                String userId = notification.getUser_id();
+                Certification carrier = certificationBO.getCertification(
+                    userId, ECertiKey.INFO_CARRIER);
+                if (carrier.getResult() == null) {
+                    certificationAO.doMxCarrierTaskFailCallback(notification);
+                }
             }
 
             // 如果事件类型是report(用户报告通知)
@@ -121,12 +137,22 @@ public class CallbackConroller {
             if (StringUtils.equalsIgnoreCase(eventName, "task")) {
                 MxAlipayNotification notification = JsonUtil.json2Bean(body,
                     MxAlipayNotification.class);
-                certificationAO.doMxAlipayTaskCallback(notification);
+                String userId = notification.getUser_id();
+                Certification alipay = certificationBO.getCertification(userId,
+                    ECertiKey.INFO_ZHIFUBAO);
+                if (alipay.getResult() == null) {
+                    certificationAO.doMxAlipayTaskCallback(notification);
+                }
             }
             if (StringUtils.equalsIgnoreCase(eventName, "task.fail")) {
                 MxAlipayNotification notification = JsonUtil.json2Bean(body,
                     MxAlipayNotification.class);
-                certificationAO.doMxAlipayTaskFailCallback(notification);
+                String userId = notification.getUser_id();
+                Certification alipay = certificationBO.getCertification(userId,
+                    ECertiKey.INFO_ZHIFUBAO);
+                if (alipay.getResult() == null) {
+                    certificationAO.doMxAlipayTaskFailCallback(notification);
+                }
             }
             if (StringUtils.equalsIgnoreCase(eventName, "report")) {
                 MxAlipayNotification notification = JsonUtil.json2Bean(body,

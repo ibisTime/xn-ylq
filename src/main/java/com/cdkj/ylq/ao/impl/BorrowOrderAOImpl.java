@@ -41,6 +41,7 @@ import com.cdkj.ylq.domain.Certification;
 import com.cdkj.ylq.domain.Company;
 import com.cdkj.ylq.domain.InfoAmount;
 import com.cdkj.ylq.domain.Noticer;
+import com.cdkj.ylq.domain.Overdue;
 import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.RepayApply;
 import com.cdkj.ylq.domain.StageInfo;
@@ -220,8 +221,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         // 额度减去
         certificationBO.refreshSxAmount(borrow.getApplyUser(), borrow
             .getAmount().negate());
-        // 信用分减少
-        applyBO.refreshCreditScore(userId, totalAmount);
         // 通知审批人
         List<Noticer> noticers = noticerBO.queryNoticersNow(
             ENoticerType.Approver.getCode(), user.getCompanyCode());
@@ -289,46 +288,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 }
             }
         }
-        // // 初始化第一期第一天分期数据
-        //
-        // for (Staging staging : stageList) {
-        // if (staging.getCount() == 1) {
-        // stageInfo.setStageCode(staging.getCode());
-        // stageInfo.setLxAmount(staging.getRate().multiply(
-        // order.getAmount()));
-        // stageInfo.setMainAmount(staging.getMainAmount());
-        // stageInfo.setAmount(stageInfo.getLxAmount().add(
-        // stageInfo.getMainAmount()));
-        // stageInfo.setDate(DateUtil.dateToStr(staging.getStartPayDate(),
-        // DateUtil.FRONT_DATE_FORMAT_STRING));
-        // stageInfo.setStageCount(staging.getCount().intValue());
-        // stageInfo.setRemark("第1期第1天还款情况");
-        // order.setInfo(stageInfo);
-        // break;
-        // }
-        // }
-
-        // 已还本期，时间还未到下期，展示下期第一天情况
-        // for (Staging data : stageList) {
-        // if (now.after(data.getStartPayDate())
-        // && now.before(data.getLastPayDate())
-        // && EStagingStatus.REPAY.getCode().equals(data.getStatus())) {
-        // Staging staging = stagingBO.getNextStaging(data);
-        //
-        // stageInfo.setStageCode(staging.getCode());
-        // stageInfo.setLxAmount(staging.getRate().multiply(
-        // order.getAmount()));
-        // stageInfo.setMainAmount(staging.getMainAmount());
-        // stageInfo.setAmount(stageInfo.getLxAmount().add(
-        // stageInfo.getMainAmount()));
-        // stageInfo.setDate(DateUtil.dateToStr(staging.getStartPayDate(),
-        // DateUtil.FRONT_DATE_FORMAT_STRING));
-        // stageInfo.setStageCount(staging.getCount().intValue());
-        // stageInfo.setRemark("第" + staging.getCount() + "期第1天还款情况");
-        // order.setInfo(stageInfo);
-        // break;
-        // }
-        // }
         for (Staging staging : stageList) {
             if (EStagingStatus.REPAY.getCode().equals(staging.getStatus())) {
                 // 构建还款信息
@@ -347,30 +306,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             } else {
                 Date startDate = staging.getStartPayDate();
 
-                // // 如果还款开始时间在当前时间之前，按当前时间算
-                // if (now.after(startDate)) {
-                // startDate = now;
-                // // 距离开始时间已有几天
-                // int days = DateUtil.daysBetween(staging.getStartPayDate(),
-                // startDate) + 1;
-                // // 利息=利率*天数*分期总本金
-                // BigDecimal lxAmount = staging.getRate()
-                // .multiply(new BigDecimal(days))
-                // .multiply(order.getAmount());
-                // // 可以开始还款，覆盖初始化的分期数据
-                // StageInfo info = new StageInfo();
-                // info.setStageCode(staging.getCode());
-                // info.setLxAmount(lxAmount);
-                // info.setMainAmount(staging.getMainAmount());
-                // info.setAmount(lxAmount.add(staging.getMainAmount()));
-                // info.setDate(DateUtil.dateToStr(startDate,
-                // DateUtil.FRONT_DATE_FORMAT_STRING));
-                // info.setStatus(staging.getStatus());
-                // info.setStageCount(staging.getCount().intValue());
-                // info.setRemark("第" + staging.getCount() + "期，第" + days
-                // + "天");
-                // order.setInfo(info);
-                // }
                 for (; startDate.before(staging.getLastPayDate()); startDate = DateUtil
                     .getRelativeDateOfDays(startDate, 1)) {
                     // 距离开始时间已有几天
@@ -455,6 +390,10 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         User user = borrow.getUser();
         Integer count = borrowOrderBO.getTotalBorrowCount(user.getUserId());
         borrow.setBorrowCount(count);
+        Overdue condition = new Overdue();
+        condition.setUserId(borrow.getApplyUser());
+        Integer yqCount = (int) overdueBO.getTotalCount(condition);
+        borrow.setYqCount(yqCount);
         return borrow;
     }
 
@@ -486,9 +425,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             status = EBorrowStatus.APPROVE_NO.getCode();
             // 使用优惠券
             userCouponBO.useCancel(borrow.getCode());
-            // 更新授信额度
-            applyBO.refreshCreditScore(borrow.getApplyUser(), borrow
-                .getAmount().negate());
             // 返还额度信用分
             certificationBO.refreshSxAmount(borrow.getApplyUser(),
                 borrow.getAmount());
@@ -705,9 +641,9 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         }
         // 额度重置为0
         certificationBO.resetSxAmount(borrow.getApplyUser());
+        User user = userBO.getUser(borrow.getApplyUser());
         // 将用户拉入黑名单
-        userBO.addBlacklist(borrow.getApplyUser(), "bad_debt", updater,
-            "借钱不还，已确认坏账");
+        userBO.refereshBlack(user);
 
     }
 
@@ -926,8 +862,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             Date lastPayDate = DateUtil.getDaysEnd(borrow.getHkDatetime(),
                 (int) ((i + 1) * cycle));
             // 每期本金
-            BigDecimal mainAmount = borrow.getTotalAmount()
-                .divide(new BigDecimal(count)).setScale(0, BigDecimal.ROUND_UP);
+            BigDecimal mainAmount = borrow.getTotalAmount().divide(
+                new BigDecimal(count), 0, BigDecimal.ROUND_UP);
             // 落地本期
             stagingBO.saveStaging(borrow.getApplyUser(), orderCode, mainAmount,
                 rate, startPayDate, lastPayDate, (long) (i + 1),
@@ -967,8 +903,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 (int) ((i + 1) * cycle - 1));
             // 每期本金
             BigDecimal mainAmount = borrow.getTotalAmount()
-                .subtract(borrow.getYqlxAmount()).divide(new BigDecimal(count))
-                .setScale(0, BigDecimal.ROUND_UP);
+                .subtract(borrow.getYqlxAmount())
+                .divide(new BigDecimal(count), 0, BigDecimal.ROUND_UP);
             if (i == 0) {
                 mainAmount = mainAmount.add(borrow.getYqlxAmount());
             }
@@ -1005,9 +941,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 Date startPayDate = DateUtil.getDaysStart(
                     order.getHkDatetime(), (int) (i * cycle + 1));
                 // 每期本金
-                BigDecimal mainAmount = order.getTotalAmount()
-                    .divide(new BigDecimal(count))
-                    .setScale(0, BigDecimal.ROUND_UP);
+                BigDecimal mainAmount = order.getTotalAmount().divide(
+                    new BigDecimal(count), 0, BigDecimal.ROUND_UP);
                 for (int j = 1; j <= cycle; j++) {
                     StageInfo info = new StageInfo();
                     info.setDate(DateUtil.dateToStr(startPayDate,
@@ -1073,7 +1008,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
     public void repayWarning(String code) {
         BorrowOrder order = borrowOrderBO.getBorrow(code);
         String content = "尊敬的用户，您的"
-                + order.getAmount().toString()
+                + order.getAmount().divide(new BigDecimal(1000)).toString()
                 + "借款还款时间截止到"
                 + DateUtil.dateToStr(order.getHkDatetime(),
                     DateUtil.FRONT_DATE_FORMAT_STRING) + "，请及时还款";

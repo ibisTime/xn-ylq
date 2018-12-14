@@ -1,5 +1,6 @@
 package com.cdkj.ylq.ao.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.cdkj.ylq.bo.IBusinessManBO;
 import com.cdkj.ylq.bo.IChargeBO;
 import com.cdkj.ylq.bo.ICompanyBO;
 import com.cdkj.ylq.bo.ICouponBO;
+import com.cdkj.ylq.bo.IJourBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISYSDictBO;
 import com.cdkj.ylq.bo.ISYSMenuBO;
@@ -28,6 +30,7 @@ import com.cdkj.ylq.domain.Account;
 import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.domain.Company;
 import com.cdkj.ylq.domain.Coupon;
+import com.cdkj.ylq.domain.Jour;
 import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.SYSDict;
 import com.cdkj.ylq.domain.SYSMenu;
@@ -83,6 +86,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
     private ISYSDictBO sysDictBO;
 
     @Autowired
+    private IJourBO jourBO;
+
+    @Autowired
     private IChargeBO chargeBO;
 
     @Override
@@ -97,8 +103,17 @@ public class BusinessManAOImpl implements IBusinessManAO {
                 ECurrency.CNY.getCode()));
             Company company = companyBO.getCompany(man.getCompanyCode());
             man.setCompany(company);
+            man.setOutAmount(outAmount(man));
         }
         return page;
+    }
+
+    private BigDecimal outAmount(BusinessMan man) {
+        Jour condition = new Jour();
+        condition.setUserId(man.getUserId());
+        condition.setBizType(EJourBizTypeBoss.API.getCode());
+
+        return jourBO.getTotalAmount(condition);
     }
 
     @Override

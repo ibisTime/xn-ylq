@@ -23,8 +23,11 @@ import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EChannelType;
 import com.cdkj.ylq.enums.EChargeStatus;
+import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.enums.EJourBizTypeBoss;
+import com.cdkj.ylq.enums.EJourBizTypePlat;
 import com.cdkj.ylq.enums.EPayType;
+import com.cdkj.ylq.enums.ESystemAccount;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.EBizErrorCode;
 
@@ -106,6 +109,15 @@ public class ChargeAOImpl implements IChargeAO {
             EChannelType.Offline, null, data.getCode(),
             EJourBizTypeBoss.CHARGE.getCode(), "线下充值");
 
+        Account account = accountBO.getAccount(data.getAccountNumber());
+        if (ECurrency.CNY.getCode().equals(account.getCurrency())) {
+            // 线下托管账户加钱
+            Account sysAccountOffLine = accountBO
+                .getAccount(ESystemAccount.SYS_ACOUNT_OFFLINE.getCode());
+            accountBO.changeAmount(sysAccountOffLine, data.getAmount(),
+                EChannelType.Offline, null, data.getCode(),
+                EJourBizTypePlat.CHARGE.getCode(), "线下充值");
+        }
     }
 
     @Override

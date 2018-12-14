@@ -8,6 +8,7 @@
  */
 package com.cdkj.ylq.ao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.cdkj.ylq.bo.base.Paginable;
@@ -39,5 +40,9 @@ public interface IAccountAO {
     public void editBankcard(String userId, String code, String realName,
             String bankcardNumber, String bankCode, String bankName,
             String status);
+
+    public void withdrawEnter(String accountNumber, BigDecimal amount,
+            String withDate, String channelOrder, String withNote,
+            String updater);
 
 }

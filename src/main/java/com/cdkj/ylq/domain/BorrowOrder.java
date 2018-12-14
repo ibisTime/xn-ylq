@@ -172,6 +172,17 @@ public class BorrowOrder extends ABaseDO {
     // 借款次数
     private Integer borrowCount;
 
+    // 逾期次数
+    private Integer yqCount;
+
+    public Integer getYqCount() {
+        return yqCount;
+    }
+
+    public void setYqCount(Integer yqCount) {
+        this.yqCount = yqCount;
+    }
+
     public Integer getBorrowCount() {
         return borrowCount;
     }

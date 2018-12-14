@@ -1,5 +1,6 @@
 package com.cdkj.ylq.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.cdkj.ylq.dao.base.ABaseDO;
@@ -87,15 +88,16 @@ public class BusinessMan extends ABaseDO {
 
     private Company company;
 
-    // private String keyword;
-    //
-    // public String getKeyword() {
-    // return keyword;
-    // }
-    //
-    // public void setKeyword(String keyword) {
-    // this.keyword = keyword;
-    // }
+    // 累计支出
+    private BigDecimal outAmount;
+
+    public BigDecimal getOutAmount() {
+        return outAmount;
+    }
+
+    public void setOutAmount(BigDecimal outAmount) {
+        this.outAmount = outAmount;
+    }
 
     public Company getCompany() {
         return company;
