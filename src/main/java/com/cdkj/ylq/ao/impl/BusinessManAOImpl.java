@@ -113,7 +113,7 @@ public class BusinessManAOImpl implements IBusinessManAO {
         condition.setUserId(man.getUserId());
         condition.setBizType(EJourBizTypeBoss.API.getCode());
 
-        return jourBO.getTotalAmount(condition);
+        return jourBO.getTotalAmount(condition).negate();
     }
 
     @Override
@@ -135,6 +135,7 @@ public class BusinessManAOImpl implements IBusinessManAO {
             .getCompanyCode());
         man.setAccount(accountBO.getAccountByUser(boss.getUserId(),
             ECurrency.CNY.getCode()));
+        man.setOutAmount(outAmount(man));
         return man;
     }
 
@@ -325,6 +326,7 @@ public class BusinessManAOImpl implements IBusinessManAO {
             .getCompanyCode());
         man.setAccount(accountBO.getAccountByUser(boss.getUserId(),
             ECurrency.CNY.getCode()));
+        man.setOutAmount(outAmount(man));
         return man;
     }
 }

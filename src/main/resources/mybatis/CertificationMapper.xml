@@ -11,6 +11,7 @@
 		<result column="cer_datetime" property="cerDatetime" />
 		<result column="valid_datetime" property="validDatetime" />
 		<result column="ref" property="ref" />
+		<result column="message" property="message" />
 		<result column="company_code" property="companyCode" />
 	</resultMap>
 	<sql id="where_condition">
@@ -51,6 +52,7 @@
 		,t.cer_datetime
 		,t.valid_datetime
 		,t.ref
+		,t.message
 		,t.company_code
 		FROM
 		tjd_certification t
@@ -100,6 +102,7 @@
 		,cer_datetime = #{cerDatetime}
 		,valid_datetime = #{validDatetime}
 		,ref = #{ref}
+		,message=#{message}
 		WHERE id = #{id}
 	</update>
 	

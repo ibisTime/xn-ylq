@@ -8,6 +8,8 @@
 		<result column="apply_user" property="applyUser" />
 		<result column="sign_datetime" property="signDatetime" />
 		<result column="amount" property="amount" />
+		<result column="borrow_amount" property="borrowAmount" />
+		<result column="real_get_amount" property="realGetAmount" />
 		<result column="level" property="level" />
 		<result column="duration" property="duration" />
 		<result column="fk_datetime" property="fkDatetime" />
@@ -117,6 +119,8 @@
 		,t.apply_user
 		,t.sign_datetime
 		,t.amount
+		,t.borrow_amount
+		,t.real_get_amount
 		,t.level
 		,t.duration
 		,t.fk_datetime
@@ -175,6 +179,8 @@
 		,apply_user
 		,sign_datetime
 		,amount
+		,borrow_amount
+		,real_get_amount
 		
 		,level
 		,duration
@@ -213,6 +219,8 @@
 		,#{applyUser}
 		,#{signDatetime}
 		,#{amount}
+		,#{borrowAmount}
+		,#{realGetAmount}
 		
 		,#{level}
 		,#{duration}
@@ -260,7 +268,9 @@
 	<update id="update_loanSuccess" parameterType="borrowOrder">
 		UPDATE tjd_borrow_order
 		SET
-		fk_datetime = #{fkDatetime}
+		borrow_amount=#{borrowAmount}
+		,real_get_amount=#{realGetAmount}
+		,fk_datetime = #{fkDatetime}
 		,jx_datetime = #{jxDatetime}
 		,hk_datetime = #{hkDatetime}
 		,loan_type = #{loanType}
@@ -342,6 +352,7 @@
 		status = #{status}
 		,yq_days = #{yqDays}
 		,yqlx_amount = #{yqlxAmount}
+		,amount=#{amount}
 		,total_amount = #{totalAmount}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}

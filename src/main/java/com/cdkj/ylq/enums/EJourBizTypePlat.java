@@ -21,7 +21,9 @@ public enum EJourBizTypePlat {
 
     WITHDRAW_ENTER("withdraw_enter", "提现回录"),
 
-    CHARGE("CHARGE", "boss充值");
+    CHARGE("CHARGE", "boss充值"),
+
+    WITHDRAW_TRANS_FEE("WITHDRAW_TRANS_FEE", "转账费");
 
     public static EJourBizTypePlat getBizType(String code) {
         Map<String, EJourBizTypePlat> map = getBizTypeMap();

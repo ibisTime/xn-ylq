@@ -24,6 +24,9 @@ public class XN805120Req extends APageReq {
     // 推荐人(选填)
     private String userReferee;
 
+    // 推荐人类型（选填）
+    private String refereeType;
+
     // 证件类型(选填)
     private String idKind;
 
@@ -254,6 +257,14 @@ public class XN805120Req extends APageReq {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public String getRefereeType() {
+        return refereeType;
+    }
+
+    public void setRefereeType(String refereeType) {
+        this.refereeType = refereeType;
     }
 
     public String getEmail() {

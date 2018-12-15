@@ -33,13 +33,13 @@
 	
 	<sql id="join_condition">
 		<if test="realName != null and realName != '' ">
-			left join tjd_business_man m on t.apply_user = m.user_id
+			left join tjd_business_man tu on t.apply_user = m.user_id
 		</if>
 	</sql>
 	
 	<sql id="where_realname_condition">
 			<if test="realName != null and realName != '' ">
-				AND m.mobile like "%"#{realName}"%" OR m.real_name like "%"#{realName}"%"
+				AND (concat_ws('-', tu.real_name, tu.mobile) like "%"#{realName}"%"
 			</if>
 	</sql>
 

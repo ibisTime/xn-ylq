@@ -252,6 +252,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
     @Transactional
     public String repayStage(String code) {
         Staging staging = stagingBO.getStaging(code);
+        BorrowOrder order = borrowOrderBO.getBorrow(staging.getOrderCode());
         if (!EStagingStatus.TOREPAY.getCode().equals(staging.getStatus())) {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "分期计划不处于待还款状态，不能进行还款操作");
@@ -272,7 +273,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         int days = DateUtil.daysBetween(staging.getStartPayDate(), new Date()) + 1;
         // 计算利息
         BigDecimal lxAmount = new BigDecimal(days).multiply(staging.getRate())
-            .multiply(staging.getMainAmount());
+            .multiply(order.getAmount());
         // 还款金额
         BigDecimal payAmount = staging.getMainAmount().add(lxAmount);
 

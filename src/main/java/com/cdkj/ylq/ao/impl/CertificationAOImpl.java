@@ -66,7 +66,7 @@ import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.enums.EIDKind;
 import com.cdkj.ylq.enums.EJourBizTypeBoss;
 import com.cdkj.ylq.enums.EJourBizTypePlat;
-import com.cdkj.ylq.enums.ESysUser;
+import com.cdkj.ylq.enums.ESystemAccount;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.EBizErrorCode;
@@ -171,16 +171,21 @@ public class CertificationAOImpl implements ICertificationAO {
                 "认证失败，失败原因为:" + infoZqzn.getZqznInfoRealAuth().getReason());
         }
         BigDecimal fee = sysConfigBO.getBigDecimalValue(
-            ECertiKey.INFO_ZQZN.getCode(), ESystemCode.YLQ.getCode());
+            ECertiKey.INFO_ZQZN.getCode(), ESystemCode.YLQ.getCode()).multiply(
+            new BigDecimal(1000));
         Long id = certRecordBO.saveCertRecord(userId, fee,
             ECertiKey.INFO_ZQZN.getCode(), user.getCompanyCode());
         // 接口费用
         BusinessMan man = businessManBO.getBusinessManByCompanyCode(user
             .getCompanyCode());
-        accountBO.transAmount(man.getUserId(), ESysUser.SYS_USER.getCode(),
-            ECurrency.CNY.getCode(), fee, EJourBizTypeBoss.API.getCode(),
-            EJourBizTypePlat.API.getCode(), EJourBizTypeBoss.API.getValue(),
-            EJourBizTypePlat.API.getValue(), id.toString());
+        Account toAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
+        Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
+            ECurrency.CNY.getCode());
+        accountBO.transAmount(fromAccount, toAccount, fee,
+            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypeBoss.API.getValue(), EJourBizTypePlat.API.getValue(),
+            id.toString());
         return infoZqzn;
     }
 
@@ -345,7 +350,8 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                     DateUtil.getTodayStart(), config));
-                certification.setRef(notification.getMessage());
+                certification.setRef(notification.getTask_id());
+                certification.setMessage(notification.getMessage());
                 certificationBO.refreshCertification(certification);
             }
             if (certificationBO.isCompleteCerti(userId)) {
@@ -364,16 +370,21 @@ public class CertificationAOImpl implements ICertificationAO {
             }
         }
         BigDecimal fee = sysConfigBO.getBigDecimalValue(
-            ECertiKey.INFO_CARRIER.getCode(), ESystemCode.YLQ.getCode());
+            ECertiKey.INFO_CARRIER.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
         Long id = certRecordBO.saveCertRecord(userId, fee,
             ECertiKey.INFO_CARRIER.getCode(), certification.getCompanyCode());
         // 接口费用
         BusinessMan man = businessManBO
             .getBusinessManByCompanyCode(certification.getCompanyCode());
-        accountBO.transAmount(man.getUserId(), ESysUser.SYS_USER.getCode(),
-            ECurrency.CNY.getCode(), fee, EJourBizTypeBoss.API.getCode(),
-            EJourBizTypePlat.API.getCode(), EJourBizTypeBoss.API.getValue(),
-            EJourBizTypePlat.API.getValue(), id.toString());
+        Account toAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
+        Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
+            ECurrency.CNY.getCode());
+        accountBO.transAmount(fromAccount, toAccount, fee,
+            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypeBoss.API.getValue(), EJourBizTypePlat.API.getValue(),
+            id.toString());
     }
 
     // 魔蝎支付宝登录完成回掉处理
@@ -427,7 +438,8 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setCerDatetime(new Date());
                 certification.setValidDatetime(DateUtil.getRelativeDateOfDays(
                     DateUtil.getTodayStart(), config));
-                certification.setRef(notification.getMessage());
+                certification.setRef(notification.getTask_id());
+                certification.setMessage(notification.getMessage());
                 certificationBO.refreshCertification(certification);
             }
             if (certificationBO.isCompleteCerti(userId)) {
@@ -446,16 +458,21 @@ public class CertificationAOImpl implements ICertificationAO {
             }
         }
         BigDecimal fee = sysConfigBO.getBigDecimalValue(
-            ECertiKey.INFO_ZHIFUBAO.getCode(), ESystemCode.YLQ.getCode());
+            ECertiKey.INFO_ZHIFUBAO.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
         Long id = certRecordBO.saveCertRecord(userId, fee,
             ECertiKey.INFO_ZHIFUBAO.getCode(), certification.getCompanyCode());
         // 接口费用
         BusinessMan man = businessManBO
             .getBusinessManByCompanyCode(certification.getCompanyCode());
-        accountBO.transAmount(man.getUserId(), ESysUser.SYS_USER.getCode(),
-            ECurrency.CNY.getCode(), fee, EJourBizTypeBoss.API.getCode(),
-            EJourBizTypePlat.API.getCode(), EJourBizTypeBoss.API.getValue(),
-            EJourBizTypePlat.API.getValue(), id.toString());
+        Account toAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
+        Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
+            ECurrency.CNY.getCode());
+        accountBO.transAmount(fromAccount, toAccount, fee,
+            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypeBoss.API.getValue(), EJourBizTypePlat.API.getValue(),
+            id.toString());
     }
 
     @Override
@@ -1122,7 +1139,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public void checkAmount(String key, String userId) {
         User user = userBO.getUser(userId);
         BigDecimal fee = sysConfigBO.getBigDecimalValue(key,
-            ESystemCode.YLQ.getCode());
+            ESystemCode.YLQ.getCode()).multiply(new BigDecimal(1000));
         BusinessMan boss = businessManBO.getBusinessBoss(user.getCompanyCode());
         Account account = accountBO.getAccountByUser(boss.getUserId(),
             ECurrency.CNY.getCode());
@@ -1146,6 +1163,9 @@ public class CertificationAOImpl implements ICertificationAO {
     @Override
     public String duotouReport(String userId) {
         User user = userBO.getUser(userId);
+        if (user == null) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "用户不存在");
+        }
         if (user.getRealName() == null) {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "用户未实名认证，无法拉取多头报告");

@@ -25,6 +25,7 @@ import com.cdkj.ylq.enums.EBoolean;
 import com.cdkj.ylq.enums.EChannelType;
 import com.cdkj.ylq.enums.EJourBizTypeBoss;
 import com.cdkj.ylq.enums.EJourBizTypePlat;
+import com.cdkj.ylq.enums.ESystemAccount;
 import com.cdkj.ylq.enums.EWithdrawStatus;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.EBizErrorCode;
@@ -62,17 +63,21 @@ public class WithdrawAOImpl implements IWithdrawAO {
 
         // 账户可用余额是否充足
         if (dbAccount.getAmount().subtract(dbAccount.getFrozenAmount())
-            .compareTo(amount) == -1) {
+            .compareTo(amount.add(fee)) == -1) {
             throw new BizException("xn000000", "可用余额不足");
         }
         // 生成取现订单
         String withdrawCode = withdrawBO.applyOrder(dbAccount, amount, fee,
             payCardInfo, payCardNo, applyUser, applyUserType, applyNote);
 
-        // 冻结取现金额
+        // 冻结取现金额和手续费
         dbAccount = accountBO.frozenAmount(dbAccount, amount,
             EJourBizTypeBoss.WITHDRAW_FROZEN.getCode(),
             EJourBizTypeBoss.WITHDRAW_FROZEN.getValue(), withdrawCode);
+
+        dbAccount = accountBO.frozenAmount(dbAccount, fee,
+            EJourBizTypeBoss.WITHDRAW_FEE_FROZEN.getCode(),
+            EJourBizTypeBoss.WITHDRAW_FEE_FROZEN.getValue(), withdrawCode);
 
         return withdrawCode;
     }
@@ -110,6 +115,9 @@ public class WithdrawAOImpl implements IWithdrawAO {
         accountBO.unfrozenAmount(dbAccount, data.getAmount(),
             EJourBizTypeBoss.WITHDRAW_UNFROZEN.getCode(), "取现失败退回",
             data.getCode());
+        dbAccount = accountBO.unfrozenAmount(dbAccount, data.getFee(),
+            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getCode(),
+            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getValue(), data.getCode());
     }
 
     @Override
@@ -143,6 +151,9 @@ public class WithdrawAOImpl implements IWithdrawAO {
         accountBO.unfrozenAmount(dbAccount, data.getAmount(),
             EJourBizTypeBoss.WITHDRAW_UNFROZEN.getCode(), "取现失败退回",
             data.getCode());
+        accountBO.unfrozenAmount(dbAccount, data.getFee(),
+            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getCode(),
+            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getValue(), data.getCode());
     }
 
     private void payOrderYES(Withdraw data, String payUser, String payNote,
@@ -155,16 +166,30 @@ public class WithdrawAOImpl implements IWithdrawAO {
         accountBO.unfrozenAmount(dbAccount, data.getAmount(),
             EJourBizTypeBoss.WITHDRAW_UNFROZEN.getCode(),
             EJourBizTypeBoss.WITHDRAW_UNFROZEN.getValue(), data.getCode());
+        accountBO.unfrozenAmount(dbAccount, data.getFee(),
+            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getCode(),
+            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getValue(), data.getCode());
 
         // 用户账户取现并扣除手续费
         accountBO.changeAmount(dbAccount, data.getAmount().negate(),
             EChannelType.Offline, payCode, data.getCode(),
             EJourBizTypeBoss.WITHDRAW.getCode(), "取现成功");
 
-        accountBO.changeAmount(dbAccount, data.getFee().negate(),
-            EChannelType.Offline, payCode, data.getCode(),
-            EJourBizTypePlat.WITHDRAW_FEE.getCode(), "取现手续费");
+        Account pAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
 
+        accountBO.transAmount(dbAccount, pAccount, data.getFee(),
+            EJourBizTypeBoss.WITHDRAW_FEE.getCode(),
+            EJourBizTypePlat.WITHDRAW_FEE.getCode(),
+            EJourBizTypeBoss.WITHDRAW_FEE.getValue(),
+            EJourBizTypePlat.WITHDRAW_FEE.getValue(), data.getCode());
+
+        // 系统账户扣除转账费
+        Account sysAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
+        accountBO.changeAmount(sysAccount, payFee.negate(),
+            EChannelType.Offline, payCode, data.getCode(),
+            EJourBizTypePlat.WITHDRAW_TRANS_FEE.getCode(), "取现转账手续费");
     }
 
     @Override

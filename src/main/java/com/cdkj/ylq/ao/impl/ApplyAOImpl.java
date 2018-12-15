@@ -144,7 +144,8 @@ public class ApplyAOImpl implements IApplyAO {
     public void doApprove(String code, String approveResult,
             BigDecimal sxAmount, String approver, String approveNote) {
         Apply apply = applyBO.getApply(code);
-        if (!EApplyStatus.TO_APPROVE.getCode().equals(apply.getStatus())) {
+        if (!EApplyStatus.TO_APPROVE.getCode().equals(apply.getStatus())
+                && !EApplyStatus.APPROVE_NO.getCode().equals(apply.getStatus())) {
             throw new BizException("xn623021", "该申请记录不处于待审核状态");
         }
         String status = null;

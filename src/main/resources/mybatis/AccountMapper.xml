@@ -30,7 +30,7 @@
 	
 	<sql id="mobileForQuery_condition">
 		<if test="keyword != null and keyword != '' ">
-			AND tu.mobile like "%"#{keyword}"%" OR tu.real_name like "%"#{keyword}"%"
+			AND (concat_ws('-', tu.real_name, tu.mobile) like "%"#{keyword}"%"
 		</if>
 	</sql>
 	

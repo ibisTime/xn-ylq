@@ -31,6 +31,7 @@ public class XN805120 extends AProcessor {
         condition.setMobileForQuery(req.getMobile());
         condition.setNickname(req.getNickname());
         condition.setUserReferee(req.getUserReferee());
+        condition.setRefereeType(req.getRefereeType());
         condition.setIdKind(req.getIdKind());
         condition.setIdNo(req.getIdNo());
         condition.setRealName(req.getRealName());

@@ -188,6 +188,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setApplyUser(userId);
         borrow.setSignDatetime(now);
         borrow.setAmount(borrowAmount);
+        borrow.setBorrowAmunt(BigDecimal.ZERO);
+        borrow.setRealGetAmount(BigDecimal.ZERO);
         borrow.setLevel(product.getLevel());
         borrow.setDuration(product.getDuration());
 
@@ -341,6 +343,10 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             limit, condition);
         List<BorrowOrder> borrowList = results.getList();
         for (BorrowOrder borrow : borrowList) {
+            Overdue con = new Overdue();
+            con.setUserId(borrow.getApplyUser());
+            Integer yqCount = (int) overdueBO.getTotalCount(con);
+            borrow.setYqCount(yqCount);
             borrow.setUser(userBO.getUser(borrow.getApplyUser()));
             borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
             if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
@@ -670,7 +676,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         logger.info("***************结束扫描逾期借款***************");
     }
 
-    public void overdue(BorrowOrder borrow) {
+    private void overdue(BorrowOrder borrow) {
         // 逾期天数
         Integer yqDays = borrow.getYqDays() + 1;
         // 逾期利息
@@ -786,8 +792,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         List<Staging> stagingList = stagingBO.queryStagingList(condition);
 
         // 此次分期应付利息
-        BigDecimal lxAmount = staging.getRate()
-            .multiply(staging.getMainAmount())
+        BigDecimal lxAmount = staging.getRate().multiply(borrow.getAmount())
             .multiply(new BigDecimal(borrow.getStageCycle()));
 
         // 剩余未还总本金
@@ -806,7 +811,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         // 更新借款订单
         borrow.setYqDays(1);
         borrow.setYqlxAmount(yqlxAmount);
-        borrow.setTotalAmount(yqlxAmount.add(remainAmount));
+        borrow.setTotalAmount(lxAmount.add(yqlxAmount).add(remainAmount));
+        borrow.setAmount(lxAmount.add(remainAmount));
         borrow.setStatus(EBorrowStatus.OVERDUE.getCode());
         borrow.setUpdater("程序自动");
         borrow.setUpdateDatetime(new Date());
@@ -927,7 +933,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         BorrowOrder order = borrowOrderBO.getBorrow(orderCode);
 
         if (!EBorrowStatus.LOANING.getCode().equals(order.getStatus())
-                && !EBorrowStatus.OVERDUE.getCode().equals(order.getStatus())) {
+                && !EBorrowStatus.OVERDUE.getCode().equals(order.getStatus())
+                && EBoolean.NO.getCode().equals(order.getIsStage())) {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "只有已放款和逾期订单可以分期");
         }
@@ -947,8 +954,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                     StageInfo info = new StageInfo();
                     info.setDate(DateUtil.dateToStr(startPayDate,
                         DateUtil.FRONT_DATE_FORMAT_STRING));
-                    info.setLxAmount(order.getTotalAmount().multiply(
-                        new BigDecimal(i * cycle + j)));
+                    info.setLxAmount(order.getTotalAmount().multiply(rate)
+                        .multiply(new BigDecimal(j)));
                     info.setMainAmount(mainAmount);
                     info.setAmount(mainAmount.add(info.getLxAmount()));
                     info.setRemark("第" + (i + 1) + "期，第" + j + "天");
@@ -963,8 +970,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 // 每期本金
                 BigDecimal mainAmount = order.getTotalAmount()
                     .subtract(order.getYqlxAmount())
-                    .divide(new BigDecimal(count))
-                    .setScale(0, BigDecimal.ROUND_UP);
+                    .divide(new BigDecimal(count), 0, BigDecimal.ROUND_UP);
                 if (i == 0) {
                     mainAmount = mainAmount.add(order.getYqlxAmount());
                 }
@@ -972,8 +978,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                     StageInfo info = new StageInfo();
                     info.setDate(DateUtil.dateToStr(startPayDate,
                         DateUtil.FRONT_DATE_FORMAT_STRING));
-                    info.setLxAmount(order.getTotalAmount().multiply(
-                        new BigDecimal(i * cycle + j)));
+                    info.setLxAmount(order.getTotalAmount().multiply(rate)
+                        .multiply(new BigDecimal(j)));
                     info.setMainAmount(mainAmount);
                     info.setAmount(mainAmount.add(info.getLxAmount()));
                     info.setRemark("第" + (i + 1) + "期，第" + j + "天");

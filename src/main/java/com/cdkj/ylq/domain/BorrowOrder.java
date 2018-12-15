@@ -31,6 +31,12 @@ public class BorrowOrder extends ABaseDO {
     // 借款金额
     private BigDecimal amount;
 
+    // 初始借款金额
+    private BigDecimal borrowAmount;
+
+    // 实际打款金额
+    private BigDecimal realGetAmount;
+
     // 等级
     private String level;
 
@@ -189,6 +195,22 @@ public class BorrowOrder extends ABaseDO {
 
     public void setBorrowCount(Integer borrowCount) {
         this.borrowCount = borrowCount;
+    }
+
+    public BigDecimal getBorrowAmunt() {
+        return borrowAmount;
+    }
+
+    public void setBorrowAmunt(BigDecimal borrowAmunt) {
+        this.borrowAmount = borrowAmunt;
+    }
+
+    public BigDecimal getRealGetAmount() {
+        return realGetAmount;
+    }
+
+    public void setRealGetAmount(BigDecimal realGetAmount) {
+        this.realGetAmount = realGetAmount;
     }
 
     public StageInfo getInfo() {

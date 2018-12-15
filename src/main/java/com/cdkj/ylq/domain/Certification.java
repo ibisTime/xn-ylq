@@ -38,6 +38,9 @@ public class Certification extends ABaseDO {
     // 关联申请单
     private String ref;
 
+    // 认证信息
+    private String message;
+
     private String companyCode;
 
     // *** 查询字段 ****
@@ -47,6 +50,14 @@ public class Certification extends ABaseDO {
 
     // 认证名
     private String name;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public String getName() {
         return name;

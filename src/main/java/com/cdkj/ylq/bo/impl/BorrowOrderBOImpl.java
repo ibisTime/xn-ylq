@@ -92,6 +92,10 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
             Date jxDatetime = DateUtil.getTomorrowStart(fkDatetime);
             Date hkDatetime = DateUtil.getRelativeDate(jxDatetime,
                 borrow.getDuration() * 24 * 3600 - 1);
+            borrow.setBorrowAmunt(borrow.getAmount());
+            borrow.setRealGetAmount(borrow.getAmount()
+                .subtract(borrow.getFwAmount()).subtract(borrow.getGlAmount())
+                .subtract(borrow.getLxAmount()).subtract(borrow.getXsAmount()));
             borrow.setFkDatetime(fkDatetime);
             borrow.setJxDatetime(jxDatetime);
             borrow.setHkDatetime(hkDatetime);
@@ -162,6 +166,8 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
         if (borrow != null && StringUtils.isNotBlank(borrow.getCode())) {
             borrow.setRealHkDatetime(new Date());
             borrow.setRealHkAmount(borrow.getRealHkAmount().add(repayAmount));
+            borrow
+                .setTotalAmount(borrow.getTotalAmount().subtract(repayAmount));
             borrow.setPayType(EPayType.OFFLINE.getCode());
             borrow.setStatus(EBorrowStatus.REPAY.getCode());
             borrow.setIsStage(EBoolean.NO.getCode());
