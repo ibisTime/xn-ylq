@@ -23,4 +23,6 @@ public interface IStagingRuleBO extends IPaginableBO<StagingRule> {
 
     public StagingRule getStagingRule(String code);
 
+    public List<StagingRule> getModelRules();
+
 }

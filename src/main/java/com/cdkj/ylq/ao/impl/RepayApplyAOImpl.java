@@ -115,8 +115,8 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                     EOverdueDeal.REPAY.getCode());
             }
             // 更新借款订单信息
-            borrowOrderBO
-                .repayOffline(borrow, repayApply.getAmount(), approver);
+            borrowOrderBO.repayOffline(borrow, repayApply.getAmount(),
+                repayApply.getAmount(), approver);
             // 发放优惠券
             List<BorrowOrder> orders = borrowOrderBO.getCouponOrders(borrow
                 .getApplyUser());
@@ -187,7 +187,8 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
 
                 // 更新借款订单还款金额
                 borrowOrderBO.repayOffline(order,
-                    staging.getMainAmount().add(lxAmount), approver);
+                    staging.getMainAmount().add(lxAmount),
+                    staging.getMainAmount(), approver);
             } else {
                 // 更新借款订单还款金额
                 borrowOrderBO.refreshStageRepay(order, staging.getMainAmount(),
@@ -241,9 +242,17 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             repayApply
                 .setBorrow(borrowOrderBO.getBorrow(repayApply.getRefNo()));
         } else {
-            String orderCode = stagingBO.getStaging(repayApply.getRefNo())
-                .getOrderCode();
-            repayApply.setBorrow(borrowOrderBO.getBorrow(orderCode));
+            Staging staging = stagingBO.getStaging(repayApply.getRefNo());
+            repayApply
+                .setBorrow(borrowOrderBO.getBorrow(staging.getOrderCode()));
+            Date date = new Date();
+            if (staging.getPayDatetime() != null) {
+                date = staging.getPayDatetime();
+            }
+            int days = DateUtil.daysBetween(staging.getStartPayDate(), date) + 1;
+            int stageCount = staging.getCount().intValue();
+            repayApply.setDays(days);
+            repayApply.setStageCount(stageCount);
         }
         return repayApply;
     }

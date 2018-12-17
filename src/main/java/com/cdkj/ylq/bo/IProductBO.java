@@ -19,4 +19,6 @@ public interface IProductBO extends IPaginableBO<Product> {
 
     public List<Product> queryProductList(Product condition);
 
+    public List<Product> getModelProducts();
+
 }

@@ -18,6 +18,9 @@
 			<if test="code != null and code != '' ">
 				AND t.code = #{code}
 			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
+			</if>
 		</trim>
 	</sql>
 	<select id="select_stagingRule" parameterType="stagingRule" resultMap="stagingRule_DB_Result">

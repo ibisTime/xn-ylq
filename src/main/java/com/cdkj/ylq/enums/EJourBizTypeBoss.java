@@ -14,13 +14,9 @@ public enum EJourBizTypeBoss {
     // 人民币账户
     CHARGE("CHARGE", "充值"),
 
-    API("API", "征信接口支出"),
+    API("API_OUT", "风控认证接口支出"),
 
     WITHDRAW_FEE("WITHDRAW_FEE", "取现手续费"),
-
-    WITHDRAW_FEE_FROZEN("WITHDRAW_FEE_FROZEN", "取现手续费冻结"),
-
-    WITHDRAW_FEE_UNFROZEN("WITHDRAW_FEE_UNFROZEN", "取现手续费解冻"),
 
     WITHDRAW_FROZEN("WITHDRAW_FROZEN", "取现冻结"),
 

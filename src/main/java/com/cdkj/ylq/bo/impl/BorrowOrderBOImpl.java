@@ -92,10 +92,7 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
             Date jxDatetime = DateUtil.getTomorrowStart(fkDatetime);
             Date hkDatetime = DateUtil.getRelativeDate(jxDatetime,
                 borrow.getDuration() * 24 * 3600 - 1);
-            borrow.setBorrowAmunt(borrow.getAmount());
-            borrow.setRealGetAmount(borrow.getAmount()
-                .subtract(borrow.getFwAmount()).subtract(borrow.getGlAmount())
-                .subtract(borrow.getLxAmount()).subtract(borrow.getXsAmount()));
+
             borrow.setFkDatetime(fkDatetime);
             borrow.setJxDatetime(jxDatetime);
             borrow.setHkDatetime(hkDatetime);
@@ -161,13 +158,12 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
 
     @Override
     public int repayOffline(BorrowOrder borrow, BigDecimal repayAmount,
-            String updater) {
+            BigDecimal mainAmount, String updater) {
         int count = 0;
         if (borrow != null && StringUtils.isNotBlank(borrow.getCode())) {
             borrow.setRealHkDatetime(new Date());
             borrow.setRealHkAmount(borrow.getRealHkAmount().add(repayAmount));
-            borrow
-                .setTotalAmount(borrow.getTotalAmount().subtract(repayAmount));
+            borrow.setTotalAmount(borrow.getTotalAmount().subtract(mainAmount));
             borrow.setPayType(EPayType.OFFLINE.getCode());
             borrow.setStatus(EBorrowStatus.REPAY.getCode());
             borrow.setIsStage(EBoolean.NO.getCode());
@@ -178,27 +174,6 @@ public class BorrowOrderBOImpl extends PaginableBOImpl<BorrowOrder> implements
         }
         return count;
     }
-
-    // @Override
-    // public int renewalOffline(Borrow borrow, Renewal renewal, Long amount,
-    // String updater) {
-    // int count = 0;
-    // if (borrow != null && StringUtils.isNotBlank(borrow.getCode())) {
-    // borrow.setTotalAmount(borrow.getTotalAmount()
-    // - borrow.getYqlxAmount());
-    // borrow.setYqDays(0);
-    // borrow.setYqlxAmount(0L);
-    // borrow.setJxDatetime(renewal.getStartDate());
-    // borrow.setHkDatetime(renewal.getEndDate());
-    // borrow.setRenewalCount(borrow.getRenewalCount() + 1);
-    // borrow.setStatus(EBorrowStatus.LOANING.getCode());
-    // borrow.setUpdater(updater);
-    // borrow.setUpdateDatetime(new Date());
-    // borrow.setRemark("借款续期中");
-    // count = borrowDAO.updateRenewalOffline(borrow);
-    // }
-    // return count;
-    // }
 
     @Override
     public int confirmBad(BorrowOrder data, String updater, String remark) {

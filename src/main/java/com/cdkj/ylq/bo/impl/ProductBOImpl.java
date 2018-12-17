@@ -11,6 +11,7 @@ import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.dao.IProductDAO;
 import com.cdkj.ylq.domain.Product;
+import com.cdkj.ylq.enums.ECompanyCodeModel;
 import com.cdkj.ylq.enums.EProductStatus;
 import com.cdkj.ylq.exception.BizException;
 
@@ -71,6 +72,13 @@ public class ProductBOImpl extends PaginableBOImpl<Product> implements
 
     @Override
     public List<Product> queryProductList(Product condition) {
+        return productDAO.selectList(condition);
+    }
+
+    @Override
+    public List<Product> getModelProducts() {
+        Product condition = new Product();
+        condition.setCompanyCode(ECompanyCodeModel.MODEL.getCode());
         return productDAO.selectList(condition);
     }
 

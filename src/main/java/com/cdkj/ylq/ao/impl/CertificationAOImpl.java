@@ -62,10 +62,12 @@ import com.cdkj.ylq.dto.res.XN623050Res;
 import com.cdkj.ylq.enums.EApplyStatus;
 import com.cdkj.ylq.enums.ECertiKey;
 import com.cdkj.ylq.enums.ECertificationStatus;
+import com.cdkj.ylq.enums.EChannelType;
 import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.enums.EIDKind;
 import com.cdkj.ylq.enums.EJourBizTypeBoss;
 import com.cdkj.ylq.enums.EJourBizTypePlat;
+import com.cdkj.ylq.enums.EOutFeeKey;
 import com.cdkj.ylq.enums.ESystemAccount;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
@@ -183,9 +185,15 @@ public class CertificationAOImpl implements ICertificationAO {
         Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
             ECurrency.CNY.getCode());
         accountBO.transAmount(fromAccount, toAccount, fee,
-            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.API.getCode(),
-            EJourBizTypeBoss.API.getValue(), EJourBizTypePlat.API.getValue(),
-            id.toString());
+            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.REPORT.getCode(),
+            EJourBizTypeBoss.API.getValue(),
+            EJourBizTypePlat.REPORT.getValue(), id.toString());
+        BigDecimal outFee = sysConfigBO.getBigDecimalValue(
+            EOutFeeKey.INFO_ZQZN.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
+        accountBO.changeAmount(toAccount, outFee, EChannelType.NBZ, null,
+            certification.getId().toString(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypePlat.API.getValue());
         return infoZqzn;
     }
 
@@ -382,9 +390,15 @@ public class CertificationAOImpl implements ICertificationAO {
         Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
             ECurrency.CNY.getCode());
         accountBO.transAmount(fromAccount, toAccount, fee,
-            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.API.getCode(),
-            EJourBizTypeBoss.API.getValue(), EJourBizTypePlat.API.getValue(),
-            id.toString());
+            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.REPORT.getCode(),
+            EJourBizTypeBoss.API.getValue(),
+            EJourBizTypePlat.REPORT.getValue(), id.toString());
+        BigDecimal outFee = sysConfigBO.getBigDecimalValue(
+            EOutFeeKey.INFO_CARRIER.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
+        accountBO.changeAmount(toAccount, outFee, EChannelType.NBZ, null,
+            certification.getId().toString(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypePlat.API.getValue());
     }
 
     // 魔蝎支付宝登录完成回掉处理
@@ -470,9 +484,15 @@ public class CertificationAOImpl implements ICertificationAO {
         Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
             ECurrency.CNY.getCode());
         accountBO.transAmount(fromAccount, toAccount, fee,
-            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.API.getCode(),
-            EJourBizTypeBoss.API.getValue(), EJourBizTypePlat.API.getValue(),
-            id.toString());
+            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.REPORT.getCode(),
+            EJourBizTypeBoss.API.getValue(),
+            EJourBizTypePlat.REPORT.getValue(), id.toString());
+        BigDecimal outFee = sysConfigBO.getBigDecimalValue(
+            EOutFeeKey.INFO_ZHIFUBAO.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
+        accountBO.changeAmount(toAccount, outFee, EChannelType.NBZ, null,
+            certification.getId().toString(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypePlat.API.getValue());
     }
 
     @Override
@@ -1197,6 +1217,31 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setCerDatetime(new Date());
                 certification.setResult(data);
                 certificationBO.saveCertification(certification);
+                BigDecimal fee = sysConfigBO.getBigDecimalValue(
+                    ECertiKey.INFO_DT_REPORT.getCode(),
+                    ESystemCode.YLQ.getCode()).multiply(new BigDecimal(1000));
+                Long id = certRecordBO.saveCertRecord(userId, fee,
+                    ECertiKey.INFO_DT_REPORT.getCode(),
+                    certification.getCompanyCode());
+                // 接口费用
+                BusinessMan man = businessManBO
+                    .getBusinessManByCompanyCode(certification.getCompanyCode());
+                Account toAccount = accountBO
+                    .getAccount(ESystemAccount.SYS_ACOUNT_CNY.getCode());
+                Account fromAccount = accountBO.getAccountByUser(
+                    man.getUserId(), ECurrency.CNY.getCode());
+                accountBO.transAmount(fromAccount, toAccount, fee,
+                    EJourBizTypeBoss.API.getCode(),
+                    EJourBizTypePlat.REPORT.getCode(),
+                    EJourBizTypeBoss.API.getValue(),
+                    EJourBizTypePlat.REPORT.getValue(), id.toString());
+                BigDecimal outFee = sysConfigBO.getBigDecimalValue(
+                    EOutFeeKey.INFO_DT_REPORT.getCode(),
+                    ESystemCode.YLQ.getCode()).multiply(new BigDecimal(1000));
+                accountBO.changeAmount(toAccount, outFee, EChannelType.NBZ,
+                    null, certification.getId().toString(),
+                    EJourBizTypePlat.API.getCode(),
+                    EJourBizTypePlat.API.getValue());
             } else {
                 throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                     "拉取报告失败，原因为：" + msg);
@@ -1236,6 +1281,7 @@ public class CertificationAOImpl implements ICertificationAO {
                 dtReport.setCerDatetime(new Date());
                 dtReport.setResult(data);
                 certificationBO.refreshCertification(dtReport);
+
             } else {
                 throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                     "拉取报告失败，原因为：" + msg);

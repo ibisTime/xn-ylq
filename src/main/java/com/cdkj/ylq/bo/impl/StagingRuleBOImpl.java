@@ -13,6 +13,7 @@ import com.cdkj.ylq.bo.base.PaginableBOImpl;
 import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.dao.IStagingRuleDAO;
 import com.cdkj.ylq.domain.StagingRule;
+import com.cdkj.ylq.enums.ECompanyCodeModel;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.exception.BizException;
 
@@ -95,5 +96,13 @@ public class StagingRuleBOImpl extends PaginableBOImpl<StagingRule> implements
             }
         }
         return data;
+    }
+
+    @Override
+    public List<StagingRule> getModelRules() {
+        StagingRule condition = new StagingRule();
+        condition.setCompanyCode(ECompanyCodeModel.MODEL.getCode());
+
+        return stagingRuleDAO.selectList(condition);
     }
 }

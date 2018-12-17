@@ -71,13 +71,9 @@ public class WithdrawAOImpl implements IWithdrawAO {
             payCardInfo, payCardNo, applyUser, applyUserType, applyNote);
 
         // 冻结取现金额和手续费
-        dbAccount = accountBO.frozenAmount(dbAccount, amount,
+        dbAccount = accountBO.frozenAmount(dbAccount, amount.add(fee),
             EJourBizTypeBoss.WITHDRAW_FROZEN.getCode(),
             EJourBizTypeBoss.WITHDRAW_FROZEN.getValue(), withdrawCode);
-
-        dbAccount = accountBO.frozenAmount(dbAccount, fee,
-            EJourBizTypeBoss.WITHDRAW_FEE_FROZEN.getCode(),
-            EJourBizTypeBoss.WITHDRAW_FEE_FROZEN.getValue(), withdrawCode);
 
         return withdrawCode;
     }
@@ -112,12 +108,10 @@ public class WithdrawAOImpl implements IWithdrawAO {
         Account dbAccount = accountBO.getAccount(data.getAccountNumber());
 
         // 释放冻结流水
-        accountBO.unfrozenAmount(dbAccount, data.getAmount(),
+        accountBO.unfrozenAmount(dbAccount,
+            data.getAmount().add(data.getFee()),
             EJourBizTypeBoss.WITHDRAW_UNFROZEN.getCode(), "取现失败退回",
             data.getCode());
-        dbAccount = accountBO.unfrozenAmount(dbAccount, data.getFee(),
-            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getCode(),
-            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getValue(), data.getCode());
     }
 
     @Override
@@ -148,12 +142,10 @@ public class WithdrawAOImpl implements IWithdrawAO {
 
         Account dbAccount = accountBO.getAccount(data.getAccountNumber());
         // 释放冻结流水
-        accountBO.unfrozenAmount(dbAccount, data.getAmount(),
+        accountBO.unfrozenAmount(dbAccount,
+            data.getAmount().add(data.getFee()),
             EJourBizTypeBoss.WITHDRAW_UNFROZEN.getCode(), "取现失败退回",
             data.getCode());
-        accountBO.unfrozenAmount(dbAccount, data.getFee(),
-            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getCode(),
-            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getValue(), data.getCode());
     }
 
     private void payOrderYES(Withdraw data, String payUser, String payNote,
@@ -163,12 +155,10 @@ public class WithdrawAOImpl implements IWithdrawAO {
 
         Account dbAccount = accountBO.getAccount(data.getAccountNumber());
         // 先解冻，然后扣减余额
-        accountBO.unfrozenAmount(dbAccount, data.getAmount(),
+        accountBO.unfrozenAmount(dbAccount,
+            data.getAmount().add(data.getFee()),
             EJourBizTypeBoss.WITHDRAW_UNFROZEN.getCode(),
             EJourBizTypeBoss.WITHDRAW_UNFROZEN.getValue(), data.getCode());
-        accountBO.unfrozenAmount(dbAccount, data.getFee(),
-            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getCode(),
-            EJourBizTypeBoss.WITHDRAW_FEE_UNFROZEN.getValue(), data.getCode());
 
         // 用户账户取现并扣除手续费
         accountBO.changeAmount(dbAccount, data.getAmount().negate(),

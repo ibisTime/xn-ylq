@@ -1,270 +1,605 @@
-CREATE TABLE `t_apply` (
+DROP TABLE IF EXISTS `tstd_user`;
+CREATE TABLE `tstd_user` (
+  `user_id` varchar(32) NOT NULL COMMENT '用户编号',
+  `login_name` varchar(64) DEFAULT NULL COMMENT '登陆名',
+  `mobile` varchar(32) DEFAULT NULL COMMENT '手机号',
+  `email` varchar(32) DEFAULT NULL COMMENT '邮箱',
+  `photo` varchar(255) DEFAULT NULL COMMENT '头像',
+  `nickname` varchar(64) DEFAULT NULL COMMENT '昵称',
+  `login_pwd` varchar(32) DEFAULT NULL COMMENT '登陆密码',
+  `login_pwd_strength` char(1) DEFAULT NULL COMMENT '登陆密码强度',
+  `referee_type` varchar(32) DEFAULT NULL COMMENT '推荐人类型',
+  `user_referee` varchar(32) DEFAULT NULL COMMENT '推荐人',
+  `id_kind` char(1) DEFAULT NULL COMMENT '证件类型',
+  `id_no` varchar(32) DEFAULT NULL COMMENT '证件号码',
+  `real_name` varchar(16) DEFAULT NULL COMMENT '真实姓名',
+  `trade_pwd` varchar(32) DEFAULT NULL COMMENT '安全密码',
+  `trade_pwd_strength` char(1) DEFAULT NULL COMMENT '安全密码强度',
+  `status` varchar(2) DEFAULT NULL COMMENT '状态',
+  `province` varchar(255) DEFAULT NULL COMMENT '省',
+  `city` varchar(255) DEFAULT NULL COMMENT '市',
+  `area` varchar(255) DEFAULT NULL COMMENT '区',
+  `address` varchar(255) DEFAULT NULL COMMENT '详细地址',
+  `longitude` varchar(255) DEFAULT NULL COMMENT '经度',
+  `latitude` varchar(255) DEFAULT NULL COMMENT '维度',
+  `create_datetime` datetime DEFAULT NULL COMMENT '注册时间',
+  `create_ip` varchar(32) DEFAULT NULL COMMENT '注册ip',
+  `create_client` varchar(45) DEFAULT NULL COMMENT '注册端',
+  `updater` varchar(32) DEFAULT NULL COMMENT '修改人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '修改时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `is_blacklist` varchar(4) DEFAULT NULL COMMENT '是否黑名单',
+  `is_whitelist` varchar(4) DEFAULT NULL COMMENT '是否白名单',
+  `is_coupon` varchar(4) DEFAULT NULL COMMENT '是否领优惠券',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='C端用户';
+
+DROP TABLE IF EXISTS `tsys_user`;
+CREATE TABLE `tsys_user` (
+  `user_id` varchar(32) NOT NULL,
+  `role_code` varchar(32) DEFAULT NULL COMMENT '角色编号',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  `real_name` varchar(255) DEFAULT NULL COMMENT '真实姓名',
+  `photo` varchar(255) DEFAULT NULL COMMENT '头像',
+  `mobile` varchar(16) DEFAULT NULL COMMENT '手机号',
+  `login_name` varchar(64) DEFAULT NULL COMMENT '登录名',
+  `login_pwd` varchar(32) DEFAULT NULL COMMENT '登录密码',
+  `login_pwd_strength` char(1) DEFAULT NULL COMMENT '登录密码强度',
+  `is_jt` varchar(32) DEFAULT NULL COMMENT '是否借条模块',
+  `is_fk` varchar(32) DEFAULT NULL COMMENT '是否风控',
+  `is_dl` varchar(32) DEFAULT NULL COMMENT '是否导流',
+  `create_datetime` datetime DEFAULT NULL COMMENT '注册时间',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（1待审核2合伙中3已解除合伙4已注销）',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` text COMMENT '备注',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统用户';
+
+DROP TABLE IF EXISTS `tsys_channel_bank`;
+CREATE TABLE `tsys_channel_bank` (
+  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '编号（自增长）',
+  `bank_code` varchar(32) DEFAULT NULL COMMENT '银行编号',
+  `bank_name` varchar(32) DEFAULT NULL COMMENT '银行名称',
+  `channel_type` varchar(4) DEFAULT NULL COMMENT '渠道类型',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（启用/不启用）',
+  `channel_bank` varchar(32) DEFAULT NULL COMMENT '渠道给银行的代号',
+  `max_order` bigint(32) DEFAULT NULL COMMENT '笔数限制',
+  `order_amount` bigint(32) DEFAULT NULL COMMENT '单笔限额',
+  `day_amount` bigint(32) DEFAULT NULL COMMENT '每日限额',
+  `month_amount` bigint(32) DEFAULT NULL COMMENT '每月限额',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tstd_cnavigate`;
+CREATE TABLE `tstd_cnavigate` (
   `code` varchar(32) NOT NULL COMMENT '编号',
-  `type` varchar(32) NOT NULL COMMENT '类型',
-  `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
-  `apply_datetime` datetime DEFAULT NULL COMMENT '申请时间',
-  `product_code` varchar(32) DEFAULT NULL COMMENT '产品编号',
-  `status` varchar(32) DEFAULT NULL COMMENT '状态',
-  `sx_amount` bigint(32) DEFAULT NULL COMMENT '授信额度',
-  `approver` varchar(32) DEFAULT NULL COMMENT '审核人',
-  `approve_note` varchar(255) DEFAULT NULL COMMENT '审核说明',
-  `approve_datetime` datetime DEFAULT NULL COMMENT '审核时间',
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `type` varchar(32) DEFAULT NULL COMMENT '类型',
+  `url` varchar(255) DEFAULT NULL COMMENT '访问Url',
+  `pic` varchar(255) DEFAULT NULL COMMENT '图片',
+  `belong` varchar(32) DEFAULT NULL COMMENT '属于',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态(1 显示 0 不显示)',
+  `location` varchar(32) DEFAULT NULL COMMENT '位置',
+  `order_no` int(11) DEFAULT NULL COMMENT '相对位置编号',
+  `parent_code` varchar(32) DEFAULT NULL COMMENT '父编号',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tsys_company`;
+CREATE TABLE `tsys_company` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `name` varchar(255) DEFAULT NULL COMMENT '公司名称',
+  `logo` varchar(255) DEFAULT NULL COMMENT 'app logo',
+  `charger` varchar(255) DEFAULT NULL COMMENT '负责人',
+  `charge_mobile` varchar(32) DEFAULT NULL COMMENT '负责人联系方式',
+  `province` varchar(255) DEFAULT NULL COMMENT '省',
+  `city` varchar(255) DEFAULT NULL COMMENT '市',
+  `area` varchar(255) DEFAULT NULL COMMENT '区',
+  `address` varchar(255) DEFAULT NULL COMMENT '地址',
+  `description` varchar(255) DEFAULT NULL COMMENT '简介',
+  `bussiness_license` text COMMENT '营业执照',
+  `organization_code` varchar(255) DEFAULT NULL COMMENT '组织机构代码',
+  `certificate_template` text COMMENT '证书模板',
+  `contract_template` text COMMENT '合同模板',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
   `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
-  `jdt_report` longtext DEFAULT NULL COMMENT '借贷通资信报告',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `t_borrow` (
-  `code` varchar(32) NOT NULL COMMENT '编号（合同编号）',
+
+DROP TABLE IF EXISTS `tsys_config`;
+CREATE TABLE `tsys_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(32) DEFAULT NULL COMMENT '类型',
+  `ckey` varchar(255) DEFAULT NULL COMMENT 'key',
+  `cvalue` text COMMENT 'value',
+  `updater` varchar(32) DEFAULT NULL COMMENT '最近修改人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '最近修改人',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tsys_dict`;
+CREATE TABLE `tsys_dict` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(32) DEFAULT NULL COMMENT '类型',
+  `parent_key` varchar(32) DEFAULT NULL COMMENT '父亲key',
+  `dkey` varchar(32) DEFAULT NULL COMMENT 'key',
+  `dvalue` varchar(255) DEFAULT NULL COMMENT 'value',
+  `updater` varchar(32) DEFAULT NULL COMMENT '最近修改人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '最近修改人',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=324 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tsys_menu`;
+CREATE TABLE `tsys_menu` (
+  `code` varchar(255) NOT NULL DEFAULT '' COMMENT '编号',
+  `parent_code` varchar(255) DEFAULT NULL COMMENT '父亲key',
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `type` varchar(2) DEFAULT NULL COMMENT '类型',
+  `url` varchar(255) DEFAULT NULL COMMENT 'url',
+  `order_no` int(11) DEFAULT NULL COMMENT '次序',
+  `updater` varchar(32) DEFAULT NULL COMMENT '最近修改人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '最近修改人',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tsys_menu_role`;
+CREATE TABLE `tsys_menu_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_code` varchar(32) DEFAULT NULL COMMENT '角色编号',
+  `menu_code` varchar(255) DEFAULT NULL COMMENT '菜单编号',
+  `updater` varchar(32) DEFAULT NULL COMMENT '最近修改人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '最近修改人',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5730 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tsys_role`;
+CREATE TABLE `tsys_role` (
+  `code` varchar(32) NOT NULL DEFAULT '' COMMENT '编号',
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `type` varchar(4) DEFAULT NULL,
+  `updater` varchar(32) DEFAULT NULL COMMENT '最近修改人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '最近修改人',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tstd_account`;
+CREATE TABLE `tstd_account` (
+  `account_number` varchar(32) NOT NULL COMMENT '账户编号',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `currency` varchar(32) DEFAULT NULL COMMENT '币种',
+  `type` varchar(4) DEFAULT NULL COMMENT '类别（B端账号，C端账号，平台账号）',
+  `status` varchar(2) DEFAULT NULL COMMENT '状态（正常/程序冻结/人工冻结）',
+  `amount` decimal(64,0) DEFAULT NULL COMMENT '余额',
+  `total_amount` decimal(64,0) DEFAULT NULL COMMENT '累计加的金额',
+  `frozen_amount` decimal(64,0) DEFAULT NULL COMMENT '冻结金额',
+  `md5` varchar(32) DEFAULT NULL COMMENT 'MD5',
+  `in_amount` decimal(64,0) DEFAULT '0' COMMENT '总充值金额（入金）',
+  `out_amount` decimal(64,0) DEFAULT '0' COMMENT '总取现金额（出金）',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
+  `last_order` varchar(32) DEFAULT NULL COMMENT '最近一次变动对应的流水编号',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`account_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='账户';
+
+DROP TABLE IF EXISTS `tstd_bankcard`;
+CREATE TABLE `tstd_bankcard` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `bankcard_number` varchar(64) DEFAULT NULL COMMENT '银行卡编号',
+  `bank_code` varchar(32) DEFAULT NULL COMMENT '银行行别',
+  `bank_name` varchar(32) DEFAULT NULL COMMENT '银行名称',
+  `subbranch` varchar(255) DEFAULT NULL COMMENT '开户支行',
+  `bind_mobile` varchar(32) DEFAULT NULL COMMENT '银行卡绑定手机号',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `real_name` varchar(16) DEFAULT NULL COMMENT '真实姓名',
+  `type` varchar(4) DEFAULT NULL COMMENT '类型',
+  `status` varchar(2) DEFAULT NULL COMMENT '状态',
+  `currency` varchar(8) DEFAULT NULL COMMENT '币种',
+  `amount` bigint(32) DEFAULT NULL COMMENT '余额',
+  `frozen_amount` bigint(32) DEFAULT NULL COMMENT '冻结金额',
+  `md5` varchar(32) DEFAULT NULL COMMENT 'MD5',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `last_order` varchar(32) DEFAULT NULL COMMENT '最近一次变动对应的流水编号',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `tstd_charge`;
+CREATE TABLE `tstd_charge` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `account_number` varchar(32) DEFAULT NULL COMMENT '账户编号',
+  `account_type` varchar(4) DEFAULT NULL COMMENT '账户类型',
+  `amount` decimal(64,0) DEFAULT NULL COMMENT '充值金额',
+  `currency` varchar(8) DEFAULT NULL COMMENT '币种',
+  `biz_type` varchar(32) DEFAULT NULL COMMENT '关联业务类型',
+  `biz_note` varchar(255) DEFAULT NULL COMMENT '关联业务备注',
+  `biz_no` varchar(255) DEFAULT NULL COMMENT '关联订单号',
+  `pay_card_info` varchar(255) DEFAULT NULL COMMENT '支付渠道账号信息',
+  `pay_card_no` varchar(255) DEFAULT NULL COMMENT '支付渠道账号',
+  `status` varchar(4) NOT NULL COMMENT '状态 1待支付 2支付失败 3支付成功',
+  `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
+  `apply_user_type` varchar(32) DEFAULT NULL COMMENT '申请人类型',
+  `apply_note` varchar(255) DEFAULT NULL COMMENT '申请说明',
+  `apply_datetime` datetime DEFAULT NULL COMMENT '申请时间',
+  `pay_group` varchar(32) DEFAULT NULL COMMENT '支付组号',
+  `pay_user` varchar(32) DEFAULT NULL COMMENT '支付回录人',
+  `pay_note` varchar(255) DEFAULT NULL COMMENT '支付渠道说明',
+  `pay_datetime` datetime DEFAULT NULL COMMENT '支付时间',
+  `channel_type` varchar(32) DEFAULT NULL COMMENT '支付渠道',
+  `channel_order` varchar(255) DEFAULT NULL COMMENT '支付渠道单号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='充值订单';
+
+DROP TABLE IF EXISTS `tstd_jour`;
+CREATE TABLE `tstd_jour` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `type` varchar(32) DEFAULT NULL COMMENT '流水类型（余额流水、冻结流水）',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `account_number` varchar(32) DEFAULT NULL COMMENT '账户编号',
+  `account_type` varchar(4) DEFAULT NULL COMMENT '账户类型',
+  `currency` varchar(8) DEFAULT NULL COMMENT '币种',
+  `biz_type` varchar(32) DEFAULT NULL COMMENT '业务类型',
+  `biz_note` varchar(255) DEFAULT NULL COMMENT '业务说明',
+  `trans_amount` decimal(64,0) DEFAULT NULL COMMENT '变动金额',
+  `pre_amount` decimal(64,0) DEFAULT NULL COMMENT '变动前金额',
+  `post_amount` decimal(64,0) DEFAULT NULL COMMENT '变动后金额',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态',
+  `channel_type` varchar(32) DEFAULT NULL COMMENT '支付渠道类型',
+  `channel_order` varchar(255) DEFAULT NULL COMMENT '支付渠道单号',
+  `ref_no` varchar(255) DEFAULT NULL COMMENT '系统内部参考订单号',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
+  `work_date` varchar(8) DEFAULT NULL COMMENT '拟对账时间',
+  `check_user` varchar(32) DEFAULT NULL COMMENT '对账人',
+  `check_note` varchar(255) DEFAULT NULL COMMENT '对账说明',
+  `check_datetime` datetime DEFAULT NULL COMMENT '对账时间',
+  `adjust_user` varchar(32) DEFAULT NULL COMMENT '调账人',
+  `adjust_note` varchar(255) DEFAULT NULL COMMENT '调账说明',
+  `adjust_datetime` datetime DEFAULT NULL COMMENT '调账时间',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='账户流水';
+
+DROP TABLE IF EXISTS `tstd_withdraw`;
+CREATE TABLE `tstd_withdraw` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `account_number` varchar(32) DEFAULT NULL COMMENT '账户编号',
+  `account_type` varchar(4) DEFAULT NULL COMMENT '类别（B端账号，C端账号，平台账号）',
+  `currency` varchar(32) DEFAULT NULL COMMENT '币种',
+  `amount` decimal(64,0) DEFAULT NULL COMMENT '取现金额',
+  `fee` decimal(64,0) DEFAULT NULL COMMENT '手续费',
+  `actual_amount` decimal(64,0) DEFAULT NULL COMMENT '实际到账金额',
+  `channel_type` varchar(32) DEFAULT NULL COMMENT '支付渠道',
+  `channel_bank` varchar(32) DEFAULT NULL COMMENT '渠道银行代号',
+  `channel_order` varchar(255) DEFAULT NULL COMMENT '支付渠道编号',
+  `pay_card_info` varchar(255) DEFAULT NULL COMMENT '支付渠道账号信息',
+  `pay_card_no` varchar(255) DEFAULT NULL COMMENT '支付渠道账号',
+  `status` varchar(4) NOT NULL COMMENT '状态',
+  `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
+  `apply_user_type` varchar(32) DEFAULT NULL COMMENT '申请人类型',
+  `apply_note` varchar(255) DEFAULT NULL COMMENT '申请说明',
+  `apply_datetime` datetime DEFAULT NULL COMMENT '申请时间',
+  `approve_user` varchar(32) DEFAULT NULL COMMENT '审批人',
+  `approve_note` varchar(255) DEFAULT NULL COMMENT '审批说明',
+  `approve_datetime` varchar(32) DEFAULT NULL COMMENT '审批时间',
+  `pay_user` varchar(255) DEFAULT NULL COMMENT '支付回录人',
+  `pay_note` varchar(255) DEFAULT NULL COMMENT '支付回录说明',
+  `pay_fee` decimal(64,0) DEFAULT NULL COMMENT '支付渠道手续费（矿工费）',
+  `pay_datetime` datetime DEFAULT NULL COMMENT '支付回录时间',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='取现订单';
+
+DROP TABLE IF EXISTS `tsys_channel`;
+CREATE TABLE `tsys_channel` (
+  `code` varchar(32) NOT NULL,
+  `name` varchar(64) DEFAULT NULL COMMENT '名称',
+  `url` varchar(255) DEFAULT NULL COMMENT '链接',
+  `point_count` bigint(20) DEFAULT NULL COMMENT '渠道点击数',
+  `user_count` bigint(20) DEFAULT NULL COMMENT '用户人数',
+  `start_datetime` datetime DEFAULT NULL COMMENT '开始时间',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='渠道';
+
+DROP TABLE IF EXISTS `tsys_noticer`;
+CREATE TABLE `tsys_noticer` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `name` varchar(64) DEFAULT NULL COMMENT '姓名',
+  `mobile` varchar(64) DEFAULT NULL COMMENT '手机号',
+  `type` varchar(4) DEFAULT NULL COMMENT '类型',
+  `start_time` varchar(4) DEFAULT NULL COMMENT '开始时间点',
+  `end_time` varchar(4) DEFAULT NULL COMMENT '结束时间点',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) NOT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知人';
+
+
+DROP TABLE IF EXISTS `tjd_product`;
+CREATE TABLE `tjd_product` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `name` varchar(64) DEFAULT NULL COMMENT '名字',
+  `slogan` varchar(255) DEFAULT NULL COMMENT '广告语',
+  `level` int(11) DEFAULT NULL COMMENT '产品等级',
+  `amount` decimal(64,0) DEFAULT NULL COMMENT '借贷金额',
+  `duration` varchar(32) DEFAULT NULL COMMENT '借贷时长',
+  `yq_rate1` decimal(18,8) DEFAULT NULL COMMENT '7天内逾期利率',
+  `yq_rate2` decimal(18,8) DEFAULT NULL COMMENT '7天后逾期利率',
+  `lx_rate` decimal(18,8) DEFAULT NULL COMMENT '利息',
+  `xs_amount` decimal(64,0) DEFAULT NULL COMMENT '快速信审费',
+  `gl_amount` decimal(64,0) DEFAULT NULL COMMENT '账户管理费',
+  `fw_amount` decimal(64,0) DEFAULT NULL COMMENT '服务费',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（0 关闭，1 开启）',
+  `location` varchar(32) DEFAULT NULL COMMENT 'UI位置',
+  `order_no` bigint(20) DEFAULT NULL COMMENT 'UI次序',
+  `color` varchar(32) DEFAULT NULL COMMENT 'UI颜色',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='产品';
+
+DROP TABLE IF EXISTS `tjd_borrow_order`;
+CREATE TABLE `tjd_borrow_order` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `type` varchar(4) DEFAULT NULL COMMENT '类型',
   `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
   `sign_datetime` datetime DEFAULT NULL COMMENT '签约时间',
-  `amount` bigint(32) DEFAULT NULL COMMENT '借款金额',
-  `level` varchar(32) DEFAULT NULL COMMENT '借款等级',
-  `duration` int(11) DEFAULT NULL COMMENT '借款时长',
+  `amount` decimal(64,0) DEFAULT NULL COMMENT '借贷金额',
+  `borrow_amount` decimal(64,0) DEFAULT NULL COMMENT '初始借款金额',
+  `real_get_amount` decimal(64,0) DEFAULT NULL COMMENT '打款金额',
+  `level` varchar(4) DEFAULT NULL COMMENT '借款等级',
+  `duration` varchar(32) DEFAULT NULL COMMENT '借贷时长',
   `fk_datetime` datetime DEFAULT NULL COMMENT '放款时间',
   `jx_datetime` datetime DEFAULT NULL COMMENT '计息时间',
   `hk_datetime` datetime DEFAULT NULL COMMENT '约定还款时间',
-  `lx_rate` decimal(18,8) DEFAULT NULL COMMENT '正常利息利率',
-  `lx_amount` bigint(32) DEFAULT NULL COMMENT '正常应付利息',
-  `xs_amount` bigint(32) DEFAULT NULL COMMENT '快速信审费',
-  `gl_amount` bigint(32) DEFAULT NULL COMMENT '账户管理费',
-  `fw_amount` bigint(32) DEFAULT NULL COMMENT '服务费',
-  `yh_amount` bigint(32) DEFAULT NULL COMMENT '优惠金额',
-  `rate1` decimal(18,8) DEFAULT NULL COMMENT '7天内逾期利率',
-  `rate2` decimal(18,8) DEFAULT NULL COMMENT '7天外逾期利率',
-  `yqlx_amount` bigint(32) DEFAULT NULL COMMENT '逾期利息',
+  `yqlx_amount` decimal(18,8) DEFAULT NULL COMMENT '逾期金额',
   `yq_days` int(11) DEFAULT NULL COMMENT '逾期天数',
-  `total_amount` bigint(32) DEFAULT NULL COMMENT '总共应还金额',
+  `total_amount` decimal(64,0) DEFAULT NULL COMMENT '总共应还金额',
   `real_hk_datetime` datetime DEFAULT NULL COMMENT '实际还款时间',
-  `real_hk_amount` bigint(32) DEFAULT NULL COMMENT '实际还款金额',
+  `real_hk_amount` decimal(64,0) DEFAULT NULL COMMENT '实际还款金额',
+  `lx_rate` decimal(18,8) DEFAULT NULL COMMENT '正常利率',
+  `lx_amount` decimal(18,8) DEFAULT NULL COMMENT '应付利息金额',
+  `xs_amount` decimal(64,0) DEFAULT NULL COMMENT '快速信审费',
+  `gl_amount` decimal(64,0) DEFAULT NULL COMMENT '账户管理费',
+  `fw_amount` decimal(64,0) DEFAULT NULL COMMENT '服务费',
+  `yh_amount` decimal(18,8) DEFAULT NULL COMMENT '优惠金额',
+  `rate1` decimal(18,8) DEFAULT NULL COMMENT '7天内逾期利率',
+  `rate2` decimal(18,8) DEFAULT NULL COMMENT '7天后逾期利率',
+  `is_archive` varchar(4) DEFAULT NULL COMMENT '是否归档',
+  `is_coupon` varchar(4) DEFAULT NULL COMMENT '是否领优惠券',
   `pay_code` varchar(32) DEFAULT NULL COMMENT '支付编号',
-  `pay_group` varchar(32) DEFAULT NULL COMMENT '支付组号',
-  `pay_type` varchar(32) DEFAULT NULL COMMENT '还款方式',
-  `loan_type` varchar(32) DEFAULT NULL COMMENT '放款方式',
-  `renewal_count` int(11) DEFAULT NULL COMMENT '续期次数',
-  `status` varchar(32) DEFAULT NULL COMMENT '状态',
-  `is_archive` varchar(32) DEFAULT '0' COMMENT '是否归档',
-  `approver` varchar(32) DEFAULT NULL COMMENT '审核人',
-  `approve_note` varchar(255) DEFAULT NULL COMMENT '审核说明',
-  `approve_datetime` datetime DEFAULT NULL COMMENT '审核时间',
-  `updater` varchar(32) DEFAULT NULL COMMENT '最后更新人',
-  `update_datetime` datetime DEFAULT NULL COMMENT '最后更新时间',
+  `pay_group` varchar(45) DEFAULT NULL COMMENT '支付组号',
+  `pay_type` varchar(4) DEFAULT NULL COMMENT '还款方式',
+  `loan_type` varchar(4) DEFAULT NULL COMMENT '放款方式',
+  `is_stage` varchar(4) DEFAULT NULL COMMENT '是否分期',
+  `stage_batch` int(11) DEFAULT NULL COMMENT '分期批次',
+  `stage_count` int(11) DEFAULT NULL COMMENT '分期期数',
+  `stage_cycle` int(11) DEFAULT NULL COMMENT '分期周期',
+  `repay_count` int(11) DEFAULT NULL COMMENT '还款次数',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（0 待审核，1 审核不通过，2 待放款，3 付款失败，4 已放款，5 逾期，6 已还款，7 坏账）',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='借款订单';
 
 
-CREATE TABLE `t_certification` (
-  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '编号',
+
+
+
+DROP TABLE IF EXISTS `tjd_apply`;
+CREATE TABLE `tjd_apply` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `type` varchar(4) DEFAULT NULL COMMENT '类型',
+  `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
+  `apply_datetime` datetime DEFAULT NULL COMMENT '申请时间',
+  `apply_note` varchar(255) DEFAULT NULL COMMENT '申请说明',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（0 认证中，1 待审核，2 审核通过，3 审核不通过）',
+  `credit_score` decimal(64,0) DEFAULT NULL COMMENT '信用分',
+  `approver` varchar(32) DEFAULT NULL COMMENT '审核人',
+  `approve_datetime` datetime DEFAULT NULL COMMENT '审核时间',
+  `approve_note` varchar(255) DEFAULT NULL COMMENT '审核说明',
+  `cur_node` varchar(4) DEFAULT NULL COMMENT '当前节点',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `report` varchar(255) DEFAULT NULL COMMENT '报告',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='认证申请';
+
+DROP TABLE IF EXISTS `tjd_certification`;
+CREATE TABLE `tjd_certification` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
   `certi_key` varchar(32) DEFAULT NULL COMMENT '键',
-  `flag` varchar(32) DEFAULT NULL COMMENT '标识',
-  `result` longtext COMMENT '认证结果',
+  `flag` varchar(4) DEFAULT NULL COMMENT '标示',
+  `result` longtext COMMENT '结果',
   `cer_datetime` datetime DEFAULT NULL COMMENT '认证时间',
   `valid_datetime` datetime DEFAULT NULL COMMENT '有效时间',
-  `ref` longtext DEFAULT NULL COMMENT '关联申请单',
+  `ref` varchar(255) DEFAULT NULL COMMENT '关联订单号',
+  `message` varchar(255) DEFAULT NULL COMMENT '认证信息',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COMMENT='认证结果';
 
-CREATE TABLE `t_coupon` (
+
+DROP TABLE IF EXISTS `tjd_coupon_rule`;
+CREATE TABLE `tjd_coupon_rule` (
   `code` varchar(32) NOT NULL COMMENT '编号',
-  `type` varchar(32) DEFAULT NULL COMMENT '类型',
-  `get_condition` int(11) DEFAULT NULL COMMENT '获得条件',
-  `amount` bigint(32) DEFAULT NULL COMMENT '金额',
+  `type` varchar(4) DEFAULT NULL COMMENT '类型',
+  `get_condition` int(11) DEFAULT NULL COMMENT '获得条件（数量）',
+  `amount` decimal(64,0) DEFAULT NULL COMMENT '优惠金额',
   `valid_days` int(11) DEFAULT NULL COMMENT '有效天数',
-  `start_amount` bigint(32) DEFAULT NULL COMMENT '起用金额',
-  `status` varchar(32) DEFAULT NULL COMMENT '状态',
-  `updater` varchar(32) DEFAULT NULL COMMENT '最后更新人',
-  `update_datetime` datetime DEFAULT NULL COMMENT '最后更新时间',
-  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `t_product` (
-  `code` varchar(32) NOT NULL COMMENT '编号',
-  `name` varchar(255) DEFAULT NULL COMMENT '名称',
-  `slogan` varchar(255) DEFAULT NULL COMMENT '广告语',
-  `level` varchar(32) DEFAULT NULL COMMENT '等级',
-  `amount` bigint(32) DEFAULT NULL COMMENT '借款金额',
-  `duration` int(11) DEFAULT NULL COMMENT '借款时长',
-  `yq_rate1` decimal(18,8) DEFAULT NULL COMMENT '7天内逾期利率',
-  `yq_rate2` decimal(18,8) DEFAULT NULL COMMENT '7天外逾期利率',
-  `lx_rate` decimal(18,8) DEFAULT NULL COMMENT '利息',
-  `xs_amount` bigint(32) DEFAULT NULL COMMENT '快速信审费',
-  `gl_amount` bigint(32) DEFAULT NULL COMMENT '账户管理费',
-  `fw_amount` bigint(32) DEFAULT NULL COMMENT '服务费',
-  `status` varchar(32) DEFAULT NULL COMMENT '状态',
-  `ui_location` varchar(32) DEFAULT NULL COMMENT 'UI位置',
-  `ui_order` int(11) DEFAULT NULL COMMENT 'UI顺序',
-  `ui_color` varchar(32) DEFAULT NULL COMMENT 'UI颜色',
-  `updater` varchar(32) DEFAULT NULL COMMENT '最后更新人',
-  `update_datetime` datetime DEFAULT NULL COMMENT '最后更新时间',
-  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `tsys_config` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `type` varchar(32) DEFAULT NULL COMMENT '类型',
-  `ckey` varchar(32) DEFAULT NULL COMMENT 'key值',
-  `cvalue` text COMMENT '值',
-  `updater` varchar(32) NOT NULL COMMENT '更新人',
-  `update_datetime` datetime NOT NULL COMMENT '更新时间',
+  `start_amount` decimal(64,0) DEFAULT NULL COMMENT '启用金额',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（0 关闭，1 开启）',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
-  `system_code` varchar(32) DEFAULT NULL COMMENT '系统编号',
-  PRIMARY KEY (`id`) COMMENT '系统参数'
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券规则';
 
-CREATE TABLE `tsys_dict` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号（自增长）',
-  `type` char(1) NOT NULL COMMENT '类型（0=下拉框意义 1=下拉框选项）',
-  `parent_key` varchar(32) DEFAULT NULL COMMENT '父key',
-  `dkey` varchar(32) NOT NULL COMMENT 'key',
-  `dvalue` varchar(64) NOT NULL COMMENT '值',
-  `updater` varchar(32) NOT NULL COMMENT '更新人',
-  `update_datetime` datetime NOT NULL COMMENT '更新时间',
-  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
-  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
-  `system_code` varchar(32) DEFAULT NULL COMMENT '系统编号',
-  PRIMARY KEY (`id`) COMMENT '数据字典'
-) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8;
-
-CREATE TABLE `t_user_coupon` (
-  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+DROP TABLE IF EXISTS `tjd_coupon`;
+CREATE TABLE `tjd_coupon` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
   `get_datetime` datetime DEFAULT NULL COMMENT '获得时间',
-  `type` varchar(32) DEFAULT NULL COMMENT '优惠券类型',
-  `amount` bigint(32) DEFAULT NULL COMMENT '优惠券金额',
-  `start_amount` bigint(32) DEFAULT NULL COMMENT '起用金额',
+  `type` varchar(4) DEFAULT NULL COMMENT '优惠券类型',
+  `amount` decimal(64,0) DEFAULT NULL COMMENT '优惠金额',
+  `start_amount` decimal(64,0) DEFAULT NULL COMMENT '启用金额',
   `valid_days` int(11) DEFAULT NULL COMMENT '有效天数',
   `invalid_datetime` datetime DEFAULT NULL COMMENT '失效时间',
-  `status` varchar(32) DEFAULT NULL COMMENT '状态',
-  `borrow_code` varchar(32) DEFAULT NULL COMMENT '关联借款编号',
-  `updater` varchar(32) DEFAULT NULL COMMENT '最后更新人',
-  `update_datetime` datetime DEFAULT NULL COMMENT '最后更新时间',
-  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-
-CREATE TABLE `t_coupon_condition` (
-  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
-  `coupon_type` varchar(32) DEFAULT NULL COMMENT '获取优惠券类型',
-  `count` int(11) DEFAULT NULL COMMENT '已有次数',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
-CREATE TABLE `t_repay_apply` (
-  `code` VARCHAR(32) NOT NULL COMMENT '编号',
-  `ref_no` VARCHAR(32) NULL COMMENT '关联订单号',
-  `type` VARCHAR(32) NULL COMMENT '打款类型',
-  `amount` BIGINT(32) NULL COMMENT '打款金额',
-  `apply_user` VARCHAR(32) NULL COMMENT '申请人',
-  `apply_note` VARCHAR(255) NULL COMMENT '申请备注',
-  `apply_datetime` DATETIME NULL COMMENT '申请时间',
-  `approver` VARCHAR(32) NULL COMMENT '审核人',
-  `approve_note` VARCHAR(255) NULL COMMENT '审核说明',
-  `approve_datetime` DATETIME NULL COMMENT '审核时间',
-  `status` VARCHAR(32) NULL COMMENT '状态',
-  PRIMARY KEY (`code`)  COMMENT '')
-ENGINE = InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `t_renewal` (
-  `code` VARCHAR(32) NOT NULL COMMENT '编号',
-  `apply_user` VARCHAR(32) NULL COMMENT '申请人',
-  `borrow_code` VARCHAR(32) NULL COMMENT '借款编号',
-  `step` INT(11) NULL COMMENT '续期步长',
-  `cycle` INT(11) NULL COMMENT '续期周期',
-  `start_date` DATETIME NULL COMMENT '开始时间',
-  `end_date` DATETIME NULL COMMENT '结束时间',
-  `yq_amount` BIGINT(32) NULL COMMENT '续期前逾期费',
-  `xs_amount` BIGINT(32) NULL COMMENT '快速信审费',
-  `gl_amount` BIGINT(32) NULL COMMENT '账户管理费',
-  `fw_amount` BIGINT(32) NULL COMMENT '服务费',
-  `lx_amount` BIGINT(32) NULL COMMENT '利息',
-  `total_amount` BIGINT(32) NULL COMMENT '续费总费用',
-  `pay_datetime` DATETIME NULL COMMENT '支付时间',
-  `pay_type` VARCHAR(32)  NULL COMMENT '支付方式',
-  `pay_code` VARCHAR(32)  NULL COMMENT '三方支付编号',
-  `pay_group` VARCHAR(32)  NULL COMMENT '支付组号',
-  `create_datetime` DATETIME NULL COMMENT '创建时间',
-  `status` VARCHAR(32)  NULL COMMENT '状态',
-  `cur_no` INT(11) NULL COMMENT '第几次续期',
-  PRIMARY KEY (`code`)  COMMENT '')
-ENGINE = InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `t_overdue` (
-  `id` BIGINT(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `user_id` VARCHAR(32) NULL COMMENT '用户编号',
-  `borrow_code` VARCHAR(32) NULL COMMENT '关联借款订单号',
-  `days` INT(11) NULL COMMENT '逾期天数',
-  `amount` BIGINT(32) NULL COMMENT '逾期金额',
-  `result` VARCHAR(32) NULL COMMENT '逾期后处理',
-  PRIMARY KEY (`id`)  COMMENT '')
-ENGINE = InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `t_contract` (
-  `code` varchar(32) NOT NULL COMMENT '编号',
-  `user_id` varchar(32) NOT NULL COMMENT '用户编号',
-  `borrow_code` varchar(32) NOT NULL COMMENT '借款编号',
-  `title` varchar(255) NOT NULL COMMENT '标题',
-  `content` text NOT NULL COMMENT '内容',
-  `type` char(1) NOT NULL COMMENT '类型',
-  `create_datetime` datetime NOT NULL COMMENT '创建时间',
-  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
-  `status` varchar(2) NOT NULL COMMENT '状态',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（0 可使用，1 已使用，2 已过期，3 已回收）',
+  `order_code` varchar(32) DEFAULT NULL COMMENT '关联借款订单',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='电子合同表';
-
-
-
-CREATE TABLE `t_statistic` (
-  `id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `today` bigint(32) DEFAULT NULL COMMENT '日期',
-  `reg_num` bigint(32) DEFAULT NULL COMMENT '注册人数',
-  `certi_num` bigint(32) DEFAULT NULL COMMENT '认证人数',
-  `zmxy_num` bigint(32) DEFAULT NULL COMMENT '芝麻认证人数',
-  `carrier_num` bigint(32) DEFAULT NULL COMMENT '运营商认证人数',
-  `jdt_num` bigint(32) DEFAULT NULL COMMENT '借贷通导流人数',
-  `apply_num` bigint(32) DEFAULT NULL COMMENT '申请人数',
-  `fk_num` bigint(32) DEFAULT NULL COMMENT '放款单量',
-  `fk_amount` bigint(32) DEFAULT NULL COMMENT '放款金额',
-  `order_amount` bigint(32) DEFAULT NULL COMMENT '订单金额',
-  `yhk_num` bigint(32) DEFAULT NULL COMMENT '当日应还款单量',
-  `yhk_amount` bigint(32) DEFAULT NULL COMMENT '当日应还款金额',
-  `sjhk_num` bigint(32) DEFAULT NULL COMMENT '实际还款总单量',
-  `bfhk_num` bigint(32) DEFAULT NULL COMMENT '宝付代扣还款单量',
-  `bfhk_amount` bigint(32) DEFAULT NULL COMMENT '宝付代扣还款金额',
-  `zfbhk_num` bigint(32) DEFAULT NULL COMMENT '支付宝还款单量',
-  `zfbhk_amount` bigint(32) DEFAULT NULL COMMENT '支付宝还款金额',
-  `hk_amount` bigint(32) DEFAULT NULL COMMENT '实际还款总金额',
-  `xq_num` bigint(32) DEFAULT NULL COMMENT '续期总单量',
-  `bfdk_num` bigint(32) DEFAULT NULL COMMENT '宝付代扣续期单量',
-  `bfdk_amount` bigint(32) DEFAULT NULL COMMENT '宝付代扣续期金额',
-  `zfbdk_num` bigint(32) DEFAULT NULL COMMENT '支付宝代扣续期单量',
-  `zfbdk_amount` bigint(32) DEFAULT NULL COMMENT '支付宝代扣续期金额',
-  `xq_total_amount` bigint(32) DEFAULT NULL COMMENT '续期总金额',
-  `yqhk_num` bigint(32) DEFAULT NULL COMMENT '逾期还款单量',
-  `yqhk_amount` bigint(32) DEFAULT NULL COMMENT '逾期还款金额',
-  `bfyq_num` bigint(32) DEFAULT NULL COMMENT '宝付代扣逾期还款单量',
-  `bfyq_total_amount` bigint(32) DEFAULT NULL COMMENT '宝付代扣逾期还款金额',
-  `zfbyq_num` bigint(32) DEFAULT NULL COMMENT '支付宝逾期还款单量',
-  `zfbyq_total_amount` bigint(32) DEFAULT NULL COMMENT '支付宝逾期还款金额',
-  `ys_num` bigint(32) DEFAULT NULL COMMENT '当前应收单量',
-  `ys_total_amount` bigint(32) DEFAULT NULL COMMENT '当前应收金额',
-  `ysbj_total_amount` bigint(32) DEFAULT NULL COMMENT '当前应收本金',
-  `ysfy_total_amount` bigint(32) DEFAULT NULL COMMENT '当前应收费用',
-  `yq_count` bigint(32) DEFAULT NULL COMMENT '当前逾期单量',
-  `yq_total_amount` bigint(32) DEFAULT NULL COMMENT '当前逾期金额',
-  `yqbj_total_amount` bigint(32) DEFAULT NULL COMMENT '当前逾期本金',
-  `yqfy_total_amount` bigint(32) DEFAULT NULL COMMENT '当前逾期费用',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券';
+
+DROP TABLE IF EXISTS `tjd_repay_apply`;
+CREATE TABLE `tjd_repay_apply` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `type` varchar(4) DEFAULT NULL COMMENT '类型',
+  `ref_no` varchar(32) DEFAULT NULL COMMENT '关联订单号',
+  `amount` decimal(64,0) DEFAULT NULL COMMENT '还款金额',
+  `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
+  `apply_datetime` datetime DEFAULT NULL COMMENT '申请时间',
+  `apply_note` varchar(255) DEFAULT NULL COMMENT '申请说明',
+  `approver` varchar(32) DEFAULT NULL COMMENT '审核人',
+  `approve_datetime` datetime DEFAULT NULL COMMENT '审核时间',
+  `approve_note` varchar(255) DEFAULT NULL COMMENT '审核说明',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（0 待审批，1 审批通过，2 审批不通过）',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='线下还款申请';
+
+
+DROP TABLE IF EXISTS `tjd_overdue`;
+CREATE TABLE `tjd_overdue` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `borrow_code` varchar(32) DEFAULT NULL COMMENT '借款订单号',
+  `days` int(11) DEFAULT NULL COMMENT '逾期天数',
+  `amount` decimal(64,0) DEFAULT NULL COMMENT '逾期金额',
+  `result` varchar(255) DEFAULT NULL COMMENT '逾期后处理',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='逾期记录';
+
+DROP TABLE IF EXISTS `tjd_staging`;
+CREATE TABLE `tjd_staging` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `apply_user` varchar(32) DEFAULT NULL COMMENT '申请人',
+  `order_code` varchar(32) DEFAULT NULL COMMENT '借款订单号',
+  `main_amount` decimal(64,0) DEFAULT NULL COMMENT '本期应还本金',
+  `pay_amount` decimal(64,0) DEFAULT NULL COMMENT '还款金额',
+  `rate` decimal(18,8) DEFAULT NULL COMMENT '利率',
+  `start_pay_date` datetime DEFAULT NULL COMMENT '开始支付时间',
+  `last_pay_date` datetime DEFAULT NULL COMMENT '最晚支付日期',
+  `pay_datetime` datetime DEFAULT NULL COMMENT '支付时间',
+  `pay_type` varchar(4) DEFAULT NULL COMMENT '支付类型',
+  `pay_code` varchar(32) DEFAULT NULL COMMENT '支付编号',
+  `pay_group` varchar(32) DEFAULT NULL COMMENT '支付组号',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（0 待支付，1 已支付，2 逾期）',
+  `count` int(11) DEFAULT NULL COMMENT '第几期',
+  `batch` int(11) DEFAULT NULL COMMENT '批次号',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分期记录';
 
 
 
+DROP TABLE IF EXISTS `tjd_stage_rule`;
+CREATE TABLE `tjd_stage_rule` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `count` int(11) DEFAULT NULL COMMENT '分期期数',
+  `cycle` int(11) DEFAULT NULL COMMENT '分期周期',
+  `rate` decimal(18,8) DEFAULT NULL COMMENT '日利率',
+  `order_no` bigint(20) DEFAULT NULL COMMENT '次序',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分期规则';
+
+DROP TABLE IF EXISTS `tsys_way`;
+CREATE TABLE `tsys_way` (
+  `code` varchar(32) NOT NULL COMMENT '编号',
+  `name` varchar(64) DEFAULT NULL COMMENT '名字',
+  `url` varchar(255) DEFAULT NULL COMMENT '链接',
+  `point_count` bigint(20) DEFAULT NULL COMMENT '渠道点击数',
+  `user_count` bigint(20) DEFAULT NULL COMMENT '注册用户数',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='渠道';
+
+DROP TABLE IF EXISTS `tjd_business_man`;
+CREATE TABLE `tjd_business_man` (
+  `user_id` varchar(32) NOT NULL COMMENT '用户编号',
+  `role_code` varchar(32) DEFAULT NULL COMMENT '角色编号',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  `real_name` varchar(64) DEFAULT NULL COMMENT '真实姓名',
+  `photo` varchar(255) DEFAULT NULL COMMENT '头像',
+  `mobile` varchar(64) DEFAULT NULL COMMENT '手机号',
+  `login_name` varchar(64) DEFAULT NULL COMMENT '登录名',
+  `login_pwd` varchar(64) DEFAULT NULL COMMENT '登陆密码',
+  `login_pwd_strength` varchar(64) DEFAULT NULL COMMENT '登陆密码强度',
+  `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态',
+  `is_jt` varchar(4) DEFAULT NULL COMMENT '是否借条',
+  `is_fk` varchar(4) DEFAULT NULL COMMENT '是否风控',
+  `is_dl` varchar(4) DEFAULT NULL COMMENT '是否导流',
+  `is_admin` varchar(4) DEFAULT '0' COMMENT '是否admin',
+  `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
+  `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='借款商';
+
+
+DROP TABLE IF EXISTS `tjd_cert_record`;
+CREATE TABLE `tjd_cert_record` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` varchar(32) DEFAULT NULL COMMENT '用户编号',
+  `use_datetime` datetime DEFAULT NULL COMMENT '使用时间',
+  `fee` decimal(64,0) DEFAULT NULL COMMENT '费用',
+  `cert_key` varchar(32) DEFAULT NULL COMMENT '认证类型',
+  `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='认证记录';
 

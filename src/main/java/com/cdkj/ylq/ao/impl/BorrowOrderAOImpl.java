@@ -188,7 +188,9 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setApplyUser(userId);
         borrow.setSignDatetime(now);
         borrow.setAmount(borrowAmount);
-        borrow.setBorrowAmunt(BigDecimal.ZERO);
+        borrow.setBorrowAmunt(borrowAmount);
+        borrow.setRealGetAmount(borrowAmount.subtract(lxAmount)
+            .subtract(xsAmount).subtract(glAmount).subtract(fwAmount));
         borrow.setRealGetAmount(BigDecimal.ZERO);
         borrow.setLevel(product.getLevel());
         borrow.setDuration(product.getDuration());
@@ -700,7 +702,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setYqlxAmount(yqlxAmount);
         borrow.setTotalAmount(borrow.getAmount().add(yqlxAmount));
         borrow.setStatus(EBorrowStatus.OVERDUE.getCode());
-        borrow.setUpdater("程序自动");
+        borrow.setUpdater("程序自动更新");
         borrow.setUpdateDatetime(new Date());
         borrow.setRemark("已逾期");
         borrowOrderBO.overdue(borrow);
@@ -814,7 +816,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setTotalAmount(lxAmount.add(yqlxAmount).add(remainAmount));
         borrow.setAmount(lxAmount.add(remainAmount));
         borrow.setStatus(EBorrowStatus.OVERDUE.getCode());
-        borrow.setUpdater("程序自动");
+        borrow.setUpdater("程序自动更新");
         borrow.setUpdateDatetime(new Date());
         borrow.setRemark("已逾期");
         borrowOrderBO.overdue(borrow);
@@ -960,6 +962,9 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                     info.setAmount(mainAmount.add(info.getLxAmount()));
                     info.setRemark("第" + (i + 1) + "期，第" + j + "天");
                     infos.add(info);
+                    // 日期加一
+                    startPayDate = DateUtil.getRelativeDateOfDays(startPayDate,
+                        1);
                 }
             }
         } else {

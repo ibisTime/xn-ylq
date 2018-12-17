@@ -67,6 +67,28 @@ public class RepayApply extends ABaseDO {
 
     private Renewal renewal;
 
+    // 分期期数
+    private Integer stageCount;
+
+    // 分期天数
+    private Integer days;
+
+    public Integer getStageCount() {
+        return stageCount;
+    }
+
+    public void setStageCount(Integer stageCount) {
+        this.stageCount = stageCount;
+    }
+
+    public Integer getDays() {
+        return days;
+    }
+
+    public void setDays(Integer days) {
+        this.days = days;
+    }
+
     public User getUser() {
         return user;
     }

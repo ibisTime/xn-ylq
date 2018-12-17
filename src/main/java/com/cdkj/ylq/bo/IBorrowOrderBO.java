@@ -36,7 +36,7 @@ public interface IBorrowOrderBO extends IPaginableBO<BorrowOrder> {
             String payCode, String payType);
 
     public int repayOffline(BorrowOrder borrow, BigDecimal repayAmount,
-            String updater);
+            BigDecimal mainAmount, String updater);
 
     public int archive(BorrowOrder data);
 

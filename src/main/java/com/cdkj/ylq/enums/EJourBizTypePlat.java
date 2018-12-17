@@ -13,11 +13,11 @@ import com.cdkj.ylq.exception.BizException;
 public enum EJourBizTypePlat {
     // 人民币账户
 
-    REPORT("REPORT", "报告收入"),
+    REPORT("REPORT", "客户认证接口收入"),
 
     WITHDRAW_FEE("WITHDRAW_FEE", "取现手续费"),
 
-    API("API", "征信接口支出"),
+    API("API", "第三方认证接口支出"),
 
     WITHDRAW_ENTER("withdraw_enter", "提现回录"),
 

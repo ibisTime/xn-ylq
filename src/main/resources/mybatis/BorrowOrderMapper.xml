@@ -325,6 +325,7 @@
 		SET
 		real_hk_datetime = #{realHkDatetime}
 		,real_hk_amount = #{realHkAmount}
+		,total_amount=#{totalAmount}
 		,pay_type = #{payType}
 		,status = #{status}
 		,is_stage=#{isStage}

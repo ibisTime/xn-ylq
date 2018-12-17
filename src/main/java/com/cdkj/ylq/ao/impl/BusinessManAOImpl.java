@@ -15,12 +15,14 @@ import com.cdkj.ylq.bo.IChargeBO;
 import com.cdkj.ylq.bo.ICompanyBO;
 import com.cdkj.ylq.bo.ICouponBO;
 import com.cdkj.ylq.bo.IJourBO;
+import com.cdkj.ylq.bo.IProductBO;
 import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISYSDictBO;
 import com.cdkj.ylq.bo.ISYSMenuBO;
 import com.cdkj.ylq.bo.ISYSMenuRoleBO;
 import com.cdkj.ylq.bo.ISYSRoleBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
+import com.cdkj.ylq.bo.IStagingRuleBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.MD5Util;
 import com.cdkj.ylq.core.OrderNoGenerater;
@@ -31,11 +33,13 @@ import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.domain.Company;
 import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.Jour;
+import com.cdkj.ylq.domain.Product;
 import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.domain.SYSDict;
 import com.cdkj.ylq.domain.SYSMenu;
 import com.cdkj.ylq.domain.SYSMenuRole;
 import com.cdkj.ylq.domain.SYSRole;
+import com.cdkj.ylq.domain.StagingRule;
 import com.cdkj.ylq.dto.req.XN630100Req;
 import com.cdkj.ylq.dto.res.XN630101Res;
 import com.cdkj.ylq.enums.EAccountType;
@@ -65,6 +69,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
     private IAccountBO accountBO;
 
     @Autowired
+    private IProductBO productBO;
+
+    @Autowired
     private ISmsOutBO smsOutBO;
 
     @Autowired
@@ -84,6 +91,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
 
     @Autowired
     private ISYSDictBO sysDictBO;
+
+    @Autowired
+    private IStagingRuleBO stagingRuleBO;
 
     @Autowired
     private IJourBO jourBO;
@@ -227,6 +237,19 @@ public class BusinessManAOImpl implements IBusinessManAO {
         for (Coupon coupon : coupons) {
             coupon.setCompanyCode(companyCode);
             couponBO.saveCoupon(coupon);
+        }
+        // 分期规则
+        List<StagingRule> rules = stagingRuleBO.getModelRules();
+        for (StagingRule stagingRule : rules) {
+            stagingRuleBO.saveStagingRule(stagingRule.getCount(),
+                stagingRule.getCycle(), stagingRule.getRate(),
+                stagingRule.getOrderNo(), companyCode);
+        }
+        // 产品
+        List<Product> products = productBO.getModelProducts();
+        for (Product product : products) {
+            product.setCompanyCode(companyCode);
+            productBO.saveProduct(product);
         }
         // 预充值
         chargeBO.applyOrderOffline(account, EJourBizTypeBoss.CHARGE.getCode(),
