@@ -159,7 +159,7 @@ public class BusinessManAOImpl implements IBusinessManAO {
         // 角色
         SYSRole role = new SYSRole();
         role.setName("借款商");
-        role.setUpdater("UCOIN201700000000000001");
+        role.setUpdater("admin");
         role.setRemark("新增客户角色");
         role.setCompanyCode(companyCode);
         String roleCode = sysRoleBO.saveSYSRole(role);
@@ -248,7 +248,9 @@ public class BusinessManAOImpl implements IBusinessManAO {
         // 产品
         List<Product> products = productBO.getModelProducts();
         for (Product product : products) {
+            String code = OrderNoGenerater.generateM("CP");
             product.setCompanyCode(companyCode);
+            product.setCode(code);
             productBO.saveProduct(product);
         }
         // 预充值

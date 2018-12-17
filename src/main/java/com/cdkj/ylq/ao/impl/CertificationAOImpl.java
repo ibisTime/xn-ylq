@@ -191,9 +191,9 @@ public class CertificationAOImpl implements ICertificationAO {
         BigDecimal outFee = sysConfigBO.getBigDecimalValue(
             EOutFeeKey.INFO_ZQZN.getCode(), ESystemCode.YLQ.getCode())
             .multiply(new BigDecimal(1000));
-        accountBO.changeAmount(toAccount, outFee, EChannelType.NBZ, null,
-            certification.getId().toString(), EJourBizTypePlat.API.getCode(),
-            EJourBizTypePlat.API.getValue());
+        accountBO.changeAmount(toAccount, outFee.negate(), EChannelType.NBZ,
+            null, certification.getId().toString(),
+            EJourBizTypePlat.API.getCode(), EJourBizTypePlat.API.getValue());
         return infoZqzn;
     }
 
@@ -396,9 +396,9 @@ public class CertificationAOImpl implements ICertificationAO {
         BigDecimal outFee = sysConfigBO.getBigDecimalValue(
             EOutFeeKey.INFO_CARRIER.getCode(), ESystemCode.YLQ.getCode())
             .multiply(new BigDecimal(1000));
-        accountBO.changeAmount(toAccount, outFee, EChannelType.NBZ, null,
-            certification.getId().toString(), EJourBizTypePlat.API.getCode(),
-            EJourBizTypePlat.API.getValue());
+        accountBO.changeAmount(toAccount, outFee.negate(), EChannelType.NBZ,
+            null, certification.getId().toString(),
+            EJourBizTypePlat.API.getCode(), EJourBizTypePlat.API.getValue());
     }
 
     // 魔蝎支付宝登录完成回掉处理
@@ -490,9 +490,9 @@ public class CertificationAOImpl implements ICertificationAO {
         BigDecimal outFee = sysConfigBO.getBigDecimalValue(
             EOutFeeKey.INFO_ZHIFUBAO.getCode(), ESystemCode.YLQ.getCode())
             .multiply(new BigDecimal(1000));
-        accountBO.changeAmount(toAccount, outFee, EChannelType.NBZ, null,
-            certification.getId().toString(), EJourBizTypePlat.API.getCode(),
-            EJourBizTypePlat.API.getValue());
+        accountBO.changeAmount(toAccount, outFee.negate(), EChannelType.NBZ,
+            null, certification.getId().toString(),
+            EJourBizTypePlat.API.getCode(), EJourBizTypePlat.API.getValue());
     }
 
     @Override
@@ -1238,8 +1238,8 @@ public class CertificationAOImpl implements ICertificationAO {
                 BigDecimal outFee = sysConfigBO.getBigDecimalValue(
                     EOutFeeKey.INFO_DT_REPORT.getCode(),
                     ESystemCode.YLQ.getCode()).multiply(new BigDecimal(1000));
-                accountBO.changeAmount(toAccount, outFee, EChannelType.NBZ,
-                    null, certification.getId().toString(),
+                accountBO.changeAmount(toAccount, outFee.negate(),
+                    EChannelType.NBZ, null, certification.getId().toString(),
                     EJourBizTypePlat.API.getCode(),
                     EJourBizTypePlat.API.getValue());
             } else {

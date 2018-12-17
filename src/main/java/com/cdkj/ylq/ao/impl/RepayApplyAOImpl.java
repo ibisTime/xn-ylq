@@ -226,9 +226,17 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                 repayApply.setBorrow(borrowOrderBO.getBorrow(repayApply
                     .getRefNo()));
             } else {
-                String orderCode = stagingBO.getStaging(repayApply.getRefNo())
-                    .getOrderCode();
-                repayApply.setBorrow(borrowOrderBO.getBorrow(orderCode));
+                Staging staging = stagingBO.getStaging(repayApply.getRefNo());
+                repayApply
+                    .setBorrow(borrowOrderBO.getBorrow(staging.getOrderCode()));
+                Date date = new Date();
+                if (staging.getPayDatetime() != null) {
+                    date = staging.getPayDatetime();
+                }
+                int days = DateUtil.daysBetween(staging.getStartPayDate(), date) + 1;
+                int stageCount = staging.getCount().intValue();
+                repayApply.setDays(days);
+                repayApply.setStageCount(stageCount);
             }
         }
         return results;
