@@ -36,6 +36,7 @@ import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.ENoticerType;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.exception.BizException;
+import com.cdkj.ylq.exception.EBizErrorCode;
 
 @Service
 public class ApplyAOImpl implements IApplyAO {
@@ -151,6 +152,10 @@ public class ApplyAOImpl implements IApplyAO {
         String status = null;
         String content = null;
         if (EBoolean.YES.getCode().equals(approveResult)) {
+            if (sxAmount.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                    "信用分必须大于0");
+            }
             status = EApplyStatus.APPROVE_YES.getCode();
             // 落地授信信息
             InfoAmount infoAmount = new InfoAmount();

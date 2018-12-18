@@ -38,4 +38,8 @@ public interface IBusinessManAO {
 
     public BusinessMan getBusinessManByCompanyCode(String companyCode);
 
+    public void editPwdByOld(String userId, String oldPwd, String newPwd);
+
+    public void editPwdByAdmin(String userId, String adminPwd, String newPwd);
+
 }

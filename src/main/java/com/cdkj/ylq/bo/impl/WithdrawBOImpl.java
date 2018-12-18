@@ -58,7 +58,7 @@ public class WithdrawBOImpl extends PaginableBOImpl<Withdraw> implements
         data.setAmount(amount);
 
         data.setFee(fee);
-        data.setActualAmount(amount.subtract(fee));
+        data.setActualAmount(amount);
         data.setChannelType(EChannelType.Offline.getCode());
         data.setChannelBank(account.getCurrency());
         data.setPayCardInfo(payCardInfo);

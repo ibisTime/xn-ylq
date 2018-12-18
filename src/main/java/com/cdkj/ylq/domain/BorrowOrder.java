@@ -181,6 +181,25 @@ public class BorrowOrder extends ABaseDO {
     // 逾期次数
     private Integer yqCount;
 
+    // 还款列表
+    private List<RepayApply> repayList;
+
+    public BigDecimal getBorrowAmount() {
+        return borrowAmount;
+    }
+
+    public void setBorrowAmount(BigDecimal borrowAmount) {
+        this.borrowAmount = borrowAmount;
+    }
+
+    public List<RepayApply> getRepayList() {
+        return repayList;
+    }
+
+    public void setRepayList(List<RepayApply> repayList) {
+        this.repayList = repayList;
+    }
+
     public Integer getYqCount() {
         return yqCount;
     }

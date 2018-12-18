@@ -8,6 +8,8 @@
  */
 package com.cdkj.ylq.dto.req;
 
+import javax.validation.constraints.Min;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /** 
@@ -21,6 +23,7 @@ public class XN623024Req {
     private String userId;
 
     @NotBlank
+    @Min(0)
     private String creditScore;
 
     public String getUserId() {

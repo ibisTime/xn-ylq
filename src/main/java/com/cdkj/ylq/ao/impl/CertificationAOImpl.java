@@ -1181,12 +1181,13 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
+    @Transactional
     public String duotouReport(String userId) {
         User user = userBO.getUser(userId);
         if (user == null) {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(), "用户不存在");
         }
-        if (user.getRealName() == null) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(user.getRealName())) {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "用户未实名认证，无法拉取多头报告");
         }
@@ -1216,7 +1217,7 @@ public class CertificationAOImpl implements ICertificationAO {
                 certification.setCertiKey(ECertiKey.INFO_DT_REPORT.getCode());
                 certification.setCerDatetime(new Date());
                 certification.setResult(data);
-                certificationBO.saveCertification(certification);
+                Long ID = certificationBO.saveCertification(certification);
                 BigDecimal fee = sysConfigBO.getBigDecimalValue(
                     ECertiKey.INFO_DT_REPORT.getCode(),
                     ESystemCode.YLQ.getCode()).multiply(new BigDecimal(1000));
@@ -1225,7 +1226,7 @@ public class CertificationAOImpl implements ICertificationAO {
                     certification.getCompanyCode());
                 // 接口费用
                 BusinessMan man = businessManBO
-                    .getBusinessManByCompanyCode(certification.getCompanyCode());
+                    .getBusinessManByCompanyCode(user.getCompanyCode());
                 Account toAccount = accountBO
                     .getAccount(ESystemAccount.SYS_ACOUNT_CNY.getCode());
                 Account fromAccount = accountBO.getAccountByUser(
@@ -1239,7 +1240,7 @@ public class CertificationAOImpl implements ICertificationAO {
                     EOutFeeKey.INFO_DT_REPORT.getCode(),
                     ESystemCode.YLQ.getCode()).multiply(new BigDecimal(1000));
                 accountBO.changeAmount(toAccount, outFee.negate(),
-                    EChannelType.NBZ, null, certification.getId().toString(),
+                    EChannelType.NBZ, null, ID.toString(),
                     EJourBizTypePlat.API.getCode(),
                     EJourBizTypePlat.API.getValue());
             } else {
@@ -1253,6 +1254,7 @@ public class CertificationAOImpl implements ICertificationAO {
     }
 
     @Override
+    @Transactional
     public String updateDuotou(String userId) {
         User user = userBO.getUser(userId);
         if (user.getRealName() == null) {

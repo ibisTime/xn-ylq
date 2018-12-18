@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cdkj.ylq.ao.IBorrowOrderAO;
 import com.cdkj.ylq.ao.IRepayApplyAO;
 import com.cdkj.ylq.bo.IApplyBO;
 import com.cdkj.ylq.bo.IBorrowOrderBO;
@@ -51,6 +52,9 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
 
     @Autowired
     private IBorrowOrderBO borrowOrderBO;
+
+    @Autowired
+    private IBorrowOrderAO borrowOrderAO;
 
     @Autowired
     private IApplyBO applyBO;
@@ -227,13 +231,14 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                     .getRefNo()));
             } else {
                 Staging staging = stagingBO.getStaging(repayApply.getRefNo());
-                repayApply
-                    .setBorrow(borrowOrderBO.getBorrow(staging.getOrderCode()));
+                repayApply.setBorrow(borrowOrderBO.getBorrow(staging
+                    .getOrderCode()));
                 Date date = new Date();
                 if (staging.getPayDatetime() != null) {
                     date = staging.getPayDatetime();
                 }
-                int days = DateUtil.daysBetween(staging.getStartPayDate(), date) + 1;
+                int days = DateUtil
+                    .daysBetween(staging.getStartPayDate(), date) + 1;
                 int stageCount = staging.getCount().intValue();
                 repayApply.setDays(days);
                 repayApply.setStageCount(stageCount);
@@ -248,11 +253,11 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
         repayApply.setUser(userBO.getUser(repayApply.getApplyUser()));
         if (ERepayApplyType.REPAY.getCode().equals(repayApply.getType())) {
             repayApply
-                .setBorrow(borrowOrderBO.getBorrow(repayApply.getRefNo()));
+                .setBorrow(borrowOrderAO.getBorrow(repayApply.getRefNo()));
         } else {
             Staging staging = stagingBO.getStaging(repayApply.getRefNo());
             repayApply
-                .setBorrow(borrowOrderBO.getBorrow(staging.getOrderCode()));
+                .setBorrow(borrowOrderAO.getBorrow(staging.getOrderCode()));
             Date date = new Date();
             if (staging.getPayDatetime() != null) {
                 date = staging.getPayDatetime();

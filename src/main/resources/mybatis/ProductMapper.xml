@@ -147,6 +147,8 @@
 		,xs_amount = #{xsAmount}
 		,gl_amount = #{glAmount}
 		,fw_amount = #{fwAmount}
+		,order_no=#{orderNo}
+		,color=#{color}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}

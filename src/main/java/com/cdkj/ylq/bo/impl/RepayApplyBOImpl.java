@@ -63,4 +63,12 @@ public class RepayApplyBOImpl extends PaginableBOImpl<RepayApply> implements
         return repayApplyDAO.selectList(condition);
     }
 
+    @Override
+    public RepayApply getApplyByRef(String ref) {
+        RepayApply condition = new RepayApply();
+        condition.setRefNo(ref);
+        RepayApply apply = repayApplyDAO.select(condition);
+        return apply;
+    }
+
 }

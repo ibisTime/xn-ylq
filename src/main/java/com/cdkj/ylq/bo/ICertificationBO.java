@@ -10,7 +10,7 @@ import com.cdkj.ylq.enums.ECertificationStatus;
 
 public interface ICertificationBO extends IPaginableBO<Certification> {
 
-    public String saveCertification(Certification data);
+    public long saveCertification(Certification data);
 
     public int refreshCertification(Certification data);
 

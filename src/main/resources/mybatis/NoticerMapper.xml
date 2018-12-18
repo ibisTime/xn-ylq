@@ -29,6 +29,9 @@
 			<if test="mobile != null and mobile != '' ">
 				AND t.mobile like "%"#{mobile}"%"
 			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code like "%"#{companyCode}"%"
+			</if>
 		</trim>
 	</sql>
 	<select id="select_noticer" parameterType="noticer" resultMap="noticer_DB_Result">

@@ -32,12 +32,11 @@ public class CertificationBOImpl extends PaginableBOImpl<Certification>
     private IUserBO userBO;
 
     @Override
-    public String saveCertification(Certification data) {
-        String code = null;
+    public long saveCertification(Certification data) {
         if (data != null) {
             certificationDAO.insert(data);
         }
-        return code;
+        return data.getId();
     }
 
     @Override

@@ -48,6 +48,7 @@ import com.cdkj.ylq.enums.ECurrency;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EJourBizTypeBoss;
 import com.cdkj.ylq.enums.EMenuCode;
+import com.cdkj.ylq.enums.EProductStatus;
 import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.EBizErrorCode;
@@ -251,6 +252,7 @@ public class BusinessManAOImpl implements IBusinessManAO {
             String code = OrderNoGenerater.generateM("CP");
             product.setCompanyCode(companyCode);
             product.setCode(code);
+            product.setStatus(EProductStatus.OFF.getCode());
             productBO.saveProduct(product);
         }
         // 预充值
@@ -353,5 +355,24 @@ public class BusinessManAOImpl implements IBusinessManAO {
             ECurrency.CNY.getCode()));
         man.setOutAmount(outAmount(man));
         return man;
+    }
+
+    @Override
+    public void editPwdByOld(String userId, String oldPwd, String newPwd) {
+        BusinessMan man = businessManBO.getBusinessMan(userId);
+        if (!MD5Util.md5(oldPwd).equals(man.getLoginPwd())) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "原密码不正确");
+        }
+        businessManBO.refreshLoginPwd(man, newPwd);
+    }
+
+    @Override
+    public void editPwdByAdmin(String userId, String adminPwd, String newPwd) {
+        BusinessMan man = businessManBO.getBusinessMan(userId);
+        BusinessMan boss = businessManBO.getBusinessBoss(man.getCompanyCode());
+        if (!MD5Util.md5(adminPwd).equals(boss.getLoginPwd())) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "管理员密码错误");
+        }
+        businessManBO.refreshLoginPwd(man, newPwd);
     }
 }

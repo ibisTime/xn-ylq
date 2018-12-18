@@ -174,7 +174,9 @@
 	<select id="select_jour_count" parameterType="jour"
 		resultType="java.lang.Long">
 		SELECT count(1) FROM tstd_jour t
+		<include refid="join_condition" />
 		<include refid="where_condition" />
+		<include refid="relaNameForQuery_condition" />
 	</select>
 
 	<insert id="insert_jour" parameterType="jour">

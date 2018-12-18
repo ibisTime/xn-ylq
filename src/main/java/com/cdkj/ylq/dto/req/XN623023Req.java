@@ -8,6 +8,8 @@
  */
 package com.cdkj.ylq.dto.req;
 
+import javax.validation.constraints.Min;
+
 /** 
  * @author: haiqingzheng 
  * @since: 2017年8月12日 上午11:32:28 
@@ -22,6 +24,7 @@ public class XN623023Req {
     private String approveResult;
 
     // 授信额度（必填）
+    @Min(0)
     private String creditScore;
 
     // 审核人（必填）

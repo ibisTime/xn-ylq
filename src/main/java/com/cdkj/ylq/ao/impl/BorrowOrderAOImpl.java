@@ -191,7 +191,6 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setBorrowAmunt(borrowAmount);
         borrow.setRealGetAmount(borrowAmount.subtract(lxAmount)
             .subtract(xsAmount).subtract(glAmount).subtract(fwAmount));
-        borrow.setRealGetAmount(BigDecimal.ZERO);
         borrow.setLevel(product.getLevel());
         borrow.setDuration(product.getDuration());
 
@@ -395,6 +394,12 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 && borrow.getRepayCount() != null) {
             initStageList(borrow);
         }
+        if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
+                || EBorrowStatus.REPAY.getCode().equals(borrow.getStatus())
+                || EBorrowStatus.OVERDUE.getCode().equals(borrow.getStatus())
+                || EBorrowStatus.BAD.getCode().equals(borrow.getStatus())) {
+            initRepayList(borrow);
+        }
         User user = borrow.getUser();
         Integer count = borrowOrderBO.getTotalBorrowCount(user.getUserId());
         borrow.setBorrowCount(count);
@@ -403,6 +408,28 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         Integer yqCount = (int) overdueBO.getTotalCount(condition);
         borrow.setYqCount(yqCount);
         return borrow;
+    }
+
+    private void initRepayList(BorrowOrder borrow) {
+        Staging condition = new Staging();
+        condition.setOrderCode(borrow.getCode());
+        condition.setStatus(EStagingStatus.REPAY.getCode());
+        List<Staging> stagings = stagingBO.queryStagingList(condition);
+        List<RepayApply> repayList = new ArrayList<RepayApply>();
+        for (Staging staging : stagings) {
+            RepayApply apply = repayApplyBO.getApplyByRef(staging.getCode());
+            int days = DateUtil.daysBetween(staging.getStartPayDate(),
+                staging.getPayDatetime()) + 1;
+            apply.setRemark("第" + staging.getBatch() + "次分期：第"
+                    + staging.getCount() + "期，第" + days + "天");
+            repayList.add(apply);
+        }
+        RepayApply apply = repayApplyBO.getApplyByRef(borrow.getCode());
+        if (apply != null) {
+            repayList.add(apply);
+        }
+        borrow.setRepayList(repayList);
+
     }
 
     @Override
@@ -817,6 +844,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setAmount(lxAmount.add(remainAmount));
         borrow.setStatus(EBorrowStatus.OVERDUE.getCode());
         borrow.setUpdater("程序自动更新");
+        borrow.setIsStage(EBoolean.NO.getCode());
         borrow.setUpdateDatetime(new Date());
         borrow.setRemark("已逾期");
         borrowOrderBO.overdue(borrow);
@@ -878,6 +906,11 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                 borrow.getStageBatch() + 1, borrow.getCompanyCode());
         }
         borrowOrderBO.refreshStaging(borrow, count, cycle, updater, remark);
+        String content = "您的借款订单" + borrow.getCode() + "已成功分期，分为" + count
+                + "期，每期" + cycle + "天，日利率：" + rate;
+        User user = userBO.getUser(borrow.getApplyUser());
+        smsOutBO.sendContent(user.getMobile(), content,
+            borrow.getCompanyCode(), ESystemCode.YLQ.getCode());
     }
 
     @Override
@@ -927,6 +960,12 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         overdueBO.saveOverdue(borrow.getApplyUser(), borrow.getCode(),
             borrow.getYqDays(), borrow.getYqlxAmount(),
             EOverdueDeal.STAGE.getCode());
+
+        String content = "您的借款订单" + borrow.getCode() + "已成功分期，分为" + count
+                + "期，每期" + cycle + "天，日利率：" + rate;
+        User user = userBO.getUser(borrow.getApplyUser());
+        smsOutBO.sendContent(user.getMobile(), content,
+            borrow.getCompanyCode(), ESystemCode.YLQ.getCode());
     }
 
     @Override

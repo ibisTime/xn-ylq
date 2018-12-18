@@ -23,7 +23,7 @@ public class XN623162Req {
 
     private String mobile;
 
-    private String stratTime;
+    private String startTime;
 
     private String endTime;
 
@@ -73,11 +73,11 @@ public class XN623162Req {
     }
 
     public String getStratTime() {
-        return stratTime;
+        return startTime;
     }
 
     public void setStratTime(String stratTime) {
-        this.stratTime = stratTime;
+        this.startTime = stratTime;
     }
 
     public String getEndTime() {

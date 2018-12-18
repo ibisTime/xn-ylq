@@ -231,23 +231,38 @@ public class WithdrawAOImpl implements IWithdrawAO {
     }
 
     private void initWithdraw(Withdraw withdraw) {
-
+        Account account = accountBO.getAccount(withdraw.getAccountNumber());
         // 户名
         String realName = null;
+        if ("admin".equals(withdraw.getApplyUser())) {
+            withdraw.setApplyUser("管理员");
+            BusinessMan businessMan = businessManBO.getBusinessMan(account
+                .getUserId());
+            User user = new User();
+            user.setMobile(businessMan.getMobile());
+            withdraw.setUser(user);
 
-        // 其他用户
-        BusinessMan businessMan = businessManBO.getBusinessMan(withdraw
-            .getApplyUser());
-        User user = new User();
-        user.setMobile(businessMan.getMobile());
-        withdraw.setUser(user);
+            realName = businessMan.getMobile();
+            if (StringUtils.isNotBlank(businessMan.getRealName())) {
+                realName = businessMan.getRealName().concat("-")
+                    .concat(realName);
+            }
+        } else {
+            // 其他用户
+            BusinessMan businessMan = businessManBO.getBusinessMan(withdraw
+                .getApplyUser());
+            User user = new User();
+            user.setMobile(businessMan.getMobile());
+            withdraw.setUser(user);
 
-        realName = businessMan.getMobile();
-        if (StringUtils.isNotBlank(businessMan.getRealName())) {
-            realName = businessMan.getRealName().concat("-").concat(realName);
+            realName = businessMan.getMobile();
+            if (StringUtils.isNotBlank(businessMan.getRealName())) {
+                realName = businessMan.getRealName().concat("-")
+                    .concat(realName);
+            }
+
+            withdraw.setRealName(realName);
         }
-
-        withdraw.setRealName(realName);
     }
 
 }

@@ -355,6 +355,7 @@
 		,yqlx_amount = #{yqlxAmount}
 		,amount=#{amount}
 		,total_amount = #{totalAmount}
+		,is_stage=#{isStage}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}
 		,remark = #{remark}

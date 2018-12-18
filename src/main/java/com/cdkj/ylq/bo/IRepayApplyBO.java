@@ -16,4 +16,6 @@ public interface IRepayApplyBO extends IPaginableBO<RepayApply> {
 
     public List<RepayApply> queryCurrentRepayApplyList(String applyUser);
 
+    public RepayApply getApplyByRef(String ref);
+
 }
