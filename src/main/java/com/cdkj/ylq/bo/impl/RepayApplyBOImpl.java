@@ -67,6 +67,7 @@ public class RepayApplyBOImpl extends PaginableBOImpl<RepayApply> implements
     public RepayApply getApplyByRef(String ref) {
         RepayApply condition = new RepayApply();
         condition.setRefNo(ref);
+        condition.setStatus(ERepayApplyStatus.APPROVE_YES.getCode());
         RepayApply apply = repayApplyDAO.select(condition);
         return apply;
     }

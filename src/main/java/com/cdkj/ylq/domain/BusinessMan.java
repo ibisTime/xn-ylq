@@ -88,8 +88,18 @@ public class BusinessMan extends ABaseDO {
 
     private Company company;
 
+    private BusinessMan businessMan;
+
     // 累计支出
     private BigDecimal outAmount;
+
+    public BusinessMan getBusinessMan() {
+        return businessMan;
+    }
+
+    public void setBusinessMan(BusinessMan businessMan) {
+        this.businessMan = businessMan;
+    }
 
     public BigDecimal getOutAmount() {
         return outAmount;

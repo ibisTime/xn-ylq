@@ -22,4 +22,6 @@ public interface IWayAO {
 
     public void point(String code);
 
+    public void loginOff(String code);
+
 }

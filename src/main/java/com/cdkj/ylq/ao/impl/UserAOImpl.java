@@ -55,7 +55,9 @@ import com.cdkj.ylq.enums.EIDKind;
 import com.cdkj.ylq.enums.EUserCouponStatus;
 import com.cdkj.ylq.enums.EUserRefereeType;
 import com.cdkj.ylq.enums.EUserStatus;
+import com.cdkj.ylq.enums.EWayStatus;
 import com.cdkj.ylq.exception.BizException;
+import com.cdkj.ylq.exception.EBizErrorCode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -96,9 +98,6 @@ public class UserAOImpl implements IUserAO {
     @Autowired
     private IWayBO wayBO;
 
-    /** 
-     * @see com.std.user.ao.IUserAO#doCheckMobile(java.lang.String, java.lang.String, java.lang.String)
-     */
     @Override
     public void doCheckMobile(String mobile, String kind, String companyCode,
             String systemCode) {
@@ -138,6 +137,10 @@ public class UserAOImpl implements IUserAO {
             }
         } else if (EUserRefereeType.W.getCode().equals(userRefereeKind)) {
             Way way = wayBO.getWay(userReferee);
+            if (way.getStatus().equals(EWayStatus.Locked.getCode())) {
+                throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                    "该渠道已注销");
+            }
             wayBO.refreshUserCount(way, Long.valueOf(1));
         }
 

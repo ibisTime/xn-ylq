@@ -35,6 +35,7 @@ public class XN623155 extends AProcessor {
     public Object doBusiness() throws BizException {
         Way condition = new Way();
         condition.setName(req.getName());
+        condition.setStatus(req.getStatus());
         condition.setCompanyCode(req.getCompanyCode());
         int start = StringValidater.toInteger(req.getStart());
         int limit = StringValidater.toInteger(req.getLimit());

@@ -81,6 +81,16 @@ public class Account extends ABaseDO {
 
     private String keyword;
 
+    private BusinessMan businessMan;
+
+    public BusinessMan getBusinessMan() {
+        return businessMan;
+    }
+
+    public void setBusinessMan(BusinessMan businessMan) {
+        this.businessMan = businessMan;
+    }
+
     public String getKeyword() {
         return keyword;
     }

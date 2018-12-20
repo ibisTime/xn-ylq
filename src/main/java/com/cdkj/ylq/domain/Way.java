@@ -29,6 +29,9 @@ public class Way extends ABaseDO {
     // 注册用户数
     private Long userCount;
 
+    // 状态
+    private String status;
+
     // 创建时间
     private Date createDatetime;
 
@@ -43,6 +46,14 @@ public class Way extends ABaseDO {
 
     // 公司编号
     private String companyCode;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public void setCode(String code) {
         this.code = code;

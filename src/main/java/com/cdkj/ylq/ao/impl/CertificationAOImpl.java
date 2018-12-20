@@ -187,13 +187,13 @@ public class CertificationAOImpl implements ICertificationAO {
         accountBO.transAmount(fromAccount, toAccount, fee,
             EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.REPORT.getCode(),
             EJourBizTypeBoss.API.getValue(),
-            EJourBizTypePlat.REPORT.getValue(), id.toString());
+            EJourBizTypePlat.REPORT.getValue(), user.getMobile());
         BigDecimal outFee = sysConfigBO.getBigDecimalValue(
             EOutFeeKey.INFO_ZQZN.getCode(), ESystemCode.YLQ.getCode())
             .multiply(new BigDecimal(1000));
         accountBO.changeAmount(toAccount, outFee.negate(), EChannelType.NBZ,
-            null, certification.getId().toString(),
-            EJourBizTypePlat.API.getCode(), EJourBizTypePlat.API.getValue());
+            null, user.getMobile(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypePlat.API.getValue());
         return infoZqzn;
     }
 
@@ -344,6 +344,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public void doMxCarrierReportCallback(MxCarrierNofification notification) {
         logger.info("&**&*&* 开始魔蝎回调——资信报告通知 &*&*&*&*&");
         String userId = notification.getUser_id();
+        User user = userBO.getUser(userId);
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_CARRIER);
         Integer config = sysConfigBO.getIntegerValue(
@@ -392,13 +393,13 @@ public class CertificationAOImpl implements ICertificationAO {
         accountBO.transAmount(fromAccount, toAccount, fee,
             EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.REPORT.getCode(),
             EJourBizTypeBoss.API.getValue(),
-            EJourBizTypePlat.REPORT.getValue(), id.toString());
+            EJourBizTypePlat.REPORT.getValue(), user.getMobile());
         BigDecimal outFee = sysConfigBO.getBigDecimalValue(
             EOutFeeKey.INFO_CARRIER.getCode(), ESystemCode.YLQ.getCode())
             .multiply(new BigDecimal(1000));
         accountBO.changeAmount(toAccount, outFee.negate(), EChannelType.NBZ,
-            null, certification.getId().toString(),
-            EJourBizTypePlat.API.getCode(), EJourBizTypePlat.API.getValue());
+            null, user.getMobile(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypePlat.API.getValue());
     }
 
     // 魔蝎支付宝登录完成回掉处理
@@ -439,6 +440,7 @@ public class CertificationAOImpl implements ICertificationAO {
     public void doMxAlipayReportCallback(MxAlipayNotification notification) {
         logger.info("***************魔蝎支付宝信息采集通知***************");
         String userId = notification.getUser_id();
+        User user = userBO.getUser(userId);
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_ZHIFUBAO);
         Integer config = sysConfigBO.getIntegerValue(
@@ -486,13 +488,13 @@ public class CertificationAOImpl implements ICertificationAO {
         accountBO.transAmount(fromAccount, toAccount, fee,
             EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.REPORT.getCode(),
             EJourBizTypeBoss.API.getValue(),
-            EJourBizTypePlat.REPORT.getValue(), id.toString());
+            EJourBizTypePlat.REPORT.getValue(), user.getMobile());
         BigDecimal outFee = sysConfigBO.getBigDecimalValue(
             EOutFeeKey.INFO_ZHIFUBAO.getCode(), ESystemCode.YLQ.getCode())
             .multiply(new BigDecimal(1000));
         accountBO.changeAmount(toAccount, outFee.negate(), EChannelType.NBZ,
-            null, certification.getId().toString(),
-            EJourBizTypePlat.API.getCode(), EJourBizTypePlat.API.getValue());
+            null, user.getMobile(), EJourBizTypePlat.API.getCode(),
+            EJourBizTypePlat.API.getValue());
     }
 
     @Override
@@ -1209,14 +1211,14 @@ public class CertificationAOImpl implements ICertificationAO {
             }
             JSONObject jsonObject = JSONObject.parseObject(result);
             boolean flag = jsonObject.getBooleanValue("success");
-            String data = jsonObject.getString("data");
+            result = jsonObject.getString("data");
             String msg = jsonObject.getString("msg");
             if (flag) {
                 Certification certification = new Certification();
                 certification.setUserId(userId);
                 certification.setCertiKey(ECertiKey.INFO_DT_REPORT.getCode());
                 certification.setCerDatetime(new Date());
-                certification.setResult(data);
+                certification.setResult(result);
                 Long ID = certificationBO.saveCertification(certification);
                 BigDecimal fee = sysConfigBO.getBigDecimalValue(
                     ECertiKey.INFO_DT_REPORT.getCode(),
@@ -1235,12 +1237,12 @@ public class CertificationAOImpl implements ICertificationAO {
                     EJourBizTypeBoss.API.getCode(),
                     EJourBizTypePlat.REPORT.getCode(),
                     EJourBizTypeBoss.API.getValue(),
-                    EJourBizTypePlat.REPORT.getValue(), id.toString());
+                    EJourBizTypePlat.REPORT.getValue(), user.getMobile());
                 BigDecimal outFee = sysConfigBO.getBigDecimalValue(
                     EOutFeeKey.INFO_DT_REPORT.getCode(),
                     ESystemCode.YLQ.getCode()).multiply(new BigDecimal(1000));
                 accountBO.changeAmount(toAccount, outFee.negate(),
-                    EChannelType.NBZ, null, ID.toString(),
+                    EChannelType.NBZ, null, user.getMobile(),
                     EJourBizTypePlat.API.getCode(),
                     EJourBizTypePlat.API.getValue());
             } else {

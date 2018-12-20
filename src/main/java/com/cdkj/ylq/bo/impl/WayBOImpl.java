@@ -16,6 +16,7 @@ import com.cdkj.ylq.dao.IWayDAO;
 import com.cdkj.ylq.domain.Way;
 import com.cdkj.ylq.enums.EGeneratePrefix;
 import com.cdkj.ylq.enums.EUserRefereeType;
+import com.cdkj.ylq.enums.EWayStatus;
 import com.cdkj.ylq.exception.BizException;
 
 @Component
@@ -50,6 +51,7 @@ public class WayBOImpl extends PaginableBOImpl<Way> implements IWayBO {
         data.setUrl(url.toString());
         data.setPointCount(0L);
         data.setUserCount(0L);
+        data.setStatus(EWayStatus.NORMAL.getCode());
         data.setCreateDatetime(new Date());
         data.setCompanyCode(companyCode);
         wayDAO.insert(data);
@@ -117,6 +119,16 @@ public class WayBOImpl extends PaginableBOImpl<Way> implements IWayBO {
             I = wayDAO.updateUserCount(data);
         }
         return I;
+    }
+
+    @Override
+    public void refreshStatus(Way data) {
+        if (EWayStatus.Locked.getCode().equals(data.getStatus())) {
+            data.setStatus(EWayStatus.NORMAL.getCode());
+        } else {
+            data.setStatus(EWayStatus.Locked.getCode());
+        }
+        wayDAO.updateWay(data);
     }
 
 }

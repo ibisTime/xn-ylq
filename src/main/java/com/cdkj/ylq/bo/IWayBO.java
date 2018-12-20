@@ -23,4 +23,6 @@ public interface IWayBO extends IPaginableBO<Way> {
 
     public Way getWay(String code);
 
+    public void refreshStatus(Way data);
+
 }

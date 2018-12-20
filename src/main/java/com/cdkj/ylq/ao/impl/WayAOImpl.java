@@ -59,4 +59,10 @@ public class WayAOImpl implements IWayAO {
         wayBO.refreshPointCount(way, Long.valueOf(1));
     }
 
+    @Override
+    public void loginOff(String code) {
+        Way way = wayBO.getWay(code);
+        wayBO.refreshStatus(way);
+    }
+
 }

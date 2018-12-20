@@ -8,6 +8,7 @@
 		<result column="url" property="url" />
 		<result column="point_count" property="pointCount" />
 		<result column="user_count" property="userCount" />
+		<result column="status" property="status" />
 		<result column="create_datetime" property="createDatetime" />
 		<result column="updater" property="updater" />
 		<result column="update_datetime" property="updateDatetime" />
@@ -22,8 +23,11 @@
 			<if test="name != null and name != '' ">
 				AND t.name like "%"#{name}"%"
 			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
 			<if test="companyCode != null and companyCode != '' ">
-				AND t.company_code like "%"#{companyCode}"%"
+				AND t.company_code =#{companyCode}
 			</if>
 		</trim>
 	</sql>
@@ -34,6 +38,7 @@
 		,t.url
 		,t.point_count
 		,t.user_count
+		,t.status
 		,t.create_datetime
 		,t.updater
 		,t.update_datetime
@@ -63,6 +68,7 @@
 		,url
 		,point_count
 		,user_count
+		,status
 		,create_datetime
 		,updater
 		,update_datetime
@@ -75,6 +81,7 @@
 		,#{url}
 		,#{pointCount}
 		,#{userCount}
+		,#{status}
 		,#{createDatetime}
 		,#{updater}
 		,#{updateDatetime}
@@ -93,6 +100,7 @@
 		SET
 		name = #{name}
 		,url = #{url}
+		,status=#{status}
 		,create_datetime = #{createDatetime}
 		,updater = #{updater}
 		,update_datetime = #{updateDatetime}

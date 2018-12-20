@@ -190,7 +190,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         borrow.setAmount(borrowAmount);
         borrow.setBorrowAmunt(borrowAmount);
         borrow.setRealGetAmount(borrowAmount.subtract(lxAmount)
-            .subtract(xsAmount).subtract(glAmount).subtract(fwAmount));
+            .subtract(xsAmount).subtract(glAmount).subtract(fwAmount)
+            .add(yhAmount));
         borrow.setLevel(product.getLevel());
         borrow.setDuration(product.getDuration());
 

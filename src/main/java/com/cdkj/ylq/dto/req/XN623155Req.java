@@ -22,6 +22,9 @@ public class XN623155Req extends APageReq {
     // 姓名
     private String name;
 
+    // 状态
+    private String status;
+
     // 公司编号
     @NotBlank
     private String companyCode;
@@ -36,6 +39,14 @@ public class XN623155Req extends APageReq {
 
     public String getCompanyCode() {
         return companyCode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void setCompanyCode(String companyCode) {

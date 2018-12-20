@@ -106,6 +106,7 @@ public class AccountAOImpl implements IAccountAO {
             if (null != businessMan) {
                 realName = businessMan.getMobile();
                 account.setMobile(realName);
+                account.setBusinessMan(businessMan);
                 if (StringUtils.isNotBlank(businessMan.getRealName())) {
                     realName = businessMan.getRealName().concat("-")
                         .concat(realName);
