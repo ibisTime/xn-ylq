@@ -71,7 +71,7 @@ CREATE TABLE `tsys_channel_bank` (
   `month_amount` bigint(32) DEFAULT NULL COMMENT '每月限额',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `tstd_cnavigate`;
 CREATE TABLE `tstd_cnavigate` (
@@ -126,7 +126,7 @@ CREATE TABLE `tsys_config` (
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `tsys_dict`;
 CREATE TABLE `tsys_dict` (
@@ -140,7 +140,7 @@ CREATE TABLE `tsys_dict` (
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=324 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `tsys_menu`;
 CREATE TABLE `tsys_menu` (
@@ -167,7 +167,7 @@ CREATE TABLE `tsys_menu_role` (
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5730 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `tsys_role`;
 CREATE TABLE `tsys_role` (
@@ -448,7 +448,7 @@ CREATE TABLE `tjd_certification` (
   `message` varchar(255) DEFAULT NULL COMMENT '认证信息',
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COMMENT='认证结果';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='认证结果';
 
 
 DROP TABLE IF EXISTS `tjd_coupon_rule`;
@@ -560,6 +560,7 @@ CREATE TABLE `tsys_way` (
   `url` varchar(255) DEFAULT NULL COMMENT '链接',
   `point_count` bigint(20) DEFAULT NULL COMMENT '渠道点击数',
   `user_count` bigint(20) DEFAULT NULL COMMENT '注册用户数',
+  `status` varchar(4) DEFAULT NULL COMMENT '状态（0，正常，1，注销）',
   `create_datetime` datetime DEFAULT NULL COMMENT '创建时间',
   `updater` varchar(32) DEFAULT NULL COMMENT '更新人',
   `update_datetime` datetime DEFAULT NULL COMMENT '更新时间',
@@ -567,6 +568,7 @@ CREATE TABLE `tsys_way` (
   `company_code` varchar(32) DEFAULT NULL COMMENT '公司编号',
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='渠道';
+
 
 DROP TABLE IF EXISTS `tjd_business_man`;
 CREATE TABLE `tjd_business_man` (
