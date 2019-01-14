@@ -168,6 +168,8 @@
 			</if>
 		</trim>
 	</select>
+	
+	
 
 	<select id="select_user_count" parameterType="user" resultType="java.lang.Long">
 		SELECT count(1) FROM tstd_user t 

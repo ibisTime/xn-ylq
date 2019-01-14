@@ -25,6 +25,10 @@
 		<property name="paginableDAO" ref="wayDAOImpl"/>
 	</bean>	
 	
+	<bean id="wayerBO" class="com.cdkj.ylq.bo.impl.WayerBOImpl">
+		<property name="paginableDAO" ref="wayerDAOImpl"/>
+	</bean>	
+	
 	<bean id="applyBO" class="com.cdkj.ylq.bo.impl.ApplyBOImpl">
 		<property name="paginableDAO" ref="applyDAOImpl"/>
 	</bean>	

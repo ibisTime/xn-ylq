@@ -32,7 +32,8 @@ public class XN623150 extends AProcessor {
 
     @Override
     public Object doBusiness() throws BizException {
-        return new PKCodeRes(wayAO.addWay(req.getName(), req.getCompanyCode()));
+        return new PKCodeRes(wayAO.addWay(req.getName(), req.getCompanyCode(),
+            req.getUserId()));
     }
 
     @Override

@@ -21,6 +21,7 @@
 	    <typeAlias alias="sysRole" type="com.cdkj.ylq.domain.SYSRole" />
  	    <typeAlias alias="sysMenuRole" type="com.cdkj.ylq.domain.SYSMenuRole" />
  	    <typeAlias alias="way" type="com.cdkj.ylq.domain.Way" />
+ 	    <typeAlias alias="wayer" type="com.cdkj.ylq.domain.Wayer" />
  	    <typeAlias alias="noticer" type="com.cdkj.ylq.domain.Noticer" />
  	    <typeAlias alias="businessMan" type="com.cdkj.ylq.domain.BusinessMan" />
  	    <typeAlias alias="stagingRule" type="com.cdkj.ylq.domain.StagingRule" />
@@ -38,6 +39,7 @@
  	    <typeAlias alias="jour" type="com.cdkj.ylq.domain.Jour" />
  	    <typeAlias alias="sysUser" type="com.cdkj.ylq.domain.SYSUser" />
  	    <typeAlias alias="withdraw" type="com.cdkj.ylq.domain.Withdraw" />
+ 	    <typeAlias alias="repayCard" type="com.cdkj.ylq.domain.RepayCard" />
 	</typeAliases>	
 </configuration>
 

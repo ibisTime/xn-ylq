@@ -5,8 +5,10 @@
 	<resultMap id="way_DB_Result" type="way">
 		<result column="code" property="code" />
 		<result column="name" property="name" />
-		<result column="url" property="url" />
-		<result column="point_count" property="pointCount" />
+		<result column="product_url" property="productUrl" />
+		<result column="product_point_count" property="productPointCount" />
+		<result column="reg_url" property="regUrl" />
+		<result column="reg_point_count" property="regPointCount" />
 		<result column="user_count" property="userCount" />
 		<result column="status" property="status" />
 		<result column="create_datetime" property="createDatetime" />
@@ -14,6 +16,7 @@
 		<result column="update_datetime" property="updateDatetime" />
 		<result column="remark" property="remark" />
 		<result column="company_code" property="companyCode" />
+		<result column="user_id" property="userId" />
 	</resultMap>
 	<sql id="where_condition">
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
@@ -29,14 +32,19 @@
 			<if test="companyCode != null and companyCode != '' ">
 				AND t.company_code =#{companyCode}
 			</if>
+			<if test="userId != null and userId != '' ">
+				AND t.user_id =#{userId}
+			</if>
 		</trim>
 	</sql>
 	<select id="select_way" parameterType="way" resultMap="way_DB_Result">
 		SELECT
 		t.code
 		,t.name
-		,t.url
-		,t.point_count
+		,t.product_url
+		,t.product_point_count
+		,t.reg_url
+		,t.reg_point_count
 		,t.user_count
 		,t.status
 		,t.create_datetime
@@ -44,6 +52,7 @@
 		,t.update_datetime
 		,t.remark
 		,t.company_code
+		,t.user_id
 		FROM
 		tsys_way t
 		<include refid="where_condition" />
@@ -65,8 +74,10 @@
 		tsys_way(
 		code
 		,name
-		,url
-		,point_count
+		,product_url
+		,product_point_count
+		,reg_url
+		,reg_point_count
 		,user_count
 		,status
 		,create_datetime
@@ -74,12 +85,15 @@
 		,update_datetime
 		,remark
 		,company_code
+		,user_id
 		)
 		VALUES(
 		#{code}
 		,#{name}
-		,#{url}
-		,#{pointCount}
+		,#{productUrl}
+		,#{productPointCount}
+		,#{regUrl}
+		,#{regPointCount}
 		,#{userCount}
 		,#{status}
 		,#{createDatetime}
@@ -87,6 +101,7 @@
 		,#{updateDatetime}
 		,#{remark}
 		,#{companyCode}
+		,#{userId}
 		)
 	</insert>
 	
@@ -99,7 +114,6 @@
 		UPDATE tsys_way
 		SET
 		name = #{name}
-		,url = #{url}
 		,status=#{status}
 		,create_datetime = #{createDatetime}
 		,updater = #{updater}
@@ -108,10 +122,17 @@
 		WHERE code = #{code}
 	</update>
 	
-	<update id="update_point_count" parameterType="way">
+	<update id="update_product_point_count" parameterType="way">
 		UPDATE tsys_way
 		SET
-		point_count=#{pointCount}
+		product_point_count=#{productPointCount}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_reg_point_count" parameterType="way">
+		UPDATE tsys_way
+		SET
+		reg_point_count=#{regPointCount}
 		WHERE code = #{code}
 	</update>
 	

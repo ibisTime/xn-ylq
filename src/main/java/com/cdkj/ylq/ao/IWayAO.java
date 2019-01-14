@@ -8,7 +8,7 @@ import com.cdkj.ylq.domain.Way;
 public interface IWayAO {
     static final String DEFAULT_ORDER_COLUMN = "code";
 
-    public String addWay(String name, String companyCode);
+    public String addWay(String name, String companyCode, String userId);
 
     public int dropWay(String code);
 
@@ -20,7 +20,9 @@ public interface IWayAO {
 
     public Way getWay(String code);
 
-    public void point(String code);
+    public void point(String code, String type);
+
+    public void pointOff(String code);
 
     public void loginOff(String code);
 

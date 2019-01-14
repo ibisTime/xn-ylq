@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.IWayerDAO">
+	<resultMap id="wayer_DB_Result" type="wayer">
+		<result column="user_id" property="userId" />
+		<result column="company_code" property="companyCode" />
+		<result column="name" property="name" />
+		<result column="login_name" property="loginName" />
+		<result column="login_pwd" property="loginPwd" />
+		<result column="login_pwd_strength" property="loginPwdStrength" />
+		<result column="create_datetime" property="createDatetime" />
+		<result column="user_count" property="userCount" />
+		<result column="url_count" property="urlCount" />
+		<result column="status" property="status" />
+		<result column="updater" property="updater" />
+		<result column="update_datetime" property="updateDatetime" />
+		<result column="remark" property="remark" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="userId != null and userId != '' ">
+				AND t.user_id = #{userId}
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
+			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
+			<if test="name != null and name != '' ">
+				AND t.name = #{name}
+			</if>
+			<if test="loginName != null and loginName != '' ">
+				AND t.login_name = #{loginName}
+			</if>
+			<if test="loginPwd != null and loginPwd != '' ">
+				AND t.login_pwd = #{loginPwd}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_wayer" parameterType="wayer" resultMap="wayer_DB_Result">
+		SELECT
+		t.user_id
+		,t.company_code
+		,t.name
+		,t.login_name
+		,t.login_pwd
+		,t.login_pwd_strength
+		,t.create_datetime
+		,t.user_count
+		,t.url_count
+		,t.status
+		,t.updater
+		,t.update_datetime
+		,t.remark
+		FROM
+		tsys_wayer t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_wayer_count" parameterType="wayer"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM tsys_wayer t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_wayer" parameterType="wayer">
+		INSERT INTO
+		tsys_wayer(
+		user_id
+		,company_code
+		,name
+		,login_name
+		,login_pwd
+		,login_pwd_strength
+		,create_datetime
+		,user_count
+		,url_count
+		,status
+		,updater
+		,update_datetime
+		,remark
+		)
+		VALUES(
+		#{userId}
+		,#{companyCode}
+		,#{name}
+		,#{loginName}
+		,#{loginPwd}
+		,#{loginPwdStrength}
+		,#{createDatetime}
+		,#{userCount}
+		,#{urlCount}
+		,#{status}
+		,#{updater}
+		,#{updateDatetime}
+		,#{remark}
+		)
+	</insert>
+
+	<update id="update_wayer" parameterType="wayer">
+		UPDATE tsys_wayer
+		SET
+		company_code = #{companyCode}
+		,name = #{name}
+		,login_name = #{loginName}
+		,login_pwd = #{loginPwd}
+		,login_pwd_strength = #{loginPwdStrength}
+		,create_datetime = #{createDatetime}
+		,user_count = #{userCount}
+		,url_count = #{urlCount}
+		,status = #{status}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="update_pwd" parameterType="wayer">
+		UPDATE tsys_wayer
+		SET
+		login_pwd = #{loginPwd}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="update_status" parameterType="wayer">
+		UPDATE tsys_wayer
+		SET
+		status = #{status}
+		,updater=#{updater}
+		,remark=#{remark}
+		WHERE user_id = #{userId}
+	</update>
+
+
+</mapper>

@@ -39,21 +39,30 @@ public class WayBOImpl extends PaginableBOImpl<Way> implements IWayBO {
     }
 
     @Override
-    public String saveWay(String name, String companyCode) {
+    public String saveWay(String name, String companyCode, String userId) {
         Way data = new Way();
         String code = OrderNoGenerater.generateM(EGeneratePrefix.WAY.getCode());
-        StringBuilder url = new StringBuilder(sysConfigBO.getStringValue(
-            SysConstants.WAY_URL, companyCode)).append("?code=").append(code)
-            .append("&userRefereeKind=").append(EUserRefereeType.W.getCode())
-            .append("&companyCode=").append(companyCode);
+        StringBuilder productUrl = new StringBuilder(
+            sysConfigBO.getStringValue(SysConstants.WAY_URL, companyCode))
+            .append("?code=").append(code).append("&userRefereeKind=")
+            .append(EUserRefereeType.W.getCode()).append("&companyCode=")
+            .append(companyCode);
+        StringBuilder regUrl = new StringBuilder(sysConfigBO.getStringValue(
+            SysConstants.WAY_URL, companyCode)).append("/user/register.html")
+            .append("?code=").append(code).append("&userRefereeKind=")
+            .append(EUserRefereeType.W.getCode()).append("&companyCode=")
+            .append(companyCode);
         data.setCode(code);
         data.setName(name);
-        data.setUrl(url.toString());
-        data.setPointCount(0L);
+        data.setProductUrl(productUrl.toString());
+        data.setProductPointCount(0L);
+        data.setRegUrl(regUrl.toString());
+        data.setRegPointCount(0L);
         data.setUserCount(0L);
         data.setStatus(EWayStatus.NORMAL.getCode());
         data.setCreateDatetime(new Date());
         data.setCompanyCode(companyCode);
+        data.setUserId(userId);
         wayDAO.insert(data);
         return code;
     }
@@ -102,11 +111,22 @@ public class WayBOImpl extends PaginableBOImpl<Way> implements IWayBO {
     }
 
     @Override
-    public int refreshPointCount(Way data, Long count) {
+    public int refreshProductPointCount(Way data, Long count) {
         int I = 0;
         if (data != null) {
-            data.setPointCount(data.getPointCount() + count);
-            I = wayDAO.updatePointCount(data);
+            data.setProductPointCount(data.getProductPointCount() + count);
+            I = wayDAO.updateProductPointCount(data);
+        }
+        return I;
+    }
+
+    @Override
+    public int refreshRegPointCount(Way data, Long count) {
+
+        int I = 0;
+        if (data != null) {
+            data.setRegPointCount(data.getRegPointCount() + count);
+            I = wayDAO.updateRegPointCount(data);
         }
         return I;
     }

@@ -20,11 +20,17 @@ public class Way extends ABaseDO {
     // 名字
     private String name;
 
+    // 产品链接
+    private String productUrl;
+
+    // 产品链接点击数
+    private Long productPointCount;
+
     // 链接
-    private String url;
+    private String regUrl;
 
     // 渠道点击数
-    private Long pointCount;
+    private Long regPointCount;
 
     // 注册用户数
     private Long userCount;
@@ -46,6 +52,19 @@ public class Way extends ABaseDO {
 
     // 公司编号
     private String companyCode;
+
+    // 渠道商用户编号
+    private String userId;
+
+    private Wayer wayer;
+
+    public Wayer getWayer() {
+        return wayer;
+    }
+
+    public void setWayer(Wayer wayer) {
+        this.wayer = wayer;
+    }
 
     public String getStatus() {
         return status;
@@ -71,20 +90,44 @@ public class Way extends ABaseDO {
         return name;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public String getProductUrl() {
+        return productUrl;
     }
 
-    public String getUrl() {
-        return url;
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
     }
 
-    public Long getPointCount() {
-        return pointCount;
+    public Long getProductPointCount() {
+        return productPointCount;
     }
 
-    public void setPointCount(Long pointCount) {
-        this.pointCount = pointCount;
+    public void setProductPointCount(Long productPointCount) {
+        this.productPointCount = productPointCount;
+    }
+
+    public String getRegUrl() {
+        return regUrl;
+    }
+
+    public void setRegUrl(String regUrl) {
+        this.regUrl = regUrl;
+    }
+
+    public Long getRegPointCount() {
+        return regPointCount;
+    }
+
+    public void setRegPointCount(Long regPointCount) {
+        this.regPointCount = regPointCount;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Long getUserCount() {

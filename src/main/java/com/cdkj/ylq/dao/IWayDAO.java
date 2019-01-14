@@ -9,7 +9,9 @@ public interface IWayDAO extends IBaseDAO<Way> {
 
     public int updateWay(Way data);
 
-    public int updatePointCount(Way data);
+    public int updateProductPointCount(Way data);
+
+    public int updateRegPointCount(Way data);
 
     public int updateUserCount(Way data);
 }

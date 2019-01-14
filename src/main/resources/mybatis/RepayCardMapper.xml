@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdkj.ylq.dao.IRepayCardDAO">
+	<resultMap id="repayCard_DB_Result" type="repayCard">
+		<result column="code" property="code" />
+		<result column="pict" property="pict" />
+		<result column="bankcard_number" property="bankcardNumber" />
+		<result column="bank_code" property="bankCode" />
+		<result column="bank_name" property="bankName" />
+		<result column="subbranch" property="subbranch" />
+		<result column="owner_name" property="ownerName" />
+		<result column="amount" property="amount" />
+		<result column="type" property="type" />
+		<result column="status" property="status" />
+		<result column="create_datetime" property="createDatetime" />
+		<result column="updater" property="updater" />
+		<result column="update_datetime" property="updateDatetime" />
+		<result column="remark" property="remark" />
+		<result column="company_code" property="companyCode" />
+	</resultMap>
+	<sql id="where_condition">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="code != null and code != '' ">
+				AND t.code = #{code}
+			</if>
+			<if test="status != null and status != '' ">
+				AND t.status = #{status}
+			</if>
+			<if test="bankCode != null and bankCode != '' ">
+				AND t.bank_code = #{bankCode}
+			</if>
+			<if test="companyCode != null and companyCode != '' ">
+				AND t.company_code = #{companyCode}
+			</if>
+		</trim>
+	</sql>
+	<select id="select_repayCard" parameterType="repayCard" resultMap="repayCard_DB_Result">
+		SELECT
+		t.code
+		,t.pict
+		,t.bankcard_number
+		,t.bank_code
+		,t.bank_name
+		,t.subbranch
+		,t.owner_name
+		,t.amount
+		,t.type
+		,t.status
+		,t.create_datetime
+		,t.updater
+		,t.update_datetime
+		,t.remark
+		,t.company_code
+		FROM
+		tstd_repay_card t
+		<include refid="where_condition" />
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				t.${order}
+			</if>
+		</trim>
+	</select>
+
+	<select id="select_repayCard_count" parameterType="repayCard"
+		resultType="java.lang.Long">
+		SELECT count(1) FROM tstd_repay_card t
+		<include refid="where_condition" />
+	</select>
+
+	<insert id="insert_repayCard" parameterType="repayCard">
+		INSERT INTO
+		tstd_repay_card(
+		code
+		,pict
+		,bankcard_number
+		,bank_code
+		,bank_name
+		,subbranch
+		,owner_name
+		,amount
+		,type
+		,status
+		,create_datetime
+		,updater
+		,update_datetime
+		,remark
+		,company_code
+		)
+		VALUES(
+		#{code}
+		,#{pict}
+		,#{bankcardNumber}
+		,#{bankCode}
+		,#{bankName}
+		,#{subbranch}
+		,#{ownerName}
+		,#{amount}
+		,#{type}
+		,#{status}
+		,#{createDatetime}
+		,#{updater}
+		,#{updateDatetime}
+		,#{remark}
+		,#{companyCode}
+		)
+	</insert>
+
+	<update id="update_repayCard" parameterType="repayCard">
+		UPDATE tstd_repay_card
+		SET
+		pict = #{pict}
+		,bankcard_number = #{bankcardNumber}
+		,bank_code = #{bankCode}
+		,bank_name = #{bankName}
+		,subbranch = #{subbranch}
+		,owner_name = #{ownerName}
+		,amount = #{amount}
+		,type = #{type}
+		,status = #{status}
+		,create_datetime = #{createDatetime}
+		,updater = #{updater}
+		,update_datetime = #{updateDatetime}
+		,remark = #{remark}
+		,company_code = #{companyCode}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_amount" parameterType="repayCard">
+		UPDATE tstd_repay_card
+		SET
+		amount = #{amount}
+		,updater=#{updater}
+		,remark=#{remark}
+		WHERE code = #{code}
+	</update>
+
+
+</mapper>

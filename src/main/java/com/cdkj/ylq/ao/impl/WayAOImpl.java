@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.cdkj.ylq.ao.IWayAO;
 import com.cdkj.ylq.bo.IWayBO;
+import com.cdkj.ylq.bo.IWayerBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Way;
+import com.cdkj.ylq.domain.Wayer;
+import com.cdkj.ylq.enums.EUrlType;
 import com.cdkj.ylq.exception.BizException;
 
 @Service
@@ -17,9 +20,12 @@ public class WayAOImpl implements IWayAO {
     @Autowired
     private IWayBO wayBO;
 
+    @Autowired
+    private IWayerBO wayerBO;
+
     @Override
-    public String addWay(String name, String companyCode) {
-        String code = wayBO.saveWay(name, companyCode);
+    public String addWay(String name, String companyCode, String userId) {
+        String code = wayBO.saveWay(name, companyCode, userId);
         return code;
     }
 
@@ -40,6 +46,12 @@ public class WayAOImpl implements IWayAO {
 
     @Override
     public Paginable<Way> queryWayPage(int start, int limit, Way condition) {
+        Paginable<Way> page = wayBO.getPaginable(start, limit, condition);
+        List<Way> wayList = page.getList();
+        for (Way way : wayList) {
+            Wayer wayer = wayerBO.getWayer(way.getUserId());
+            way.setWayer(wayer);
+        }
         return wayBO.getPaginable(start, limit, condition);
     }
 
@@ -54,15 +66,26 @@ public class WayAOImpl implements IWayAO {
     }
 
     @Override
-    public void point(String code) {
+    public void point(String code, String type) {
         Way way = wayBO.getWay(code);
-        wayBO.refreshPointCount(way, Long.valueOf(1));
+        if (EUrlType.PRODUCT.getCode().equals(type)) {
+            wayBO.refreshProductPointCount(way, Long.valueOf(1));
+        } else if (EUrlType.REG.getCode().equals(type)) {
+            wayBO.refreshRegPointCount(way, Long.valueOf(1));
+        }
+
     }
 
     @Override
     public void loginOff(String code) {
         Way way = wayBO.getWay(code);
         wayBO.refreshStatus(way);
+    }
+
+    @Override
+    public void pointOff(String code) {
+        Way way = wayBO.getWay(code);
+        wayBO.refreshRegPointCount(way, Long.valueOf(-1));
     }
 
 }

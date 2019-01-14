@@ -32,7 +32,7 @@ public class XN623153 extends AProcessor {
 
     @Override
     public Object doBusiness() throws BizException {
-        wayAO.point(req.getCode());
+        wayAO.point(req.getCode(), req.getType());
         return new BooleanRes(true);
     }
 

@@ -18,7 +18,8 @@ import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.ParaException;
 import com.cdkj.ylq.spring.SpringContextHolder;
 
-/** 渠道注销/恢复
+/** 
+ * 渠道注销/恢复
  * @author: taojian 
  * @since: 2018年12月20日 下午4:02:00 
  * @history:

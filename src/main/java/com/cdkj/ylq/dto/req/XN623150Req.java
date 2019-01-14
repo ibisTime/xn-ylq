@@ -25,6 +25,18 @@ public class XN623150Req {
     @NotBlank
     private String companyCode;
 
+    // 用户编号
+    @NotBlank
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getName() {
         return name;
     }

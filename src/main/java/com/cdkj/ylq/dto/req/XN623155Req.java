@@ -8,7 +8,6 @@
  */
 package com.cdkj.ylq.dto.req;
 
-import org.hibernate.validator.constraints.NotBlank;
 
 /** 
  * @author: taojian 
@@ -26,7 +25,6 @@ public class XN623155Req extends APageReq {
     private String status;
 
     // 公司编号
-    @NotBlank
     private String companyCode;
 
     public String getName() {

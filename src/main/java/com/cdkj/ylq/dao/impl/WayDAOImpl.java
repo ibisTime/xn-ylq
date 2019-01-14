@@ -52,8 +52,14 @@ public class WayDAOImpl extends AMybatisTemplate implements IWayDAO {
     }
 
     @Override
-    public int updatePointCount(Way data) {
-        return super.update(NAMESPACE.concat("update_point_count"), data);
+    public int updateProductPointCount(Way data) {
+        return super.update(NAMESPACE.concat("update_product_point_count"),
+            data);
+    }
+
+    @Override
+    public int updateRegPointCount(Way data) {
+        return super.update(NAMESPACE.concat("update_reg_point_count"), data);
     }
 
     @Override
