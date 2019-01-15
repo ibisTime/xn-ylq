@@ -811,6 +811,94 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         logger.info("***************结束扫描分期记录***************");
     }
 
+    public void doCheckWillRepayAt8() {
+        logger.info("***************开始扫描今日到期借款和分期，短信提醒***************");
+        // 借款记录
+        BorrowOrder condition = new BorrowOrder();
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(EBorrowStatus.LOANING.getCode());
+        condition.setStatusList(statusList);
+        condition.setHkDatetime(DateUtil.getTodayEnd());
+        List<BorrowOrder> borrowList = borrowOrderBO.queryBorrowList(condition);
+        // 分期记录
+        Staging conditionStaging = new Staging();
+        conditionStaging.setStatus(EStagingStatus.TOREPAY.getCode());
+        conditionStaging.setLastPayDate(DateUtil.getTodayEnd());
+        List<Staging> stagingList = stagingBO
+            .queryStagingList(conditionStaging);
+        if (borrowList != null || stagingList != null) {
+            logger.info("***************共扫描到"
+                    + (borrowList.size() + stagingList.size())
+                    + "条记录***************");
+        }
+        if (CollectionUtils.isNotEmpty(borrowList)) {
+            for (BorrowOrder borrow : borrowList) {
+                User user = userBO.getUser(borrow.getApplyUser());
+                smsOutBO.sendContent(
+                    user.getMobile(),
+                    "您的"
+                            + CalculationUtil.diviUp(borrow.getAmount()
+                                .longValue()) + "借款即将到期，借款编号为"
+                            + borrow.getCode()
+                            + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。", borrow
+                        .getCompanyCode(), ESystemCode.YLQ.getCode());
+            }
+        }
+        if (CollectionUtils.isNotEmpty(stagingList)) {
+            for (Staging staging : stagingList) {
+                smsOutBO.sendContent(staging.getApplyUser(), "您的分期借款即将到期，分期编号为"
+                        + staging.getCode()
+                        + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。",
+                    staging.getCompanyCode(), ESystemCode.YLQ.getCode());
+            }
+        }
+        logger.info("***************结束扫描今日到期借款和分期***************");
+    }
+
+    public void doCheckWillRepayAt18() {
+        logger.info("***************开始扫描今日到期借款和分期，短信提醒***************");
+        // 借款记录
+        BorrowOrder condition = new BorrowOrder();
+        List<String> statusList = new ArrayList<String>();
+        statusList.add(EBorrowStatus.LOANING.getCode());
+        condition.setStatusList(statusList);
+        condition.setHkDatetime(DateUtil.getTodayEnd());
+        List<BorrowOrder> borrowList = borrowOrderBO.queryBorrowList(condition);
+        // 分期记录
+        Staging conditionStaging = new Staging();
+        conditionStaging.setStatus(EStagingStatus.TOREPAY.getCode());
+        conditionStaging.setLastPayDate(DateUtil.getTodayEnd());
+        List<Staging> stagingList = stagingBO
+            .queryStagingList(conditionStaging);
+        if (borrowList != null || stagingList != null) {
+            logger.info("***************共扫描到"
+                    + (borrowList.size() + stagingList.size())
+                    + "条记录***************");
+        }
+        if (CollectionUtils.isNotEmpty(borrowList)) {
+            for (BorrowOrder borrow : borrowList) {
+                User user = userBO.getUser(borrow.getApplyUser());
+                smsOutBO.sendContent(
+                    user.getMobile(),
+                    "您的"
+                            + CalculationUtil.diviUp(borrow.getAmount()
+                                .longValue()) + "借款即将到期，借款编号为"
+                            + borrow.getCode()
+                            + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。", borrow
+                        .getCompanyCode(), ESystemCode.YLQ.getCode());
+            }
+        }
+        if (CollectionUtils.isNotEmpty(stagingList)) {
+            for (Staging staging : stagingList) {
+                smsOutBO.sendContent(staging.getApplyUser(), "您的分期借款即将到期，分期编号为"
+                        + staging.getCode()
+                        + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。",
+                    staging.getCompanyCode(), ESystemCode.YLQ.getCode());
+            }
+        }
+        logger.info("***************结束扫描今日到期借款和分期***************");
+    }
+
     private void stageOverdue(Staging staging) {
 
         // 查询借款订单

@@ -130,4 +130,8 @@
 	<bean id="stagingRuleBO" class="com.cdkj.ylq.bo.impl.StagingRuleBOImpl">
 		<property name="paginableDAO" ref="stagingRuleDAOImpl"/>
 	</bean>
+	
+	<bean id="repayCardBO" class="com.cdkj.ylq.bo.impl.RepayCardBOImpl">
+		<property name="paginableDAO" ref="repayCardDAOImpl"/>
+	</bean>
 </beans>

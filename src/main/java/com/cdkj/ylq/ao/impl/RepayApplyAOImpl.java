@@ -16,6 +16,7 @@ import com.cdkj.ylq.bo.ICertificationBO;
 import com.cdkj.ylq.bo.ICouponBO;
 import com.cdkj.ylq.bo.IOverdueBO;
 import com.cdkj.ylq.bo.IRepayApplyBO;
+import com.cdkj.ylq.bo.IRepayCardBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IStagingBO;
 import com.cdkj.ylq.bo.IStagingRuleBO;
@@ -28,6 +29,7 @@ import com.cdkj.ylq.core.OrderNoGenerater;
 import com.cdkj.ylq.domain.BorrowOrder;
 import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.RepayApply;
+import com.cdkj.ylq.domain.RepayCard;
 import com.cdkj.ylq.domain.Staging;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.enums.EBoolean;
@@ -83,6 +85,9 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
     @Autowired
     private IStagingBO stagingBO;
 
+    @Autowired
+    private IRepayCardBO repayCardBO;
+
     @Override
     @Transactional
     public void doApprove(String code, String approveResult, String approver,
@@ -103,6 +108,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             String approver, String approveNote) {
         String status = null;
         String smsContent = null;
+        User user = userBO.getUser(repayApply.getApplyUser());
         if (EBoolean.YES.getCode().equals(approveResult)) {
             status = ERepayApplyStatus.APPROVE_YES.getCode();
 
@@ -140,12 +146,16 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             smsContent = "您的"
                     + CalculationUtil.diviUp(borrow.getAmount().longValue())
                     + "借款（合同编号：" + borrow.getCode() + "）已经成功还款，详情查看请登录APP。";
+            // 还款账号加钱
+            RepayCard card = repayCardBO.getOpenCard(borrow.getCompanyCode());
+            repayCardBO.refreshAmount(card, borrow.getAmount(),
+                user.getUserId(), "用户还款加钱");
         } else if (EBoolean.NO.getCode().equals(approveResult)) {
             status = ERepayApplyStatus.APPROVE_NO.getCode();
             smsContent = "您的线下还款申请审核未通过，原因：" + approveNote + "。";
         }
         repayApplyBO.doApprove(repayApply, status, approver, approveNote);
-        User user = userBO.getUser(repayApply.getApplyUser());
+
         smsOutBO.sendContent(user.getMobile(), smsContent,
             repayApply.getCompanyCode(), ESystemCode.YLQ.getCode());
     }
@@ -154,6 +164,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             String approver, String approveNote) {
         String status = null;
         String smsContent = null;
+        User user = userBO.getUser(repayApply.getApplyUser());
         if (EBoolean.YES.getCode().equals(result)) {
             status = ERepayApplyStatus.APPROVE_YES.getCode();
             Staging staging = stagingBO.getStaging(repayApply.getRefNo());
@@ -198,6 +209,11 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                 borrowOrderBO.refreshStageRepay(order, staging.getMainAmount(),
                     staging.getMainAmount().add(lxAmount), approver);
             }
+            // 还款账号加钱
+            RepayCard card = repayCardBO.getOpenCard(repayApply
+                .getCompanyCode());
+            repayCardBO.refreshAmount(card, repayApply.getAmount(),
+                user.getUserId(), "用户还款加钱");
             stagingBO.refreshRepay(staging.getCode(),
                 EPayType.OFFLINE.getCode(), repayApply.getCode(),
                 repayApply.getAmount());
@@ -214,7 +230,7 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
             smsContent = "您的线下还款申请审核未通过，原因：" + approveNote + "。";
         }
         repayApplyBO.doApprove(repayApply, status, approver, approveNote);
-        User user = userBO.getUser(repayApply.getApplyUser());
+
         smsOutBO.sendContent(user.getMobile(), smsContent,
             repayApply.getCompanyCode(), ESystemCode.YLQ.getCode());
     }

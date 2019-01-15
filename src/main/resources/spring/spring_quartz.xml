@@ -23,6 +23,8 @@
            	  <ref bean="certificationTrigger"/>
            	  <ref bean="userCouponTrigger"/>
            	  <ref bean="repayRemindTrigger"/>
+           	  <ref bean="remind8Trigger"/>
+           	  <ref bean="remind18Trigger"/>
            	  <!-- <ref bean="doInsertStatisticDailyTrigger"/> -->
           </list>  
        </property>  
@@ -41,7 +43,7 @@
 	
 	<bean id="stageTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
        <property name="jobDetail" ref="doCheckStageDaily"/>  
-       <property name="cronExpression" value="0 0 0 * * ?"/><!-- 每天0点执行 -->
+       <property name="cronExpression" value="0 0 17 * * ?"/><!-- 每天0点执行 -->
 	</bean>
 	<bean id="doCheckStageDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="borrowOrderAOImpl"/>  
@@ -56,6 +58,26 @@
 	<bean id="doCheckWillRepayDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="borrowOrderAOImpl"/>  
 	        <property name="targetMethod" value="doCheckWillRepayDaily"/>  
+	        <property name="concurrent" value="false"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
+	</bean>
+	
+	<bean id="remind8Trigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail" ref="doCheckWillRepayAt8"/>  
+       <property name="cronExpression" value="0 0 8 * * ?"/><!-- 每天8点执行 -->
+	</bean>
+	<bean id="doCheckWillRepayAt8" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
+	        <property name="targetObject" ref="borrowOrderAOImpl"/>  
+	        <property name="targetMethod" value="doCheckWillRepayAt8"/>  
+	        <property name="concurrent" value="false"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
+	</bean>
+	
+	<bean id="remind18Trigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail" ref="doCheckWillRepayAt18"/>  
+       <property name="cronExpression" value="0 0 18 * * ?"/><!-- 每天18点执行 -->
+	</bean>
+	<bean id="doCheckWillRepayAt18" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
+	        <property name="targetObject" ref="borrowOrderAOImpl"/>  
+	        <property name="targetMethod" value="doCheckWillRepayAt18"/>  
 	        <property name="concurrent" value="false"/>   <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程  --> 
 	</bean>
 	

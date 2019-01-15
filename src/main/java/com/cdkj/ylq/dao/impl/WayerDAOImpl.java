@@ -55,4 +55,14 @@ public class WayerDAOImpl extends AMybatisTemplate implements IWayerDAO {
         return super.update(NAMESPACE.concat("update_status"), data);
     }
 
+    @Override
+    public int updateUrlCount(Wayer data) {
+        return super.update(NAMESPACE.concat("update_url_count"), data);
+    }
+
+    @Override
+    public int updateUserCount(Wayer data) {
+        return super.update(NAMESPACE.concat("update_user_count"), data);
+    }
+
 }

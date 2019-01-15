@@ -20,7 +20,7 @@ public enum EGeneratePrefix {
 
     Interact("I", "点赞"), BANK_CARD("BC", "银行卡"), WAY("W", "渠道"), BUSINESS(
             "JDS", "借贷商"), NOTICER("NO", "通知人"), StagingRule("SR", "分期规则"), Wayer(
-            "QDS", "渠道商");
+            "QDS", "渠道商"), RepayCard("RC", "收款账号");
 
     public static Map<String, EGeneratePrefix> getMap() {
         Map<String, EGeneratePrefix> map = new HashMap<String, EGeneratePrefix>();

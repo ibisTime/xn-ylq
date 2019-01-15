@@ -131,6 +131,17 @@
 		SET
 		amount = #{amount}
 		,updater=#{updater}
+		,update_datetime=#{updateDatetime}
+		,remark=#{remark}
+		WHERE code = #{code}
+	</update>
+	
+	<update id="update_status" parameterType="repayCard">
+		UPDATE tstd_repay_card
+		SET
+		status = #{status}
+		,updater=#{updater}
+		,update_datetime=#{updateDatetime}
 		,remark=#{remark}
 		WHERE code = #{code}
 	</update>

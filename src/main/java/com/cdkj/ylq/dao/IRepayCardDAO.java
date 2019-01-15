@@ -9,5 +9,7 @@ public interface IRepayCardDAO extends IBaseDAO<RepayCard> {
 
     public int updateAmount(RepayCard data);
 
+    public int updateStatus(RepayCard data);
+
     public int update(RepayCard data);
 }

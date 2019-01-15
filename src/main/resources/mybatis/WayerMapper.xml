@@ -137,6 +137,20 @@
 		,remark=#{remark}
 		WHERE user_id = #{userId}
 	</update>
+	
+	<update id="update_url_count" parameterType="wayer">
+		UPDATE tsys_wayer
+		SET
+		url_count = #{urlCount}
+		WHERE user_id = #{userId}
+	</update>
+	
+	<update id="update_user_count" parameterType="wayer">
+		UPDATE tsys_wayer
+		SET
+		user_count = #{userCount}
+		WHERE user_id = #{userId}
+	</update>
 
 
 </mapper>

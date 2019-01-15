@@ -40,8 +40,7 @@ public class XN805027 extends AProcessor {
     @Override
     public void doCheck(String inputparams) throws ParaException {
         req = JsonUtil.json2Bean(inputparams, XN805027Req.class);
-        StringValidater.validateBlank(req.getRoleCode(), req.getUpdater(),
-            req.getCompanyCode());
+        StringValidater.validateBlank(req.getRoleCode(), req.getUpdater());
         if (CollectionUtils.isEmpty(req.getMenuCodeList())) {
             throw new BizException("xnlh4000", "菜单列表不能为空");
         }

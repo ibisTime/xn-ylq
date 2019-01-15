@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cdkj.ylq.ao.IWayAO;
 import com.cdkj.ylq.bo.IWayBO;
@@ -24,8 +25,12 @@ public class WayAOImpl implements IWayAO {
     private IWayerBO wayerBO;
 
     @Override
+    @Transactional
     public String addWay(String name, String companyCode, String userId) {
+        Wayer wayer = wayerBO.getWayer(userId);
         String code = wayBO.saveWay(name, companyCode, userId);
+        // 渠道商链接数加一
+        wayerBO.refreshUrlCount(wayer, 1L);
         return code;
     }
 

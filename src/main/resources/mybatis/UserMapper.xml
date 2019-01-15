@@ -169,6 +169,20 @@
 		</trim>
 	</select>
 	
+	<select id="select_wayer_user" parameterType="user" resultMap="user_DB_Result">
+		SELECT 
+		t.mobile
+		,t.create_datetime
+		FROM
+		tstd_user t
+		<include refid="where_condition"/>
+		<trim prefix="ORDER BY ">
+			<if test="order != null and order != '' ">
+				${order}
+			</if>
+		</trim>
+	</select>
+	
 	
 
 	<select id="select_user_count" parameterType="user" resultType="java.lang.Long">

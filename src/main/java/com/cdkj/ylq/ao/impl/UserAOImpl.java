@@ -31,6 +31,7 @@ import com.cdkj.ylq.bo.ISmsOutBO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IUserCouponBO;
 import com.cdkj.ylq.bo.IWayBO;
+import com.cdkj.ylq.bo.IWayerBO;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.MD5Util;
@@ -42,6 +43,7 @@ import com.cdkj.ylq.domain.Coupon;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.UserCoupon;
 import com.cdkj.ylq.domain.Way;
+import com.cdkj.ylq.domain.Wayer;
 import com.cdkj.ylq.dto.req.XN805042Req;
 import com.cdkj.ylq.dto.req.XN805043Req;
 import com.cdkj.ylq.dto.req.XN805081ZReq;
@@ -57,7 +59,6 @@ import com.cdkj.ylq.enums.EUserRefereeType;
 import com.cdkj.ylq.enums.EUserStatus;
 import com.cdkj.ylq.enums.EWayStatus;
 import com.cdkj.ylq.exception.BizException;
-import com.cdkj.ylq.exception.EBizErrorCode;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -98,6 +99,9 @@ public class UserAOImpl implements IUserAO {
     @Autowired
     private IWayBO wayBO;
 
+    @Autowired
+    private IWayerBO wayerBO;
+
     @Override
     public void doCheckMobile(String mobile, String kind, String companyCode,
             String systemCode) {
@@ -137,11 +141,12 @@ public class UserAOImpl implements IUserAO {
             }
         } else if (EUserRefereeType.W.getCode().equals(userRefereeKind)) {
             Way way = wayBO.getWay(userReferee);
-            if (way.getStatus().equals(EWayStatus.Locked.getCode())) {
-                throw new BizException(EBizErrorCode.DEFAULT.getCode(),
-                    "该渠道已注销");
+            if (way.getStatus().equals(EWayStatus.NORMAL.getCode())) {
+                Wayer wayer = wayerBO.getWayer(way.getUserId());
+                wayBO.refreshUserCount(way, Long.valueOf(1));
+                wayerBO.refreshUserCount(wayer, 1L);
             }
-            wayBO.refreshUserCount(way, Long.valueOf(1));
+
         }
 
         // 验证短信验证码

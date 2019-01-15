@@ -56,4 +56,9 @@ public class RepayCardDAOImpl extends AMybatisTemplate implements IRepayCardDAO 
         return super.update(NAMESPACE.concat("update_repayCard"), data);
     }
 
+    @Override
+    public int updateStatus(RepayCard data) {
+        return super.update(NAMESPACE.concat("update_status"), data);
+    }
+
 }

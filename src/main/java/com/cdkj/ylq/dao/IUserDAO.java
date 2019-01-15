@@ -81,4 +81,6 @@ public interface IUserDAO extends IBaseDAO<User> {
     public int updateIsCoupon(User data);
 
     public int updateLocation(User data);
+
+    public User selectWayerUser(User condition);
 }

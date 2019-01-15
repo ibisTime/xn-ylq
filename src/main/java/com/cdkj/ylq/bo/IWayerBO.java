@@ -27,4 +27,8 @@ public interface IWayerBO extends IPaginableBO<Wayer> {
 
     public Wayer getWayer(String userId);
 
+    public void refreshUrlCount(Wayer data, Long count);
+
+    public void refreshUserCount(Wayer data, Long count);
+
 }

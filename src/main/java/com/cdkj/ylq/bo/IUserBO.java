@@ -142,4 +142,5 @@ public interface IUserBO extends IPaginableBO<User> {
 
     public void refreshLocation(String userId, String province, String city,
             String area, String address);
+
 }

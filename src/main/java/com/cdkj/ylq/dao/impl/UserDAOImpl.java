@@ -193,4 +193,10 @@ public class UserDAOImpl extends AMybatisTemplate implements IUserDAO {
     public int updateLocation(User data) {
         return super.update(NAMESPACE.concat("update_location"), data);
     }
+
+    @Override
+    public User selectWayerUser(User condition) {
+        return super.select(NAMESPACE.concat("select_wayer_user"), condition,
+            User.class);
+    }
 }

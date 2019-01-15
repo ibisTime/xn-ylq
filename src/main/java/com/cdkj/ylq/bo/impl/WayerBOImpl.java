@@ -123,4 +123,16 @@ public class WayerBOImpl extends PaginableBOImpl<Wayer> implements IWayerBO {
         }
         return false;
     }
+
+    @Override
+    public void refreshUrlCount(Wayer data, Long count) {
+        data.setUrlCount(data.getUrlCount() + count);
+        wayerDAO.updateUrlCount(data);
+    }
+
+    @Override
+    public void refreshUserCount(Wayer data, Long count) {
+        data.setUserCount(data.getUserCount() + count);
+        wayerDAO.updateUserCount(data);
+    }
 }
