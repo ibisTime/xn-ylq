@@ -19,6 +19,10 @@ public enum EJourBizTypePlat {
 
     API("API", "第三方认证接口支出"),
 
+    SMSOUT("SMS_OUT", "短信支出"),
+
+    SMSIN("SMS_IN", "短信收入"),
+
     WITHDRAW_ENTER("withdraw_enter", "提现回录"),
 
     CHARGE("CHARGE", "boss充值"),

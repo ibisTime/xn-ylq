@@ -1,15 +1,30 @@
 package com.cdkj.ylq.bo.impl;
 
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
+import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.cdkj.ylq.bo.IAccountBO;
+import com.cdkj.ylq.bo.IBusinessManBO;
+import com.cdkj.ylq.bo.ISYSConfigBO;
 import com.cdkj.ylq.bo.ISmsOutBO;
+import com.cdkj.ylq.domain.Account;
+import com.cdkj.ylq.domain.BusinessMan;
 import com.cdkj.ylq.dto.req.XN001200Req;
 import com.cdkj.ylq.dto.req.XN804080Req;
 import com.cdkj.ylq.dto.req.XN804081Req;
 import com.cdkj.ylq.dto.req.XN804082Req;
 import com.cdkj.ylq.dto.res.BooleanRes;
 import com.cdkj.ylq.dto.res.PKCodeRes;
+import com.cdkj.ylq.enums.EChannelType;
+import com.cdkj.ylq.enums.ECurrency;
+import com.cdkj.ylq.enums.EJourBizTypeBoss;
+import com.cdkj.ylq.enums.EJourBizTypePlat;
+import com.cdkj.ylq.enums.ESmsFeeType;
+import com.cdkj.ylq.enums.ESystemAccount;
 import com.cdkj.ylq.enums.ESystemCode;
 import com.cdkj.ylq.http.BizConnecter;
 import com.cdkj.ylq.http.JsonUtils;
@@ -22,6 +37,15 @@ import com.cdkj.ylq.http.JsonUtils;
 @Component
 public class SmsOutBOImpl implements ISmsOutBO {
     static Logger logger = Logger.getLogger(SmsOutBOImpl.class);
+
+    @Autowired
+    private ISYSConfigBO sysConfigBO;
+
+    @Autowired
+    private IBusinessManBO businessManBO;
+
+    @Autowired
+    private IAccountBO accountBO;
 
     @Override
     public void sentContent(String ownerId, String content) {
@@ -38,6 +62,7 @@ public class SmsOutBOImpl implements ISmsOutBO {
     }
 
     @Override
+    @Transactional
     public void sendContent(String mobile, String content, String companyCode,
             String systemCode) {
         try {
@@ -51,7 +76,29 @@ public class SmsOutBOImpl implements ISmsOutBO {
                 Object.class);
         } catch (Exception e) {
             logger.error("调用短信发送服务异常, 原因：" + e.getMessage());
+            System.out.println("调用短信发送服务异常, 原因：" + e.getMessage());
         }
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(
+            ESmsFeeType.BOSSDXFEE.getCode(), ESystemCode.YLQ.getCode());
+        fee = fee.multiply(new BigDecimal(1000));
+        // 短信费用
+        BusinessMan man = businessManBO
+            .getBusinessManByCompanyCode(companyCode);
+        Account toAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
+        Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
+            ECurrency.CNY.getCode());
+        accountBO.transAmount(fromAccount, toAccount, fee,
+            EJourBizTypeBoss.SMSOUT.getCode(),
+            EJourBizTypePlat.SMSIN.getCode(),
+            EJourBizTypeBoss.SMSOUT.getValue(),
+            EJourBizTypePlat.SMSIN.getValue(), mobile);
+        BigDecimal outFee = sysConfigBO.getBigDecimalValue(
+            ESmsFeeType.PLATDXFEE.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
+        accountBO.changeAmount(toAccount, outFee.negate(), EChannelType.NBZ,
+            null, mobile, EJourBizTypePlat.SMSOUT.getCode(),
+            EJourBizTypePlat.SMSOUT.getValue());
     }
 
     @Override
@@ -109,4 +156,5 @@ public class SmsOutBOImpl implements ISmsOutBO {
             logger.error("调用短信发送服务异常");
         }
     }
+
 }

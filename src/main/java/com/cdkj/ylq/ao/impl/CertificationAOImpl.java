@@ -563,6 +563,7 @@ public class CertificationAOImpl implements ICertificationAO {
     @Override
     public void doAddressBookVerify(String userId,
             List<InfoAddressBook> addressBookList) {
+        User user = userBO.getUser(userId);
         Certification certification = certificationBO.getCertification(userId,
             ECertiKey.INFO_ADDRESS_BOOK);
         Integer config = sysConfigBO.getIntegerValue(
@@ -577,6 +578,22 @@ public class CertificationAOImpl implements ICertificationAO {
             certification.setRef("");
             certificationBO.refreshCertification(certification);
         }
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(
+            ECertiKey.INFO_ADDRESS_BOOK.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
+        Long id = certRecordBO.saveCertRecord(userId, fee,
+            ECertiKey.INFO_ADDRESS_BOOK.getCode(), user.getCompanyCode());
+        // 接口费用
+        BusinessMan man = businessManBO.getBusinessManByCompanyCode(user
+            .getCompanyCode());
+        Account toAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
+        Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
+            ECurrency.CNY.getCode());
+        accountBO.transAmount(fromAccount, toAccount, fee,
+            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.REPORT.getCode(),
+            EJourBizTypeBoss.API.getValue(),
+            EJourBizTypePlat.REPORT.getValue(), user.getMobile());
     }
 
     @Override
@@ -1052,6 +1069,7 @@ public class CertificationAOImpl implements ICertificationAO {
 
     @Override
     public void submitInfoPersonal(String userId) {
+        User user = userBO.getUser(userId);
         // 获取认证结果
         List<Certification> certifications = certificationBO
             .queryCertificationList(userId);
@@ -1111,6 +1129,23 @@ public class CertificationAOImpl implements ICertificationAO {
         certification.setValidDatetime(DateUtil
             .getRelativeDateOfDays(now, days));
         certificationBO.refreshCertification(certification);
+
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(
+            ECertiKey.INFO_BASIC.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
+        Long id = certRecordBO.saveCertRecord(userId, fee,
+            ECertiKey.INFO_ADDRESS_BOOK.getCode(), user.getCompanyCode());
+        // 接口费用
+        BusinessMan man = businessManBO.getBusinessManByCompanyCode(user
+            .getCompanyCode());
+        Account toAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
+        Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
+            ECurrency.CNY.getCode());
+        accountBO.transAmount(fromAccount, toAccount, fee,
+            EJourBizTypeBoss.API.getCode(), EJourBizTypePlat.REPORT.getCode(),
+            EJourBizTypeBoss.API.getValue(),
+            EJourBizTypePlat.REPORT.getValue(), user.getMobile());
 
         if (certificationBO.isCompleteCerti(userId)) {
             Apply apply = applyBO.getInCertApply(userId);

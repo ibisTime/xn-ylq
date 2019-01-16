@@ -12,6 +12,7 @@ import com.cdkj.ylq.ao.IWayerAO;
 import com.cdkj.ylq.api.AProcessor;
 import com.cdkj.ylq.common.JsonUtil;
 import com.cdkj.ylq.core.ObjValidater;
+import com.cdkj.ylq.core.StringValidater;
 import com.cdkj.ylq.dto.req.XN623208Req;
 import com.cdkj.ylq.exception.BizException;
 import com.cdkj.ylq.exception.ParaException;
@@ -30,7 +31,11 @@ public class XN623208 extends AProcessor {
 
     @Override
     public Object doBusiness() throws BizException {
-        return wayerAO.getUsersOfWayer(req.getUserId());
+        int start = StringValidater.toInteger(req.getStart());
+        int limit = StringValidater.toInteger(req.getLimit());
+
+        return wayerAO.getUsersOfWayer(req.getUserId(), start, limit,
+            req.getDateStart(), req.getDateEnd());
     }
 
     @Override

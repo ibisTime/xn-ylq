@@ -52,12 +52,11 @@ public class WayAOImpl implements IWayAO {
     @Override
     public Paginable<Way> queryWayPage(int start, int limit, Way condition) {
         Paginable<Way> page = wayBO.getPaginable(start, limit, condition);
-        List<Way> wayList = page.getList();
-        for (Way way : wayList) {
+        for (Way way : page.getList()) {
             Wayer wayer = wayerBO.getWayer(way.getUserId());
             way.setWayer(wayer);
         }
-        return wayBO.getPaginable(start, limit, condition);
+        return page;
     }
 
     @Override

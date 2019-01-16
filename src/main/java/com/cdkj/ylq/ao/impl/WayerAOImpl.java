@@ -11,7 +11,9 @@ import com.cdkj.ylq.ao.IWayerAO;
 import com.cdkj.ylq.bo.IUserBO;
 import com.cdkj.ylq.bo.IWayBO;
 import com.cdkj.ylq.bo.IWayerBO;
+import com.cdkj.ylq.bo.base.Page;
 import com.cdkj.ylq.bo.base.Paginable;
+import com.cdkj.ylq.common.DateUtil;
 import com.cdkj.ylq.common.MD5Util;
 import com.cdkj.ylq.domain.User;
 import com.cdkj.ylq.domain.Way;
@@ -116,7 +118,8 @@ public class WayerAOImpl implements IWayerAO {
     }
 
     @Override
-    public List<XN623208Res> getUsersOfWayer(String userId) {
+    public Page<XN623208Res> getUsersOfWayer(String userId, int start,
+            int limit, String dateStart, String dateEnd) {
         wayerBO.getWayer(userId);
         List<XN623208Res> ress = new ArrayList<XN623208Res>();
         Way conditionWay = new Way();
@@ -125,6 +128,10 @@ public class WayerAOImpl implements IWayerAO {
         for (Way way : wayList) {
             User conditionUser = new User();
             conditionUser.setUserReferee(way.getCode());
+            conditionUser.setCreateDatetimeStart(DateUtil.strToDate(dateStart,
+                DateUtil.FRONT_DATE_FORMAT_STRING));
+            conditionUser.setCreateDatetimeEnd(DateUtil.strToDate(dateEnd,
+                DateUtil.FRONT_DATE_FORMAT_STRING));
             List<User> userList = userBO.queryUserList(conditionUser);
             for (User user : userList) {
                 XN623208Res res = new XN623208Res();
@@ -134,7 +141,19 @@ public class WayerAOImpl implements IWayerAO {
                 ress.add(res);
             }
         }
-        return ress;
+        // 组装page
+        Page<XN623208Res> page = new Page<XN623208Res>(start, limit,
+            ress.size());
+        List<XN623208Res> list = new ArrayList<XN623208Res>();
+        for (int i = page.getStart(); i < ress.size(); i++) {
+            list.add(ress.get(i));
+            if (list.size() == page.getPageSize()) {
+                break;
+            }
+        }
+
+        page.setList(list);
+        return page;
     }
 
 }

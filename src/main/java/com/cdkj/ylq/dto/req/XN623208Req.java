@@ -11,12 +11,17 @@ package com.cdkj.ylq.dto.req;
 import org.hibernate.validator.constraints.NotBlank;
 
 /** 
- * 列表查渠道商所属用户
+ * 分页查渠道商所属用户
  * @author: taojian 
  * @since: 2019年1月14日 上午11:13:14 
  * @history:
  */
-public class XN623208Req {
+public class XN623208Req extends APageReq {
+
+    /** 
+     * @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么) 
+     */
+    private static final long serialVersionUID = -69367246536751115L;
 
     // 用户编号
     @NotBlank

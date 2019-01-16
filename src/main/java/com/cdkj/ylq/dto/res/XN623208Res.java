@@ -18,7 +18,10 @@ public class XN623208Res {
     }
 
     public void setMobile(String mobile) {
-        this.mobile = mobile;
+        String string = "*******";
+        StringBuilder stb = new StringBuilder(mobile);
+        stb.replace(3, 10, string);
+        this.mobile = stb.toString();
     }
 
     public String getWayName() {

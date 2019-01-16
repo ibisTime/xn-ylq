@@ -37,6 +37,7 @@ public class XN623155 extends AProcessor {
         condition.setName(req.getName());
         condition.setStatus(req.getStatus());
         condition.setCompanyCode(req.getCompanyCode());
+        condition.setUserId(req.getUserId());
         int start = StringValidater.toInteger(req.getStart());
         int limit = StringValidater.toInteger(req.getLimit());
         return wayAO.queryWayPage(start, limit, condition);

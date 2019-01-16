@@ -2,6 +2,7 @@ package com.cdkj.ylq.ao;
 
 import java.util.List;
 
+import com.cdkj.ylq.bo.base.Page;
 import com.cdkj.ylq.bo.base.Paginable;
 import com.cdkj.ylq.domain.Wayer;
 import com.cdkj.ylq.dto.res.XN623208Res;
@@ -26,6 +27,7 @@ public interface IWayerAO {
 
     public void editStatus(String userId, String updater);
 
-    public List<XN623208Res> getUsersOfWayer(String userId);
+    public Page<XN623208Res> getUsersOfWayer(String userId, int start,
+            int limit, String dateStart, String dateEnd);
 
 }

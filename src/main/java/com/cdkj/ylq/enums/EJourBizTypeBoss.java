@@ -16,6 +16,8 @@ public enum EJourBizTypeBoss {
 
     API("API_OUT", "风控认证接口支出"),
 
+    SMSOUT("SMS_OUT", "短信支出"),
+
     WITHDRAW_FEE("WITHDRAW_FEE", "取现手续费"),
 
     WITHDRAW_FROZEN("WITHDRAW_FROZEN", "取现冻结"),

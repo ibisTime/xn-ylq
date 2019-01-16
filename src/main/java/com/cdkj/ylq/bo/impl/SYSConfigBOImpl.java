@@ -18,6 +18,7 @@ import com.cdkj.ylq.dao.ISYSConfigDAO;
 import com.cdkj.ylq.domain.SYSConfig;
 import com.cdkj.ylq.enums.ECompanyCodeModel;
 import com.cdkj.ylq.exception.BizException;
+import com.cdkj.ylq.exception.EBizErrorCode;
 
 /**
  * 
@@ -146,6 +147,7 @@ public class SYSConfigBOImpl extends PaginableBOImpl<SYSConfig> implements
         } catch (Exception e) {
             logger.error("参数名为" + key + "的配置转换成bigdecimal类型发生错误, 原因："
                     + e.getMessage());
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(), "去系统参数出错");
         }
         return result;
     }

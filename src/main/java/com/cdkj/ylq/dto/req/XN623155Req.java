@@ -8,7 +8,6 @@
  */
 package com.cdkj.ylq.dto.req;
 
-
 /** 
  * @author: taojian 
  * @since: 2018年11月20日 下午3:43:12 
@@ -21,11 +20,22 @@ public class XN623155Req extends APageReq {
     // 姓名
     private String name;
 
+    // 渠道商编号
+    private String userId;
+
     // 状态
     private String status;
 
     // 公司编号
     private String companyCode;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getName() {
         return name;

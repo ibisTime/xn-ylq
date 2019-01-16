@@ -22,6 +22,10 @@ public enum EOutFeeKey {
 
     , INFO_ZQZN("INFO_ZQZN_FEE", "智趣智能活体识别")
 
+    , INFO_ADDRESS_BOOK("INFO_ADDRESS_BOOK", "通讯录认证")
+
+    , INFO_BASIC("INFO_BASIC", "基本信息认证")
+
     , INFO_ZHIFUBAO("INFO_ZHIFUBAO_FEE", "支付宝信息")//
 
     , INFO_CARRIER("INFO_CARRIER_FEE", "运营商认证");

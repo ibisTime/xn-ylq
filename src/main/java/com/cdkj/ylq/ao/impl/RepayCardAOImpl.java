@@ -77,6 +77,10 @@ public class RepayCardAOImpl implements IRepayCardAO {
             throw new BizException(EBizErrorCode.DEFAULT.getCode(),
                 "账号未开启，无法结算");
         }
+        if (amount.compareTo(card.getAmount()) > 0) {
+            throw new BizException(EBizErrorCode.DEFAULT.getCode(),
+                "结算金额大于账户余额，无法结算");
+        }
         repayCardBO.refreshAmount(card, amount.negate(), updater, "结算金额:"
                 + amount.toString());
     }
