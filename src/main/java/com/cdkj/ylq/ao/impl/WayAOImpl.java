@@ -26,9 +26,10 @@ public class WayAOImpl implements IWayAO {
 
     @Override
     @Transactional
-    public String addWay(String name, String companyCode, String userId) {
+    public String addWay(String name, String companyCode, String userId,
+            String remark) {
         Wayer wayer = wayerBO.getWayer(userId);
-        String code = wayBO.saveWay(name, companyCode, userId);
+        String code = wayBO.saveWay(name, companyCode, userId, remark);
         // 渠道商链接数加一
         wayerBO.refreshUrlCount(wayer, 1L);
         return code;

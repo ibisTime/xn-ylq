@@ -351,12 +351,12 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
             borrow.setYqCount(yqCount);
             borrow.setUser(userBO.getUser(borrow.getApplyUser()));
             borrow.setBankcard(accountBO.getBankcard(borrow.getApplyUser()));
-            if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())
-                    || EBorrowStatus.OVERDUE.getCode().equals(
-                        borrow.getStatus())) {
-                borrow.setRemainDays(DateUtil.daysBetween(
-                    DateUtil.getTodayStart(),
-                    DateUtil.getTomorrowStart(borrow.getHkDatetime())));
+            if (EBorrowStatus.LOANING.getCode().equals(borrow.getStatus())) {
+                if (EBoolean.NO.getCode().equals(borrow.getIsStage())) {
+                    borrow.setRemainDays(DateUtil.daysBetween(
+                        DateUtil.getTodayStart(),
+                        DateUtil.getTomorrowStart(borrow.getHkDatetime())));
+                }
             }
         }
         return results;
@@ -619,7 +619,10 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         String userId = borrow.getApplyUser();
         User user = userBO.getUser(userId);
         Company company = companyBO.getCompany(borrow.getCompanyCode());
-        StringBuffer sb = new StringBuffer(user.getIdNo());
+        StringBuffer sb = new StringBuffer();
+        if (null != user.getIdNo()) {
+            sb = new StringBuffer(user.getIdNo());
+        }
         String contentTemplate = sysConfigBO.getStringValue(
             SysConstants.SMS_CUISHOU, ESystemCode.YLQ.getCode());
         contentTemplate = String.format(contentTemplate, user.getMobile(), sb
@@ -757,6 +760,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         condition.setStatusList(statusList);
         condition.setHkDatetime(DateUtil.getRelativeDateOfDays(
             DateUtil.getTodayEnd(), 1));
+        condition.setIsStage(EBoolean.NO.getCode());
         List<BorrowOrder> borrowList = borrowOrderBO.queryBorrowList(condition);
         // 分期记录
         Staging conditionStaging = new Staging();
@@ -785,7 +789,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         }
         if (CollectionUtils.isNotEmpty(stagingList)) {
             for (Staging staging : stagingList) {
-                smsOutBO.sendContent(staging.getApplyUser(), "您的分期借款即将到期，分期编号为"
+                User user = userBO.getUser(staging.getApplyUser());
+                smsOutBO.sendContent(user.getMobile(), "您的分期借款即将到期，分期编号为"
                         + staging.getCode()
                         + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。",
                     staging.getCompanyCode(), ESystemCode.YLQ.getCode());
@@ -800,6 +805,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         condition.setStatus(EStagingStatus.TOREPAY.getCode());
         condition.setCurDatetime(new Date());
         List<Staging> stagingList = stagingBO.queryStagingList(condition);
+
         if (CollectionUtils.isNotEmpty(stagingList)) {
             logger.info("***************扫描到" + stagingList.size()
                     + "条分期记录***************");
@@ -819,6 +825,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         statusList.add(EBorrowStatus.LOANING.getCode());
         condition.setStatusList(statusList);
         condition.setHkDatetime(DateUtil.getTodayEnd());
+        condition.setIsStage(EBoolean.NO.getCode());
         List<BorrowOrder> borrowList = borrowOrderBO.queryBorrowList(condition);
         // 分期记录
         Staging conditionStaging = new Staging();
@@ -846,7 +853,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         }
         if (CollectionUtils.isNotEmpty(stagingList)) {
             for (Staging staging : stagingList) {
-                smsOutBO.sendContent(staging.getApplyUser(), "您的分期借款即将到期，分期编号为"
+                User user = userBO.getUser(staging.getApplyUser());
+                smsOutBO.sendContent(user.getMobile(), "您的分期借款即将到期，分期编号为"
                         + staging.getCode()
                         + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。",
                     staging.getCompanyCode(), ESystemCode.YLQ.getCode());
@@ -863,6 +871,7 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         statusList.add(EBorrowStatus.LOANING.getCode());
         condition.setStatusList(statusList);
         condition.setHkDatetime(DateUtil.getTodayEnd());
+        condition.setIsStage(EBoolean.NO.getCode());
         List<BorrowOrder> borrowList = borrowOrderBO.queryBorrowList(condition);
         // 分期记录
         Staging conditionStaging = new Staging();
@@ -890,7 +899,8 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         }
         if (CollectionUtils.isNotEmpty(stagingList)) {
             for (Staging staging : stagingList) {
-                smsOutBO.sendContent(staging.getApplyUser(), "您的分期借款即将到期，分期编号为"
+                User user = userBO.getUser(staging.getApplyUser());
+                smsOutBO.sendContent(user.getMobile(), "您的分期借款即将到期，分期编号为"
                         + staging.getCode()
                         + "，逾期将会影响您的信用并产生额外利息，请及时登录APP进行还款。",
                     staging.getCompanyCode(), ESystemCode.YLQ.getCode());
@@ -1117,6 +1127,9 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
                     info.setAmount(mainAmount.add(info.getLxAmount()));
                     info.setRemark("第" + (i + 1) + "期，第" + j + "天");
                     infos.add(info);
+                    // 日期加一
+                    startPayDate = DateUtil.getRelativeDateOfDays(startPayDate,
+                        1);
                 }
             }
         }
@@ -1139,7 +1152,14 @@ public class BorrowOrderAOImpl implements IBorrowOrderAO {
         }
         Paginable<BorrowOrder> page = new Page<BorrowOrder>(start, limit,
             list.size());
-        page.setList(list);
+        List<BorrowOrder> orders = new ArrayList<BorrowOrder>();
+        for (int i = page.getStart(); i < list.size(); i++) {
+            orders.add(list.get(i));
+            if (orders.size() == page.getPageSize()) {
+                break;
+            }
+        }
+        page.setList(orders);
         return page;
     }
 

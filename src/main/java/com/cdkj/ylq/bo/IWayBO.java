@@ -9,7 +9,8 @@ public interface IWayBO extends IPaginableBO<Way> {
 
     public boolean isWayExist(String code);
 
-    public String saveWay(String name, String companyCode, String userId);
+    public String saveWay(String name, String companyCode, String userId,
+            String remark);
 
     public int removeWay(String code);
 

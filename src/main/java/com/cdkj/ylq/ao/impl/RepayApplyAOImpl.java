@@ -249,9 +249,9 @@ public class RepayApplyAOImpl implements IRepayApplyAO {
                 Staging staging = stagingBO.getStaging(repayApply.getRefNo());
                 repayApply.setBorrow(borrowOrderBO.getBorrow(staging
                     .getOrderCode()));
-                Date date = new Date();
-                if (staging.getPayDatetime() != null) {
-                    date = staging.getPayDatetime();
+                Date date = repayApply.getApproveDatetime();
+                if (date == null) {
+                    date = new Date();
                 }
                 int days = DateUtil
                     .daysBetween(staging.getStartPayDate(), date) + 1;

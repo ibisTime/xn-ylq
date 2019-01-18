@@ -8,7 +8,8 @@ import com.cdkj.ylq.domain.Way;
 public interface IWayAO {
     static final String DEFAULT_ORDER_COLUMN = "code";
 
-    public String addWay(String name, String companyCode, String userId);
+    public String addWay(String name, String companyCode, String userId,
+            String remark);
 
     public int dropWay(String code);
 

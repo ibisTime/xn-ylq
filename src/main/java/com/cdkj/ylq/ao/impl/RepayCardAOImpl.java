@@ -82,7 +82,7 @@ public class RepayCardAOImpl implements IRepayCardAO {
                 "结算金额大于账户余额，无法结算");
         }
         repayCardBO.refreshAmount(card, amount.negate(), updater, "结算金额:"
-                + amount.toString());
+                + amount.divide(new BigDecimal(1000)).toString());
     }
 
     @Override

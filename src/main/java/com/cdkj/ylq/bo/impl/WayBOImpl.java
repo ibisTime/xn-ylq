@@ -39,14 +39,15 @@ public class WayBOImpl extends PaginableBOImpl<Way> implements IWayBO {
     }
 
     @Override
-    public String saveWay(String name, String companyCode, String userId) {
+    public String saveWay(String name, String companyCode, String userId,
+            String remark) {
         Way data = new Way();
         String code = OrderNoGenerater.generateM(EGeneratePrefix.WAY.getCode());
         StringBuilder productUrl = new StringBuilder(
             sysConfigBO.getStringValue(SysConstants.WAY_URL, companyCode))
-            .append("?code=").append(code).append("&userRefereeKind=")
-            .append(EUserRefereeType.W.getCode()).append("&companyCode=")
-            .append(companyCode);
+            .append("/product/product-list.html").append("?code=").append(code)
+            .append("&userRefereeKind=").append(EUserRefereeType.W.getCode())
+            .append("&companyCode=").append(companyCode);
         StringBuilder regUrl = new StringBuilder(sysConfigBO.getStringValue(
             SysConstants.WAY_URL, companyCode)).append("/user/register.html")
             .append("?code=").append(code).append("&userRefereeKind=")
@@ -63,6 +64,7 @@ public class WayBOImpl extends PaginableBOImpl<Way> implements IWayBO {
         data.setCreateDatetime(new Date());
         data.setCompanyCode(companyCode);
         data.setUserId(userId);
+        data.setRemark(remark);
         wayDAO.insert(data);
         return code;
     }

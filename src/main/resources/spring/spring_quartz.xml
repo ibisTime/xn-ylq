@@ -33,7 +33,7 @@
 	
  	<bean id="borrowTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
        <property name="jobDetail" ref="doCheckOverdueDaily"/>  
-       <property name="cronExpression" value="0 0 0 * * ?"/><!-- 每天0点执行 -->
+       <property name="cronExpression" value="20 0 0 * * ?"/><!-- 每天0点执行 -->
 	</bean>
 	<bean id="doCheckOverdueDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="borrowOrderAOImpl"/>  
@@ -43,7 +43,7 @@
 	
 	<bean id="stageTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
        <property name="jobDetail" ref="doCheckStageDaily"/>  
-       <property name="cronExpression" value="0 0 17 * * ?"/><!-- 每天0点执行 -->
+       <property name="cronExpression" value="20 0 0 * * ?"/><!-- 每天0点执行 -->
 	</bean>
 	<bean id="doCheckStageDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="borrowOrderAOImpl"/>  
@@ -86,7 +86,7 @@
 	
 	<bean id="certificationTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
        <property name="jobDetail" ref="doCheckValidDaily"/>  
-       <property name="cronExpression" value="0 0 0 * * ?"/><!-- 每天0点执行 -->
+       <property name="cronExpression" value="20 0 0 * * ?"/><!-- 每天0点执行 -->
 	</bean>
 	<bean id="doCheckValidDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="certificationAOImpl"/>  
@@ -96,7 +96,7 @@
 	
 	<bean id="userCouponTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
        <property name="jobDetail" ref="doCheckUserCouponInvalidDaily"/>  
-       <property name="cronExpression" value="0 0 0 * * ?"/><!-- 每天0点执行 -->
+       <property name="cronExpression" value="20 0 0 * * ?"/><!-- 每天0点执行 -->
 	</bean>
 	<bean id="doCheckUserCouponInvalidDaily" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">   
 	        <property name="targetObject" ref="userCouponAOImpl"/>  

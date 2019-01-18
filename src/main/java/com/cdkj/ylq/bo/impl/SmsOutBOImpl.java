@@ -114,6 +114,27 @@ public class SmsOutBOImpl implements ISmsOutBO {
         } catch (Exception e) {
             logger.error("调用验证码发送服务异常");
         }
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(
+            ESmsFeeType.BOSSDXFEE.getCode(), ESystemCode.YLQ.getCode());
+        fee = fee.multiply(new BigDecimal(1000));
+        // 短信费用
+        BusinessMan man = businessManBO
+            .getBusinessManByCompanyCode(companyCode);
+        Account toAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
+        Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
+            ECurrency.CNY.getCode());
+        accountBO.transAmount(fromAccount, toAccount, fee,
+            EJourBizTypeBoss.SMSOUT.getCode(),
+            EJourBizTypePlat.SMSIN.getCode(),
+            EJourBizTypeBoss.SMSOUT.getValue(),
+            EJourBizTypePlat.SMSIN.getValue(), mobile);
+        BigDecimal outFee = sysConfigBO.getBigDecimalValue(
+            ESmsFeeType.PLATDXFEE.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
+        accountBO.changeAmount(toAccount, outFee.negate(), EChannelType.NBZ,
+            null, mobile, EJourBizTypePlat.SMSOUT.getCode(),
+            EJourBizTypePlat.SMSOUT.getValue());
     }
 
     @Override
@@ -155,6 +176,27 @@ public class SmsOutBOImpl implements ISmsOutBO {
         } catch (Exception e) {
             logger.error("调用短信发送服务异常");
         }
+        BigDecimal fee = sysConfigBO.getBigDecimalValue(
+            ESmsFeeType.BOSSDXFEE.getCode(), ESystemCode.YLQ.getCode());
+        fee = fee.multiply(new BigDecimal(1000));
+        // 短信费用
+        BusinessMan man = businessManBO
+            .getBusinessManByCompanyCode(companyCode);
+        Account toAccount = accountBO.getAccount(ESystemAccount.SYS_ACOUNT_CNY
+            .getCode());
+        Account fromAccount = accountBO.getAccountByUser(man.getUserId(),
+            ECurrency.CNY.getCode());
+        accountBO.transAmount(fromAccount, toAccount, fee,
+            EJourBizTypeBoss.SMSOUT.getCode(),
+            EJourBizTypePlat.SMSIN.getCode(),
+            EJourBizTypeBoss.SMSOUT.getValue(),
+            EJourBizTypePlat.SMSIN.getValue(), mobile);
+        BigDecimal outFee = sysConfigBO.getBigDecimalValue(
+            ESmsFeeType.PLATDXFEE.getCode(), ESystemCode.YLQ.getCode())
+            .multiply(new BigDecimal(1000));
+        accountBO.changeAmount(toAccount, outFee.negate(), EChannelType.NBZ,
+            null, mobile, EJourBizTypePlat.SMSOUT.getCode(),
+            EJourBizTypePlat.SMSOUT.getValue());
     }
 
 }
