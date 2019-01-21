@@ -1174,7 +1174,7 @@ public class CertificationAOImpl implements ICertificationAO {
         Properties formProperties = new Properties();
         String token = "53fdf4a17bde45e993b1bdc6c6c24b13";
         formProperties.put("Authorization", "token " + token);
-        String urlString = "https://api.51datakey.com/carrier/v3/mobiles/18251859953/mxreport?task_id=4ebc3e80-f911-11e8-a585-00163e0e0050";
+        String urlString = "https://api.51datakey.com/gateway/alipay/v6/data/4edc101a-1d43-11e9-95c4-00163e050342";
         try {
             logger.info(urlString);
             String report = HttpUtil.requestGetGzip(urlString, null,
